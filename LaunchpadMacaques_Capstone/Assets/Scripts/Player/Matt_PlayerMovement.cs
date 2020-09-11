@@ -4,19 +4,25 @@ using UnityEngine;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
-
+    [Header("PLayer Transform Assignables")]
     //Assingables
     public Transform playerCam;
     public Transform orientation;
 
+    [Header("Player Rigidbody")]
     //Other
+    [SerializeField]
     private Rigidbody rb;
 
     //Rotation and look
+    [SerializeField]
     private float xRotation;
+    [SerializeField]
     private float sensitivity = 50f;
+    [SerializeField]
     private float sensMultiplier = 1f;
 
+    [Header("PLayer Movement Variables")]
     //Movement
     public float moveSpeed = 4500;
     public float maxSpeed = 20;
@@ -24,31 +30,43 @@ public class Matt_PlayerMovement : MonoBehaviour
     public LayerMask whatIsGround;
 
     public float counterMovement = 0.175f;
+    [SerializeField]
     private float threshold = 0.01f;
     public float maxSlopeAngle = 35f;
 
     //Crouch & Slide
+    [SerializeField]
     private Vector3 crouchScale = new Vector3(1, 0.5f, 1);
+    [SerializeField]
     private Vector3 playerScale;
     public float slideForce = 400;
     public float slideCounterMovement = 0.2f;
 
+
     //Jumping
+    [SerializeField]
     private bool readyToJump = true;
+    [SerializeField]
     private float jumpCooldown = 0.25f;
     public float jumpForce = 550f;
     public float gravity = 1100;
 
     //Sprinting
+    [SerializeField]
     private bool readyToSprint = true;
 
-    //Input
-    float x, y;
-    bool jumping, sprinting, crouching;
-
     //Sliding
+    [SerializeField]
     private Vector3 normalVector = Vector3.up;
+    [SerializeField]
     private Vector3 wallNormalVector;
+
+    [Header("Player Input")]
+    //Input
+    [SerializeField]
+    private float x, y;
+    [SerializeField]
+    private bool jumping, sprinting, crouching;
 
     void Awake()
     {
