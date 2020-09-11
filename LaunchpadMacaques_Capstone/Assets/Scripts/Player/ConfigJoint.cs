@@ -50,6 +50,7 @@ public class ConfigJoint : MonoBehaviour
         jointDrive.maximumForce = 3.402823e+38f;
         jointDrive.positionSpring = positionSpringForce;
         jointDrive.positionDamper = positionSpringDamper;
+        lr.positionCount = 0;
     }
 
     void Update()
