@@ -29,6 +29,8 @@ public class ConfigJoint : MonoBehaviour
     [SerializeField] float positionSpringForce = 350;
     [SerializeField] float positionSpringDamper = 300;
 
+    private GameObject objectFixedTo;
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
@@ -64,6 +66,13 @@ public class ConfigJoint : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             Explode();
+        }
+
+        if (objectFixedTo)
+        {
+            grapplePoint = objectFixedTo.transform.position;
+            joint.connectedAnchor = grapplePoint;
+            joint.targetPosition = Vector3.zero;
         }
     }
 
@@ -103,7 +112,8 @@ public class ConfigJoint : MonoBehaviour
     {
         RaycastHit hit;
         if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
-        { 
+        {
+            objectFixedTo = hit.collider.gameObject;
             grapplePoint = hit.point;
             joint = player.gameObject.AddComponent<ConfigurableJoint>();
             joint.autoConfigureConnectedAnchor = false;
@@ -133,6 +143,7 @@ public class ConfigJoint : MonoBehaviour
     {
         lr.positionCount = 0;
         Destroy(joint);
+        objectFixedTo = null;
     }
 
   
