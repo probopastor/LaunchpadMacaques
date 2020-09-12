@@ -39,8 +39,16 @@ public class GrappleDecal : MonoBehaviour
 
     private void MoveDecal(RaycastHit info)
     {
+        //grappleAimingDecal.transform.rotation = Quaternion.FromToRotation(Vector3.right, info.normal);
+        //grappleAimingDecal.transform.rotation = new Quaternion(grappleAimingDecal.transform.rotation.x, grappleAimingDecal.transform.rotation.y, grappleAimingDecal.transform.rotation.z, grappleAimingDecal.transform.rotation.w);
+
+        //grappleAimingDecal.transform.position = info.point;
+        //grappleAimingDecal.transform.rotation = new Quaternion(info.normal.x, info.normal.y, info.normal.z, grappleAimingDecal.transform.rotation.w);
+
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //    Instantiate(grappleAimingDecal, info.point, Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), info.normal));
+
         grappleAimingDecal.transform.position = info.point;
-        //grappleAimingDecal.transform.rotation = Quaternion.FromToRotation(Vector3.up, info.normal);
-        //grappleAimingDecal.transform.
+        grappleAimingDecal.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), info.normal);
     }
 }
