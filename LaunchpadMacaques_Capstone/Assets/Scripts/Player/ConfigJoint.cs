@@ -150,7 +150,6 @@ public class ConfigJoint : MonoBehaviour
         objectFixedTo = null;
     }
 
-  
 
     void DrawRope()
     {
@@ -163,27 +162,38 @@ public class ConfigJoint : MonoBehaviour
         lr.SetPosition(1, currentGrapplePosition);
     }
 
+    /// <summary>
+    /// Returns true if the player is grappling, false if they are not.
+    /// </summary>
+    /// <returns></returns>
     public bool IsGrappling()
     {
         return joint != null;
     }
 
+    /// <summary>
+    /// Returns the world space point that the player grapples to. 
+    /// </summary>
+    /// <returns></returns>
     public Vector3 GetGrapplePoint()
     {
         return grapplePoint;
     }
 
-    public LayerMask GetGrappleLayer()
-    {
-        return whatIsGrappleable;
-    }
-
+    /// <summary>
+    /// Returns the max grapple distance possible. 
+    /// </summary>
+    /// <returns></returns>
     public float GetMaxGrappleDistance()
     {
         return maxDistance;
     }
 
-    public RaycastHit GetGrappleRayHit()
+    /// <summary>
+    /// Returns the Rayhit from the grappling Raycast. 
+    /// </summary>
+    /// <returns></returns>
+    public RaycastHit GetGrappleRayhit()
     {
         return grappleRayHit;
     }

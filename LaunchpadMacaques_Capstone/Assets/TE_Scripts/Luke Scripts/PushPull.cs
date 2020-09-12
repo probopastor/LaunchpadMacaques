@@ -55,7 +55,6 @@ public class PushPull : MonoBehaviour
         crossHairUI.sprite = crossHairSprites[0];
     }
 
-   
     void Update()
     {
         var ray = _camera.ScreenPointToRay(Input.mousePosition);
