@@ -23,6 +23,7 @@ public class GrapplingGun : MonoBehaviour
     public float springValue = 10f;
     public float springDamp = 10f;
     public float springMass = 5f;
+    private RaycastHit grappleRayHit;
 
     void Awake()
     {
@@ -92,8 +93,11 @@ public class GrapplingGun : MonoBehaviour
     void StartGrapple()
     {
         RaycastHit hit;
+
         if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
         {
+            grappleRayHit = hit;
+
             grapplePoint = hit.point;
             joint = player.gameObject.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
@@ -160,5 +164,10 @@ public class GrapplingGun : MonoBehaviour
     public float GetMaxGrappleDistance()
     {
         return maxDistance;
+    }
+
+    public RaycastHit GetGrappleRayHit()
+    {
+        return grappleRayHit;
     }
 }

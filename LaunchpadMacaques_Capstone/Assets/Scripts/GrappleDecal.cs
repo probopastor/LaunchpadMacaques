@@ -26,13 +26,13 @@ public class GrappleDecal : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitInfo;
-
-        if(Physics.Raycast(ray, out hitInfo, configJoint.GetMaxGrappleDistance(), whatIsGrappleable))
+       
+        if((Physics.Raycast(ray, out hitInfo, configJoint.GetMaxGrappleDistance(), whatIsGrappleable)) || (configJoint.IsGrappling()))
         {
             grappleDecalObj.SetActive(true);
             MoveDecal(hitInfo);
         }
-        else
+        else 
         {
             grappleDecalObj.SetActive(false);
         }
@@ -40,7 +40,17 @@ public class GrappleDecal : MonoBehaviour
 
     private void MoveDecal(RaycastHit info)
     {
-        grappleDecalObj.transform.position = info.point;
-        grappleDecalObj.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), info.normal);
+        if (!configJoint.IsGrappling())
+        {
+            grappleDecalObj.transform.position = info.point;
+            grappleDecalObj.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), info.normal);
+        }
+        else if (configJoint.IsGrappling())
+        {
+            grappleDecalObj.transform.position = configJoint.GetGrapplePoint();
+            grappleDecalObj.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), configJoint.GetGrappleRayHit().normal);
+
+            //Debug.Log(configJoint.GetGrapplePoint());
+        }
     }
 }

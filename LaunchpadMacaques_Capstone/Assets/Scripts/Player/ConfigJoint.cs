@@ -30,6 +30,7 @@ public class ConfigJoint : MonoBehaviour
     [SerializeField] float positionSpringDamper = 300;
 
     private GameObject objectFixedTo;
+    private RaycastHit grappleRayHit;
 
     void Awake()
     {
@@ -114,6 +115,8 @@ public class ConfigJoint : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
         {
+            grappleRayHit = hit;
+
             objectFixedTo = hit.collider.gameObject;
             grapplePoint = hit.point;
             joint = player.gameObject.AddComponent<ConfigurableJoint>();
@@ -178,5 +181,10 @@ public class ConfigJoint : MonoBehaviour
     public float GetMaxGrappleDistance()
     {
         return maxDistance;
+    }
+
+    public RaycastHit GetGrappleRayHit()
+    {
+        return grappleRayHit;
     }
 }
