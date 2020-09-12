@@ -156,4 +156,9 @@ public class GrapplingGun : MonoBehaviour
     {
         return grapplePoint;
     }
+
+    public float GetMaxGrappleDistance()
+    {
+        return maxDistance;
+    }
 }

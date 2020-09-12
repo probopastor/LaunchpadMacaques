@@ -169,4 +169,14 @@ public class ConfigJoint : MonoBehaviour
     {
         return grapplePoint;
     }
+
+    public LayerMask GetGrappleLayer()
+    {
+        return whatIsGrappleable;
+    }
+
+    public float GetMaxGrappleDistance()
+    {
+        return maxDistance;
+    }
 }
