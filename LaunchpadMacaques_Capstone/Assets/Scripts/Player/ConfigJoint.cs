@@ -32,10 +32,12 @@ public class ConfigJoint : MonoBehaviour
     private GameObject objectFixedTo;
     private RaycastHit grappleRayHit;
 
+    [Tooltip("The Min amount of time a joint has to connected before it can be discontented")]
+    [SerializeField] float minJointTime = .08f;
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
-
     }
 
     private void Start()
@@ -56,25 +58,14 @@ public class ConfigJoint : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && joint == null)
         {
             StartGrapple();
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-           StopGrapple();
         }
 
         if (Input.GetMouseButtonDown(1))
         {
             Explode();
-        }
-
-        if (objectFixedTo)
-        {
-            grapplePoint = objectFixedTo.transform.position;
-            joint.connectedAnchor = grapplePoint;
-            joint.targetPosition = Vector3.zero;
         }
     }
 
@@ -136,8 +127,31 @@ public class ConfigJoint : MonoBehaviour
             lr.positionCount = 2;
             currentGrapplePosition = gunTip.position;
 
+            StartCoroutine(JointDestroyDelay());
+
            
         }
+    }
+
+    /// <summary>
+    /// Will Handle Forcing the player to have the joint enabled for a min set of time
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator JointDestroyDelay()
+    {
+        float heldDownTime = 0;
+        while (Input.GetMouseButton(0))
+        {
+            heldDownTime += Time.deltaTime;
+            yield return new WaitForSeconds(0);
+        }
+
+        if(heldDownTime < minJointTime)
+        {
+            yield return new WaitForSeconds(minJointTime - heldDownTime);
+        }
+
+        StopGrapple();
     }
 
     /// <summary>
@@ -158,8 +172,11 @@ public class ConfigJoint : MonoBehaviour
 
         currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, grapplePoint, Time.deltaTime * 8f);
 
-        lr.SetPosition(0, gunTip.position);
-        lr.SetPosition(1, currentGrapplePosition);
+        if(lr.positionCount > 0)
+        {
+            lr.SetPosition(0, gunTip.position);
+            lr.SetPosition(1, currentGrapplePosition);
+        }
     }
 
     /// <summary>
