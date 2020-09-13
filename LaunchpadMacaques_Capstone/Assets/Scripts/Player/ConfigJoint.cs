@@ -225,6 +225,8 @@ public class ConfigJoint : MonoBehaviour
         //If not grappling, don't draw rope
         if (!joint) return;
 
+        if (lr.positionCount == 0) return;
+
         currentGrapplePosition = grapplePoint;
 
         lr.SetPosition(0, gunTip.position);
