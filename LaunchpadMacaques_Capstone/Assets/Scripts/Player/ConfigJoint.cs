@@ -32,8 +32,14 @@ public class ConfigJoint : MonoBehaviour
     private GameObject objectFixedTo;
     private RaycastHit grappleRayHit;
 
+    [Header("Grapple Settings")]
     [Tooltip("The Min amount of time a joint has to connected before it can be discontented")]
     [SerializeField] float minJointTime = .08f;
+    [SerializeField] bool grappleHasMax = false;
+
+
+    [Tooltip("The Max amount of time a joint will be connected for")]
+    [SerializeField] float maxJointTime = 2;
 
     void Awake()
     {
@@ -142,6 +148,11 @@ public class ConfigJoint : MonoBehaviour
         float heldDownTime = 0;
         while (Input.GetMouseButton(0))
         {
+            if(grappleHasMax && maxJointTime <= heldDownTime)
+            {
+                StopGrapple();
+                StopCoroutine(JointDestroyDelay());
+            }
             heldDownTime += Time.deltaTime;
             yield return new WaitForSeconds(0);
         }
