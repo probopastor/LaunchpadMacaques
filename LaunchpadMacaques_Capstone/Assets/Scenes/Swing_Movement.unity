@@ -390,6 +390,7 @@ GameObject:
   - component: {fileID: 71889243}
   - component: {fileID: 71889242}
   - component: {fileID: 71889241}
+  - component: {fileID: 71889244}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -568,6 +569,23 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &71889244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71889239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0feb8564bd1e7a418305d29ca4879ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grappleAimingDecal: {fileID: 8593126659679085998, guid: 8504b6a8de395544fb5dba7cd9b52963,
+    type: 3}
+  whatIsGrappleable:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &105957098
 GameObject:
   m_ObjectHideFlags: 0
