@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GrapplingGun : MonoBehaviour
 {
-
     private LineRenderer lr;
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
@@ -31,9 +30,9 @@ public class GrapplingGun : MonoBehaviour
 
     void Update()
     {
-        if(IsGrappling())
+        if (IsGrappling())
         {
-            if(joint.maxDistance <= 0)
+            if (joint.maxDistance <= 0)
             {
                 joint.maxDistance = 0;
             }
@@ -76,7 +75,7 @@ public class GrapplingGun : MonoBehaviour
             {
                 Rigidbody rb = rbHit.GetComponent<Rigidbody>();
 
-                if(rb != null)
+                if (rb != null)
                 {
                     rb.AddExplosionForce(explosionPower, explosionPos, explosionRadius, 0.0f, ForceMode.Impulse);
                 }
@@ -136,6 +135,9 @@ public class GrapplingGun : MonoBehaviour
 
     private Vector3 currentGrapplePosition;
 
+    /// <summary>
+    /// Draws the line from the grapple gun to the current grapple point.
+    /// </summary>
     void DrawRope()
     {
         //If not grappling, don't draw rope
@@ -147,11 +149,19 @@ public class GrapplingGun : MonoBehaviour
         lr.SetPosition(1, currentGrapplePosition);
     }
 
+    /// <summary>
+    /// Booleon function that determines if the player is grappleing or not.
+    /// </summary>
+    /// <returns></returns>
     public bool IsGrappling()
     {
         return joint != null;
     }
 
+    /// <summary>
+    /// Vector function that returns the grapple point
+    /// </summary>
+    /// <returns></returns>
     public Vector3 GetGrapplePoint()
     {
         return grapplePoint;
