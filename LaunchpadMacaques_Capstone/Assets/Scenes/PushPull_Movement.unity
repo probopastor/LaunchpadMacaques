@@ -1216,7 +1216,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 3.3166e-41, z: 0, w: -64}
+  m_BoundingSphereOverride: {x: 0, y: 4.8165e-41, z: 0, w: 9.403955e-38}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -4384,6 +4384,7 @@ GameObject:
   - component: {fileID: 2084724947}
   - component: {fileID: 2084724948}
   - component: {fileID: 2084724952}
+  - component: {fileID: 2084724953}
   m_Layer: 0
   m_Name: Hand
   m_TagString: Untagged
@@ -4597,7 +4598,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2084724945}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb23dfbe0fedde04286cf9f57b118d5e, type: 3}
   m_Name: 
@@ -4612,6 +4613,33 @@ MonoBehaviour:
   explosionPower: 10
   positionSpringForce: 200
   positionSpringDamper: 50
+  minJointTime: 0.08
+  grappleHasMax: 0
+  maxJointTime: 2
+--- !u!114 &2084724953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084724945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4431e8c98f2b3384d8e1778ae7fa8e1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whatIsGrappleable:
+    serializedVersion: 2
+    m_Bits: 256
+  gunTip: {fileID: 997001713}
+  camera: {fileID: 963194228}
+  player: {fileID: 142505806}
+  explosionRadius: 5
+  explosionPower: 10
+  pullSpringForce: 200
+  pullSpringDamper: 50
+  pushSpringForce: 350
+  pushSpringDamper: 300
 --- !u!1 &2145970067
 GameObject:
   m_ObjectHideFlags: 0
