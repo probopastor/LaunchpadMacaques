@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ConfigJoint : MonoBehaviour
 {
+    [SerializeField] private GameObject hitObject;
+    private GameObject hitObjectClone;
+
     private LineRenderer lr;
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
@@ -152,7 +155,12 @@ public class ConfigJoint : MonoBehaviour
 
             //Set Grapple target and mark point to pull to
             currentGrappleTarget = hit.collider.transform;
-            grapplePoint = hit.point;
+
+            hitObjectClone = Instantiate(hitObject);
+            hitObjectClone.transform.position = hit.point;
+            hitObjectClone.transform.parent = hit.transform;
+            grapplePoint = hitObjectClone.transform.position;
+
             currentGrappleTargetOffset = grapplePoint - currentGrappleTarget.position;
 
             lr.positionCount = 2;
@@ -251,14 +259,13 @@ public class ConfigJoint : MonoBehaviour
     /// </summary>
     void StopGrapple()
     {
+        Destroy(hitObjectClone.gameObject);
         isGrappling = false;
         currentGrappleTarget = null;
 
         lr.positionCount = 0;
         Destroy(joint);
     }
-
-
 
     void DrawRope()
     {
