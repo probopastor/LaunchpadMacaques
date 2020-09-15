@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class ConfigJoint : MonoBehaviour
 {
@@ -10,7 +11,6 @@ public class ConfigJoint : MonoBehaviour
     private Vector3 currentGrapplePosition;
     public Transform gunTip, camera, player;
     private float maxPullDistance = 100f;
-    private float maxPushDistance = 20f;
     private ConfigurableJoint joint;
     private RaycastHit grappleRayHit;
 
@@ -23,9 +23,8 @@ public class ConfigJoint : MonoBehaviour
     //Whether the player is currently Grappling
     private bool isGrappling = false;
 
-    [Header("Explosion Settings")]
-    public float explosionRadius = 5f;
-    public float explosionPower = 10.0f;
+    
+
 
     //this is the value that is updated every frame to set the grapples max distance equal to the player distance from the desired point by this value
 
@@ -39,7 +38,20 @@ public class ConfigJoint : MonoBehaviour
     [SerializeField] float pullSpringForce = 350;
     [SerializeField] float pullSpringDamper = 300;
 
-    [Header("Push - Spring Settings")]
+    [Header("Push Settings")]
+    [SerializeField, Tooltip("The maximum distance that the player is allowed to push from")]
+    private float maxPushDistance = 20f;
+    [SerializeField, Tooltip("The maximum time (in seconds) that the player can constantly push before being forced to stop")]
+    private float maxPushTime = 3f;
+    //Current time player has pushed out of max (Is an array so that it can be passed by reference through coroutine)
+    private float currentPushTime = 0;
+    [SerializeField, Tooltip("The delay (in seconds) between pushes ")]
+    private float pushDelay = 0.50f;
+    private float currentPushDelay = 0;
+    [SerializeField] private GameObject pushParticle;
+
+    [Space(10)]
+
     [SerializeField] float pushSpringForce = 350;
     [SerializeField] float pushSpringDamper = 300;
 
@@ -50,6 +62,8 @@ public class ConfigJoint : MonoBehaviour
 
     [Tooltip("The Max amount of time a joint will be connected for")]
     [SerializeField] float maxJointTime = 2;
+
+    private float[] currentCooldowns;
 
     void Awake()
     {
@@ -107,28 +121,6 @@ public class ConfigJoint : MonoBehaviour
         DrawRope();
     }
 
-    //adds explosion force to raycast point when called
-    void Explode()
-    {
-        print("Explode");
-        RaycastHit hit;
-        if (Physics.Raycast(camera.position, camera.forward, out hit, maxPullDistance, whatIsGrappleable))
-        {
-            Vector3 explosionPos = transform.position;
-            Collider[] colliders = Physics.OverlapSphere(explosionPos, explosionRadius);
-            foreach (Collider rbHit in colliders)
-            {
-                Rigidbody rb = rbHit.GetComponent<Rigidbody>();
-
-                if (rb != null)
-                {
-                    rb.AddExplosionForce(explosionPower, explosionPos, explosionRadius, 0.0f, ForceMode.Impulse);
-                }
-            }
-        }
-    }
-
-
     /// <summary>
     /// Call whenever we want to start a grapple
     /// </summary>
@@ -137,10 +129,11 @@ public class ConfigJoint : MonoBehaviour
 
         RaycastHit hit;
         //If pushing and there is a surface in front of the player for them to push off of
-        if (grappleType == GrappleType.Push && Physics.Raycast(camera.position, camera.forward, out hit, maxPushDistance, ~LayerMask.GetMask("CantPush")))
+        if (grappleType == GrappleType.Push && Physics.Raycast(camera.position, camera.forward, out hit, maxPushDistance, ~LayerMask.GetMask("CantPush"))
+            && CanPush())
         {
             isGrappling = true;
-
+            Instantiate(pushParticle, hit.point, Quaternion.LookRotation((camera.position - hit.point).normalized));
             lr.positionCount = 0;
         }
         //If pulling and there is a surface in front of the player in which they can grapple to
@@ -185,27 +178,32 @@ public class ConfigJoint : MonoBehaviour
     IEnumerator UpdateGrapplePosition(GrappleType grappleType)
     {
         RaycastHit hit;
-
+        
         while (isGrappling)
         {
             //Pushing
-            if (grappleType == GrappleType.Push && Physics.Raycast(camera.position, camera.forward, out hit, maxPushDistance, ~LayerMask.GetMask("CantPush")))
+            if (grappleType == GrappleType.Push && Physics.Raycast(camera.position, camera.forward, out hit, maxPushDistance, ~LayerMask.GetMask("CantPush"))
+                && CanPush())
             {
                 //Update grapple point to arbitrary point behind player
                 grapplePoint = hit.point + -(camera.forward * maxPushDistance);
+                //Spawn a particle every 10th frame
+                if(Time.frameCount % 10 == 0)
+                    Instantiate(pushParticle, hit.point, Quaternion.LookRotation((camera.position - hit.point).normalized));
+                currentPushTime += Time.deltaTime;
             }
             else if (grappleType == GrappleType.Push)
             {
+                StartCoroutine(PushDelay());
                 StopGrapple();
             }
             //Pulling
-            else if (grappleType == GrappleType.Pull)
+            else if (grappleType == GrappleType.Pull && currentGrappleTarget != null)
             {
                 //Update grapple point to the target + original offset
                 grapplePoint = currentGrappleTarget.position + currentGrappleTargetOffset;
                 StartCoroutine(JointDestroyDelay());
             }
-
 
             //Update Joint
             joint.connectedAnchor = grapplePoint;
@@ -218,6 +216,7 @@ public class ConfigJoint : MonoBehaviour
 
             yield return null;
         }
+           
     }
 
     /// <summary>
@@ -244,6 +243,35 @@ public class ConfigJoint : MonoBehaviour
         }
 
         StopGrapple();
+    }
+
+
+    //IEnumerator PushCooldown()
+    //{
+    //    while (currentPushTime != 0)
+    //    {
+    //        currentPushTime = Mathf.Clamp(currentPushTime - Time.deltaTime, 0, MAX_PUSH_TIME);
+    //        yield return null;
+    //    }
+    //}
+
+    /// <summary>
+    /// Handles the short delay cooldown between pushes
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator PushDelay()
+    {
+        //Set push delay to max and count down
+        currentPushDelay = pushDelay;
+
+        while(currentPushDelay != 0)
+        {
+            currentPushDelay = Mathf.Clamp(currentPushDelay - Time.deltaTime, 0, pushDelay);
+            yield return null;
+        }
+
+        //Reset Push Time for next Push
+        currentPushTime = 0;
     }
 
     /// <summary>
@@ -273,9 +301,14 @@ public class ConfigJoint : MonoBehaviour
         lr.SetPosition(1, currentGrapplePosition);
     }
 
+    public bool CanPush()
+    {
+        return (currentPushTime < maxPushTime) && (currentPushDelay == 0f);
+    }
+
     public bool IsGrappling()
     {
-        return joint != null;
+        return joint != null && isGrappling;
     }
 
     public Vector3 GetGrapplePoint()
