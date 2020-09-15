@@ -86,7 +86,6 @@ public class ConfigJoint : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !isGrappling)
         {
-
             StartGrapple(GrappleType.Pull);
         }
         //else if (Input.GetMouseButtonUp(0))
@@ -259,7 +258,11 @@ public class ConfigJoint : MonoBehaviour
     /// </summary>
     void StopGrapple()
     {
-        Destroy(hitObjectClone.gameObject);
+        if(hitObjectClone)
+        {
+            Destroy(hitObjectClone.gameObject);
+        }
+
         isGrappling = false;
         currentGrappleTarget = null;
 
