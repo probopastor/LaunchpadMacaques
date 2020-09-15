@@ -5,6 +5,9 @@ using UnityEngine.Playables;
 
 public class ConfigJoint : MonoBehaviour
 {
+    [SerializeField] private GameObject hitObject;
+    private GameObject hitObjectClone;
+
     private LineRenderer lr;
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
@@ -68,6 +71,12 @@ public class ConfigJoint : MonoBehaviour
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
+
+        if (joint)
+        {
+            Debug.Log("Joint was created on awake");
+            Destroy(joint);
+        }
     }
 
     /// <summary>
@@ -97,7 +106,6 @@ public class ConfigJoint : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !isGrappling)
         {
-
             StartGrapple(GrappleType.Pull);
         }
         //else if (Input.GetMouseButtonUp(0))
@@ -111,6 +119,12 @@ public class ConfigJoint : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(1))
         {
+            StopGrapple();
+        }
+
+        if(lr == null && joint)
+        {
+            Debug.Log("Line Render Was Dead but Joint was still there");
             StopGrapple();
         }
     }
@@ -145,13 +159,18 @@ public class ConfigJoint : MonoBehaviour
 
             //Set Grapple target and mark point to pull to
             currentGrappleTarget = hit.collider.transform;
-            grapplePoint = hit.point;
+
+            hitObjectClone = Instantiate(hitObject);
+            hitObjectClone.transform.position = hit.point;
+            hitObjectClone.transform.parent = hit.transform;
+            grapplePoint = hitObjectClone.transform.position;
+
             currentGrappleTargetOffset = grapplePoint - currentGrappleTarget.position;
 
             lr.positionCount = 2;
             currentGrapplePosition = gunTip.position;
 
-            //StartCoroutine(JointDestroyDelay());
+            StartCoroutine(JointDestroyDelay());
         }
 
         //Not able to pull or push
@@ -202,7 +221,7 @@ public class ConfigJoint : MonoBehaviour
             {
                 //Update grapple point to the target + original offset
                 grapplePoint = currentGrappleTarget.position + currentGrappleTargetOffset;
-                StartCoroutine(JointDestroyDelay());
+                //StartCoroutine(JointDestroyDelay());
             }
 
             //Update Joint
@@ -279,14 +298,17 @@ public class ConfigJoint : MonoBehaviour
     /// </summary>
     void StopGrapple()
     {
+        if(hitObjectClone)
+        {
+            Destroy(hitObjectClone.gameObject);
+        }
+
         isGrappling = false;
         currentGrappleTarget = null;
 
         lr.positionCount = 0;
         Destroy(joint);
     }
-
-
 
     void DrawRope()
     {
@@ -322,7 +344,7 @@ public class ConfigJoint : MonoBehaviour
     /// <returns></returns>
     public float GetMaxGrappleDistance()
     {
-        return maxPushDistance;
+        return maxPullDistance;
     }
 
     /// <summary>
