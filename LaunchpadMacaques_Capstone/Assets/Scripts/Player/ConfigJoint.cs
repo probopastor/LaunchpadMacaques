@@ -57,6 +57,12 @@ public class ConfigJoint : MonoBehaviour
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
+
+        if (joint)
+        {
+            Debug.Log("Joint was created on awake");
+            Destroy(joint);
+        }
     }
 
     /// <summary>
@@ -99,6 +105,12 @@ public class ConfigJoint : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(1))
         {
+            StopGrapple();
+        }
+
+        if(lr == null && joint)
+        {
+            Debug.Log("Line Render Was Dead but Joint was still there");
             StopGrapple();
         }
     }

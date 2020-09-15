@@ -31,6 +31,12 @@ public class GrapplingGun : MonoBehaviour
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
+
+        if (joint)
+        {
+            Debug.Log("Joint was created on awake");
+            Destroy(joint);
+        }
     }
 
     void Update()
@@ -62,6 +68,12 @@ public class GrapplingGun : MonoBehaviour
         //{
         //    Explode();
         //}
+
+        if (lr == null && joint)
+        {
+            Debug.Log("Line Render Was Dead but Joint was still there");
+            StopGrapple();
+        }
     }
 
     //Called after Update
