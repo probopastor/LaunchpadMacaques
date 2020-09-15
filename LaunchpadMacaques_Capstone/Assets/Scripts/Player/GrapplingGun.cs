@@ -148,6 +148,7 @@ public class GrapplingGun : MonoBehaviour
 
             lr.positionCount = 2;
             currentGrapplePosition = hitObjectClone.transform.position;
+            GetComponent<FMODUnity.StudioEventEmitter>().Play();
         }
     }
 

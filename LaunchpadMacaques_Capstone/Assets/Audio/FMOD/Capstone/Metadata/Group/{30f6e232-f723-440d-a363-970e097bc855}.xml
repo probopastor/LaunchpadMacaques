@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="MixerGroup" id="{30f6e232-f723-440d-a363-970e097bc855}">
+		<property name="name">
+			<value>Medium Whistle</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{4d14b452-9ba9-4cc1-9dc4-1d81542fea5a}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{07081234-922c-4e71-b204-e45d69ab8daa}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{fdccf937-e24b-447d-a70c-01db63142635}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{4d14b452-9ba9-4cc1-9dc4-1d81542fea5a}">
+		<relationship name="effects">
+			<destination>{980caf99-f7aa-4c77-81e7-d65f4f9bd919}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{07081234-922c-4e71-b204-e45d69ab8daa}" />
+	<object class="MixerBusFader" id="{980caf99-f7aa-4c77-81e7-d65f4f9bd919}" />
+</objects>

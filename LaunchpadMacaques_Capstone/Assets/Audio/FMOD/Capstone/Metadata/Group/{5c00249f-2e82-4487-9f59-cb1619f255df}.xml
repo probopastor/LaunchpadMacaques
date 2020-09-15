@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="MixerGroup" id="{5c00249f-2e82-4487-9f59-cb1619f255df}">
+		<property name="name">
+			<value>High Whistle</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{89e0a8d5-061b-425e-a12b-7e9dd18a36c4}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{71d98f2e-e21c-499a-b3b3-f3f428aec7e2}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{fdccf937-e24b-447d-a70c-01db63142635}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{89e0a8d5-061b-425e-a12b-7e9dd18a36c4}">
+		<relationship name="effects">
+			<destination>{b6d3918e-0b48-4eec-a0fa-da2f7faed2ae}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{71d98f2e-e21c-499a-b3b3-f3f428aec7e2}" />
+	<object class="MixerBusFader" id="{b6d3918e-0b48-4eec-a0fa-da2f7faed2ae}" />
+</objects>
