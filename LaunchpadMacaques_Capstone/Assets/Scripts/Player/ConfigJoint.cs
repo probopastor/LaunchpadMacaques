@@ -289,7 +289,7 @@ public class ConfigJoint : MonoBehaviour
     /// <returns></returns>
     public float GetMaxGrappleDistance()
     {
-        return maxPushDistance;
+        return maxPullDistance;
     }
 
     /// <summary>
