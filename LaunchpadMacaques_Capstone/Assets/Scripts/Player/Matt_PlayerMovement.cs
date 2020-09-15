@@ -4,51 +4,81 @@ using UnityEngine;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
+    [SerializeField]
+    private GrapplingGun grappleGunReference;
 
+    [Header("Player Transform Assignables")]
     //Assingables
     public Transform playerCam;
     public Transform orientation;
 
+    [Header("Player Rigidbody")]
     //Other
+    [SerializeField]
     private Rigidbody rb;
 
+    [Header("Player Rotation and Look")]
     //Rotation and look
+    [SerializeField]
     private float xRotation;
+    [SerializeField]
     private float sensitivity = 50f;
+    [SerializeField]
     private float sensMultiplier = 1f;
 
+    [Header("PLayer Movement Variables")]
     //Movement
     public float moveSpeed = 4500;
     public float maxSpeed = 20;
     public bool grounded;
     public LayerMask whatIsGround;
 
+    [Header("Max Player Velocity")]
+    // Max velocity for the character
+    [SerializeField]
+    private float maxVelocity = 50f;
+
+    [Header("Counter Movement")]
     public float counterMovement = 0.175f;
+    [SerializeField]
     private float threshold = 0.01f;
     public float maxSlopeAngle = 35f;
 
+    [Header("Crouch & Slide")]
     //Crouch & Slide
+    [SerializeField]
     private Vector3 crouchScale = new Vector3(1, 0.5f, 1);
+    [SerializeField]
     private Vector3 playerScale;
     public float slideForce = 400;
     public float slideCounterMovement = 0.2f;
 
+    //Sliding
+    [SerializeField]
+    private Vector3 normalVector = Vector3.up;
+    [SerializeField]
+    private Vector3 wallNormalVector;
+
+    [Header("Jumping")]
     //Jumping
+    [SerializeField]
     private bool readyToJump = true;
+    [SerializeField]
     private float jumpCooldown = 0.25f;
     public float jumpForce = 550f;
     public float gravity = 1100;
 
+    [Header("Sprinting")]
     //Sprinting
+    [SerializeField]
     private bool readyToSprint = true;
 
+    [Header("Player Input")]
     //Input
-    float x, y;
-    bool jumping, sprinting, crouching;
-
-    //Sliding
-    private Vector3 normalVector = Vector3.up;
-    private Vector3 wallNormalVector;
+    [SerializeField]
+    private float x, y;
+    [SerializeField]
+    private bool jumping, sprinting, crouching;
 
     void Awake()
     {
@@ -62,10 +92,10 @@ public class Matt_PlayerMovement : MonoBehaviour
         Cursor.visible = false;
     }
 
-
     private void FixedUpdate()
     {
         Movement();
+        LimitVelocity();
     }
 
     private void Update()
@@ -74,8 +104,10 @@ public class Matt_PlayerMovement : MonoBehaviour
         Look();
     }
 
+    #region Input
+
     /// <summary>
-    /// Find user input. Should put this in its own class but im lazy
+    /// Find user input. Should put this in its own class but im lazy.
     /// </summary>
     private void MyInput()
     {
@@ -98,6 +130,10 @@ public class Matt_PlayerMovement : MonoBehaviour
             StopSprint();
     }
 
+    #endregion
+
+    #region Crouching Stuff
+
     private void StartCrouch()
     {
         transform.localScale = crouchScale;
@@ -117,11 +153,35 @@ public class Matt_PlayerMovement : MonoBehaviour
         transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
     }
 
+    #endregion
+
+    /// <summary>
+    /// This function limits the velocity of the player so they can't just increase speed into oblivion.
+    /// </summary>
+    private void LimitVelocity()
+    {
+        if (rb.velocity.magnitude > maxVelocity)
+        {
+            rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxVelocity);
+        }
+    }
+
+    #region Movement
+
     private void Movement()
     {
-
-        //Add gravity
-        rb.AddForce(Vector3.down * Time.deltaTime * gravity);
+        if (!grappleGunReference.IsGrappling() && !grounded && (gameObject.transform.position.y > 20)) // If in the air
+        {
+            //Add gravity
+            gravity = 3000;
+            rb.AddForce(Vector3.down * Time.deltaTime * gravity);
+        }
+        else
+        {
+            //Add gravity
+            gravity = 1500;
+            rb.AddForce(Vector3.down * Time.deltaTime * gravity);
+        }
 
         //Find actual velocity relative to where player is looking
         Vector2 mag = FindVelRelativeToLook();
@@ -170,6 +230,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
     }
 
+    #endregion
+
+    #region Sprinting Stuff
     //sprinting
     private void Sprint()
     {
@@ -185,6 +248,10 @@ public class Matt_PlayerMovement : MonoBehaviour
         maxSpeed = 5;
         readyToSprint = true;
     }
+
+    #endregion
+
+    #region Jumping Stuff
 
     private void Jump()
     {
@@ -211,6 +278,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         readyToJump = true;
     }
+
+    #endregion
 
     private float desiredX;
     private void Look()

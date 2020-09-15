@@ -513,20 +513,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9da04c29a428ccc42a46cde9baf6bfdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grappleGunReference: {fileID: 2084724947}
   playerCam: {fileID: 1063995556}
   orientation: {fileID: 1733823668}
+  rb: {fileID: 0}
+  xRotation: 0
+  sensitivity: 50
+  sensMultiplier: 1
   moveSpeed: 4500
   maxSpeed: 10
   grounded: 0
   whatIsGround:
     serializedVersion: 2
     m_Bits: 256
+  maxVelocity: 50
   counterMovement: 0.175
+  threshold: 0.01
   maxSlopeAngle: 35
+  crouchScale: {x: 1, y: 0.5, z: 1}
+  playerScale: {x: 0, y: 0, z: 0}
   slideForce: 400
   slideCounterMovement: 0.2
+  normalVector: {x: 0, y: 1, z: 0}
+  wallNormalVector: {x: 0, y: 0, z: 0}
+  readyToJump: 1
+  jumpCooldown: 0.25
   jumpForce: 550
   gravity: 1100
+  readyToSprint: 1
+  x: 0
+  y: 0
+  jumping: 0
+  sprinting: 0
+  crouching: 0
 --- !u!1 &149718433
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,7 +1235,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 9.78e-43, y: 1.551e-42, z: 0, w: 391.1682}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 4.3e-44}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
