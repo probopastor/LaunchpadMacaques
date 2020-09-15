@@ -45,6 +45,8 @@ public class GrapplingGun : MonoBehaviour
             {
                 joint.maxDistance = distanceFromPoint - grappleSpeed * Time.deltaTime;
             }
+
+            grapplePoint = hitObjectClone.transform.position;
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -133,7 +135,7 @@ public class GrapplingGun : MonoBehaviour
             //joint.massScale = 4.5f;
 
             lr.positionCount = 2;
-            currentGrapplePosition = gunTip.position;
+            currentGrapplePosition = hitObjectClone.transform.position;
         }
     }
 
