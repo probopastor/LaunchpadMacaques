@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GrapplingGun : MonoBehaviour
 {
+    [SerializeField] private GameObject hitObject;
+    private GameObject hitObjectClone;
+
     private LineRenderer lr;
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
@@ -95,7 +98,13 @@ public class GrapplingGun : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
         {
-            grapplePoint = hit.point;
+
+            hitObjectClone = Instantiate(hitObject);
+            hitObjectClone.transform.position = hit.point;
+            hitObjectClone.transform.parent = hit.transform;
+            grapplePoint = hitObjectClone.transform.position;
+
+            //grapplePoint = hit.point;
             grappleRayHit = hit;
 
             joint = player.gameObject.AddComponent<SpringJoint>();

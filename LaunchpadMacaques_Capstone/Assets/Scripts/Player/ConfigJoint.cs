@@ -166,7 +166,7 @@ public class ConfigJoint : MonoBehaviour
             lr.positionCount = 2;
             currentGrapplePosition = gunTip.position;
 
-            //StartCoroutine(JointDestroyDelay());
+            StartCoroutine(JointDestroyDelay());
         }
 
         //Not able to pull or push
@@ -211,7 +211,7 @@ public class ConfigJoint : MonoBehaviour
             {
                 //Update grapple point to the target + original offset
                 grapplePoint = currentGrappleTarget.position + currentGrappleTargetOffset;
-                StartCoroutine(JointDestroyDelay());
+                //StartCoroutine(JointDestroyDelay());
             }
 
 
