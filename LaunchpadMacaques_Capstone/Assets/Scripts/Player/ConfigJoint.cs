@@ -45,11 +45,11 @@ public class ConfigJoint : MonoBehaviour
     [SerializeField, Tooltip("The maximum distance that the player is allowed to push from")]
     private float maxPushDistance = 20f;
     [SerializeField, Tooltip("The maximum time (in seconds) that the player can constantly push before being forced to stop")]
-    private float maxPushTime = 3f;
-    //Current time player has pushed out of max (Is an array so that it can be passed by reference through coroutine)
+    private float maxPushTime = 2f;
+    //Current time player has pushed out of max
     private float currentPushTime = 0;
     [SerializeField, Tooltip("The delay (in seconds) between pushes ")]
-    private float pushDelay = 0.50f;
+    private float pushDelay = 1.25f;
     private float currentPushDelay = 0;
     [SerializeField] private GameObject pushParticle;
 
@@ -213,7 +213,6 @@ public class ConfigJoint : MonoBehaviour
             }
             else if (grappleType == GrappleType.Push)
             {
-                StartCoroutine(PushDelay());
                 StopGrapple();
             }
             //Pulling
@@ -235,6 +234,9 @@ public class ConfigJoint : MonoBehaviour
 
             yield return null;
         }
+
+        if (grappleType == GrappleType.Push)
+            StartCoroutine(PushDelay());
            
     }
 
@@ -263,16 +265,6 @@ public class ConfigJoint : MonoBehaviour
 
         StopGrapple();
     }
-
-
-    //IEnumerator PushCooldown()
-    //{
-    //    while (currentPushTime != 0)
-    //    {
-    //        currentPushTime = Mathf.Clamp(currentPushTime - Time.deltaTime, 0, MAX_PUSH_TIME);
-    //        yield return null;
-    //    }
-    //}
 
     /// <summary>
     /// Handles the short delay cooldown between pushes

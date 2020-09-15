@@ -1235,7 +1235,8 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 4.3e-44}
+  m_BoundingSphereOverride: {x: 1.8178569e+31, y: 2.0703489e-19, z: 1.2119491e+25,
+    w: 4.5447432e+30}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -4647,12 +4648,15 @@ MonoBehaviour:
   gunTip: {fileID: 997001713}
   camera: {fileID: 963194228}
   player: {fileID: 142505806}
-  explosionRadius: 5
-  explosionPower: 10
   pullSpringForce: 350
   pullSpringDamper: 300
+  maxPushDistance: 20
+  maxPushTime: 2
+  pushDelay: 1.25
+  pushParticle: {fileID: 7030930879666007775, guid: 65aca912000f13b4190e49ef66b37d9f,
+    type: 3}
   pushSpringForce: 350
-  pushSpringDamper: 300
+  pushSpringDamper: 200
   minJointTime: 0.08
   grappleHasMax: 0
   maxJointTime: 2
