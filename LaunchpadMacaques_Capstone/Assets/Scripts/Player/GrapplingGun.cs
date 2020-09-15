@@ -31,6 +31,12 @@ public class GrapplingGun : MonoBehaviour
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
+
+        if (joint)
+        {
+            Debug.Log("Joint was created on awake");
+            Destroy(joint);
+        }
     }
 
     void Update()
@@ -45,7 +51,10 @@ public class GrapplingGun : MonoBehaviour
             {
                 joint.maxDistance = distanceFromPoint - grappleSpeed * Time.deltaTime;
             }
+
+            grapplePoint = hitObjectClone.transform.position;
         }
+
         if (Input.GetMouseButtonDown(0))
         {
             StartGrapple();
@@ -55,9 +64,15 @@ public class GrapplingGun : MonoBehaviour
             StopGrapple();
         }
 
-        if (Input.GetMouseButtonDown(1))
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    Explode();
+        //}
+
+        if (lr == null && joint)
         {
-            Explode();
+            Debug.Log("Line Render Was Dead but Joint was still there");
+            StopGrapple();
         }
     }
 
@@ -98,14 +113,13 @@ public class GrapplingGun : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
         {
+            //grapplePoint = hit.point;
+            grappleRayHit = hit;
 
             hitObjectClone = Instantiate(hitObject);
             hitObjectClone.transform.position = hit.point;
             hitObjectClone.transform.parent = hit.transform;
             grapplePoint = hitObjectClone.transform.position;
-
-            //grapplePoint = hit.point;
-            grappleRayHit = hit;
 
             joint = player.gameObject.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
@@ -133,7 +147,7 @@ public class GrapplingGun : MonoBehaviour
             //joint.massScale = 4.5f;
 
             lr.positionCount = 2;
-            currentGrapplePosition = gunTip.position;
+            currentGrapplePosition = hitObjectClone.transform.position;
         }
     }
 
@@ -142,6 +156,11 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     void StopGrapple()
     {
+        if (hitObjectClone)
+        {
+            Destroy(hitObjectClone.gameObject);
+        }
+
         lr.positionCount = 0;
         Destroy(joint);
     }
@@ -156,7 +175,9 @@ public class GrapplingGun : MonoBehaviour
         //If not grappling, don't draw rope
         if (!joint) return;
 
-        currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, grapplePoint, Time.deltaTime * 8f);
+        if (lr.positionCount == 0) return;
+
+        currentGrapplePosition = grapplePoint;
 
         lr.SetPosition(0, gunTip.position);
         lr.SetPosition(1, currentGrapplePosition);

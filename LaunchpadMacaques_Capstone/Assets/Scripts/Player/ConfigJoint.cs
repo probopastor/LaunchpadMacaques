@@ -57,6 +57,12 @@ public class ConfigJoint : MonoBehaviour
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
+
+        if (joint)
+        {
+            Debug.Log("Joint was created on awake");
+            Destroy(joint);
+        }
     }
 
     /// <summary>
@@ -86,7 +92,6 @@ public class ConfigJoint : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !isGrappling)
         {
-
             StartGrapple(GrappleType.Pull);
         }
         //else if (Input.GetMouseButtonUp(0))
@@ -100,6 +105,12 @@ public class ConfigJoint : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(1))
         {
+            StopGrapple();
+        }
+
+        if(lr == null && joint)
+        {
+            Debug.Log("Line Render Was Dead but Joint was still there");
             StopGrapple();
         }
     }
@@ -259,7 +270,11 @@ public class ConfigJoint : MonoBehaviour
     /// </summary>
     void StopGrapple()
     {
-        Destroy(hitObjectClone.gameObject);
+        if(hitObjectClone)
+        {
+            Destroy(hitObjectClone.gameObject);
+        }
+
         isGrappling = false;
         currentGrappleTarget = null;
 
