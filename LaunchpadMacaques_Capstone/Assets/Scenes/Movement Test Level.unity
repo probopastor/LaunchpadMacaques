@@ -694,7 +694,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 5.5e-44, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 4.53e-43, y: 9.01e-43, z: 0, w: -3.796557e-12}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -1284,6 +1284,7 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194229}
   - component: {fileID: 963194230}
+  - component: {fileID: 963194231}
   - component: {fileID: 963194226}
   m_Layer: 0
   m_Name: Main Camera
@@ -1475,9 +1476,26 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e34a9270097736d49b39ccecbc71d15e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grappleAimingDecal: {fileID: 8593126659679085998, guid: 8504b6a8de395544fb5dba7cd9b52963,
+    type: 3}
+  whatIsGrappleable:
+    serializedVersion: 2
+    m_Bits: 256
+--- !u!114 &963194231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0feb8564bd1e7a418305d29ca4879ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   grappleAimingDecal: {fileID: 8593126659679085998, guid: 8504b6a8de395544fb5dba7cd9b52963,
@@ -2076,10 +2094,9 @@ GameObject:
   - component: {fileID: 2084724951}
   - component: {fileID: 2084724950}
   - component: {fileID: 2084724949}
-  - component: {fileID: 2084724947}
   - component: {fileID: 2084724948}
+  - component: {fileID: 2084724947}
   - component: {fileID: 2084724952}
-  - component: {fileID: 2084724953}
   - component: {fileID: 2084724954}
   m_Layer: 0
   m_Name: Hand
@@ -2110,12 +2127,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2084724945}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2db3bcdbec063fc439e4e9bea7338987, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitObject: {fileID: 0}
+  hitObject: {fileID: 1736345935115610924, guid: 0294f38c6695ef344b4efa4c29f1c223,
+    type: 3}
   whatIsGrappleable:
     serializedVersion: 2
     m_Bits: 256
@@ -2293,7 +2311,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2084724945}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb23dfbe0fedde04286cf9f57b118d5e, type: 3}
   m_Name: 
@@ -2315,31 +2333,6 @@ MonoBehaviour:
     type: 3}
   pushSpringForce: 350
   pushSpringDamper: 200
-  minJointTime: 0.08
-  grappleHasMax: 0
-  maxJointTime: 2
---- !u!114 &2084724953
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2084724945}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4431e8c98f2b3384d8e1778ae7fa8e1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  whatIsGrappleable:
-    serializedVersion: 2
-    m_Bits: 256
-  gunTip: {fileID: 997001713}
-  camera: {fileID: 963194228}
-  player: {fileID: 142505806}
-  explosionRadius: 5
-  explosionPower: 10
-  positionSpringForce: 350
-  positionSpringDamper: 300
   minJointTime: 0.08
   grappleHasMax: 0
   maxJointTime: 2
