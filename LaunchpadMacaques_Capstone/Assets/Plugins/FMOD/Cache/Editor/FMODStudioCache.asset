@@ -52,6 +52,23 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &-8431458877325833083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Landing/Magnitude
+  m_EditorClassIdentifier: 
+  Name: Magnitude
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
 --- !u!114 &-7972436314357378171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,7 +191,8 @@ MonoBehaviour:
   Path: event:/Grapple
   guid: 5013f26025e5ea4698116df0fee6c08c
   Banks:
-  - {fileID: -150188919383762906}
+  - {fileID: 755953198790002995}
+  - {fileID: 4409588535137973287}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -199,6 +217,23 @@ MonoBehaviour:
   lastModified: 637356257731544009
   LoadResult: 0
   FileSizes: []
+  Exists: 0
+--- !u!114 &-5618049985121620651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Swinging/Magnitude
+  m_EditorClassIdentifier: 
+  Name: Magnitude
+  Min: 0
+  Max: 1
+  Default: 0
   Exists: 0
 --- !u!114 &-5468588239913616411
 MonoBehaviour:
@@ -496,6 +531,23 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 1
+--- !u!114 &-1352538736948899808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Walking/Magnitude
+  m_EditorClassIdentifier: 
+  Name: Magnitude
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 0
 --- !u!114 &-1242184915401525709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -545,12 +597,13 @@ MonoBehaviour:
   Path: event:/Walking
   guid: fe01894a42db7a468fa0ae3562a75ac1
   Banks:
-  - {fileID: -150188919383762906}
+  - {fileID: 755953198790002995}
+  - {fileID: 4409588535137973287}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
   Parameters:
-  - {fileID: -2146012097367316959}
+  - {fileID: 6311771567505026996}
   MinDistance: 1
   MaxDistance: 20
   Length: 250
@@ -708,7 +761,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: 3899874459530867832}
-  - {fileID: -150188919383762906}
+  - {fileID: 4409588535137973287}
   EditorEvents:
   - {fileID: -6356810551894553891}
   - {fileID: 7399515937746968955}
@@ -716,11 +769,29 @@ MonoBehaviour:
   - {fileID: -784586566653921646}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -150188919383762906}
+  - {fileID: 4409588535137973287}
   StringsBanks:
   - {fileID: 3899874459530867832}
-  stringsBankWriteTime: 637357804844223062
+  stringsBankWriteTime: 637357859073709365
   cacheVersion: 3
+--- !u!114 &755953198790002995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Audio/FMOD/Capstone/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637357859073233419
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &1323216874867591943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -909,15 +980,33 @@ MonoBehaviour:
   Path: event:/Landing
   guid: 665b1696597d3c49889575455bd1e619
   Banks:
-  - {fileID: -150188919383762906}
+  - {fileID: 755953198790002995}
+  - {fileID: 4409588535137973287}
   IsStream: 0
   Is3D: 1
   IsOneShot: 0
   Parameters:
-  - {fileID: 7286730497259311303}
+  - {fileID: -8431458877325833083}
   MinDistance: 1
   MaxDistance: 20
   Length: 592
+--- !u!114 &2865183528708486730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Landing/Magnitude
+  m_EditorClassIdentifier: 
+  Name: Magnitude
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 0
 --- !u!114 &3267844607371126332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1002,7 +1091,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: Assets/Audio/FMOD/Capstone/Build/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637357804844223062
+  lastModified: 637357859073709365
   LoadResult: 0
   FileSizes:
   - Name: Desktop
@@ -1025,6 +1114,24 @@ MonoBehaviour:
   Max: 1
   Default: 0
   Exists: 0
+--- !u!114 &4409588535137973287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Audio/FMOD/Capstone/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637357859073233419
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &4483990660017085050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1043,6 +1150,23 @@ MonoBehaviour:
   Default: 0
   Exists: 0
 --- !u!114 &4619538959374539220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Swinging/Magnitude
+  m_EditorClassIdentifier: 
+  Name: Magnitude
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
+--- !u!114 &5241193754503670267
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1146,6 +1270,23 @@ MonoBehaviour:
   Max: 1
   Default: 0
   Exists: 0
+--- !u!114 &6311771567505026996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Walking/Magnitude
+  m_EditorClassIdentifier: 
+  Name: Magnitude
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
 --- !u!114 &6651215786638817247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1229,12 +1370,13 @@ MonoBehaviour:
   Path: event:/Swinging
   guid: 9b1b5a3a90e8b248bba1e11391a417a4
   Banks:
-  - {fileID: -150188919383762906}
+  - {fileID: 755953198790002995}
+  - {fileID: 4409588535137973287}
   IsStream: 0
   Is3D: 1
   IsOneShot: 0
   Parameters:
-  - {fileID: 1584077135770249420}
+  - {fileID: 5241193754503670267}
   MinDistance: 1
   MaxDistance: 20
   Length: 3500
