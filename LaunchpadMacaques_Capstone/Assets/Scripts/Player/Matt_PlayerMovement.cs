@@ -80,9 +80,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField]
     private bool jumping, sprinting, crouching;
 
+    private PauseManager pauseManager;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        pauseManager = FindObjectOfType<PauseManager>();
     }
 
     void Start()
@@ -100,8 +103,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        MyInput();
-        Look();
+        if(!pauseManager.GetPaused())
+        {
+            MyInput();
+            Look();
+        }
     }
 
     #region Input
