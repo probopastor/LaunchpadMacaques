@@ -82,7 +82,7 @@ public class PauseManager : MonoBehaviour
     public void ToMainMenu()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene("mainMenuScene");
+        SceneManager.LoadScene(mainMenuScene);
     }
 
     public void SetGameLost()
