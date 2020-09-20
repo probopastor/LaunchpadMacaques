@@ -9,26 +9,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SocialPlatforms.Impl;
+using UnityStandardAssets._2D;
 
 public class CollectibleController : MonoBehaviour
 {
     public int totalCollectibles;
     public TextMeshProUGUI totalCollectiblesText;
+    private int totalSpheres;
+    private PauseManager pauseManager;
 
     // Start is called before the first frame update
     void Start()
     {
+        pauseManager = FindObjectOfType<PauseManager>();
         totalCollectiblesText.SetText("Total Collectibles: 0 / " + FindObjectsOfType<CollectibleSphereScript>().Length);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        totalSpheres = FindObjectsOfType<CollectibleSphereScript>().Length;
     }
 
     public int GetTotalCollectibles()
     {
         return totalCollectibles;
+    }
+
+    public void AddToTotalCollectibles(int plusOne)
+    {
+        totalCollectibles += plusOne;
+        totalCollectiblesText.SetText("Total Collectibles: " + totalCollectibles + " / " + totalSpheres);
+
+        if(totalCollectibles >= totalSpheres)
+        {
+            pauseManager.SetGameWin();
+        }
     }
 }

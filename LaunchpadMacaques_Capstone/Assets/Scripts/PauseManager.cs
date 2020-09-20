@@ -16,14 +16,16 @@ public class PauseManager : MonoBehaviour
 {
     private bool paused;
     private bool gameLost;
+    private bool gameWon;
 
     [SerializeField] private string thisScene;
     [SerializeField] private string mainMenuScene;
 
     [SerializeField] private GameObject PauseCanvas;
     //[SerializeField] private GameObject LoseCanvas;
-    //[SerializeField] private GameObject WinCanvas;
+    [SerializeField] private GameObject WinCanvas;
     [SerializeField] private GameObject CursorCanvas;
+    [SerializeField] private GameObject UICanvas;
 
     // Start is called before the first frame update
     void Start()
@@ -32,9 +34,11 @@ public class PauseManager : MonoBehaviour
         gameLost = false;
 
         paused = false;
+        gameWon = false;
         PauseCanvas.SetActive(false);
         //LoseCanvas.SetActive(false);
-        //WinCanvas.SetActive(false);
+        WinCanvas.SetActive(false);
+        UICanvas.SetActive(true);
     }
 
     // Update is called once per frame
@@ -42,7 +46,7 @@ public class PauseManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!gameLost)
+            if (!gameLost && !gameWon)
             {
                 PauseGame();
             }
@@ -94,13 +98,22 @@ public class PauseManager : MonoBehaviour
 
     public void SetGameWin()
     {
-        //WinCanvas.SetActive(true);
+        gameWon = true;
+        WinCanvas.SetActive(true);
+        UICanvas.SetActive(false);
         Time.timeScale = 0;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public bool GetPaused()
     {
         return paused;
+    }
+
+    public bool GetGameWon()
+    {
+        return gameWon;
     }
 
     public bool GetGameLost()
