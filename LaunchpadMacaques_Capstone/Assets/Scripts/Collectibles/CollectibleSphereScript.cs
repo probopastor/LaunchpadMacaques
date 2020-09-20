@@ -18,9 +18,15 @@ public class CollectibleSphereScript : MonoBehaviour
     private CollectibleController collectibleController;
     private int plusOne = 1;
 
+    private int totalSpheres;
+
     private void Awake()
     {
-        collectibleController = GameObject.Find("Collectible Controller").GetComponent<CollectibleController>();
+        // collectibleController = GameObject.Find("Collectible Controller").GetComponent<CollectibleController>();
+        collectibleController = FindObjectOfType<CollectibleController>();
+
+        totalSpheres = FindObjectsOfType<CollectibleSphereScript>().Length;
+
     }
 
     private void Collect()
@@ -35,7 +41,7 @@ public class CollectibleSphereScript : MonoBehaviour
 
         totalCollectibles= collectibleController.totalCollectibles = collectibleController.GetTotalCollectibles() + plusOne;
 
-        collectibleController.totalCollectiblesText.SetText("Total Collectibles: " + totalCollectibles);
+        collectibleController.totalCollectiblesText.SetText("Total Collectibles: " + totalCollectibles + " / " + totalSpheres);
 
     }
 

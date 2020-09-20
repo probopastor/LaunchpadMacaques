@@ -18,7 +18,7 @@ public class CollectibleController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        totalCollectiblesText.SetText("Total Collectibles: 0");
+        totalCollectiblesText.SetText("Total Collectibles: 0 / " + FindObjectsOfType<CollectibleSphereScript>().Length);
     }
 
     // Update is called once per frame
