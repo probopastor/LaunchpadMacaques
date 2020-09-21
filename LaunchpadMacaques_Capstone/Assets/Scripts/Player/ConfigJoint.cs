@@ -149,7 +149,7 @@ public class ConfigJoint : MonoBehaviour
             isGrappling = true;
             Instantiate(pushParticle, hit.point, Quaternion.LookRotation((camera.position - hit.point).normalized));
             lr.positionCount = 0;
-           // GetComponent<FMODUnity.StudioEventEmitter>().Play();
+            GetComponent<FMODUnity.StudioEventEmitter>().Play();
         }
         //If pulling and there is a surface in front of the player in which they can grapple to
         else if (grappleType == GrappleType.Pull && Physics.Raycast(camera.position, camera.forward, out hit, maxPullDistance, whatIsGrappleable))
@@ -171,7 +171,7 @@ public class ConfigJoint : MonoBehaviour
             lr.positionCount = 2;
             currentGrapplePosition = gunTip.position;
 
-         //   GetComponent<FMODUnity.StudioEventEmitter>().Play();
+            GetComponent<FMODUnity.StudioEventEmitter>().Play();
             StartCoroutine(JointDestroyDelay());
         }
 
