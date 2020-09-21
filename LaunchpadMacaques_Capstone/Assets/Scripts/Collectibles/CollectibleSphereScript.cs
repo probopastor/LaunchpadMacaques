@@ -14,37 +14,21 @@ using UnityStandardAssets._2D;
 
 public class CollectibleSphereScript : MonoBehaviour
 {
-    [SerializeField]
     private CollectibleController collectibleController;
-    private int plusOne = 1;
+    [SerializeField] private int plusOne = 1;
 
-    private int totalSpheres;
+    //private int totalSpheres;
 
     private void Awake()
     {
-        // collectibleController = GameObject.Find("Collectible Controller").GetComponent<CollectibleController>();
         collectibleController = FindObjectOfType<CollectibleController>();
-
-        totalSpheres = FindObjectsOfType<CollectibleSphereScript>().Length;
-
     }
 
     private void Collect()
     {
-        AddToTotalCollectibles(plusOne);
+        collectibleController.AddToTotalCollectibles(plusOne);
         Destroy(this.gameObject);
     }
-
-    public void AddToTotalCollectibles(int plusOne)
-    {
-        int totalCollectibles = 0;
-
-        totalCollectibles= collectibleController.totalCollectibles = collectibleController.GetTotalCollectibles() + plusOne;
-
-        collectibleController.totalCollectiblesText.SetText("Total Collectibles: " + totalCollectibles + " / " + totalSpheres);
-
-    }
-
 
     private void OnTriggerEnter(Collider other)
     {

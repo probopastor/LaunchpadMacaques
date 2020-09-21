@@ -103,7 +103,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if(!pauseManager.GetPaused())
+        if(!pauseManager.GetPaused() && !pauseManager.GetGameWon())
         {
             MyInput();
             Look();
