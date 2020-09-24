@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GrappleUI : MonoBehaviour
+public class GrappleUIScreenSpaceSwing : MonoBehaviour
 {
     #region Inspector Variables 
     [Header("UI Settings")] [SerializeField] Sprite uiSprite;
@@ -11,15 +11,18 @@ public class GrappleUI : MonoBehaviour
     [Tooltip("The layers the aiming decal should be enabled on.")] [SerializeField] private LayerMask whatIsGrappleable;
     [SerializeField] private Canvas grappleCanvas;
     [SerializeField] private float distanceVariable = .01f;
+    [SerializeField] private float minScale = .5f;
+    [SerializeField] private float maxScale = .5f;
     #endregion
 
     #region Private Variables 
-    private ConfigJoint configJoint;
+    private GrapplingGun springJoint;
     private Camera cam;
     private GameObject player;
     private Vector3 objectHitPoint;
     private bool objectSet = false;
     private Canvas thisCanvas;
+    private Vector3 uiPos;
     #endregion
 
 
@@ -29,8 +32,8 @@ public class GrappleUI : MonoBehaviour
         thisCanvas = Instantiate(grappleCanvas);
         uiImageHolder = thisCanvas.GetComponentInChildren<Image>();
         uiImageHolder.sprite = uiSprite;
-        configJoint = FindObjectOfType<ConfigJoint>();
-        thisCanvas.enabled = false;
+        springJoint = FindObjectOfType<GrapplingGun>();
+        uiImageHolder.enabled = false;
         cam = FindObjectOfType<Camera>();
         player = FindObjectOfType<Matt_PlayerMovement>().gameObject;
         objectHitPoint = Vector3.zero;
@@ -42,13 +45,36 @@ public class GrappleUI : MonoBehaviour
         DisplayUI();
     }
 
+    private void LateUpdate()
+    {
+        if (objectSet && thisCanvas)
+        {
+            UpdateUIPos();
+        }
+
+
+        if (uiImageHolder)
+        {
+            if (uiImageHolder.rectTransform.localScale.x < minScale)
+            {
+                uiImageHolder.rectTransform.localScale = new Vector3(minScale, minScale, minScale);
+            }
+
+            else if (uiImageHolder.rectTransform.localScale.x > maxScale)
+            {
+                uiImageHolder.rectTransform.localScale = new Vector3(maxScale, maxScale, maxScale);
+            }
+        }
+    }
+
     private void DisplayUI()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitInfo;
 
-        if ((Physics.Raycast(ray, out hitInfo, configJoint.GetMaxGrappleDistance(), whatIsGrappleable)) || (configJoint.IsGrappling()))
+        if ((Physics.Raycast(ray, out hitInfo, springJoint.GetMaxGrappleDistance(), whatIsGrappleable)) || (springJoint.IsGrappling()))
         {
+            uiImageHolder.rectTransform.localPosition = Vector3.zero;
             CreateUI(hitInfo);
         }
         else
@@ -59,14 +85,13 @@ public class GrappleUI : MonoBehaviour
 
     private void CreateUI(RaycastHit hitObject)
     {
-        thisCanvas.transform.LookAt(player.transform.position + cam.transform.rotation * Vector3.back, cam.transform.rotation * Vector3.up);
         float distance = Vector3.Distance(player.transform.position, hitObject.point);
 
-        if (configJoint.IsGrappling())
+        if (springJoint.IsGrappling())
         {
             if (!objectSet)
             {
-                objectHitPoint = hitObject.transform.position;
+                objectHitPoint = hitObject.point;
                 objectSet = true;
             }
 
@@ -74,10 +99,9 @@ public class GrappleUI : MonoBehaviour
             uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
         }
 
-        if (!configJoint.IsGrappling())
+        if (!springJoint.IsGrappling())
         {
-            thisCanvas.enabled = true;
-            thisCanvas.transform.position = hitObject.point;
+            uiImageHolder.enabled = true;
             uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
             objectSet = false;
         }
@@ -86,7 +110,23 @@ public class GrappleUI : MonoBehaviour
 
     private void TurnOffUI()
     {
-        thisCanvas.enabled = false;
+        uiImageHolder.enabled = false;
+
+    }
+
+    private void UpdateUIPos()
+    {
+        uiPos = cam.WorldToScreenPoint(objectHitPoint);
+
+        if (uiPos.z < 0)
+        {
+            uiImageHolder.enabled = false;
+        }
+        if (uiPos.z >= 0)
+        {
+            uiImageHolder.enabled = true;
+            uiImageHolder.transform.position = uiPos;
+        }
 
     }
 }
