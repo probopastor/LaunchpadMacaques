@@ -16,7 +16,7 @@ public class Player_Audio : MonoBehaviour
     private bool grounded;
     private bool landed;
 
-    private float magnitude;
+    private static float magnitude;
 
 
 
@@ -68,5 +68,10 @@ public class Player_Audio : MonoBehaviour
         m_land.SetParameter("Magnitude", magnitude);
         m_footsteps.SetParameter("Magnitude", magnitude);
 
+    }
+
+    public static float GetMagnitude()
+    {
+        return magnitude;
     }
 }

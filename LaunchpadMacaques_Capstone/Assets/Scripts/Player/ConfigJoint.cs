@@ -68,9 +68,13 @@ public class ConfigJoint : MonoBehaviour
 
     private float[] currentCooldowns;
 
+    [Header("Audio Variables")]
+    private GrappleGun_Audio m_audio;
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
+        m_audio = GetComponent<GrappleGun_Audio>();
 
         if (joint)
         {
@@ -149,7 +153,8 @@ public class ConfigJoint : MonoBehaviour
             isGrappling = true;
             Instantiate(pushParticle, hit.point, Quaternion.LookRotation((camera.position - hit.point).normalized));
             lr.positionCount = 0;
-            GetComponent<FMODUnity.StudioEventEmitter>().Play();
+
+            m_audio.m_push.Play();
         }
         //If pulling and there is a surface in front of the player in which they can grapple to
         else if (grappleType == GrappleType.Pull && Physics.Raycast(camera.position, camera.forward, out hit, maxPullDistance, whatIsGrappleable))
@@ -171,7 +176,8 @@ public class ConfigJoint : MonoBehaviour
             lr.positionCount = 2;
             currentGrapplePosition = gunTip.position;
 
-            GetComponent<FMODUnity.StudioEventEmitter>().Play();
+            m_audio.m_grapple.Play();
+            m_audio.m_beam.Play();
             StartCoroutine(JointDestroyDelay());
         }
 
@@ -302,6 +308,8 @@ public class ConfigJoint : MonoBehaviour
 
         lr.positionCount = 0;
         Destroy(joint);
+
+        m_audio.m_beam.Stop();
     }
 
     void DrawRope()
