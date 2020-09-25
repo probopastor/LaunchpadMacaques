@@ -9,6 +9,7 @@ public class GrappleUIScreenSpace : MonoBehaviour
     [Header("UI Settings")] [SerializeField] Sprite uiSprite;
     Image uiImageHolder;
     [Tooltip("The layers the aiming decal should be enabled on.")] [SerializeField] private LayerMask whatIsGrappleable;
+    [SerializeField] private LayerMask whatIsNotGrappleable;
     [SerializeField] private Canvas grappleCanvas;
     [SerializeField] private float distanceVariable = .01f;
     [SerializeField] private float minScale = .5f;
@@ -76,11 +77,30 @@ public class GrappleUIScreenSpace : MonoBehaviour
 
         if ((Physics.Raycast(ray, out hitInfo, configJoint.GetMaxGrappleDistance(), whatIsGrappleable)) || (configJoint.IsGrappling()))
         {
-            uiImageHolder.rectTransform.localPosition = Vector3.zero;
-            CreateUI(hitInfo);
+            Debug.Log("Is Grappling: "+ configJoint.IsGrappling());
+            float distance = Vector3.Distance(transform.position, hitInfo.point);
+            Vector3 dir = (hitInfo.point - transform.position).normalized;
+
+            if (configJoint.IsGrappling())
+            {
+                uiImageHolder.rectTransform.localPosition = Vector3.zero;
+                CreateUI(hitInfo);
+            }
+
+            else if (!Physics.Raycast(transform.position, dir, distance, whatIsNotGrappleable))
+            {
+                uiImageHolder.rectTransform.localPosition = Vector3.zero;
+                CreateUI(hitInfo);
+            }
+
+            else
+            {
+                TurnOffUI();
+            }
         }
         else
         {
+            Debug.Log("Should be turning off");
             TurnOffUI();
         }
     }
@@ -113,6 +133,8 @@ public class GrappleUIScreenSpace : MonoBehaviour
 
     private void TurnOffUI()
     {
+        Debug.Log("Image Holder: " + uiImageHolder.enabled);
+        objectSet = false;
         uiImageHolder.enabled = false;
 
     }
