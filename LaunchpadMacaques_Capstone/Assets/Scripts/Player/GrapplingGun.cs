@@ -11,6 +11,7 @@ public class GrapplingGun : MonoBehaviour
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
     public Transform gunTip, camera, player;
+    [SerializeField] private float minDistance = 0f;
     private float maxDistance = 100f;
     private SpringJoint joint;
     private float distanceFromPoint;
@@ -68,7 +69,7 @@ public class GrapplingGun : MonoBehaviour
             StopGrapple();
         }
 
-        if (Input.GetMouseButtonDown(2))
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             if (swingToggle == false)
             {
@@ -147,7 +148,7 @@ public class GrapplingGun : MonoBehaviour
 
             //The distance grapple will try to keep from grapple point. 
             joint.maxDistance = distanceFromPoint;
-            joint.minDistance = 0;
+            joint.minDistance = minDistance;
 
             //Default Vaules
             //joint.maxDistance = distanceFromPoint * 0.8f;

@@ -233,12 +233,18 @@ public class Matt_PlayerMovement : MonoBehaviour
         if (grounded && crouching) multiplierV = 0f;
 
         //Apply forces to move player
-        rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
-        rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
+        if(!grappleGunReference.IsGrappling())
+        {
+            rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
+            rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
+        }
 
         if (grappleGunReference.IsGrappling() && grappleGunReference.GetSwingToggle())
         {
-            rb.AddForce(orientation.transform.forward * y * swingSpeed * Time.deltaTime);
+            Debug.Log("Toggle Status " + grappleGunReference.GetSwingToggle());
+
+            rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
+            rb.AddForce(orientation.transform.right * moveSpeed * Time.deltaTime * multiplier);
         }
     }
 
