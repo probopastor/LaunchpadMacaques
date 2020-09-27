@@ -28,6 +28,8 @@ public class GrapplingGun : MonoBehaviour
 
     private RaycastHit grappleRayHit;
 
+    private bool swingToggle;
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
@@ -37,6 +39,8 @@ public class GrapplingGun : MonoBehaviour
             Debug.Log("Joint was created on awake");
             Destroy(joint);
         }
+
+        swingToggle = false;
     }
 
     void Update()
@@ -62,6 +66,18 @@ public class GrapplingGun : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             StopGrapple();
+        }
+
+        if (Input.GetMouseButtonDown(2))
+        {
+            if (swingToggle == false)
+            {
+                swingToggle = true;
+            }
+            else
+            {
+                swingToggle = false;
+            }
         }
 
         //if (Input.GetMouseButtonDown(1))
@@ -218,5 +234,10 @@ public class GrapplingGun : MonoBehaviour
     public RaycastHit GetGrappleRayhit()
     {
         return grappleRayHit;
+    }
+
+    public bool GetSwingToggle()
+    {
+        return swingToggle;
     }
 }
