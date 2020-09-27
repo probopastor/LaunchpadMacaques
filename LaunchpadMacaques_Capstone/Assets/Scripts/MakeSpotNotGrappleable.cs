@@ -54,8 +54,6 @@ public class MakeSpotNotGrappleable : MonoBehaviour
         Vector3 objectVector = hitObject.GetComponent<Renderer>().bounds.size;
         objectSize = objectVector.x + objectVector.y + objectVector.z;
 
-        Debug.Log("Object Size: " + objectSize);
-
         if(objectSize > maxObjectSize)
         {
             MakePartOfObjectNotGrappable(spotPos, hitObject);
@@ -75,10 +73,12 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     private void MakePartOfObjectNotGrappable(RaycastHit spotPos, GameObject hitObject)
     {
         GameObject temporaryCorruptedVisual = Instantiate(corruptedVisual);
-        temporaryCorruptedVisual.transform.LookAt(player.transform.position + cam.transform.rotation * Vector3.back, cam.transform.rotation * Vector3.up);
+        temporaryCorruptedVisual.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), spotPos.normal);
+        Debug.Log("Object Rotation: "+ transform.rotation);
         temporaryCorruptedVisual.transform.position = spotPos.point;
-        temporaryCorruptedVisual.transform.localScale = new Vector3(notGrappableSize, notGrappableSize, notGrappableSize);
-        temporaryCorruptedVisual.transform.parent = hitObject.transform;
+        temporaryCorruptedVisual.transform.localScale = new Vector3(notGrappableSize, notGrappableSize, .5f);
+        //temporaryCorruptedVisual.transform.parent = hitObject.transform;
+
 
 
         Color objectColor = hitObject.GetComponent<MeshRenderer>().material.color;
@@ -87,7 +87,7 @@ public class MakeSpotNotGrappleable : MonoBehaviour
         grappleDecalObj.transform.position = spotPos.point;
         grappleDecalObj.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), spotPos.normal);
         grappleDecalObj.GetComponent<DecalProjector>().size = new Vector3(notGrappableSize * 1.25f, notGrappableSize * 1.25f, notGrappableSize * 1.25f);
-        grappleDecalObj.transform.parent = hitObject.transform;
+        //grappleDecalObj.transform.parent = hitObject.transform;
     }
 
     /// <summary>

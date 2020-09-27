@@ -75,24 +75,25 @@ public class GrappleUIScreenSpace : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitInfo;
 
-        if ((Physics.Raycast(ray, out hitInfo, configJoint.GetMaxGrappleDistance(), whatIsGrappleable)) || (configJoint.IsGrappling()))
+
+        if ((Physics.Raycast(ray, out hitInfo, configJoint.GetMaxGrappleDistance(), whatIsGrappleable)))
         {
             Debug.Log("Is Grappling: "+ configJoint.IsGrappling());
-            float distance = Vector3.Distance(transform.position, hitInfo.point);
-            Vector3 dir = (hitInfo.point - transform.position).normalized;
+            float distance = Vector3.Distance(ray.GetPoint(0), hitInfo.point);
 
-            if (configJoint.IsGrappling())
+
+            //if (!Physics.Raycast(transform.position, dir, distance, whatIsNotGrappleable))
+            //{
+            //    uiImageHolder.rectTransform.localPosition = Vector3.zero;
+            //    CreateUI(hitInfo);
+            //}
+
+
+            if (!(Physics.Raycast(ray, distance, whatIsNotGrappleable)))
             {
                 uiImageHolder.rectTransform.localPosition = Vector3.zero;
                 CreateUI(hitInfo);
             }
-
-            else if (!Physics.Raycast(transform.position, dir, distance, whatIsNotGrappleable))
-            {
-                uiImageHolder.rectTransform.localPosition = Vector3.zero;
-                CreateUI(hitInfo);
-            }
-
             else
             {
                 TurnOffUI();
@@ -109,20 +110,20 @@ public class GrappleUIScreenSpace : MonoBehaviour
     {
         float distance = Vector3.Distance(player.transform.position, hitObject.point);
 
-        if (configJoint.IsGrappling())
-        {
-            if (!objectSet)
-            {
-                objectHitPoint = hitObject.point;
-                objectSet = true;
-            }
+        //if (configJoint.IsGrappling())
+        //{
+        //    if (!objectSet)
+        //    {
+        //        objectHitPoint = hitObject.point;
+        //        objectSet = true;
+        //    }
 
-            distance = Vector3.Distance(player.transform.position, objectHitPoint);
-            uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
-   
-        }
+        //    distance = Vector3.Distance(player.transform.position, objectHitPoint);
+        //    uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
 
-        if (!configJoint.IsGrappling())
+        //}
+
+        if (true)
         {
             uiImageHolder.enabled = true;
             uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
