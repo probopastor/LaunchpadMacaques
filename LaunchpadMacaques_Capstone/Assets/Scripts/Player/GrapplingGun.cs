@@ -34,6 +34,13 @@ public class GrapplingGun : MonoBehaviour
 
     private GameObject grappledObj;
 
+    [SerializeField] private float minSwingAngle = -90f;
+    [SerializeField] private float maxSwingAngle = 90f;
+
+
+    [SerializeField] private GameObject grappleToggleEnabledText;
+    [SerializeField] private GameObject grappleToggleDisabledText;
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
@@ -45,6 +52,8 @@ public class GrapplingGun : MonoBehaviour
         }
 
         swingToggle = false;
+        grappleToggleEnabledText.SetActive(false);
+        grappleToggleDisabledText.SetActive(true);
     }
 
     void Update()
@@ -71,7 +80,7 @@ public class GrapplingGun : MonoBehaviour
 
                 Debug.Log("angle " + angle);
 
-                if (angle < -90 || angle > 90)
+                if (angle < minSwingAngle || angle > maxSwingAngle)
                 {
                     canApplyForce = true;
                 }
@@ -96,10 +105,14 @@ public class GrapplingGun : MonoBehaviour
             if (swingToggle == false)
             {
                 swingToggle = true;
+                grappleToggleEnabledText.SetActive(true);
+                grappleToggleDisabledText.SetActive(false);
             }
             else
             {
                 swingToggle = false;
+                grappleToggleEnabledText.SetActive(false);
+                grappleToggleDisabledText.SetActive(true);
             }
         }
 
