@@ -11,6 +11,7 @@ public class GrapplingGun : MonoBehaviour
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
     public Transform gunTip, camera, player;
+    [SerializeField] private float minDistance = 0f;
     private float maxDistance = 100f;
     private SpringJoint joint;
     private float distanceFromPoint;
@@ -28,6 +29,11 @@ public class GrapplingGun : MonoBehaviour
 
     private RaycastHit grappleRayHit;
 
+    private bool swingToggle;
+    private bool canApplyForce;
+
+    private GameObject grappledObj;
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
@@ -37,6 +43,8 @@ public class GrapplingGun : MonoBehaviour
             Debug.Log("Joint was created on awake");
             Destroy(joint);
         }
+
+        swingToggle = false;
     }
 
     void Update()
@@ -53,6 +61,25 @@ public class GrapplingGun : MonoBehaviour
             }
 
             grapplePoint = hitObjectClone.transform.position;
+
+            if (grappledObj != null)
+            {
+                Vector3 objectDirection = (grappledObj.transform.position - player.transform.position).normalized;
+                Vector3 groundDirection = Vector3.down;
+
+                float angle = Vector3.Angle(objectDirection, groundDirection);
+
+                Debug.Log("angle " + angle);
+
+                if (angle < -90 || angle > 90)
+                {
+                    canApplyForce = true;
+                }
+                else
+                {
+                    canApplyForce = false;
+                }
+            }
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -62,6 +89,18 @@ public class GrapplingGun : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             StopGrapple();
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            if (swingToggle == false)
+            {
+                swingToggle = true;
+            }
+            else
+            {
+                swingToggle = false;
+            }
         }
 
         //if (Input.GetMouseButtonDown(1))
@@ -100,7 +139,6 @@ public class GrapplingGun : MonoBehaviour
                     rb.AddExplosionForce(explosionPower, explosionPos, explosionRadius, 0.0f, ForceMode.Impulse);
                 }
             }
-
         }
     }
 
@@ -121,6 +159,8 @@ public class GrapplingGun : MonoBehaviour
             hitObjectClone.transform.parent = hit.transform;
             grapplePoint = hitObjectClone.transform.position;
 
+            grappledObj = hit.transform.gameObject;
+
             joint = player.gameObject.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
             joint.connectedAnchor = grapplePoint;
@@ -131,7 +171,7 @@ public class GrapplingGun : MonoBehaviour
 
             //The distance grapple will try to keep from grapple point. 
             joint.maxDistance = distanceFromPoint;
-            joint.minDistance = 0;
+            joint.minDistance = minDistance;
 
             //Default Vaules
             //joint.maxDistance = distanceFromPoint * 0.8f;
@@ -218,5 +258,15 @@ public class GrapplingGun : MonoBehaviour
     public RaycastHit GetGrappleRayhit()
     {
         return grappleRayHit;
+    }
+
+    public bool GetSwingToggle()
+    {
+        return swingToggle;
+    }
+
+    public bool GetCanApplyForce()
+    {
+        return canApplyForce;
     }
 }

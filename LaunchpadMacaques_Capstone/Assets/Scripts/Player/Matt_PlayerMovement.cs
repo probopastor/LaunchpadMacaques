@@ -30,6 +30,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     //Movement
     public float moveSpeed = 4500;
     public float maxSpeed = 20;
+    public float swingSpeed = 4500;
     public bool grounded;
     public LayerMask whatIsGround;
 
@@ -232,8 +233,18 @@ public class Matt_PlayerMovement : MonoBehaviour
         if (grounded && crouching) multiplierV = 0f;
 
         //Apply forces to move player
-        rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
-        rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
+        if(!grappleGunReference.IsGrappling())
+        {
+            rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
+            rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
+        }
+        else if(grappleGunReference.GetSwingToggle() && grappleGunReference.IsGrappling())
+        {
+            if(grappleGunReference.GetCanApplyForce())
+            {
+                rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
+            }
+        }
     }
 
     #endregion
