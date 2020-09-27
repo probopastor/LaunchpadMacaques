@@ -1802,7 +1802,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 4.99e-43, y: 2.044e-42, z: 0, w: 143.48535}
+  m_BoundingSphereOverride: {x: 6.21e-43, y: 4.9e-44, z: 0, w: 27.533524}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -3296,7 +3296,7 @@ GameObject:
   - component: {fileID: 1342466998}
   - component: {fileID: 1342466997}
   m_Layer: 0
-  m_Name: GameObject (1)
+  m_Name: Make Not Grappable Object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3315,9 +3315,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   notGrappableSize: 5
+  maxObjectSize: 20
   corruptedVisual: {fileID: 5284914527419647616, guid: 683acb04d8931a04084ae6e83bc5f570,
     type: 3}
-  decal: {fileID: 8593126659679085998, guid: 8504b6a8de395544fb5dba7cd9b52963, type: 3}
+  corruptedMaterial: {fileID: 2100000, guid: 72dd96b6c76cfc04186e7eefc05dba50, type: 2}
+  decal: {fileID: 7227755499754186309, guid: 6e669c6e13ff6594f999fc31b23ac9be, type: 3}
   whatIsGrappleable:
     serializedVersion: 2
     m_Bits: 256
