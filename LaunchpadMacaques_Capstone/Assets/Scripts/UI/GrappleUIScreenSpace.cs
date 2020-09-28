@@ -78,7 +78,6 @@ public class GrappleUIScreenSpace : MonoBehaviour
 
         if ((Physics.Raycast(ray, out hitInfo, configJoint.GetMaxGrappleDistance(), whatIsGrappleable)))
         {
-            Debug.Log("Is Grappling: "+ configJoint.IsGrappling());
             float distance = Vector3.Distance(ray.GetPoint(0), hitInfo.point);
 
 
@@ -134,7 +133,6 @@ public class GrappleUIScreenSpace : MonoBehaviour
 
     private void TurnOffUI()
     {
-        Debug.Log("Image Holder: " + uiImageHolder.enabled);
         objectSet = false;
         uiImageHolder.enabled = false;
 

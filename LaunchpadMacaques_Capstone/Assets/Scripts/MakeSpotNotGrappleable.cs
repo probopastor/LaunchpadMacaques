@@ -97,7 +97,19 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     private void MakeEntireObjectNotGrappable(GameObject hitObject)
     {
         StartCoroutine(ChangeObjectLayer(hitObject));
-        hitObject.GetComponent<Renderer>().material = corruptedMaterial;
+        //hitObject.GetComponent<Renderer>().material = corruptedMaterial;
+
+        Renderer r = hitObject.GetComponent<Renderer>();
+        MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
+
+        r.GetPropertyBlock(pBlock);
+
+        Debug.Log("Should Shader");
+        pBlock.SetFloat("CorruptionStartTime", Time.time);
+        Vector3 localPos = hitObject.transform.InverseTransformPoint(hitObject.transform.position);
+        pBlock.SetVector("CorruptionStartPos", localPos);
+
+        r.SetPropertyBlock(pBlock);
     }
 
 
