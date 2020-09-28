@@ -61,7 +61,7 @@ public class MakeSpotNotGrappleable : MonoBehaviour
 
         else
         {
-            MakeEntireObjectNotGrappable(hitObject);
+            MakeEntireObjectNotGrappable(hitObject, spotPos);
         }
     }
 
@@ -94,22 +94,36 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     /// Will Make an entire object un Grappable and will change its material
     /// </summary>
     /// <param name="hitObject"></param>
-    private void MakeEntireObjectNotGrappable(GameObject hitObject)
+    private void MakeEntireObjectNotGrappable(GameObject hitObject, RaycastHit hit)
     {
         StartCoroutine(ChangeObjectLayer(hitObject));
-        //hitObject.GetComponent<Renderer>().material = corruptedMaterial;
+        
 
-        Renderer r = hitObject.GetComponent<Renderer>();
-        MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
+        //Renderer r = hitObject.GetComponent<Renderer>();
+        //MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
 
-        r.GetPropertyBlock(pBlock);
+        //r.GetPropertyBlock(pBlock);
 
-        Debug.Log("Should Shader");
-        pBlock.SetFloat("CorruptionStartTime", Time.time);
-        Vector3 localPos = hitObject.transform.InverseTransformPoint(hitObject.transform.position);
-        pBlock.SetVector("CorruptionStartPos", localPos);
+        //Debug.Log("Should Shader");
+        //pBlock.SetFloat("CorruptionStartTime", Time.time);
+        //Vector3 localPos = hitObject.transform.InverseTransformPoint(hitObject.transform.position);
+        //pBlock.SetVector("CorruptionStartPos", localPos);
 
-        r.SetPropertyBlock(pBlock);
+        //r.SetPropertyBlock(pBlock);
+
+        if (hit.collider != null)
+        {
+            Renderer r = hit.collider.GetComponent<Renderer>();
+            MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
+
+            r.GetPropertyBlock(pBlock);
+
+            pBlock.SetFloat("CorruptionStartTime", Time.time);
+            Vector3 localPos = hit.collider.transform.InverseTransformPoint(hit.point);
+            pBlock.SetVector("CorruptionStartPos", localPos);
+
+            r.SetPropertyBlock(pBlock);
+        }
     }
 
 
