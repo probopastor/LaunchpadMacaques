@@ -73,6 +73,10 @@ public class Matt_PlayerMovement : MonoBehaviour
     //Sprinting
     [SerializeField]
     private bool readyToSprint = true;
+    private float speedStorage;
+    [SerializeField]
+    private float sprintMultiplier = 1.75f;
+
 
     [Header("Player Input")]
     //Input
@@ -94,6 +98,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         playerScale = transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        speedStorage = maxSpeed;
     }
 
     private void FixedUpdate()
@@ -257,12 +262,12 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             readyToSprint = false;
             //Apply sprint to player
-            maxSpeed = 9;
+            maxSpeed = speedStorage * sprintMultiplier;
         }
     }
     private void StopSprint()
     {
-        maxSpeed = 5;
+        maxSpeed = speedStorage;
         readyToSprint = true;
     }
 
