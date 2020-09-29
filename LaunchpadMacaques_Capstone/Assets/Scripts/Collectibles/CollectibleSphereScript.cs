@@ -8,33 +8,64 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Policy;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityStandardAssets._2D;
 
-public class CollectibleSphereScript : MonoBehaviour
+public class CollectibleSphereScript : CollectibleBehavior
 {
-    private CollectibleController collectibleController;
-    [SerializeField] private int plusOne = 1;
 
-    //private int totalSpheres;
+    private int totalSpheres;
 
-    private void Awake()
+    public override void Collect()
     {
-        collectibleController = FindObjectOfType<CollectibleController>();
+        IncrementCollectibleCount();
+        GetCollectibleController().testDisplayText.SetText("Test Display: This is a test. Total Count: " + totalSpheres);
+        DestroyCollectible();
     }
 
-    private void Collect()
+    public override void DestroyCollectible()
     {
-        collectibleController.AddToTotalCollectibles(plusOne);
         Destroy(this.gameObject);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public override void IncrementCollectibleCount()
     {
-        if(other.gameObject.CompareTag("Player"))
+        totalSpheres++;
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player"))
         {
             Collect();
         }
     }
+
+    #region Old Code
+    //private CollectibleController collectibleController;
+    //[SerializeField] private int plusOne = 1;
+
+    ////private int totalSpheres;
+
+    //private void Awake()
+    //{
+    //    collectibleController = FindObjectOfType<CollectibleController>();
+    //}
+
+    //private void Collect()
+    //{
+    //    collectibleController.AddToTotalCollectibles(plusOne);
+    //    Destroy(this.gameObject);
+    //}
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if(other.gameObject.CompareTag("Player"))
+    //    {
+    //        Collect();
+    //    }
+    //}
+    #endregion
 }

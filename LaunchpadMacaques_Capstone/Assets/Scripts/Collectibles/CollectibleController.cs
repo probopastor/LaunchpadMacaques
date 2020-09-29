@@ -19,6 +19,8 @@ public class CollectibleController : MonoBehaviour
     private int totalSpheres;
     private PauseManager pauseManager;
 
+    public TextMeshProUGUI testDisplayText;
+
     // Start is called before the first frame update
     void Start()
     {
