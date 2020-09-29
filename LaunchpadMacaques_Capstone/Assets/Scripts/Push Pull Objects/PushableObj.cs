@@ -112,7 +112,9 @@ public class PushableObj : MonoBehaviour
     {
         tempSpeed = speed;
         tempCam = cam;
+        beingPushed = false;
         pickedUp = true;
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
 
     }
 
@@ -121,6 +123,8 @@ public class PushableObj : MonoBehaviour
         pickedUp = false;
         beingPushed = false;
         GetComponent<Rigidbody>().useGravity = true;
+        lr.positionCount = 0;
+        thisDecal.SetActive(false);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -132,5 +136,9 @@ public class PushableObj : MonoBehaviour
     {
         beingPushed = false;
         GetComponent<Rigidbody>().useGravity = true;
+        pickedUp = false;
+        lr.positionCount = 0;
+        thisDecal.SetActive(false);
+
     }
 }
