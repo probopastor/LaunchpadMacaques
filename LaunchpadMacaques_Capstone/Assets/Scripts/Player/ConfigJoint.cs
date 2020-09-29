@@ -46,6 +46,8 @@ public class ConfigJoint : MonoBehaviour
     [SerializeField] float minDistanceFromObjForLaunch = 10f;
     [SerializeField] float distanceFromObjForLaunch;
     [SerializeField] float minTimeForLaunch = 1f;
+    [SerializeField] float startTime = 0f;
+    [SerializeField] float endTime = 0f;
 
     [Header("Push Settings")]
     [SerializeField, Tooltip("The maximum distance that the player is allowed to push from")]
@@ -147,6 +149,8 @@ public class ConfigJoint : MonoBehaviour
     void StartGrapple(GrappleType grappleType)
     {
         RaycastHit hit;
+        startTime = Time.time;
+
         //If pushing and there is a surface in front of the player for them to push off of
         if (grappleType == GrappleType.Push && Physics.Raycast(camera.position, camera.forward, out hit, maxPushDistance, ~LayerMask.GetMask("CantPush"))
             && CanPush())
@@ -300,14 +304,17 @@ public class ConfigJoint : MonoBehaviour
     /// </summary>
     void StopGrapple()
     {
-        
+        endTime = Time.time;
         Vector3 pullDirection = player.transform.position - grapplePoint;
 
         distanceFromObjForLaunch = (grapplePoint - player.transform.position).magnitude;
 
+        float deltaLaunchTime = endTime - startTime;
+
         //launch player in direction if distance allows it 
-        if ((distanceFromObjForLaunch > minDistanceFromObjForLaunch))
+        if ((distanceFromObjForLaunch > minDistanceFromObjForLaunch) && (deltaLaunchTime > minTimeForLaunch))
         {
+            print("luancvh");
             player.GetComponent<Rigidbody>().AddForce((-pullDirection.normalized) * launchSpeed * Time.deltaTime, ForceMode.Impulse);
         }
 
