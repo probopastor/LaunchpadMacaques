@@ -3071,7 +3071,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &920392076
 Transform:
   m_ObjectHideFlags: 0
@@ -3106,7 +3106,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920392075}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -7086,8 +7086,10 @@ MonoBehaviour:
   minDistanceFromObjForLaunch: 15
   distanceFromObjForLaunch: 0
   minTimeForLaunch: 0.25
+  maxLaunchMultiplier: 5
   startTime: 0
   endTime: 0
+  ghostTime: 1
   maxPushDistance: 20
   maxPushTime: 2
   pushDelay: 1.25

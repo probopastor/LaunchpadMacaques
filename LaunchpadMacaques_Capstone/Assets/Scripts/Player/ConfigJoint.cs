@@ -46,8 +46,10 @@ public class ConfigJoint : MonoBehaviour
     [SerializeField] float minDistanceFromObjForLaunch = 10f;
     [SerializeField] float distanceFromObjForLaunch;
     [SerializeField] float minTimeForLaunch = 1f;
+    [SerializeField] float maxLaunchMultiplier = 5f;
     [SerializeField] float startTime = 0f;
     [SerializeField] float endTime = 0f;
+    [SerializeField] float ghostTime = 1f;
 
     [Header("Push Settings")]
     [SerializeField, Tooltip("The maximum distance that the player is allowed to push from")]
@@ -310,12 +312,14 @@ public class ConfigJoint : MonoBehaviour
         distanceFromObjForLaunch = (grapplePoint - player.transform.position).magnitude;
 
         float deltaLaunchTime = endTime - startTime;
+        float launchMultiplier = Mathf.Min(endTime - startTime + 2f, maxLaunchMultiplier);
 
         //launch player in direction if distance allows it 
         if ((distanceFromObjForLaunch > minDistanceFromObjForLaunch) && (deltaLaunchTime > minTimeForLaunch))
         {
-            print("luancvh");
-            player.GetComponent<Rigidbody>().AddForce((-pullDirection.normalized) * launchSpeed * Time.deltaTime, ForceMode.Impulse);
+            player.GetComponent<Rigidbody>().AddForce((-pullDirection.normalized) * (launchSpeed * launchMultiplier) * Time.deltaTime, ForceMode.Impulse);
+            player.GetComponent<CapsuleCollider>().enabled = false;
+            StartCoroutine(GhostMode(ghostTime));
         }
 
 
@@ -330,6 +334,13 @@ public class ConfigJoint : MonoBehaviour
 
         lr.positionCount = 0;
         Destroy(joint);
+    }
+
+    IEnumerator GhostMode(float time)
+    {
+        yield return new WaitForSeconds(time);
+        player.GetComponent<CapsuleCollider>().enabled = true;
+
     }
 
     void DrawRope()
