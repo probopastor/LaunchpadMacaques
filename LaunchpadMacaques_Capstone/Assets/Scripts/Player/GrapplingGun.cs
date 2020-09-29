@@ -52,8 +52,16 @@ public class GrapplingGun : MonoBehaviour
         }
 
         swingToggle = false;
-        grappleToggleEnabledText.SetActive(false);
-        grappleToggleDisabledText.SetActive(true);
+
+        if(grappleToggleEnabledText != null)
+        {
+            grappleToggleEnabledText.SetActive(false);
+        }
+
+        if(grappleToggleDisabledText != null)
+        {
+            grappleToggleDisabledText.SetActive(true);
+        }
     }
 
     void Update()
