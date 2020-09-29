@@ -8,8 +8,7 @@ public class PushPullObjects : MonoBehaviour
     [SerializeField] GameObject objectHolder;
     [SerializeField] LayerMask canBePickedUp;
     [SerializeField] float objectFollowSpeed = 10;
-    [SerializeField] GameObject hand;
-    [SerializeField] float throwForce = 10;
+
 
 
     private Rigidbody objectRB;
@@ -75,7 +74,7 @@ public class PushPullObjects : MonoBehaviour
             grabbing = true;
 
             lr.positionCount = 2;
-            objectRB.GetComponent<PushableObj>().PickedUpObject(throwForce, cam);
+            objectRB.GetComponent<PushableObj>().PickedUpObject(cam);
 
 
         }
@@ -94,7 +93,7 @@ public class PushPullObjects : MonoBehaviour
     private void ThrowObject()
     {
         objectRB.isKinematic = false;
-        objectRB.GetComponent<PushableObj>().StartPush(throwForce, cam);
+        objectRB.GetComponent<PushableObj>().StartPush(cam);
         objectRB.useGravity = false;
         grabbing = false;
         lr.positionCount = 0;
@@ -106,7 +105,7 @@ public class PushPullObjects : MonoBehaviour
     void DrawRope()
     { 
         lr.SetPosition(0, objectRB.transform.position);
-        lr.SetPosition(1, hand.transform.position);
+        lr.SetPosition(1, this.transform.position);
     }
 
 }

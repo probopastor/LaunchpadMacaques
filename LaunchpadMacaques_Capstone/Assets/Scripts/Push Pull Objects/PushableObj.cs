@@ -5,18 +5,33 @@ using UnityEngine;
 
 public class PushableObj : MonoBehaviour
 {
-    private bool beingPushed;
-    private bool pickedUp = false;
-
+    #region Inspector Vars
+    [Header("Visual Settings")]
     [SerializeField] GameObject throwDecal;
-    private GameObject thisDecal;
-    [SerializeField] Vector3 objectVelocity;
-    [SerializeField] int predStepsPerFrame;
+ 
+    [Header("Movement Settings")]
+    public float gravityScaler = 5;
+    [SerializeField] float distance;
 
+
+ 
+    [Header("Change Distance Settings")]
+    [SerializeField] private float wheelSensitivity = 5;
+    [SerializeField] bool changeDistance = true;
+    [SerializeField] float minDistance = 5;
+    [SerializeField] float maxDistance = 40;
+    #endregion
+
+    #region Private Vars
     private float tempSpeed;
     private GameObject tempCam;
-
+    private GameObject thisDecal;
+    private Vector3 objectVelocity;
+    private bool beingPushed;
+    private bool pickedUp = false;
+    int predStepsPerFrame = 6;
     private LineRenderer lr;
+    #endregion
     private void Start()
     {
         thisDecal = Instantiate(throwDecal);
@@ -25,17 +40,50 @@ public class PushableObj : MonoBehaviour
         lr = this.GetComponent<LineRenderer>();
         lr.positionCount = 0;
     }
-    public void StartPush(float speed, GameObject cam)
+    public void StartPush(GameObject cam)
     {
         beingPushed = true;
-        objectVelocity = speed * cam.transform.forward;
+        objectVelocity = distance * cam.transform.forward;
     }
 
     private void Update()
     {
+        if (changeDistance & pickedUp)
+        {
+            ChangeDistance();
+        }
+  
+    }
+
+    private void FixedUpdate()
+    {
         if (beingPushed) PushObject();
 
         else if (pickedUp) ShowLine();
+    }
+
+    private void ChangeDistance()
+    {
+        var wheelInput = Input.GetAxis("Mouse ScrollWheel");
+
+        if (wheelInput > 0)
+        {
+            distance += wheelSensitivity;
+            if(distance > maxDistance)
+            {
+                distance = maxDistance;
+            }
+        }
+
+        else if (wheelInput < 0)
+        {
+            distance -= wheelSensitivity;
+
+            if(distance < minDistance)
+            {
+                distance = minDistance;
+            }
+        }
     }
 
     private void PushObject()
@@ -48,26 +96,30 @@ public class PushableObj : MonoBehaviour
 
         for (float step = 0; step < 1; step += stepSize)
         {
-            objectVelocity += Physics.gravity * stepSize * Time.deltaTime;
+            objectVelocity += (Physics.gravity * gravityScaler )* stepSize * Time.deltaTime;
             Vector3 point2 = point1 + objectVelocity * stepSize * Time.deltaTime;
 
+            RaycastHit hit;
             Ray ray = new Ray(point1, point2 - point1);
-            if (Physics.Raycast(ray, (point2 - point1).magnitude))
+            if (Physics.Raycast(ray, out hit ,(point2 - point1).magnitude))
             {
-                StopPushingObject();
+                if (!hit.collider.isTrigger)
+                {
+                    StopPushingObject();
+                }
             }
 
 
             point1 = point2;
-
-
         }
 
         this.transform.position = point1;
     }
 
+    #region Line
     private void ShowLine()
     {
+        tempSpeed = distance;
         Vector3 point1 = this.transform.position;
         Vector3 predObjectVelocity = objectVelocity;
         predObjectVelocity = tempSpeed * tempCam.transform.forward;
@@ -77,17 +129,21 @@ public class PushableObj : MonoBehaviour
         int count = 1;
         for (float step = 0; step < 500; step += stepSize)
         {
-            predObjectVelocity += Physics.gravity * stepSize;
+            predObjectVelocity += (Physics.gravity * gravityScaler) * stepSize;
             Vector3 point2 = point1 + predObjectVelocity * stepSize;
 
             RaycastHit hit;
             Ray ray = new Ray(point1, point2 - point1);
             if (Physics.Raycast(ray, out hit, (point2 - point1).magnitude))
             {
-                lr.positionCount = count;
-                thisDecal.SetActive(true);
-                MoveDecal(hit);
-                break;
+                if (!hit.collider.isTrigger)
+                {
+                    lr.positionCount = count;
+                    thisDecal.SetActive(true);
+                    MoveDecal(hit);
+                    break;
+                }
+
             }
 
             lr.SetPosition(count, point2);
@@ -100,6 +156,9 @@ public class PushableObj : MonoBehaviour
 
     }
 
+    #endregion
+
+
     private void MoveDecal(RaycastHit info)
     {
         thisDecal.transform.position = info.point;
@@ -107,10 +166,10 @@ public class PushableObj : MonoBehaviour
 
     }
 
+    #region Pick Up/Drop Object
 
-    public void PickedUpObject(float speed, GameObject cam)
+    public void PickedUpObject(GameObject cam)
     {
-        tempSpeed = speed;
         tempCam = cam;
         beingPushed = false;
         pickedUp = true;
@@ -141,4 +200,6 @@ public class PushableObj : MonoBehaviour
         thisDecal.SetActive(false);
 
     }
+
+    #endregion
 }
