@@ -485,6 +485,7 @@ MonoBehaviour:
   sensMultiplier: 1
   moveSpeed: 4500
   maxSpeed: 10
+  swingSpeed: 4500
   grounded: 0
   whatIsGround:
     serializedVersion: 2
@@ -6889,12 +6890,17 @@ MonoBehaviour:
   gunTip: {fileID: 997001713}
   camera: {fileID: 963194228}
   player: {fileID: 142505806}
+  minDistance: 0
   explosionRadius: 1
   explosionPower: 50
   grappleSpeed: 10
   springValue: 5
   springDamp: 10
   springMass: 5
+  minSwingAngle: -90
+  maxSwingAngle: 90
+  grappleToggleEnabledText: {fileID: 0}
+  grappleToggleDisabledText: {fileID: 0}
 --- !u!120 &2084724948
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -7073,8 +7079,13 @@ MonoBehaviour:
   gunTip: {fileID: 997001713}
   camera: {fileID: 963194228}
   player: {fileID: 142505806}
+  orientation: {fileID: 1733823668}
   pullSpringForce: 350
   pullSpringDamper: 300
+  launchSpeed: 30000
+  minDistanceFromObjForLaunch: 15
+  distanceFromObjForLaunch: 0
+  minTimeForLaunch: 1
   maxPushDistance: 20
   maxPushTime: 2
   pushDelay: 1.25

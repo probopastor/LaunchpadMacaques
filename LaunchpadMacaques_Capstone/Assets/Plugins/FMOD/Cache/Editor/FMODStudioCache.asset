@@ -294,7 +294,7 @@ MonoBehaviour:
   guid: 5013f26025e5ea4698116df0fee6c08c
   Banks:
   - {fileID: 755953198790002995}
-  - {fileID: 9179153243133486233}
+  - {fileID: -2922011055503908682}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -803,6 +803,24 @@ MonoBehaviour:
   Max: 1
   Default: 0
   Exists: 0
+--- !u!114 &-2922011055503908682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Audio/FMOD/Capstone/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637359382421422432
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &-2454905206064081890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -820,6 +838,23 @@ MonoBehaviour:
   Max: 1
   Default: 0
   Exists: 0
+--- !u!114 &-2448480755726877410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Landing/Magnitude
+  m_EditorClassIdentifier: 
+  Name: Magnitude
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
 --- !u!114 &-2268571855390844493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1167,12 +1202,12 @@ MonoBehaviour:
   guid: fe01894a42db7a468fa0ae3562a75ac1
   Banks:
   - {fileID: 755953198790002995}
-  - {fileID: 9179153243133486233}
+  - {fileID: -2922011055503908682}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
   Parameters:
-  - {fileID: 3369377067743284095}
+  - {fileID: 5830600956532948217}
   MinDistance: 1
   MaxDistance: 20
   Length: 250
@@ -1347,7 +1382,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: 3899874459530867832}
-  - {fileID: 9179153243133486233}
+  - {fileID: -2922011055503908682}
   EditorEvents:
   - {fileID: -6356810551894553891}
   - {fileID: 7399515937746968955}
@@ -1355,10 +1390,10 @@ MonoBehaviour:
   - {fileID: -784586566653921646}
   EditorParameters: []
   MasterBanks:
-  - {fileID: 9179153243133486233}
+  - {fileID: -2922011055503908682}
   StringsBanks:
   - {fileID: 3899874459530867832}
-  stringsBankWriteTime: 637368095712935181
+  stringsBankWriteTime: 637359382421422432
   cacheVersion: 3
 --- !u!114 &95800486253855825
 MonoBehaviour:
@@ -1413,6 +1448,23 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &486884937784600796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Swinging/Magnitude
+  m_EditorClassIdentifier: 
+  Name: Magnitude
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
 --- !u!114 &713177772316718902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1722,12 +1774,12 @@ MonoBehaviour:
   guid: 665b1696597d3c49889575455bd1e619
   Banks:
   - {fileID: 755953198790002995}
-  - {fileID: 9179153243133486233}
+  - {fileID: -2922011055503908682}
   IsStream: 0
   Is3D: 1
   IsOneShot: 0
   Parameters:
-  - {fileID: -4048733695886302189}
+  - {fileID: -2448480755726877410}
   MinDistance: 1
   MaxDistance: 20
   Length: 592
@@ -1884,7 +1936,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: Assets/Audio/FMOD/Capstone/Build/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637368095712935181
+  lastModified: 637359382421422432
   LoadResult: 0
   FileSizes:
   - Name: Desktop
@@ -2061,6 +2113,23 @@ MonoBehaviour:
   Max: 1
   Default: 0
   Exists: 0
+--- !u!114 &5830600956532948217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Walking/Magnitude
+  m_EditorClassIdentifier: 
+  Name: Magnitude
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
 --- !u!114 &5845352313175033491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2284,12 +2353,12 @@ MonoBehaviour:
   guid: 9b1b5a3a90e8b248bba1e11391a417a4
   Banks:
   - {fileID: 755953198790002995}
-  - {fileID: 9179153243133486233}
+  - {fileID: -2922011055503908682}
   IsStream: 0
   Is3D: 1
   IsOneShot: 0
   Parameters:
-  - {fileID: 4889740718311029160}
+  - {fileID: 486884937784600796}
   MinDistance: 1
   MaxDistance: 20
   Length: 3500

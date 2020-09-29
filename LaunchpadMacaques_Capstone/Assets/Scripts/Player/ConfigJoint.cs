@@ -17,6 +17,8 @@ public class ConfigJoint : MonoBehaviour
     private ConfigurableJoint joint;
     private RaycastHit grappleRayHit;
 
+    [SerializeField] private Transform orientation;
+
 
     private enum GrappleType { Pull, Push }
     //If the player is Pulling, this is the object they're pulling toward
@@ -40,6 +42,10 @@ public class ConfigJoint : MonoBehaviour
     [Header("Pull - Spring Settings")]
     [SerializeField] float pullSpringForce = 350;
     [SerializeField] float pullSpringDamper = 300;
+    [SerializeField] float launchSpeed = 30000;
+    [SerializeField] float minDistanceFromObjForLaunch = 10f;
+    [SerializeField] float distanceFromObjForLaunch;
+    [SerializeField] float minTimeForLaunch = 1f;
 
     [Header("Push Settings")]
     [SerializeField, Tooltip("The maximum distance that the player is allowed to push from")]
@@ -140,7 +146,6 @@ public class ConfigJoint : MonoBehaviour
     /// </summary>
     void StartGrapple(GrappleType grappleType)
     {
-
         RaycastHit hit;
         //If pushing and there is a surface in front of the player for them to push off of
         if (grappleType == GrappleType.Push && Physics.Raycast(camera.position, camera.forward, out hit, maxPushDistance, ~LayerMask.GetMask("CantPush"))
@@ -150,10 +155,12 @@ public class ConfigJoint : MonoBehaviour
             Instantiate(pushParticle, hit.point, Quaternion.LookRotation((camera.position - hit.point).normalized));
             lr.positionCount = 0;
             GetComponent<FMODUnity.StudioEventEmitter>().Play();
+
         }
         //If pulling and there is a surface in front of the player in which they can grapple to
         else if (grappleType == GrappleType.Pull && Physics.Raycast(camera.position, camera.forward, out hit, maxPullDistance, whatIsGrappleable))
         {
+
             isGrappling = true;
 
             grappleRayHit = hit;
@@ -173,6 +180,7 @@ public class ConfigJoint : MonoBehaviour
 
             GetComponent<FMODUnity.StudioEventEmitter>().Play();
             StartCoroutine(JointDestroyDelay());
+
         }
 
         //Not able to pull or push
@@ -292,7 +300,20 @@ public class ConfigJoint : MonoBehaviour
     /// </summary>
     void StopGrapple()
     {
-        if(hitObjectClone)
+        
+        Vector3 pullDirection = player.transform.position - grapplePoint;
+
+        distanceFromObjForLaunch = (grapplePoint - player.transform.position).magnitude;
+
+        //launch player in direction if distance allows it 
+        if ((distanceFromObjForLaunch > minDistanceFromObjForLaunch))
+        {
+            player.GetComponent<Rigidbody>().AddForce((-pullDirection.normalized) * launchSpeed * Time.deltaTime, ForceMode.Impulse);
+        }
+
+
+
+        if (hitObjectClone)
         {
             Destroy(hitObjectClone.gameObject);
         }
