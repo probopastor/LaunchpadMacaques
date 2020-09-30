@@ -51,16 +51,17 @@ public class GrapplingGun : MonoBehaviour
             Destroy(joint);
         }
 
-        swingToggle = false;
+        //swingToggle = false;
+        swingToggle = true;
 
-        if(grappleToggleEnabledText != null)
+        if (grappleToggleEnabledText != null)
         {
-            grappleToggleEnabledText.SetActive(false);
+            //grappleToggleEnabledText.SetActive(false);
         }
 
         if(grappleToggleDisabledText != null)
         {
-            grappleToggleDisabledText.SetActive(true);
+            //grappleToggleDisabledText.SetActive(true);
         }
     }
 
@@ -112,15 +113,15 @@ public class GrapplingGun : MonoBehaviour
         {
             if (swingToggle == false)
             {
-                swingToggle = true;
-                grappleToggleEnabledText.SetActive(true);
-                grappleToggleDisabledText.SetActive(false);
+                //swingToggle = true;
+                //grappleToggleEnabledText.SetActive(true);
+                //grappleToggleDisabledText.SetActive(false);
             }
             else
             {
-                swingToggle = false;
-                grappleToggleEnabledText.SetActive(false);
-                grappleToggleDisabledText.SetActive(true);
+                //swingToggle = false;
+                //grappleToggleEnabledText.SetActive(false);
+                //grappleToggleDisabledText.SetActive(true);
             }
         }
 
