@@ -16,13 +16,37 @@ using UnityStandardAssets._2D;
 public class CollectibleSphereScript : CollectibleBehavior
 {
 
-    private int totalSpheres;
+    private int totalCollectibles;
+    private int totalCollectedCollectibles;
+
+    public override void Start()
+    {
+        base.Start();
+        totalCollectedCollectibles = 0;
+        totalCollectibles = FindObjectsOfType<CollectibleSphereScript>().Length;
+    }
+
+    //public override void Update()
+    //{
+    //    Debug.Log("The total amount of collected collectibles: " + totalCollectedCollectibles);
+    //    Debug.Log("The total amount of collectibles: " + totalCollectedCollectibles);
+    //}
 
     public override void Collect()
     {
         IncrementCollectibleCount();
-        GetCollectibleController().testDisplayText.SetText("Test Display: This is a test. Total Count: " + totalSpheres);
+        DecrementCollectibleTotal();
+        GetCollectibleController().testDisplayText.SetText("Total Sphere Count: " + totalCollectedCollectibles + " / " + totalCollectibles);
         DestroyCollectible();
+
+        Debug.Log("The total amount of collected collectibles: " + totalCollectedCollectibles);
+        Debug.Log("The total amount of collectibles: " + totalCollectedCollectibles);
+
+        if (totalCollectedCollectibles >= totalCollectibles)
+        {
+            GetCollectibleController().pauseManager.SetGameWin();
+        }
+
     }
 
     public override void DestroyCollectible()
@@ -32,15 +56,19 @@ public class CollectibleSphereScript : CollectibleBehavior
 
     public override void IncrementCollectibleCount()
     {
-        totalSpheres++;
+        //base.IncrementCollectibleCount();
+        totalCollectibles++;
     }
 
-    public void OnTriggerEnter(Collider other)
+    public override void DecrementCollectibleTotal()
     {
-        if(other.CompareTag("Player"))
-        {
-            Collect();
-        }
+        //base.DecrementCollectibleTotal();
+        totalCollectedCollectibles--;
+    }
+
+    public override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
     }
 
     #region Old Code

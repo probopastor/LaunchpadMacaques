@@ -14,34 +14,32 @@ using UnityStandardAssets._2D;
 
 public class CollectibleController : MonoBehaviour
 {
-    public int totalCollectibles;
     public TextMeshProUGUI totalCollectiblesText;
-    private int totalSpheres;
-    private PauseManager pauseManager;
-
+    public PauseManager pauseManager;
     public TextMeshProUGUI testDisplayText;
 
     // Start is called before the first frame update
     void Start()
     {
         pauseManager = FindObjectOfType<PauseManager>();
-        totalCollectiblesText.SetText("Total Collectibles: 0 / " + FindObjectsOfType<CollectibleSphereScript>().Length);
-        totalSpheres = FindObjectsOfType<CollectibleSphereScript>().Length;
+        //totalCollectiblesText.SetText("Total Collectibles: 0 / " + FindObjectsOfType<CollectibleSphereScript>().Length);
+        totalCollectiblesText.SetText("Original Text");
+        //totalSpheres = FindObjectsOfType<CollectibleSphereScript>().Length;
     }
 
-    public int GetTotalCollectibles()
-    {
-        return totalCollectibles;
-    }
+    //public int GetTotalCollectibles()
+    //{
+    //    return totalCollectibles;
+    //}
 
-    public void AddToTotalCollectibles(int plusOne)
-    {
-        totalCollectibles += plusOne;
-        totalCollectiblesText.SetText("Total Collectibles: " + totalCollectibles + " / " + totalSpheres);
+    //public void AddToTotalCollectibles(int plusOne)
+    //{
+    //    totalCollectibles += plusOne;
+    //    totalCollectiblesText.SetText("Total Collectibles: " + totalCollectibles + " / " + totalSpheres);
 
-        if(totalCollectibles >= totalSpheres)
-        {
-            pauseManager.SetGameWin();
-        }
-    }
+    //    if(totalCollectibles >= totalSpheres)
+    //    {
+    //        pauseManager.SetGameWin();
+    //    }
+    //}
 }

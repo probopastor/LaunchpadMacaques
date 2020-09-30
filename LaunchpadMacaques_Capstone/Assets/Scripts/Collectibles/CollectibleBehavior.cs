@@ -11,13 +11,21 @@ public abstract class CollectibleBehavior : MonoBehaviour
     // Start is called before the first frame update
     public virtual void Start()
     {
-        collectibleController = GameObject.Find("Collectible Controller").GetComponent<CollectibleController>();
+        collectibleController = GameObject.FindGameObjectWithTag("Collectible Controller").GetComponent<CollectibleController>();
     }
 
     // Update is called once per frame
     public virtual void Update()
     {
 
+    }
+
+    public virtual void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            Collect();
+        }
     }
 
     public abstract void Collect();
@@ -29,6 +37,10 @@ public abstract class CollectibleBehavior : MonoBehaviour
 
     }
 
+    public virtual void DecrementCollectibleTotal()
+    {
+
+    }
 
     public bool GetCollected()
     {
