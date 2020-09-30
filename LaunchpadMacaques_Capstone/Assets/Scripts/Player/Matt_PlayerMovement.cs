@@ -66,7 +66,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField]
     private float jumpCooldown = 0.25f;
     public float jumpForce = 550f;
-    public float gravity = 1100;
+    public float gravity = 1500f;
+    public float defaultGravity = 1500f;
 
     [Header("Sprinting")]
     //Sprinting

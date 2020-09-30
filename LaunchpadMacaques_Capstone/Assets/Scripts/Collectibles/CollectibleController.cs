@@ -17,6 +17,7 @@ public class CollectibleController : MonoBehaviour
     public TextMeshProUGUI totalCollectiblesText;
     public PauseManager pauseManager;
     public TextMeshProUGUI testDisplayText;
+    public TextMeshProUGUI gravityText;
 
     // Start is called before the first frame update
     void Start()

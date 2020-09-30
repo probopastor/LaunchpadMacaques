@@ -37,7 +37,7 @@ public class CollectibleSphereScript : CollectibleBehavior
         IncrementCollectibleCount();
         DecrementCollectibleTotal();
         GetCollectibleController().testDisplayText.SetText("Total Sphere Count: " + totalCollectedCollectibles + " / " + totalCollectibles);
-        DestroyCollectible();
+        //DestroyCollectible();
 
         Debug.Log("The total amount of collected collectibles: " + totalCollectedCollectibles);
         Debug.Log("The total amount of collectibles: " + totalCollectedCollectibles);
@@ -51,19 +51,19 @@ public class CollectibleSphereScript : CollectibleBehavior
 
     public override void DestroyCollectible()
     {
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
     public override void IncrementCollectibleCount()
     {
         //base.IncrementCollectibleCount();
-        totalCollectibles++;
+        totalCollectedCollectibles++;
     }
 
     public override void DecrementCollectibleTotal()
     {
         //base.DecrementCollectibleTotal();
-        totalCollectedCollectibles--;
+        totalCollectibles--;
     }
 
     public override void OnTriggerEnter(Collider other)
