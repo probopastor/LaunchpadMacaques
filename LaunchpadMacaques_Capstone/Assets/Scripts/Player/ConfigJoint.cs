@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -317,9 +318,8 @@ public class ConfigJoint : MonoBehaviour
         //launch player in direction if distance allows it 
         if ((distanceFromObjForLaunch > minDistanceFromObjForLaunch) && (deltaLaunchTime > minTimeForLaunch))
         {
-            player.GetComponent<Rigidbody>().AddForce((-pullDirection.normalized) * (launchSpeed * launchMultiplier) * Time.deltaTime, ForceMode.Impulse);
             player.GetComponent<CapsuleCollider>().enabled = false;
-            StartCoroutine(GhostMode(ghostTime));
+            StartCoroutine(GhostMode(ghostTime, pullDirection, launchMultiplier));
         }
 
 
@@ -336,9 +336,18 @@ public class ConfigJoint : MonoBehaviour
         Destroy(joint);
     }
 
-    IEnumerator GhostMode(float time)
+    IEnumerator GhostMode(float time, Vector3 pullDirection, float launchMultiplier)
     {
-        yield return new WaitForSeconds(time);
+        float currentTime = 0;
+        while (currentTime < time)
+        {
+           player.GetComponent<Rigidbody>().AddForce((-pullDirection.normalized) * (launchSpeed * launchMultiplier) * Time.deltaTime, ForceMode.Impulse);
+           currentTime += Time.deltaTime;
+           yield return new WaitForSeconds(0);
+        }
+
+        yield return new WaitForSeconds(time / 2);
+  
         player.GetComponent<CapsuleCollider>().enabled = true;
 
     }

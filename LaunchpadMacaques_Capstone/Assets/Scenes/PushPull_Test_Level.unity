@@ -505,6 +505,7 @@ MonoBehaviour:
   jumpForce: 550
   gravity: 1100
   readyToSprint: 1
+  sprintMultiplier: 1.75
   x: 0
   y: 0
   jumping: 0
@@ -7082,14 +7083,14 @@ MonoBehaviour:
   orientation: {fileID: 1733823668}
   pullSpringForce: 30
   pullSpringDamper: 5
-  launchSpeed: 30000
+  launchSpeed: 1000
   minDistanceFromObjForLaunch: 15
   distanceFromObjForLaunch: 0
   minTimeForLaunch: 0.25
   maxLaunchMultiplier: 5
   startTime: 0
   endTime: 0
-  ghostTime: 1
+  ghostTime: 0.5
   maxPushDistance: 20
   maxPushTime: 2
   pushDelay: 1.25
