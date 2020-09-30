@@ -31,6 +31,8 @@ public class PushableObj : MonoBehaviour
     private bool pickedUp = false;
     int predStepsPerFrame = 6;
     private LineRenderer lr;
+    private Color startColor;
+    private Color endColor;
     #endregion
     private void Start()
     {
@@ -39,6 +41,9 @@ public class PushableObj : MonoBehaviour
         beingPushed = false;
         lr = this.GetComponent<LineRenderer>();
         lr.positionCount = 0;
+
+        startColor = lr.startColor;
+        endColor = lr.endColor;
     }
     public void StartPush(GameObject cam)
     {
@@ -119,6 +124,7 @@ public class PushableObj : MonoBehaviour
     #region Line
     private void ShowLine()
     {
+        bool hitCollectable = false;
         tempSpeed = distance;
         Vector3 point1 = this.transform.position;
         Vector3 predObjectVelocity = objectVelocity;
@@ -136,6 +142,24 @@ public class PushableObj : MonoBehaviour
             Ray ray = new Ray(point1, point2 - point1);
             if (Physics.Raycast(ray, out hit, (point2 - point1).magnitude))
             {
+
+
+                if (hit.collider.gameObject.CompareTag("Collectible"))
+                {
+                    //Debug.Log("Should Have Changed color");
+                    //lr.startColor = Color.green;
+                    //lr.endColor = Color.green;
+                    hitCollectable = true;
+                }
+
+                //else
+                //{
+                //    Debug.Log("Should Reset Colors");
+                //    lr.startColor = startColor;
+                //    lr.endColor = endColor;
+                //}
+
+
                 if (!hit.collider.isTrigger)
                 {
                     lr.positionCount = count;
@@ -143,6 +167,7 @@ public class PushableObj : MonoBehaviour
                     MoveDecal(hit);
                     break;
                 }
+
 
             }
 
@@ -152,6 +177,18 @@ public class PushableObj : MonoBehaviour
             lr.positionCount++;
 
 
+        }
+
+        if (hitCollectable)
+        {
+            lr.startColor = Color.green;
+            lr.endColor = Color.green;
+        }
+
+        else
+        {
+            lr.startColor = startColor;
+            lr.endColor = endColor;
         }
 
     }

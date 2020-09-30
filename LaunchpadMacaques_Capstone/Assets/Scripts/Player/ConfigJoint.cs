@@ -68,9 +68,12 @@ public class ConfigJoint : MonoBehaviour
 
     private float[] currentCooldowns;
 
+    private PushPullObjects pushPull;
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
+        pushPull = this.GetComponent<PushPullObjects>();
 
         if (joint)
         {
@@ -152,7 +155,7 @@ public class ConfigJoint : MonoBehaviour
             GetComponent<FMODUnity.StudioEventEmitter>().Play();
         }
         //If pulling and there is a surface in front of the player in which they can grapple to
-        else if (grappleType == GrappleType.Pull && Physics.Raycast(camera.position, camera.forward, out hit, maxPullDistance, whatIsGrappleable))
+        else if (grappleType == GrappleType.Pull && Physics.Raycast(camera.position, camera.forward, out hit, maxPullDistance, whatIsGrappleable) && !pushPull.IsGrabbing())
         {
             isGrappling = true;
 

@@ -108,4 +108,9 @@ public class PushPullObjects : MonoBehaviour
         lr.SetPosition(1, this.transform.position);
     }
 
+    public bool IsGrabbing()
+    {
+        return grabbing;
+    }
+
 }
