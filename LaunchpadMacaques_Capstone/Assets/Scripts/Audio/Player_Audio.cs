@@ -44,7 +44,6 @@ public class Player_Audio : MonoBehaviour
         {   
             landed = true;
             m_land.Play();
-            Debug.Log(magnitude);
         }
 
         landed = grounded;
@@ -62,11 +61,12 @@ public class Player_Audio : MonoBehaviour
 
     private void LateUpdate()
     {
-        magnitude = Mathf.Lerp(magnitude, m_rb.velocity.magnitude / PLAYER_TOP_SPEED, 0.05f);
-
+        magnitude = Mathf.Lerp(magnitude, m_rb.velocity.magnitude / PLAYER_TOP_SPEED, 0.1f);
+        
         m_swing.SetParameter("Magnitude", magnitude);
         m_land.SetParameter("Magnitude", magnitude);
         m_footsteps.SetParameter("Magnitude", magnitude);
+        
 
     }
 
