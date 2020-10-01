@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
@@ -7,11 +8,11 @@ public class MakeSpotNotGrappleable : MonoBehaviour
 {
     #region Public Values
     [Header("Size Settings")]
-    [SerializeField][Tooltip("The Size of How much of the object will be made not Grappable")] float notGrappableSize = 5;
-    [SerializeField][Tooltip("The Max Size of an object for the entire object to become un Grappable")] float maxObjectSize = 13;
+    [SerializeField] [Tooltip("The Size of How much of the object will be made not Grappable")] float notGrappableSize = 5;
+    [SerializeField] [Tooltip("The Max Size of an object for the entire object to become un Grappable")] float maxObjectSize = 13;
     [Header("Visuals")]
-    [SerializeField][Tooltip("The Object that is spawned to make part of object not Grappable")] GameObject corruptedVisual;
-    [SerializeField][Tooltip("The Material an object will switch to if the entire object becomes un Grappable")] Material corruptedMaterial;
+    [SerializeField] [Tooltip("The Object that is spawned to make part of object not Grappable")] GameObject corruptedVisual;
+    [SerializeField] [Tooltip("The Material an object will switch to if the entire object becomes un Grappable")] Material corruptedMaterial;
 
     [SerializeField] [Tooltip("The Prefab that creates the Decal that is placed on part of Object when it becomes un Grappable")] private GameObject decal;
     [SerializeField] private LayerMask whatIsGrappleable;
@@ -56,7 +57,7 @@ public class MakeSpotNotGrappleable : MonoBehaviour
         Vector3 objectVector = hitObject.GetComponent<Renderer>().bounds.size;
         objectSize = objectVector.x + objectVector.y + objectVector.z;
 
-        if(objectSize > maxObjectSize)
+        if (objectSize > maxObjectSize)
         {
             MakePartOfObjectNotGrappable(spotPos, hitObject);
         }
@@ -76,7 +77,7 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     {
         GameObject temporaryCorruptedVisual = Instantiate(corruptedVisual);
         temporaryCorruptedVisual.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), spotPos.normal);
-        Debug.Log("Object Rotation: "+ transform.rotation);
+        Debug.Log("Object Rotation: " + transform.rotation);
         temporaryCorruptedVisual.transform.position = spotPos.point;
         temporaryCorruptedVisual.transform.localScale = new Vector3(notGrappableSize, notGrappableSize, .5f);
         tempCorruptedVisuals.Add(temporaryCorruptedVisual);
@@ -96,7 +97,7 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     private void MakeEntireObjectNotGrappable(GameObject hitObject, RaycastHit hit)
     {
         StartCoroutine(ChangeObjectLayer(hitObject));
-        
+
         if (hit.collider != null)
         {
             Renderer r = hit.collider.GetComponent<Renderer>();
@@ -110,7 +111,7 @@ public class MakeSpotNotGrappleable : MonoBehaviour
 
             r.SetPropertyBlock(pBlock);
 
-         
+
         }
 
         corruptedObjects.Add(hitObject.gameObject);
@@ -128,29 +129,40 @@ public class MakeSpotNotGrappleable : MonoBehaviour
         obj.layer = LayerMask.NameToLayer("CantGrapple");
     }
 
-    public void ClearCorruption()
+    public void ClearCorruption(Vector3 collectableLocation, float resetRadius)
     {
-        foreach(GameObject g in corruptedObjects)
+
+        for (int i = 0; i < corruptedObjects.Count; i++)
         {
-            g.layer = LayerMask.NameToLayer("CanGrapple");
-            Renderer render = g.GetComponent<Renderer>();
-            MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
-            render.SetPropertyBlock(pBlock);
-       
+            if (Vector3.Distance(corruptedObjects.ElementAt(i).transform.position, collectableLocation) <= resetRadius)
+            {
+                GameObject temp = corruptedObjects.ElementAt(i);
+                corruptedObjects.RemoveAt(i);
+                Destroy(temp.gameObject);
+                i--;
+            }
+        }
+        for (int i = 0; i < corruptedDecals.Count; i++)
+        {
+            if (Vector3.Distance(corruptedDecals.ElementAt(i).transform.position, collectableLocation) <= resetRadius)
+            {
+                GameObject temp = corruptedDecals.ElementAt(i);
+                corruptedDecals.RemoveAt(i);
+                Destroy(temp.gameObject);
+                i--;
+            }
         }
 
-        corruptedObjects.Clear();
-
-        foreach(GameObject d in corruptedDecals)
+        for (int i = 0; i < tempCorruptedVisuals.Count; i++)
         {
-            Destroy(d.gameObject);
-        }
+            if (Vector3.Distance(tempCorruptedVisuals.ElementAt(i).transform.position, collectableLocation) <= resetRadius)
+            {
+                GameObject temp = tempCorruptedVisuals.ElementAt(i);
+                tempCorruptedVisuals.RemoveAt(i);
+                Destroy(temp.gameObject);
+                i--;
 
-        corruptedDecals.Clear();
-
-        foreach(GameObject t in tempCorruptedVisuals)
-        {
-            Destroy(t.gameObject);
+            }
         }
     }
 }
