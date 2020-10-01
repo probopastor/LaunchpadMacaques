@@ -27,8 +27,8 @@ public class GravityModifierCollectibleScript : CollectibleBehavior
     public override void Collect()
     {
         //StartCoroutine(GetCollectibleController().EffectTimer());
-        GetCollectibleController().gravityIsCollected = true;
-        GetCollectibleController().isActive = true;
+        GetCollectibleController().SetGravityIsCollected(true);
+        GetCollectibleController().SetIsActive(true);
         DestroyCollectible();
     }
 

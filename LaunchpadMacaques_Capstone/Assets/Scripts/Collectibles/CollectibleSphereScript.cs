@@ -21,15 +21,15 @@ public class CollectibleSphereScript : CollectibleBehavior
     public override void Collect()
     {
         IncrementCollectibleCount();
-        GetCollectibleController().totalCollectiblesText.SetText("Total Sphere Count: " + GetCollectibleController().totalCollectedCollectibles + " / " + GetCollectibleController().totalCollectibles);
+        GetCollectibleController().totalCollectiblesText.SetText("Total Sphere Count: " + GetCollectibleController().GetTotalCollectedCollectibles() + " / " + GetCollectibleController().GetTotalCollectibles());
         DestroyCollectible();
 
-        Debug.Log("The total amount of collected collectibles: " + GetCollectibleController().totalCollectedCollectibles);
-        Debug.Log("The total amount of collectibles: " + GetCollectibleController().totalCollectedCollectibles);
+        Debug.Log("The total amount of collected collectibles: " + GetCollectibleController().GetTotalCollectedCollectibles());
+        Debug.Log("The total amount of collectibles: " + GetCollectibleController().GetTotalCollectibles());
 
-        if (GetCollectibleController().totalCollectedCollectibles >= GetCollectibleController().totalCollectibles)
+        if (GetCollectibleController().GetTotalCollectedCollectibles() >= GetCollectibleController().GetTotalCollectibles())
         {
-            GetCollectibleController().pauseManager.SetGameWin();
+            GetCollectibleController().GetPauseManagerReference().SetGameWin();
         }
 
     }
@@ -47,7 +47,8 @@ public class CollectibleSphereScript : CollectibleBehavior
     /// </summary>
     public override void IncrementCollectibleCount()
     {
-        GetCollectibleController().totalCollectedCollectibles++;
+        //GetCollectibleController().totalCollectedCollectibles++;
+        GetCollectibleController().SetTotalCollectedCollectibles();
     }
 
     /// <summary>
@@ -55,7 +56,8 @@ public class CollectibleSphereScript : CollectibleBehavior
     /// </summary>
     public override void DecrementCollectibleTotal()
     {
-        GetCollectibleController().totalCollectibles--;
+        //GetCollectibleController().totalCollectibles--;
+        GetCollectibleController().SetTotalCollectibles();
     }
 
     /// <summary>

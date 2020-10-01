@@ -180,24 +180,24 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void Movement()
     {
-        if ((!grappleGunReference.IsGrappling() && !grounded) && !collectibleController.isActive) // If in the air // (gameObject.transform.position.y > 20)
+        if ((!grappleGunReference.IsGrappling() && !grounded) && !collectibleController.GetIsActive()) // If in the air // (gameObject.transform.position.y > 20)
         {
             //Add gravity
             gravity = 3000;
             rb.AddForce(Vector3.down * Time.deltaTime * gravity);
         }
-        else if((grappleGunReference.IsGrappling() || grounded) && !collectibleController.isActive)
+        else if((grappleGunReference.IsGrappling() || grounded) && !collectibleController.GetIsActive())
         {
             //Add gravity
             gravity = defaultGravity;
             rb.AddForce(Vector3.down * Time.deltaTime * gravity);
         }
 
-        if (collectibleController.isActive)
+        if (collectibleController.GetIsActive())
         {
                 gravity = 200f;
         }
-        else if (collectibleController.isActive == false)
+        else if (collectibleController.GetIsActive() == false)
         {
                 gravity = defaultGravity;
         }
