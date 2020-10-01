@@ -20,18 +20,26 @@ public class CollectibleController : MonoBehaviour
     public TextMeshProUGUI gravityText;
 
     [Header("Script References")]
-    [SerializeField] [Tooltip("Thing")]
+    [SerializeField] [Tooltip("Reference to the Pause Manager script.")]
     private PauseManager pauseManager;
-    [SerializeField] [Tooltip("Thing")]
+
+    [SerializeField] [Tooltip("Reference to the Matt Player Movement script.")]
     private Matt_PlayerMovement playerMovement;
 
     [Header("Variables")]
-    [SerializeField] [Tooltip("Thing")]
-    private int totalCollectibles, totalCollectedCollectibles;
+    [SerializeField] [Tooltip("Total amount of collectibles in the level.")] 
+    private int totalCollectibles; 
 
-    [SerializeField] [Tooltip("Thing")]
-    private bool isActive = false, gravityIsCollected = false;
+    [SerializeField] [Tooltip("Total amount of collected collectibles.")]
+    private int totalCollectedCollectibles;
 
+    [SerializeField] [Tooltip("Boolean used to determine if EffectTimer Coroutine is active or not.")]
+    private bool isActive = false;
+
+    [SerializeField] [Tooltip("Is true or false depending on if the gravity collectible is collected or not.")]
+    private bool gravityIsCollected = false;
+
+    [Tooltip("The duration of the effect of the gravity manipulation.")]
     public float effectDuration = 5f;
 
 
@@ -152,11 +160,19 @@ public class CollectibleController : MonoBehaviour
         gravityIsCollected = true_or_false;
     }
 
+    /// <summary>
+    /// Setter for the totalCollectedCollectibles int.
+    /// </summary>
+    /// <param name="true_or_false"></param>
     public void SetTotalCollectedCollectibles()
     {
         totalCollectedCollectibles++;
     }
 
+    /// <summary>
+    /// Setter for the totalCollectibles int.
+    /// </summary>
+    /// <param name="true_or_false"></param>
     public void SetTotalCollectibles()
     {
         totalCollectibles--;
@@ -164,19 +180,4 @@ public class CollectibleController : MonoBehaviour
 
     #endregion
 
-    //public int GetTotalCollectibles()
-    //{
-    //    return totalCollectibles;
-    //}
-
-    //public void AddToTotalCollectibles(int plusOne)
-    //{
-    //    totalCollectibles += plusOne;
-    //    totalCollectiblesText.SetText("Total Collectibles: " + totalCollectibles + " / " + totalSpheres);
-
-    //    if(totalCollectibles >= totalSpheres)
-    //    {
-    //        pauseManager.SetGameWin();
-    //    }
-    //}
 }
