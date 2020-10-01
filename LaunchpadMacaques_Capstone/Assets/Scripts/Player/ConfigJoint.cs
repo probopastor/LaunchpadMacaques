@@ -11,6 +11,7 @@ public class ConfigJoint : MonoBehaviour
     private LineRenderer lr;
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
+    [SerializeField] LayerMask whatIsNotGrappleable;
     private Vector3 currentGrapplePosition;
     public Transform gunTip, camera, player;
     private float maxPullDistance = 100f;
@@ -157,25 +158,35 @@ public class ConfigJoint : MonoBehaviour
         //If pulling and there is a surface in front of the player in which they can grapple to
         else if (grappleType == GrappleType.Pull && Physics.Raycast(camera.position, camera.forward, out hit, maxPullDistance, whatIsGrappleable) && !pushPull.IsGrabbing())
         {
-            isGrappling = true;
+            float distance = Vector3.Distance(transform.position, hit.point);
+            Vector3 dir = (hit.point - transform.position).normalized;
 
-            grappleRayHit = hit;
+            if (!Physics.Raycast(transform.position, dir, distance, whatIsNotGrappleable))
+            {
+                isGrappling = true;
 
-            //Set Grapple target and mark point to pull to
-            currentGrappleTarget = hit.collider.transform;
+                grappleRayHit = hit;
 
-            hitObjectClone = Instantiate(hitObject);
-            hitObjectClone.transform.position = hit.point;
-            hitObjectClone.transform.parent = hit.transform;
-            grapplePoint = hitObjectClone.transform.position;
+                //Set Grapple target and mark point to pull to
+                currentGrappleTarget = hit.collider.transform;
 
-            currentGrappleTargetOffset = grapplePoint - currentGrappleTarget.position;
+                hitObjectClone = Instantiate(hitObject);
+                hitObjectClone.transform.position = hit.point;
+                hitObjectClone.transform.parent = hit.transform;
+                grapplePoint = hitObjectClone.transform.position;
 
-            lr.positionCount = 2;
-            currentGrapplePosition = gunTip.position;
+                currentGrappleTargetOffset = grapplePoint - currentGrappleTarget.position;
 
-            GetComponent<FMODUnity.StudioEventEmitter>().Play();
-            StartCoroutine(JointDestroyDelay());
+                lr.positionCount = 2;
+                currentGrapplePosition = gunTip.position;
+
+
+
+                GetComponent<FMODUnity.StudioEventEmitter>().Play();
+                StartCoroutine(JointDestroyDelay());
+
+                //grappleSpotChanger.MakeSpotNotGrappable(hit, hit.collider.gameObject);
+            }
         }
 
         //Not able to pull or push
