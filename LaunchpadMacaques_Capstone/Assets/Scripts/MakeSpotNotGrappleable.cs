@@ -20,7 +20,9 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     #region Private Values
     private GameObject grappleDecalObj;
     private float objectSize;
-
+    private List<GameObject> tempCorruptedVisuals = new List<GameObject>();
+    private List<GameObject> corruptedDecals = new List<GameObject>();
+    private List<GameObject> corruptedObjects = new List<GameObject>();
 
     private Matt_PlayerMovement player;
     private Camera cam;
@@ -77,16 +79,13 @@ public class MakeSpotNotGrappleable : MonoBehaviour
         Debug.Log("Object Rotation: "+ transform.rotation);
         temporaryCorruptedVisual.transform.position = spotPos.point;
         temporaryCorruptedVisual.transform.localScale = new Vector3(notGrappableSize, notGrappableSize, .5f);
-        //temporaryCorruptedVisual.transform.parent = hitObject.transform;
-
-
-
-        Color objectColor = hitObject.GetComponent<MeshRenderer>().material.color;
+        tempCorruptedVisuals.Add(temporaryCorruptedVisual);
 
         grappleDecalObj = Instantiate(decal);
         grappleDecalObj.transform.position = spotPos.point;
         grappleDecalObj.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), spotPos.normal);
         grappleDecalObj.GetComponent<DecalProjector>().size = new Vector3(notGrappableSize * 1.25f, notGrappableSize * 1.25f, notGrappableSize * 1.25f);
+        corruptedDecals.Add(grappleDecalObj);
         //grappleDecalObj.transform.parent = hitObject.transform;
     }
 
@@ -98,19 +97,6 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     {
         StartCoroutine(ChangeObjectLayer(hitObject));
         
-
-        //Renderer r = hitObject.GetComponent<Renderer>();
-        //MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
-
-        //r.GetPropertyBlock(pBlock);
-
-        //Debug.Log("Should Shader");
-        //pBlock.SetFloat("CorruptionStartTime", Time.time);
-        //Vector3 localPos = hitObject.transform.InverseTransformPoint(hitObject.transform.position);
-        //pBlock.SetVector("CorruptionStartPos", localPos);
-
-        //r.SetPropertyBlock(pBlock);
-
         if (hit.collider != null)
         {
             Renderer r = hit.collider.GetComponent<Renderer>();
@@ -123,7 +109,11 @@ public class MakeSpotNotGrappleable : MonoBehaviour
             pBlock.SetVector("CorruptionStartPos", localPos);
 
             r.SetPropertyBlock(pBlock);
+
+         
         }
+
+        corruptedObjects.Add(hitObject.gameObject);
     }
 
 
@@ -136,5 +126,31 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     {
         yield return new WaitForSeconds(.1f);
         obj.layer = LayerMask.NameToLayer("CantGrapple");
+    }
+
+    public void ClearCorruption()
+    {
+        foreach(GameObject g in corruptedObjects)
+        {
+            g.layer = LayerMask.NameToLayer("CanGrapple");
+            Renderer render = g.GetComponent<Renderer>();
+            MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
+            render.SetPropertyBlock(pBlock);
+       
+        }
+
+        corruptedObjects.Clear();
+
+        foreach(GameObject d in corruptedDecals)
+        {
+            Destroy(d.gameObject);
+        }
+
+        corruptedDecals.Clear();
+
+        foreach(GameObject t in tempCorruptedVisuals)
+        {
+            Destroy(t.gameObject);
+        }
     }
 }
