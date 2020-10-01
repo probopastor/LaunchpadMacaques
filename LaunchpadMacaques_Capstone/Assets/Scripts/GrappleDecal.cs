@@ -70,5 +70,6 @@ public class GrappleDecal : MonoBehaviour
             grappleDecalObj.transform.position = configJoint.GetGrapplePoint();
             grappleDecalObj.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), configJoint.GetGrappleRayhit().normal);
         }
+       
     }
 }

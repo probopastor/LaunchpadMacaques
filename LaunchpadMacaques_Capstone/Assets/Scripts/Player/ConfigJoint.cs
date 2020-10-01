@@ -75,6 +75,7 @@ public class ConfigJoint : MonoBehaviour
 
     [Tooltip("The Max amount of time a joint will be connected for")]
     [SerializeField] float maxJointTime = 2;
+    private bool inGrappleRoutine = false;
 
     private float[] currentCooldowns;
 
@@ -118,10 +119,12 @@ public class ConfigJoint : MonoBehaviour
         {
             StartGrapple(GrappleType.Pull);
         }
-        //else if (Input.GetMouseButtonUp(0))
-        //{
-        //    StopGrapple();
-        //}
+        else if (Input.GetMouseButtonDown(0) && isGrappling)
+        {
+            inGrappleRoutine = false;
+            StopGrapple();
+            StartGrapple(GrappleType.Pull);
+        }
 
         if (Input.GetMouseButton(1) && !isGrappling)
         {
@@ -185,6 +188,7 @@ public class ConfigJoint : MonoBehaviour
             currentGrapplePosition = gunTip.position;
 
             GetComponent<FMODUnity.StudioEventEmitter>().Play();
+            inGrappleRoutine = true;
             StartCoroutine(JointDestroyDelay());
 
         }
@@ -263,7 +267,7 @@ public class ConfigJoint : MonoBehaviour
     IEnumerator JointDestroyDelay()
     {
         float heldDownTime = 0;
-        while (Input.GetMouseButton(0))
+        while (inGrappleRoutine)
         {
             if (grappleHasMax && maxJointTime <= heldDownTime)
             {
