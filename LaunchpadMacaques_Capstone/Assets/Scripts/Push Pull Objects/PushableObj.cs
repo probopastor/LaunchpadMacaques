@@ -33,9 +33,11 @@ public class PushableObj : MonoBehaviour
     private LineRenderer lr;
     private Color startColor;
     private Color endColor;
+    private Vector3 respawnPos;
     #endregion
     private void Start()
     {
+        respawnPos = this.transform.position;
         thisDecal = Instantiate(throwDecal);
         thisDecal.SetActive(false);
         beingPushed = false;
@@ -56,6 +58,11 @@ public class PushableObj : MonoBehaviour
         if (changeDistance & pickedUp)
         {
             ChangeDistance();
+        }
+
+        if(this.transform.position.y < -100)
+        {
+            this.transform.position = respawnPos;
         }
   
     }

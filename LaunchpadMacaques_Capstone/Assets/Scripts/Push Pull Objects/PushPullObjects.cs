@@ -104,8 +104,12 @@ public class PushPullObjects : MonoBehaviour
 
     void DrawRope()
     { 
-        lr.SetPosition(0, objectRB.transform.position);
-        lr.SetPosition(1, this.transform.position);
+        if(lr.positionCount > 0)
+        {
+            lr.SetPosition(0, objectRB.transform.position);
+            lr.SetPosition(1, this.transform.position);
+        }
+
     }
 
     public bool IsGrabbing()
