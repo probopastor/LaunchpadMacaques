@@ -7,6 +7,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField]
     private GrapplingGun grappleGunReference;
 
+    private CollectibleController collectibleController;
+
     [Header("Player Transform Assignables")]
     //Assingables
     public Transform playerCam;
@@ -87,6 +89,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         pauseManager = FindObjectOfType<PauseManager>();
+        collectibleController = FindObjectOfType<CollectibleController>();
     }
 
     void Start()
@@ -177,17 +180,26 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void Movement()
     {
-        if (!grappleGunReference.IsGrappling() && !grounded && (gameObject.transform.position.y > 20)) // If in the air
+        if ((!grappleGunReference.IsGrappling() && !grounded) && !collectibleController.isActive) // If in the air // (gameObject.transform.position.y > 20)
         {
             //Add gravity
             gravity = 3000;
             rb.AddForce(Vector3.down * Time.deltaTime * gravity);
         }
-        else
+        else if((grappleGunReference.IsGrappling() || grounded) && !collectibleController.isActive)
         {
             //Add gravity
-            gravity = 1500;
+            gravity = defaultGravity;
             rb.AddForce(Vector3.down * Time.deltaTime * gravity);
+        }
+
+        if (collectibleController.isActive)
+        {
+                gravity = 200f;
+        }
+        else if (collectibleController.isActive == false)
+        {
+                gravity = defaultGravity;
         }
 
         //Find actual velocity relative to where player is looking

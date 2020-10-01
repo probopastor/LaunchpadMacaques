@@ -11,16 +11,13 @@ using UnityEngine;
 
 public abstract class CollectibleBehavior : MonoBehaviour
 {
-    private bool collected;
-
+    // CollectibleController reference
     private CollectibleController collectibleController;
-    private Matt_PlayerMovement playerMovement;
 
     // Start is called before the first frame update
     public virtual void Start()
     {
         collectibleController = GameObject.FindGameObjectWithTag("Collectible Controller").GetComponent<CollectibleController>();
-        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<Matt_PlayerMovement>();
     }
 
     // Update is called once per frame
@@ -29,6 +26,9 @@ public abstract class CollectibleBehavior : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Triggers the collect function when sub classes collide with the player. 
+    /// </summary>
     public virtual void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Player"))
@@ -37,39 +37,41 @@ public abstract class CollectibleBehavior : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Abstract Collect method for sub classes to define functionality. 
+    /// </summary>
     public abstract void Collect();
 
-    public abstract void DestroyCollectible();
+    /// <summary>
+    /// Virtual DestroyCollectible method for sub classes to define functionality if they want to. 
+    /// </summary>
+    public virtual void DestroyCollectible()
+    {
 
+    }
+
+    /// <summary>
+    /// Virtual IncrementCollectibleCount method for sub classes to define functionality if they want to. 
+    /// </summary>
     public virtual void IncrementCollectibleCount()
     {
 
     }
 
+    /// <summary>
+    /// Virtual DecrementCollectibleTotal method for sub classes to define functionality if they want to. 
+    /// </summary>
     public virtual void DecrementCollectibleTotal()
     {
 
     }
 
-    public bool GetCollected()
-    {
-        return collected;
-    }
-
-    public void SetCollected(bool true_or_false)
-    {
-        collected = true_or_false;
-    }
-
-
+    /// <summary>
+    /// Getter for obtaining the CollectibleController reference
+    /// </summary>
     public CollectibleController GetCollectibleController()
     {
         return collectibleController;
-    }
-
-    public Matt_PlayerMovement GetPlayerMovement()
-    {
-        return playerMovement;
     }
 
 }

@@ -3,7 +3,7 @@
 * Colin Bugbee
 * CJ Green
 * CollectibleSphereScript.cs 
-* Destroys collectibles upon player collision.
+* This class inherits from the abstract class and defines the behavior of the circle collectibles.
 */
 
 using System.Collections;
@@ -15,57 +15,53 @@ using UnityStandardAssets._2D;
 
 public class CollectibleSphereScript : CollectibleBehavior
 {
-
-    private int totalCollectibles;
-    private int totalCollectedCollectibles;
-
-    public override void Start()
-    {
-        base.Start();
-        totalCollectedCollectibles = 0;
-        totalCollectibles = FindObjectsOfType<CollectibleSphereScript>().Length;
-    }
-
-    //public override void Update()
-    //{
-    //    Debug.Log("The total amount of collected collectibles: " + totalCollectedCollectibles);
-    //    Debug.Log("The total amount of collectibles: " + totalCollectedCollectibles);
-    //}
-
+    /// <summary>
+    /// Defines the functionality the sphere collectible's Collect function. 
+    /// </summary>
     public override void Collect()
     {
         IncrementCollectibleCount();
-        DecrementCollectibleTotal();
-        GetCollectibleController().testDisplayText.SetText("Total Sphere Count: " + totalCollectedCollectibles + " / " + totalCollectibles);
-        //DestroyCollectible();
+        GetCollectibleController().totalCollectiblesText.SetText("Total Sphere Count: " + GetCollectibleController().totalCollectedCollectibles + " / " + GetCollectibleController().totalCollectibles);
+        DestroyCollectible();
 
-        Debug.Log("The total amount of collected collectibles: " + totalCollectedCollectibles);
-        Debug.Log("The total amount of collectibles: " + totalCollectedCollectibles);
+        Debug.Log("The total amount of collected collectibles: " + GetCollectibleController().totalCollectedCollectibles);
+        Debug.Log("The total amount of collectibles: " + GetCollectibleController().totalCollectedCollectibles);
 
-        if (totalCollectedCollectibles >= totalCollectibles)
+        if (GetCollectibleController().totalCollectedCollectibles >= GetCollectibleController().totalCollectibles)
         {
             GetCollectibleController().pauseManager.SetGameWin();
         }
 
     }
 
+    /// <summary>
+    /// Destroys the current collectible.
+    /// </summary>
     public override void DestroyCollectible()
     {
         Destroy(gameObject);
     }
 
+    /// <summary>
+    /// Increment collected collectible count.
+    /// </summary>
     public override void IncrementCollectibleCount()
     {
-        //base.IncrementCollectibleCount();
-        totalCollectedCollectibles++;
+        GetCollectibleController().totalCollectedCollectibles++;
     }
 
+    /// <summary>
+    /// Cecrement total collectible object count.
+    /// </summary>
     public override void DecrementCollectibleTotal()
     {
-        //base.DecrementCollectibleTotal();
-        totalCollectibles--;
+        GetCollectibleController().totalCollectibles--;
     }
 
+    /// <summary>
+    /// Calls the OnTrigger functionality from the base class.
+    /// </summary>
+    /// <param name="other"></param>
     public override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
