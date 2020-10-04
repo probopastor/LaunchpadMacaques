@@ -92,7 +92,7 @@ public class PassTriggerEnabler : MonoBehaviour
     //waits and disables targets
     IEnumerator Disabler()
     {
-        yield return new WaitForSeconds(timerValue);
+        yield return new WaitForSecondsRealtime(timerValue);
         for (int i = 0; i < targets.Length; i++)
         {
             targets[i].SetActive(false);
