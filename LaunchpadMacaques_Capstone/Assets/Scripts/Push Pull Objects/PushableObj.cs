@@ -1,25 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+﻿/* 
+* (Launchpad Macaques - [Trial and Error]) 
+* (Levi Schoof) 
+* (PushableObj.CS) 
+* (The Script placed on object the player can pick up and throw) 
+*/
+
 using UnityEngine;
 
 public class PushableObj : MonoBehaviour
 {
     #region Inspector Vars
     [Header("Visual Settings")]
-    [SerializeField] GameObject throwDecal;
- 
+    [SerializeField] [Tooltip("The Decal that will be placed to make part of object look Corrupted")] GameObject throwDecal;
+
     [Header("Movement Settings")]
-    public float gravityScaler = 5;
-    [SerializeField] float distance;
+    [SerializeField] [Tooltip("The Variable that will be multiplyed by deafult grabity to apply gravity to this object")] float gravityScaler = 1.75f;
+    [SerializeField] [Tooltip("The distance an object will fly, when thrown")] float distance;
 
 
- 
+
     [Header("Change Distance Settings")]
-    [SerializeField] private float wheelSensitivity = 5;
-    [SerializeField] bool changeDistance = true;
-    [SerializeField] float minDistance = 5;
-    [SerializeField] float maxDistance = 40;
+    [SerializeField] [Tooltip("How much the distance will change when the player moves the mouse wheel")] float wheelSensitivity = 5;
+    [SerializeField] [Tooltip("The Bool which will determine if the player can change the Object Fly Distance")]  bool changeDistance = true;
+    [SerializeField] [Tooltip("The Min Fly Distance for the Object")]float minDistance = 5;
+    [SerializeField] [Tooltip("The Max Fly Distance for the Object")]float maxDistance = 40;
     #endregion
 
     #region Private Vars
@@ -37,6 +41,14 @@ public class PushableObj : MonoBehaviour
     #endregion
     private void Start()
     {
+        CreateDecalAndLine();
+    }
+
+    /// <summary>
+    /// Will Create and Set the decals and Line Renderer
+    /// </summary>
+    private void CreateDecalAndLine()
+    {
         respawnPos = this.transform.position;
         thisDecal = Instantiate(throwDecal);
         thisDecal.SetActive(false);
@@ -47,6 +59,11 @@ public class PushableObj : MonoBehaviour
         startColor = lr.startColor;
         endColor = lr.endColor;
     }
+
+    /// <summary>
+    /// The Public method that is called to start the push of the object
+    /// </summary>
+    /// <param name="cam"></param>
     public void StartPush(GameObject cam)
     {
         beingPushed = true;
@@ -60,11 +77,19 @@ public class PushableObj : MonoBehaviour
             ChangeDistance();
         }
 
-        if(this.transform.position.y < -100)
+        ResetObjectPos();
+    }
+
+
+    /// <summary>
+    /// If the object flys off the map, the object will be reset to starting position
+    /// </summary>
+    private void ResetObjectPos()
+    {
+        if (this.transform.position.y < -100)
         {
             this.transform.position = respawnPos;
         }
-  
     }
 
     private void FixedUpdate()
@@ -74,6 +99,9 @@ public class PushableObj : MonoBehaviour
         else if (pickedUp) ShowLine();
     }
 
+    /// <summary>
+    /// Will Get The User's Mouse Wheel Input to Change Object Distance
+    /// </summary>
     private void ChangeDistance()
     {
         var wheelInput = Input.GetAxis("Mouse ScrollWheel");
@@ -98,6 +126,9 @@ public class PushableObj : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// The Private method that is called to actually push an object
+    /// </summary>
     private void PushObject()
     {
         pickedUp = false;
@@ -129,6 +160,9 @@ public class PushableObj : MonoBehaviour
     }
 
     #region Line
+    /// <summary>
+    /// Will Create a line showing the prediction of where the object will go
+    /// </summary>
     private void ShowLine()
     {
         bool hitCollectable = false;
@@ -153,19 +187,8 @@ public class PushableObj : MonoBehaviour
 
                 if (hit.collider.gameObject.CompareTag("Collectible"))
                 {
-                    //Debug.Log("Should Have Changed color");
-                    //lr.startColor = Color.green;
-                    //lr.endColor = Color.green;
                     hitCollectable = true;
                 }
-
-                //else
-                //{
-                //    Debug.Log("Should Reset Colors");
-                //    lr.startColor = startColor;
-                //    lr.endColor = endColor;
-                //}
-
 
                 if (!hit.collider.isTrigger)
                 {
@@ -203,6 +226,10 @@ public class PushableObj : MonoBehaviour
     #endregion
 
 
+    /// <summary>
+    /// Will Place The Decal at givin spot
+    /// </summary>
+    /// <param name="info"></param>
     private void MoveDecal(RaycastHit info)
     {
         thisDecal.transform.position = info.point;
@@ -212,6 +239,10 @@ public class PushableObj : MonoBehaviour
 
     #region Pick Up/Drop Object
 
+    /// <summary>
+    /// Public method that is called to pick up this object
+    /// </summary>
+    /// <param name="cam"></param>
     public void PickedUpObject(GameObject cam)
     {
         tempCam = cam;
@@ -221,6 +252,9 @@ public class PushableObj : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Public method that will be called to drop the object
+    /// </summary>
     public void DroppedObject()
     {
         pickedUp = false;
@@ -230,11 +264,18 @@ public class PushableObj : MonoBehaviour
         thisDecal.SetActive(false);
     }
 
+    /// <summary>
+    /// When this object hits an object, will stop being pushed
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
         StopPushingObject();
     }
 
+    /// <summary>
+    /// Method that is called to stop pushing this object
+    /// </summary>
     private void StopPushingObject()
     {
         beingPushed = false;

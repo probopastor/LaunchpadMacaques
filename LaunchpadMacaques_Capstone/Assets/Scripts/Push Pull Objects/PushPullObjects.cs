@@ -1,21 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/* 
+* (Launchpad Macaques - [Trial and Error]) 
+* (Levi Schoof) 
+* (PushPullObjects.CS) 
+* (The Script that is placed on the player to handle picking and throwing objects) 
+*/
+
 using UnityEngine;
 
 public class PushPullObjects : MonoBehaviour
 {
-    [SerializeField] float maxGrabDistance;
-    [SerializeField] GameObject objectHolder;
-    [SerializeField] LayerMask canBePickedUp;
-    [SerializeField] float objectFollowSpeed = 10;
+    #region Inspector Values
+    [SerializeField][Tooltip("The Max Distance the player can pick up an object")] float maxGrabDistance;
+    [SerializeField][Tooltip("The Empty Game Objec that the picked up object will move to")] GameObject objectHolder;
+    [SerializeField][Tooltip("The Layer for object that can be picked up")] LayerMask canBePickedUp;
+    [SerializeField][Tooltip("The Speed at which the object will move to the Object Holder")] float objectFollowSpeed = 10;
+    #endregion
 
-
-
+    #region Private Variables
     private Rigidbody objectRB;
     private GameObject cam;
     private bool grabbing = false;
     private LineRenderer lr;
-    //// Start is called before the first frame update
+    #endregion
+
     void Start()
     {
         cam = FindObjectOfType<Camera>().gameObject;
@@ -63,6 +70,9 @@ public class PushPullObjects : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// The Method that is called to pick up an object
+    /// </summary>
     private void PickUpObject()
     {
         RaycastHit hit;
@@ -80,6 +90,9 @@ public class PushPullObjects : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method that is called to drop the currently held object
+    /// </summary>
     private void DropObject()
     {
         grabbing = false;
@@ -90,6 +103,10 @@ public class PushPullObjects : MonoBehaviour
 
     }
 
+
+    /// <summary>
+    /// The Method that is called to start throwing the currently held object
+    /// </summary>
     private void ThrowObject()
     {
         objectRB.isKinematic = false;
@@ -101,7 +118,9 @@ public class PushPullObjects : MonoBehaviour
 
     }
 
-
+    /// <summary>
+    /// Will Draw The Rope from the players hand to the grabbed object
+    /// </summary>
     void DrawRope()
     { 
         if(lr.positionCount > 0)
@@ -112,6 +131,10 @@ public class PushPullObjects : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Returns if the Player Is Grabbing Something
+    /// </summary>
+    /// <returns></returns>
     public bool IsGrabbing()
     {
         return grabbing;
