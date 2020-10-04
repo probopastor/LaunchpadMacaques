@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿/* 
+* (Launchpad Macaques - [Trial and Error]) 
+* (Levi Schoof) 
+* (MakeSpotNotGrappleable.cs) 
+* (The Script that is called to Corrupt and UnCorrupt Objects) 
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,8 +22,9 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     [SerializeField] [Tooltip("The Material an object will switch to if the entire object becomes un Grappable")] Material corruptedMaterial;
 
     [SerializeField] [Tooltip("The Prefab that creates the Decal that is placed on part of Object when it becomes un Grappable")] private GameObject decal;
-    [SerializeField] private LayerMask whatIsGrappleable;
+    [SerializeField] [Tooltip("The Layer for objets that the player can Grapple to")] private LayerMask whatIsGrappleable;
     #endregion
+
 
     #region Private Values
     private GameObject grappleDecalObj;
@@ -24,29 +32,10 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     private List<GameObject> tempCorruptedVisuals = new List<GameObject>();
     private List<GameObject> corruptedDecals = new List<GameObject>();
     private List<GameObject> corruptedObjects = new List<GameObject>();
-
-    private Matt_PlayerMovement player;
-    private Camera cam;
     #endregion
 
 
-
-    void Start()
-    {
-        SetUp();
-    }
-
-
-    /// <summary>
-    /// Will find and set the needed objects
-    /// </summary>
-    private void SetUp()
-    {
-        cam = FindObjectOfType<Camera>();
-        player = FindObjectOfType<Matt_PlayerMovement>();
-    }
-
-
+    #region Corrupt Objects
     /// <summary>
     /// What is Called to Determine how an object/spot is made un Grappable
     /// </summary>
@@ -117,7 +106,6 @@ public class MakeSpotNotGrappleable : MonoBehaviour
         corruptedObjects.Add(hitObject.gameObject);
     }
 
-
     /// <summary>
     /// Will Change the Layer of the Object to "CantGrapple" After short ammount of time
     /// </summary>
@@ -129,6 +117,16 @@ public class MakeSpotNotGrappleable : MonoBehaviour
         obj.layer = LayerMask.NameToLayer("CantGrapple");
     }
 
+
+    #endregion
+
+
+    #region UnCorrupt Objects
+    /// <summary>
+    /// Will loop through the Corrupted Objects in a certain radius, removing the corruption
+    /// </summary>
+    /// <param name="collectableLocation"></param>
+    /// <param name="resetRadius"></param>
     public void ClearCorruption(Vector3 collectableLocation, float resetRadius)
     {
 
@@ -137,8 +135,12 @@ public class MakeSpotNotGrappleable : MonoBehaviour
             if (Vector3.Distance(corruptedObjects.ElementAt(i).transform.position, collectableLocation) <= resetRadius)
             {
                 GameObject temp = corruptedObjects.ElementAt(i);
+                temp.layer = LayerMask.NameToLayer("CanGrapple");
+                Renderer render = corruptedObjects.ElementAt(i).GetComponent<Renderer>();
+                MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
+                render.SetPropertyBlock(pBlock);
                 corruptedObjects.RemoveAt(i);
-                Destroy(temp.gameObject);
+
                 i--;
             }
         }
@@ -165,4 +167,6 @@ public class MakeSpotNotGrappleable : MonoBehaviour
             }
         }
     }
+    #endregion
+
 }
