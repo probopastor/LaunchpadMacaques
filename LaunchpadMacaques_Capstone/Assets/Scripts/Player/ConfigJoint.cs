@@ -11,6 +11,7 @@ public class ConfigJoint : MonoBehaviour
     private LineRenderer lr;
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
+    [SerializeField] LayerMask whatIsNotGrappleable;
     private Vector3 currentGrapplePosition;
     public Transform gunTip, camera, player;
     private float maxPullDistance = 100f;
@@ -28,7 +29,7 @@ public class ConfigJoint : MonoBehaviour
     //Whether the player is currently Grappling
     private bool isGrappling = false;
 
-    
+
 
 
     //this is the value that is updated every frame to set the grapples max distance equal to the player distance from the desired point by this value
@@ -79,9 +80,12 @@ public class ConfigJoint : MonoBehaviour
 
     private float[] currentCooldowns;
 
+    private PushPullObjects pushPull;
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
+        pushPull = this.GetComponent<PushPullObjects>();
 
         if (joint)
         {
@@ -91,7 +95,7 @@ public class ConfigJoint : MonoBehaviour
     }
 
     /// <summary>
-    /// Adjust 
+    /// Adjust
     /// </summary>
     /// <param name="grappleType"></param>
     private void SetSpringSettings(GrappleType grappleType)
@@ -167,30 +171,37 @@ public class ConfigJoint : MonoBehaviour
 
         }
         //If pulling and there is a surface in front of the player in which they can grapple to
-        else if (grappleType == GrappleType.Pull && Physics.Raycast(camera.position, camera.forward, out hit, maxPullDistance, whatIsGrappleable))
+        else if (grappleType == GrappleType.Pull && Physics.Raycast(camera.position, camera.forward, out hit, maxPullDistance, whatIsGrappleable) && !pushPull.IsGrabbing())
         {
+            float distance = Vector3.Distance(transform.position, hit.point);
+            Vector3 dir = (hit.point - transform.position).normalized;
 
-            isGrappling = true;
+            if (!Physics.Raycast(transform.position, dir, distance, whatIsNotGrappleable))
+            {
+                isGrappling = true;
 
-            grappleRayHit = hit;
+                grappleRayHit = hit;
 
-            //Set Grapple target and mark point to pull to
-            currentGrappleTarget = hit.collider.transform;
+                //Set Grapple target and mark point to pull to
+                currentGrappleTarget = hit.collider.transform;
 
-            hitObjectClone = Instantiate(hitObject);
-            hitObjectClone.transform.position = hit.point;
-            hitObjectClone.transform.parent = hit.transform;
-            grapplePoint = hitObjectClone.transform.position;
+                hitObjectClone = Instantiate(hitObject);
+                hitObjectClone.transform.position = hit.point;
+                hitObjectClone.transform.parent = hit.transform;
+                grapplePoint = hitObjectClone.transform.position;
 
-            currentGrappleTargetOffset = grapplePoint - currentGrappleTarget.position;
+                currentGrappleTargetOffset = grapplePoint - currentGrappleTarget.position;
 
-            lr.positionCount = 2;
-            currentGrapplePosition = gunTip.position;
+                lr.positionCount = 2;
+                currentGrapplePosition = gunTip.position;
 
-            GetComponent<FMODUnity.StudioEventEmitter>().Play();
-            inGrappleRoutine = true;
-            StartCoroutine(JointDestroyDelay());
 
+                inGrappleRoutine = true;
+                GetComponent<FMODUnity.StudioEventEmitter>().Play();
+                StartCoroutine(JointDestroyDelay());
+
+                //grappleSpotChanger.MakeSpotNotGrappable(hit, hit.collider.gameObject);
+            }
         }
 
         //Not able to pull or push
@@ -217,7 +228,7 @@ public class ConfigJoint : MonoBehaviour
     IEnumerator UpdateGrapplePosition(GrappleType grappleType)
     {
         RaycastHit hit;
-        
+
         while (isGrappling)
         {
             //Pushing
@@ -257,7 +268,7 @@ public class ConfigJoint : MonoBehaviour
 
         if (grappleType == GrappleType.Push)
             StartCoroutine(PushDelay());
-           
+
     }
 
     /// <summary>
@@ -318,7 +329,7 @@ public class ConfigJoint : MonoBehaviour
         float deltaLaunchTime = endTime - startTime;
         float launchMultiplier = Mathf.Min(endTime - startTime + 2f, maxLaunchMultiplier);
 
-        //launch player in direction if distance allows it 
+        //launch player in direction if distance allows it
         if ((distanceFromObjForLaunch > minDistanceFromObjForLaunch) && (deltaLaunchTime > minTimeForLaunch))
         {
             player.GetComponent<CapsuleCollider>().enabled = false;
@@ -350,7 +361,7 @@ public class ConfigJoint : MonoBehaviour
         }
 
         yield return new WaitForSeconds(time / 2);
-  
+
         player.GetComponent<CapsuleCollider>().enabled = true;
 
     }
@@ -384,7 +395,7 @@ public class ConfigJoint : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the max grapple distance possible. 
+    /// Returns the max grapple distance possible.
     /// </summary>
     /// <returns></returns>
     public float GetMaxGrappleDistance()
@@ -393,7 +404,7 @@ public class ConfigJoint : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the Rayhit from the grappling Raycast. 
+    /// Returns the Rayhit from the grappling Raycast.
     /// </summary>
     /// <returns></returns>
     public RaycastHit GetGrappleRayhit()
