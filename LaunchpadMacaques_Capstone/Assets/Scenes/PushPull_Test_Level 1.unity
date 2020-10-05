@@ -491,6 +491,7 @@ MonoBehaviour:
   sensMultiplier: 1
   moveSpeed: 4500
   maxSpeed: 10
+  swingSpeed: 4500
   grounded: 0
   whatIsGround:
     serializedVersion: 2
@@ -510,6 +511,7 @@ MonoBehaviour:
   jumpForce: 550
   gravity: 1100
   readyToSprint: 1
+  sprintMultiplier: 1.75
   x: 0
   y: 0
   jumping: 0
@@ -3693,7 +3695,7 @@ Transform:
   m_Children:
   - {fileID: 2084724946}
   m_Father: {fileID: 1063995556}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
@@ -4313,6 +4315,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.516, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1608723414}
   - {fileID: 963194228}
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -5729,6 +5732,36 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8a89e36f0571dc4dacb9190ee09def5, type: 3}
+--- !u!1 &1608723413
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1608723414}
+  m_Layer: 0
+  m_Name: Object Holder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1608723414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1608723413}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 1.22, z: -2.58}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1063995556}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1611531246 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2577627170532647298, guid: e8a89e36f0571dc4dacb9190ee09def5,
@@ -7244,6 +7277,7 @@ GameObject:
   - component: {fileID: 2084724947}
   - component: {fileID: 2084724952}
   - component: {fileID: 2084724954}
+  - component: {fileID: 2084724953}
   m_Layer: 0
   m_Name: Hand
   m_TagString: Untagged
@@ -7286,12 +7320,17 @@ MonoBehaviour:
   gunTip: {fileID: 997001713}
   camera: {fileID: 963194228}
   player: {fileID: 142505806}
+  minDistance: 0
   explosionRadius: 1
   explosionPower: 50
   grappleSpeed: 10
   springValue: 5
   springDamp: 10
   springMass: 5
+  minSwingAngle: -90
+  maxSwingAngle: 90
+  grappleToggleEnabledText: {fileID: 0}
+  grappleToggleDisabledText: {fileID: 0}
 --- !u!120 &2084724948
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -7473,8 +7512,17 @@ MonoBehaviour:
   gunTip: {fileID: 997001713}
   camera: {fileID: 963194228}
   player: {fileID: 142505806}
+  orientation: {fileID: 0}
   pullSpringForce: 350
   pullSpringDamper: 300
+  launchSpeed: 30000
+  minDistanceFromObjForLaunch: 10
+  distanceFromObjForLaunch: 0
+  minTimeForLaunch: 1
+  maxLaunchMultiplier: 5
+  startTime: 0
+  endTime: 0
+  ghostTime: 1
   maxPushDistance: 20
   maxPushTime: 2
   pushDelay: 1.25
@@ -7485,6 +7533,24 @@ MonoBehaviour:
   minJointTime: 0.08
   grappleHasMax: 0
   maxJointTime: 2
+--- !u!114 &2084724953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084724945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63421190e70499143ac61b8e7c671760, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxGrabDistance: 20
+  objectHolder: {fileID: 1608723413}
+  canBePickedUp:
+    serializedVersion: 2
+    m_Bits: 0
+  objectFollowSpeed: 10
 --- !u!114 &2084724954
 MonoBehaviour:
   m_ObjectHideFlags: 0
