@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4829246689268611166
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3017156583046541416}
+  - component: {fileID: 4829246689268611165}
+  m_Layer: 0
+  m_Name: Grapple UI Swing Box
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3017156583046541416
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4829246689268611166}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -498.3332, y: 263.9802, z: 3.1653323}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4829246689268611165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4829246689268611166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1482a7fec7d65994ca10e266b202b826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiSprite: {fileID: 21300000, guid: 9220fa7889b8026499a18946d6f2dfaa, type: 3}
+  whatIsGrappleable:
+    serializedVersion: 2
+    m_Bits: 256
+  grappleCanvas: {fileID: 6887187671106448386, guid: abee9b78f6447c3409095c8808ad8ce2,
+    type: 3}
+  distanceVariable: 0.009
+  minScale: 1
+  maxScale: 40

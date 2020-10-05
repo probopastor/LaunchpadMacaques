@@ -78,12 +78,16 @@ public class ConfigJoint : MonoBehaviour
     [SerializeField] float maxJointTime = 2;
     private bool inGrappleRoutine = false;
 
+
+
+    private MakeSpotNotGrappleable grappleSpotChanger;
     private float[] currentCooldowns;
 
     private PushPullObjects pushPull;
 
     void Awake()
     {
+
         lr = GetComponent<LineRenderer>();
         pushPull = this.GetComponent<PushPullObjects>();
 
@@ -91,6 +95,21 @@ public class ConfigJoint : MonoBehaviour
         {
             Debug.Log("Joint was created on awake");
             Destroy(joint);
+        }
+    }
+
+    private void Start()
+    {
+        grappleSpotChanger = FindObjectOfType<MakeSpotNotGrappleable>();
+
+        if (grappleSpotChanger)
+        {
+            Debug.Log("Found it");
+        }
+
+        else
+        {
+            Debug.Log("Did Not Find it");
         }
     }
 
@@ -201,6 +220,7 @@ public class ConfigJoint : MonoBehaviour
                 StartCoroutine(JointDestroyDelay());
 
                 //grappleSpotChanger.MakeSpotNotGrappable(hit, hit.collider.gameObject);
+                grappleSpotChanger.MakeSpotNotGrappable(hit, hit.collider.gameObject);
             }
         }
 
