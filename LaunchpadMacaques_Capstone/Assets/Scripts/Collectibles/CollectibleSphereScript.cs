@@ -56,11 +56,7 @@ public class CollectibleSphereScript : CollectibleBehavior
     /// </summary>
     public override void DecrementCollectibleTotal()
     {
-        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("PlayerCube"))
-        {
-            //GetCollectibleController().SetTotalCollectibles();
-            Collect();
-        }
+        GetCollectibleController().SetTotalCollectibles();
     }
 
     /// <summary>
