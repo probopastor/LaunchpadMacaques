@@ -58,7 +58,10 @@ public class CollectibleController : MonoBehaviour
 
     private void Update()
     {
-        gravityText.SetText("Gravity: " + playerMovement.gravity);
+        if(gravityText != null)
+        {
+            gravityText.SetText("Gravity: " + playerMovement.gravity);
+        }
 
         Debug.Log("Is the gravity power-up is active: " + isActive);
         Debug.Log("The gravity mutiplier is currently: " + playerMovement.gravity);

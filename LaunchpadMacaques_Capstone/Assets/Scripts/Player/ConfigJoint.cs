@@ -220,7 +220,11 @@ public class ConfigJoint : MonoBehaviour
                 StartCoroutine(JointDestroyDelay());
 
                 //grappleSpotChanger.MakeSpotNotGrappable(hit, hit.collider.gameObject);
-                grappleSpotChanger.MakeSpotNotGrappable(hit, hit.collider.gameObject);
+
+                if(grappleSpotChanger != null)
+                {
+                    grappleSpotChanger.MakeSpotNotGrappable(hit, hit.collider.gameObject);
+                }
             }
         }
 
