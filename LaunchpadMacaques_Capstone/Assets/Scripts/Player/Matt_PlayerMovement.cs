@@ -31,6 +31,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("PLayer Movement Variables")]
     //Movement
     public float moveSpeed = 4500;
+    public float swingSpeed = 4500;
     public float maxSpeed = 20;
     public float swingSpeed = 4500;
     public bool grounded;

@@ -126,6 +126,18 @@ public class GrapplingGun : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            if (swingToggle == false)
+            {
+                swingToggle = true;
+            }
+            else
+            {
+                swingToggle = false;
+            }
+        }
+
         //if (Input.GetMouseButtonDown(1))
         //{
         //    Explode();
@@ -192,7 +204,7 @@ public class GrapplingGun : MonoBehaviour
 
             //Adjust these values to fit your game.
 
-            //The distance grapple will try to keep from grapple point. 
+            //The distance grapple will try to keep from grapple point.
             joint.maxDistance = distanceFromPoint;
             joint.minDistance = minDistance;
 
@@ -266,7 +278,7 @@ public class GrapplingGun : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the max grapple distance possible. 
+    /// Returns the max grapple distance possible.
     /// </summary>
     /// <returns></returns>
     public float GetMaxGrappleDistance()
@@ -275,7 +287,7 @@ public class GrapplingGun : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the Rayhit from the grappling Raycast. 
+    /// Returns the Rayhit from the grappling Raycast.
     /// </summary>
     /// <returns></returns>
     public RaycastHit GetGrappleRayhit()
