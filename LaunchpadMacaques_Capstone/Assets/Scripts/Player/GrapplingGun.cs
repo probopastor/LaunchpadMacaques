@@ -11,8 +11,11 @@ public class GrapplingGun : MonoBehaviour
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
     public Transform gunTip, camera, player;
-    [SerializeField] private float minDistance = 0f;
-    private float maxDistance = 100f;
+    [SerializeField] private float distance = 5f;
+    [SerializeField] private float minDistance = 5f;
+    [SerializeField] private float maxDistance = 50f;
+    [SerializeField] private float wheelSensitivity = 2;
+    private float maxGrappleDistance = 100f;
     private SpringJoint joint;
     private float distanceFromPoint;
 
@@ -154,6 +157,39 @@ public class GrapplingGun : MonoBehaviour
             Debug.Log("Line Render Was Dead but Joint was still there");
             StopGrapple();
         }
+
+
+        ChangeDistance();
+    }
+
+    private void ChangeDistance()
+    {
+        var wheelInput = Input.GetAxis("Mouse ScrollWheel");
+
+        if (wheelInput > 0)
+        {
+            distance += wheelSensitivity;
+            if (distance > maxDistance)
+            {
+                distance = maxDistance;
+            }
+        }
+
+        else if (wheelInput < 0)
+        {
+            Debug.Log("Go Down");
+            distance -= wheelSensitivity;
+
+            if (distance < minDistance)
+            {
+                distance = minDistance;
+            }
+        }
+
+        if (joint)
+        {
+            joint.minDistance = distance;
+        }
     }
 
     //Called after Update
@@ -167,7 +203,7 @@ public class GrapplingGun : MonoBehaviour
     {
         print("Explode");
         RaycastHit hit;
-        if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
+        if (Physics.Raycast(camera.position, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
         {
             Vector3 explosionPos = transform.position;
             Collider[] colliders = Physics.OverlapSphere(explosionPos, explosionRadius);
@@ -191,7 +227,7 @@ public class GrapplingGun : MonoBehaviour
     {
         RaycastHit hit;
         RaycastHit secondHit;
-        if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
+        if (Physics.Raycast(camera.position, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
         {
 
             float distance = Vector3.Distance(camera.position, hit.collider.gameObject.transform.position);
@@ -222,7 +258,7 @@ public class GrapplingGun : MonoBehaviour
 
                 //The distance grapple will try to keep from grapple point.
                 joint.maxDistance = distanceFromPoint;
-                joint.minDistance = minDistance;
+                joint.minDistance = distance;
 
                 //Default Vaules
                 //joint.maxDistance = distanceFromPoint * 0.8f;
@@ -314,7 +350,7 @@ public class GrapplingGun : MonoBehaviour
     /// <returns></returns>
     public float GetMaxGrappleDistance()
     {
-        return maxDistance;
+        return maxGrappleDistance;
     }
 
     /// <summary>
