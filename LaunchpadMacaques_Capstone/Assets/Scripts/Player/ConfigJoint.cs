@@ -249,6 +249,13 @@ public class ConfigJoint : MonoBehaviour
         joint.yDrive = jointDrive;
         joint.zDrive = jointDrive;
 
+        //Pinwheel
+        Pinwheel pinwheel = null;
+        if (pinwheel = hit.collider.GetComponentInParent<Pinwheel>())
+        {
+            pinwheel.TriggerRotation(hit.collider.transform, camera.forward);
+        }
+
         StartCoroutine(UpdateGrapplePosition(grappleType));
     }
 
