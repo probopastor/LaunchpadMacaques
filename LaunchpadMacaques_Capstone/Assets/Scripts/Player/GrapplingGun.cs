@@ -230,7 +230,7 @@ public class GrapplingGun : MonoBehaviour
         if (Physics.Raycast(camera.position, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
         {
 
-            float distance = Vector3.Distance(camera.position, hit.collider.gameObject.transform.position);
+            float dist = Vector3.Distance(camera.position, hit.collider.gameObject.transform.position);
 
             if (!(Physics.Raycast(camera.position, camera.forward, out secondHit, distance, whatIsNotGrappleable)))
             {
@@ -242,6 +242,8 @@ public class GrapplingGun : MonoBehaviour
                 hitObjectClone.transform.parent = hit.transform;
                 grapplePoint = hitObjectClone.transform.position;
 
+
+                joint.enableCollision = false;
 
 
                 grappledObj = hit.transform.gameObject;
@@ -258,7 +260,9 @@ public class GrapplingGun : MonoBehaviour
 
                 //The distance grapple will try to keep from grapple point.
                 joint.maxDistance = distanceFromPoint;
-                joint.minDistance = distance;
+                joint.minDistance = dist;
+
+                distance = dist;
 
                 //Default Vaules
                 //joint.maxDistance = distanceFromPoint * 0.8f;
