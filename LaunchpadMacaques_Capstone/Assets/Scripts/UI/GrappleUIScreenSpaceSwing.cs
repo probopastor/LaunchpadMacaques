@@ -13,6 +13,7 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
     [SerializeField] private float distanceVariable = .01f;
     [SerializeField] private float minScale = .5f;
     [SerializeField] private float maxScale = .5f;
+    [SerializeField] LayerMask whatIsNotGrappleable;
     #endregion
 
     #region Private Variables 
@@ -26,7 +27,7 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
     #endregion
 
 
-    // Start is called before the first frame update
+
     void Start()
     {
         thisCanvas = Instantiate(grappleCanvas);
@@ -52,7 +53,6 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
             UpdateUIPos();
         }
 
-
         if (uiImageHolder)
         {
             if (uiImageHolder.rectTransform.localScale.x < minScale)
@@ -64,7 +64,10 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
             {
                 uiImageHolder.rectTransform.localScale = new Vector3(maxScale, maxScale, maxScale);
             }
+
+
         }
+
     }
 
     private void DisplayUI()
@@ -72,13 +75,32 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitInfo;
 
-        if ((Physics.Raycast(ray, out hitInfo, springJoint.GetMaxGrappleDistance(), whatIsGrappleable)) || (springJoint.IsGrappling()))
+
+        if ((Physics.Raycast(ray, out hitInfo, springJoint.GetMaxGrappleDistance(), whatIsGrappleable)))
         {
-            uiImageHolder.rectTransform.localPosition = Vector3.zero;
-            CreateUI(hitInfo);
+            float distance = Vector3.Distance(ray.GetPoint(0), hitInfo.point);
+
+
+            //if (!Physics.Raycast(transform.position, dir, distance, whatIsNotGrappleable))
+            //{
+            //    uiImageHolder.rectTransform.localPosition = Vector3.zero;
+            //    CreateUI(hitInfo);
+            //}
+
+
+            if (!(Physics.Raycast(ray, distance, whatIsNotGrappleable)))
+            {
+                uiImageHolder.rectTransform.localPosition = Vector3.zero;
+                CreateUI(hitInfo);
+            }
+            else
+            {
+                TurnOffUI();
+            }
         }
         else
         {
+            Debug.Log("Should be turning off");
             TurnOffUI();
         }
     }
@@ -87,19 +109,20 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
     {
         float distance = Vector3.Distance(player.transform.position, hitObject.point);
 
-        if (springJoint.IsGrappling())
-        {
-            if (!objectSet)
-            {
-                objectHitPoint = hitObject.point;
-                objectSet = true;
-            }
+        //if (configJoint.IsGrappling())
+        //{
+        //    if (!objectSet)
+        //    {
+        //        objectHitPoint = hitObject.point;
+        //        objectSet = true;
+        //    }
 
-            distance = Vector3.Distance(player.transform.position, objectHitPoint);
-            uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
-        }
+        //    distance = Vector3.Distance(player.transform.position, objectHitPoint);
+        //    uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
 
-        if (!springJoint.IsGrappling())
+        //}
+
+        if (true)
         {
             uiImageHolder.enabled = true;
             uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
@@ -110,12 +133,14 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
 
     private void TurnOffUI()
     {
+        objectSet = false;
         uiImageHolder.enabled = false;
 
     }
 
     private void UpdateUIPos()
     {
+
         uiPos = cam.WorldToScreenPoint(objectHitPoint);
 
         if (uiPos.z < 0)
@@ -127,6 +152,7 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
             uiImageHolder.enabled = true;
             uiImageHolder.transform.position = uiPos;
         }
+
 
     }
 }

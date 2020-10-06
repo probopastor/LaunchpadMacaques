@@ -40,6 +40,10 @@ public class GrapplingGun : MonoBehaviour
 
     [SerializeField] private GameObject grappleToggleEnabledText;
     [SerializeField] private GameObject grappleToggleDisabledText;
+    [SerializeField] private LayerMask whatIsNotGrappleable;
+
+
+    private MakeSpotNotGrappleable corruptObject;
 
     void Awake()
     {
@@ -59,10 +63,12 @@ public class GrapplingGun : MonoBehaviour
             //grappleToggleEnabledText.SetActive(false);
         }
 
-        if(grappleToggleDisabledText != null)
+        if (grappleToggleDisabledText != null)
         {
             //grappleToggleDisabledText.SetActive(true);
         }
+
+        corruptObject = FindObjectOfType<MakeSpotNotGrappleable>();
     }
 
     void Update()
@@ -184,53 +190,71 @@ public class GrapplingGun : MonoBehaviour
     void StartGrapple()
     {
         RaycastHit hit;
+        RaycastHit secondHit;
         if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
         {
-            //grapplePoint = hit.point;
-            grappleRayHit = hit;
 
-            hitObjectClone = Instantiate(hitObject);
-            hitObjectClone.transform.position = hit.point;
-            hitObjectClone.transform.parent = hit.transform;
-            grapplePoint = hitObjectClone.transform.position;
+            float distance = Vector3.Distance(camera.position, hit.collider.gameObject.transform.position);
 
-            grappledObj = hit.transform.gameObject;
-
-            joint = player.gameObject.AddComponent<SpringJoint>();
-            joint.autoConfigureConnectedAnchor = false;
-            joint.connectedAnchor = grapplePoint;
-
-            float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
-
-            //Adjust these values to fit your game.
-
-            //The distance grapple will try to keep from grapple point.
-            joint.maxDistance = distanceFromPoint;
-            joint.minDistance = minDistance;
-
-            //Default Vaules
-            //joint.maxDistance = distanceFromPoint * 0.8f;
-            //joint.minDistance = distanceFromPoint * 0.25f;
-
-            joint.spring = springValue;
-            joint.damper = springDamp;
-            joint.massScale = springMass;
-
-            //Default values
-            //joint.spring = 4.5f;
-            //joint.damper = 7f;
-            //joint.massScale = 4.5f;
-
-            lr.positionCount = 2;
-            currentGrapplePosition = hitObjectClone.transform.position;
-            GetComponent<FMODUnity.StudioEventEmitter>().Play();
-
-            //Pinwheel
-            Pinwheel pinwheel = null;
-            if(pinwheel = hit.collider.GetComponentInParent<Pinwheel>())
+            if (!(Physics.Raycast(camera.position, camera.forward, out secondHit, distance, whatIsNotGrappleable)))
             {
-                pinwheel.TriggerRotation(hit.collider.transform, camera.forward);
+                //grapplePoint = hit.point;
+                grappleRayHit = hit;
+
+                hitObjectClone = Instantiate(hitObject);
+                hitObjectClone.transform.position = hit.point;
+                hitObjectClone.transform.parent = hit.transform;
+                grapplePoint = hitObjectClone.transform.position;
+
+
+
+                grappledObj = hit.transform.gameObject;
+
+                corruptObject.MakeSpotNotGrappable(hit, grappledObj);
+
+                joint = player.gameObject.AddComponent<SpringJoint>();
+                joint.autoConfigureConnectedAnchor = false;
+                joint.connectedAnchor = grapplePoint;
+
+                float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
+
+                //Adjust these values to fit your game.
+
+                //The distance grapple will try to keep from grapple point.
+                joint.maxDistance = distanceFromPoint;
+                joint.minDistance = minDistance;
+
+                //Default Vaules
+                //joint.maxDistance = distanceFromPoint * 0.8f;
+                //joint.minDistance = distanceFromPoint * 0.25f;
+
+                joint.spring = springValue;
+                joint.damper = springDamp;
+                joint.massScale = springMass;
+
+                //Default values
+                //joint.spring = 4.5f;
+                //joint.damper = 7f;
+                //joint.massScale = 4.5f;
+
+                lr.positionCount = 2;
+                currentGrapplePosition = hitObjectClone.transform.position;
+                GetComponent<FMODUnity.StudioEventEmitter>().Play();
+
+                //Pinwheel
+                Pinwheel pinwheel = null;
+                if (pinwheel = hit.collider.GetComponentInParent<Pinwheel>())
+                {
+                    pinwheel.TriggerRotation(hit.collider.transform, camera.forward);
+                }
             }
+
+            else
+            {
+                Debug.Log(secondHit.collider.gameObject.name);
+                Debug.Log(secondHit.collider.gameObject.transform.position);
+            }
+
         }
     }
 
