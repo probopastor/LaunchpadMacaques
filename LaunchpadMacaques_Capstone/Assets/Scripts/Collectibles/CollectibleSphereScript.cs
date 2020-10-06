@@ -8,7 +8,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Policy;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityStandardAssets._2D;
