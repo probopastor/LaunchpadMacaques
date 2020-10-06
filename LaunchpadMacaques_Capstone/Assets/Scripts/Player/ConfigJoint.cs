@@ -152,7 +152,7 @@ public class ConfigJoint : MonoBehaviour
             GetComponent<FMODUnity.StudioEventEmitter>().Play();
         }
         //If pulling and there is a surface in front of the player in which they can grapple to
-        else if (grappleType == GrappleType.Pull && Physics.Raycast(camera.position, camera.forward, out hit, maxPullDistance, whatIsGrappleable))
+        else if (Physics.Raycast(camera.position, camera.forward, out hit, maxPullDistance, whatIsGrappleable) && grappleType == GrappleType.Pull)
         {
             isGrappling = true;
 
@@ -187,6 +187,13 @@ public class ConfigJoint : MonoBehaviour
         joint.xDrive = jointDrive;
         joint.yDrive = jointDrive;
         joint.zDrive = jointDrive;
+
+        //Pinwheel
+        Pinwheel pinwheel = null;
+        if (pinwheel = hit.collider.GetComponentInParent<Pinwheel>())
+        {
+            pinwheel.TriggerRotation(hit.collider.transform, camera.forward);
+        }
 
         StartCoroutine(UpdateGrapplePosition(grappleType));
     }

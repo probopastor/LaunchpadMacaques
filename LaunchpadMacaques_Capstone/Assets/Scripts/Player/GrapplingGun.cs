@@ -149,6 +149,13 @@ public class GrapplingGun : MonoBehaviour
             lr.positionCount = 2;
             currentGrapplePosition = hitObjectClone.transform.position;
             GetComponent<FMODUnity.StudioEventEmitter>().Play();
+
+            //Pinwheel
+            Pinwheel pinwheel = null;
+            if(pinwheel = hit.collider.GetComponentInParent<Pinwheel>())
+            {
+                pinwheel.TriggerRotation(hit.collider.transform, camera.forward);
+            }
         }
     }
 
