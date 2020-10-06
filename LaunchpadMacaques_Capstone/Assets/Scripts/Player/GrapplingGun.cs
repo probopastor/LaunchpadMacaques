@@ -14,6 +14,7 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] private float distance = 5f;
     [SerializeField] private float minDistance = 5f;
     [SerializeField] private float maxDistance = 50f;
+    [SerializeField, Tooltip("The amount of length subtraced from grapple length on each subsequent grapple. ")] private float grappleLengthModifier = 10;
     [SerializeField] private float wheelSensitivity = 2;
     private float maxGrappleDistance = 100f;
     private SpringJoint joint;
@@ -32,7 +33,7 @@ public class GrapplingGun : MonoBehaviour
 
     private RaycastHit grappleRayHit;
 
-    private bool swingToggle;
+    private bool swingLockToggle;
     private bool canApplyForce;
 
     private GameObject grappledObj;
@@ -58,17 +59,16 @@ public class GrapplingGun : MonoBehaviour
             Destroy(joint);
         }
 
-        //swingToggle = false;
-        swingToggle = true;
+        swingLockToggle = false;
 
         if (grappleToggleEnabledText != null)
         {
-            //grappleToggleEnabledText.SetActive(false);
+            grappleToggleEnabledText.SetActive(false);
         }
 
         if (grappleToggleDisabledText != null)
         {
-            //grappleToggleDisabledText.SetActive(true);
+            grappleToggleDisabledText.SetActive(false);
         }
 
         corruptObject = FindObjectOfType<MakeSpotNotGrappleable>();
@@ -119,31 +119,19 @@ public class GrapplingGun : MonoBehaviour
             StartGrapple();
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.LeftControl) && IsGrappling())
         {
-            if (swingToggle == false)
+            if (!swingLockToggle)
             {
-                //swingToggle = true;
-                //grappleToggleEnabledText.SetActive(true);
-                //grappleToggleDisabledText.SetActive(false);
+                swingLockToggle = true;
+                grappleToggleEnabledText.SetActive(true);
+                grappleToggleDisabledText.SetActive(false);
             }
             else
             {
-                //swingToggle = false;
-                //grappleToggleEnabledText.SetActive(false);
-                //grappleToggleDisabledText.SetActive(true);
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            if (swingToggle == false)
-            {
-                swingToggle = true;
-            }
-            else
-            {
-                swingToggle = false;
+                swingLockToggle = false;
+                grappleToggleEnabledText.SetActive(false);
+                grappleToggleDisabledText.SetActive(true);
             }
         }
 
@@ -242,10 +230,6 @@ public class GrapplingGun : MonoBehaviour
                 hitObjectClone.transform.parent = hit.transform;
                 grapplePoint = hitObjectClone.transform.position;
 
-
-            
-
-
                 grappledObj = hit.transform.gameObject;
 
                 corruptObject.MakeSpotNotGrappable(hit, grappledObj);
@@ -258,7 +242,7 @@ public class GrapplingGun : MonoBehaviour
                 joint.maxDistance = distanceFromPoint;
                 joint.minDistance = dist;
 
-                distance = dist - 10;
+                distance = dist - grappleLengthModifier;
 
                 joint.enableCollision = false;
 
@@ -277,6 +261,16 @@ public class GrapplingGun : MonoBehaviour
                 {
                     pinwheel.TriggerRotation(hit.collider.transform, camera.forward);
                 }
+
+                //Temporary lock UI disabled after completing a grapple
+                if (grappleToggleEnabledText != null)
+                {
+                    grappleToggleEnabledText.SetActive(false);
+                }
+                if (grappleToggleDisabledText != null)
+                {
+                    grappleToggleDisabledText.SetActive(true);
+                }
             }
 
             else
@@ -293,6 +287,18 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     public void StopGrapple()
     {
+        swingLockToggle = false;
+
+        //Temporary lock UI disabled after completing a grapple
+        if (grappleToggleEnabledText != null)
+        {
+            grappleToggleEnabledText.SetActive(false);
+        }
+        if (grappleToggleDisabledText != null)
+        {
+            grappleToggleDisabledText.SetActive(false);
+        }
+
         if (hitObjectClone)
         {
             Destroy(hitObjectClone.gameObject);
@@ -356,9 +362,9 @@ public class GrapplingGun : MonoBehaviour
         return grappleRayHit;
     }
 
-    public bool GetSwingToggle()
+    public bool GetSwingLockToggle()
     {
-        return swingToggle;
+        return swingLockToggle;
     }
 
     public bool GetCanApplyForce()

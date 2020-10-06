@@ -93,6 +93,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     ConfigJoint config;
 
+    private Vector3 latestOrientation;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -280,11 +282,22 @@ public class Matt_PlayerMovement : MonoBehaviour
                 rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
                 rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
             }
-            else if (grappleGunReference.GetSwingToggle() && grappleGunReference.IsGrappling())
+            else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
             {
                 if (grappleGunReference.GetCanApplyForce())
                 {
                     rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
+                    latestOrientation = orientation.transform.forward;
+                }
+            }
+            else if(grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
+            {
+                if (grappleGunReference.GetCanApplyForce())
+                {
+                    if(latestOrientation != null)
+                    {
+                        rb.AddForce(latestOrientation * swingSpeed * Time.deltaTime);
+                    }
                 }
             }
         }

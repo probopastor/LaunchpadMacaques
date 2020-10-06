@@ -3081,7 +3081,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Controlled Grapple Disabled
+  m_text: Grapple Lock Disabled
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6201,7 +6201,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Controlled Grapple Enabled
+  m_text: Grapple Lock Enabled
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8286,7 +8286,11 @@ MonoBehaviour:
   gunTip: {fileID: 997001713}
   camera: {fileID: 963194228}
   player: {fileID: 142505806}
-  minDistance: 0
+  distance: 5
+  minDistance: 10
+  maxDistance: 100
+  grappleLengthModifier: 100
+  wheelSensitivity: 2
   explosionRadius: 1
   explosionPower: 50
   grappleSpeed: 10
