@@ -82,7 +82,7 @@ public class PassTriggerEnabler : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" || other.tag == "PlayerCube")
         {
             activated = true;
         }
