@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using TMPro.EditorUtilities;
 
 public class GrapplingGun : MonoBehaviour
 {
@@ -44,6 +46,8 @@ public class GrapplingGun : MonoBehaviour
 
     [SerializeField] private GameObject grappleToggleEnabledText;
     [SerializeField] private GameObject grappleToggleDisabledText;
+    [SerializeField] private TextMeshProUGUI ropeLengthText;
+
     [SerializeField] private LayerMask whatIsNotGrappleable;
 
 
@@ -70,6 +74,11 @@ public class GrapplingGun : MonoBehaviour
         {
             grappleToggleDisabledText.SetActive(false);
         }
+        
+        if(ropeLengthText != null)
+        {
+            ropeLengthText.text = " ";
+        }
 
         corruptObject = FindObjectOfType<MakeSpotNotGrappleable>();
     }
@@ -78,6 +87,11 @@ public class GrapplingGun : MonoBehaviour
     {
         if (IsGrappling())
         {
+            if (ropeLengthText != null)
+            {
+                ropeLengthText.text = "Rope Length: " + (int)distance;
+            }
+
             if (joint.maxDistance <= 0)
             {
                 joint.maxDistance = 0;
@@ -106,6 +120,13 @@ public class GrapplingGun : MonoBehaviour
                 {
                     canApplyForce = false;
                 }
+            }
+        }
+        else if (!IsGrappling())
+        {
+            if (ropeLengthText != null)
+            {
+                ropeLengthText.text = " ";
             }
         }
 
@@ -243,6 +264,16 @@ public class GrapplingGun : MonoBehaviour
                 joint.minDistance = dist;
 
                 distance = dist - grappleLengthModifier;
+
+                if (distance > maxDistance)
+                {
+                    distance = maxDistance;
+                }
+
+                if (distance < minDistance)
+                {
+                    distance = minDistance;
+                }
 
                 joint.enableCollision = false;
 
