@@ -2698,6 +2698,7 @@ MonoBehaviour:
   sensitivity: 50
   sensMultiplier: 1
   moveSpeed: 4500
+  swingSpeed: 4500
   maxSpeed: 10
   grounded: 0
   whatIsGround:
@@ -2717,7 +2718,9 @@ MonoBehaviour:
   jumpCooldown: 0.25
   jumpForce: 550
   gravity: 1100
+  defaultGravity: 1500
   readyToSprint: 1
+  sprintMultiplier: 1.75
   x: 0
   y: 0
   jumping: 0
@@ -2760,7 +2763,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 645859864}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -3338,11 +3341,23 @@ MonoBehaviour:
   whatIsGrappleable:
     serializedVersion: 2
     m_Bits: 256
+  whatIsNotGrappleable:
+    serializedVersion: 2
+    m_Bits: 0
   gunTip: {fileID: 1722091873}
   camera: {fileID: 81817626}
   player: {fileID: 645859874}
+  orientation: {fileID: 0}
   pullSpringForce: 350
   pullSpringDamper: 300
+  launchSpeed: 30000
+  minDistanceFromObjForLaunch: 10
+  distanceFromObjForLaunch: 0
+  minTimeForLaunch: 1
+  maxLaunchMultiplier: 5
+  startTime: 0
+  endTime: 0
+  ghostTime: 1
   maxPushDistance: 20
   maxPushTime: 2
   pushDelay: 1.25
@@ -3531,12 +3546,17 @@ MonoBehaviour:
   gunTip: {fileID: 1722091873}
   camera: {fileID: 81817626}
   player: {fileID: 645859874}
+  minDistance: 0
   explosionRadius: 1
   explosionPower: 50
   grappleSpeed: 10
   springValue: 5
   springDamp: 10
   springMass: 5
+  minSwingAngle: -90
+  maxSwingAngle: 90
+  grappleToggleEnabledText: {fileID: 0}
+  grappleToggleDisabledText: {fileID: 0}
 --- !u!1 &935614159
 GameObject:
   m_ObjectHideFlags: 0
@@ -5534,7 +5554,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1525082643}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

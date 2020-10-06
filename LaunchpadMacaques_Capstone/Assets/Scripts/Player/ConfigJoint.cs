@@ -233,6 +233,13 @@ public class ConfigJoint : MonoBehaviour
                 {
                     grappleSpotChanger.MakeSpotNotGrappable(hit, hit.collider.gameObject);
                 }
+
+                //Pinwheel
+                Pinwheel pinwheel = null;
+                if (pinwheel = hitObjectClone.GetComponentInParent<Pinwheel>())
+                {
+                    pinwheel.TriggerRotation(hitObjectClone.transform, camera.forward);
+                }
             }
         }
 
@@ -248,13 +255,6 @@ public class ConfigJoint : MonoBehaviour
         joint.xDrive = jointDrive;
         joint.yDrive = jointDrive;
         joint.zDrive = jointDrive;
-
-        //Pinwheel
-        Pinwheel pinwheel = null;
-        if (pinwheel = hit.collider.GetComponentInParent<Pinwheel>())
-        {
-            pinwheel.TriggerRotation(hit.collider.transform, camera.forward);
-        }
 
         StartCoroutine(UpdateGrapplePosition(grappleType));
     }
