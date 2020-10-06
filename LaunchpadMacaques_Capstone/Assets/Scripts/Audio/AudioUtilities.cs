@@ -12,6 +12,16 @@ public static class AudioUtilities
 
         return null;
     }
+
+    public static ScriptableEmitter FindScriptableEmitter(ScriptableEmitter[] emitters, string target)
+    {
+        foreach (ScriptableEmitter emitter in emitters)
+        {
+            if (emitter.name.Equals(target)) return emitter;
+        }
+
+        return null;
+    }
 }
 
 [System.Serializable]

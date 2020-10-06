@@ -84,12 +84,16 @@ public class ConfigJoint : MonoBehaviour
     private float[] currentCooldowns;
 
     private PushPullObjects pushPull;
+    [Header("Audio Variables")]
+    private GrappleGun_Audio m_audio;
 
     void Awake()
     {
 
         lr = GetComponent<LineRenderer>();
         pushPull = this.GetComponent<PushPullObjects>();
+        m_audio = GetComponent<GrappleGun_Audio>();
+
 
         if (joint)
         {
@@ -186,7 +190,9 @@ public class ConfigJoint : MonoBehaviour
             isGrappling = true;
             Instantiate(pushParticle, hit.point, Quaternion.LookRotation((camera.position - hit.point).normalized));
             lr.positionCount = 0;
-            GetComponent<FMODUnity.StudioEventEmitter>().Play();
+            //GetComponent<FMODUnity.StudioEventEmitter>().Play();
+            m_audio.m_push.Play();
+
 
         }
         //If pulling and there is a surface in front of the player in which they can grapple to
@@ -216,7 +222,9 @@ public class ConfigJoint : MonoBehaviour
 
 
                 inGrappleRoutine = true;
-                GetComponent<FMODUnity.StudioEventEmitter>().Play();
+                //GetComponent<FMODUnity.StudioEventEmitter>().Play();
+                m_audio.m_grapple.Play();
+                m_audio.m_beam.Play();
                 StartCoroutine(JointDestroyDelay());
 
                 //grappleSpotChanger.MakeSpotNotGrappable(hit, hit.collider.gameObject);
@@ -372,6 +380,8 @@ public class ConfigJoint : MonoBehaviour
 
         lr.positionCount = 0;
         Destroy(joint);
+
+        m_audio.m_beam.Stop();
     }
 
     IEnumerator GhostMode(float time, Vector3 pullDirection, float launchMultiplier)
