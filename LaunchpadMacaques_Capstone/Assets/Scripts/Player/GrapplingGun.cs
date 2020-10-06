@@ -237,7 +237,7 @@ public class GrapplingGun : MonoBehaviour
     /// <summary>
     /// Call whenever we want to stop a grapple
     /// </summary>
-    void StopGrapple()
+    public void StopGrapple()
     {
         if (hitObjectClone)
         {
