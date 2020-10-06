@@ -183,9 +183,10 @@ public class PushableObj : MonoBehaviour
             Ray ray = new Ray(point1, point2 - point1);
             if (Physics.Raycast(ray, out hit, (point2 - point1).magnitude))
             {
+                
 
 
-                if (hit.collider.gameObject.CompareTag("Collectible"))
+                if (hit.collider.gameObject.CompareTag("Collectible") || hit.collider.gameObject.CompareTag("PassBy"))
                 {
                     hitCollectable = true;
                 }
