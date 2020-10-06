@@ -3,13 +3,9 @@
 * GrapplePointManager.cs
 * Handles how many grapples you have left and checks if one of the grapple points has been used
 */
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.XR;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem.XR.Haptics;
+using System.Linq;
 
 public class GrapplePointManager : MonoBehaviour
 {
@@ -80,8 +76,10 @@ public class GrapplePointManager : MonoBehaviour
     //Detect if an grapplePoints is breaking and starts to remove it
     public void Notify()
     {
-        foreach (GrapplePoint gp in grapplePoints)
+        for(int i = 0; i < grapplePoints.Count; i++)
         {
+            GrapplePoint gp = grapplePoints.ElementAt(i).GetComponent<GrapplePoint>();
+
             if ((gp as GrapplePoint).isBreaking() == true)
             {
                 //Remove renderer and mesh
@@ -93,7 +91,10 @@ public class GrapplePointManager : MonoBehaviour
 
                 //Remove grapplePoints to update remaining
                 grapplePoints.Remove(gp);
+
+                i--;
             }
+ 
         }
     }
 

@@ -89,16 +89,20 @@ public class MakeSpotNotGrappleable : MonoBehaviour
 
         if (hit.collider != null)
         {
-            Renderer r = hit.collider.GetComponent<Renderer>();
-            MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
+            if (hit.collider.GetComponent<Renderer>().enabled)
+            {
+                Renderer r = hit.collider.GetComponent<Renderer>();
+                MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
 
-            r.GetPropertyBlock(pBlock);
+                r.GetPropertyBlock(pBlock);
 
-            pBlock.SetFloat("CorruptionStartTime", Time.time);
-            Vector3 localPos = hit.collider.transform.InverseTransformPoint(hit.point);
-            pBlock.SetVector("CorruptionStartPos", localPos);
+                pBlock.SetFloat("CorruptionStartTime", Time.time);
+                Vector3 localPos = hit.collider.transform.InverseTransformPoint(hit.point);
+                pBlock.SetVector("CorruptionStartPos", localPos);
 
-            r.SetPropertyBlock(pBlock);
+                r.SetPropertyBlock(pBlock);
+            }
+  
 
 
         }
