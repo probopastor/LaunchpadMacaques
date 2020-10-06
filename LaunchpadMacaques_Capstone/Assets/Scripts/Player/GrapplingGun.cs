@@ -166,7 +166,7 @@ public class GrapplingGun : MonoBehaviour
     {
         var wheelInput = Input.GetAxis("Mouse ScrollWheel");
 
-        if (wheelInput > 0)
+        if (wheelInput < 0)
         {
             distance += wheelSensitivity;
             if (distance > maxDistance)
@@ -175,7 +175,7 @@ public class GrapplingGun : MonoBehaviour
             }
         }
 
-        else if (wheelInput < 0)
+        else if (wheelInput > 0)
         {
             Debug.Log("Go Down");
             distance -= wheelSensitivity;
@@ -243,7 +243,7 @@ public class GrapplingGun : MonoBehaviour
                 grapplePoint = hitObjectClone.transform.position;
 
 
-                joint.enableCollision = false;
+            
 
 
                 grappledObj = hit.transform.gameObject;
@@ -255,27 +255,17 @@ public class GrapplingGun : MonoBehaviour
                 joint.connectedAnchor = grapplePoint;
 
                 float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
-
-                //Adjust these values to fit your game.
-
-                //The distance grapple will try to keep from grapple point.
                 joint.maxDistance = distanceFromPoint;
                 joint.minDistance = dist;
 
-                distance = dist;
+                distance = dist - 10;
 
-                //Default Vaules
-                //joint.maxDistance = distanceFromPoint * 0.8f;
-                //joint.minDistance = distanceFromPoint * 0.25f;
+                joint.enableCollision = false;
 
                 joint.spring = springValue;
                 joint.damper = springDamp;
                 joint.massScale = springMass;
 
-                //Default values
-                //joint.spring = 4.5f;
-                //joint.damper = 7f;
-                //joint.massScale = 4.5f;
 
                 lr.positionCount = 2;
                 currentGrapplePosition = hitObjectClone.transform.position;
