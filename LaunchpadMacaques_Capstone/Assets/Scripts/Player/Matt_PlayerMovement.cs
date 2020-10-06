@@ -91,11 +91,15 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private PauseManager pauseManager;
 
+    ConfigJoint config;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         pauseManager = FindObjectOfType<PauseManager>();
         collectibleController = FindObjectOfType<CollectibleController>();
+
+        config = FindObjectOfType<ConfigJoint>();
     }
 
     void Start()
@@ -251,17 +255,37 @@ public class Matt_PlayerMovement : MonoBehaviour
         // Movement while sliding
         if (grounded && crouching) multiplierV = 0f;
 
-        //Apply forces to move player
-        if(!grappleGunReference.IsGrappling())
+
+        if (config.isActiveAndEnabled)
         {
-            rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
-            rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
-        }
-        else if(grappleGunReference.GetSwingToggle() && grappleGunReference.IsGrappling())
-        {
-            if(grappleGunReference.GetCanApplyForce())
+            Debug.Log("Config Joint");
+            if (!config.IsGrappling())
             {
-                rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
+                rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
+                rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
+            }
+            else if (config.IsGrappling())
+            {
+                if (/*config.GetCanApplyForce())*/true)
+                {
+                    rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
+                }
+            }
+        }
+
+        else
+        {
+            if (!grappleGunReference.IsGrappling())
+            {
+                rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
+                rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
+            }
+            else if (grappleGunReference.GetSwingToggle() && grappleGunReference.IsGrappling())
+            {
+                if (grappleGunReference.GetCanApplyForce())
+                {
+                    rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
+                }
             }
         }
     }

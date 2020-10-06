@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using FMODUnity;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -87,6 +88,12 @@ public class ConfigJoint : MonoBehaviour
     [Header("Audio Variables")]
     private GrappleGun_Audio m_audio;
 
+
+    GameObject obj;
+
+    private bool canApplyForce;
+
+    JointDrive ydrive;
     void Awake()
     {
 
@@ -126,12 +133,16 @@ public class ConfigJoint : MonoBehaviour
         jointLimit = new SoftJointLimit();
         springLimit = new SoftJointLimitSpring();
         jointDrive = new JointDrive();
+        ydrive.maximumForce = 3.402823e+38f;
         jointDrive.maximumForce = 3.402823e+38f;
 
         if (grappleType == GrappleType.Pull)
         {
             jointDrive.positionSpring = pullSpringForce;
             jointDrive.positionDamper = pullSpringDamper;
+
+            ydrive.positionSpring =  pullSpringForce;
+            ydrive.positionDamper = 5;
         }
         else
         {
@@ -166,6 +177,29 @@ public class ConfigJoint : MonoBehaviour
         {
             Debug.Log("Line Render Was Dead but Joint was still there");
             StopGrapple();
+        }
+
+
+        if (isGrappling)
+        {
+            if (obj != null)
+            {
+                Vector3 objectDirection = (obj.transform.position - player.transform.position).normalized;
+                Vector3 groundDirection = Vector3.down;
+
+                float angle = Vector3.Angle(objectDirection, groundDirection);
+
+                Debug.Log("angle " + angle);
+
+                if (angle < 90 || angle > -90)
+                {
+                    canApplyForce = true;
+                }
+                else
+                {
+                    canApplyForce = false;
+                }
+            }
         }
     }
 
@@ -203,6 +237,7 @@ public class ConfigJoint : MonoBehaviour
 
             if (!Physics.Raycast(transform.position, dir, distance, whatIsNotGrappleable))
             {
+                obj = hit.collider.gameObject;
                 isGrappling = true;
 
                 grappleRayHit = hit;
@@ -223,8 +258,8 @@ public class ConfigJoint : MonoBehaviour
 
                 inGrappleRoutine = true;
                 //GetComponent<FMODUnity.StudioEventEmitter>().Play();
-                m_audio.m_grapple.Play();
-                m_audio.m_beam.Play();
+               // m_audio.m_grapple.Play();
+               // m_audio.m_beam.Play();
                 StartCoroutine(JointDestroyDelay());
 
                 //grappleSpotChanger.MakeSpotNotGrappable(hit, hit.collider.gameObject);
@@ -249,12 +284,18 @@ public class ConfigJoint : MonoBehaviour
 
         //Joint setup based on push or pull
         joint = player.gameObject.AddComponent<ConfigurableJoint>();
+        joint.connectedBody = obj.gameObject.GetComponent<Rigidbody>();
         joint.autoConfigureConnectedAnchor = false;
 
         SetSpringSettings(grappleType);
         joint.xDrive = jointDrive;
-        joint.yDrive = jointDrive;
+        joint.yDrive = ydrive;
+        //joint.yDrive = jointDrive;
         joint.zDrive = jointDrive;
+
+
+
+        joint.linearLimitSpring = springLimit;
 
         StartCoroutine(UpdateGrapplePosition(grappleType));
     }
@@ -297,8 +338,9 @@ public class ConfigJoint : MonoBehaviour
             joint.connectedAnchor = grapplePoint;
 
             float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
-            jointLimit.limit = distanceFromPoint;
-            joint.targetPosition = Vector3.zero;
+            // jointLimit.limit = distanceFromPoint;
+            joint.enableCollision = false;
+            joint.targetPosition = (Vector3.zero);
 
             currentGrapplePosition = gunTip.position;
 
@@ -369,11 +411,11 @@ public class ConfigJoint : MonoBehaviour
         float launchMultiplier = Mathf.Min(endTime - startTime + 2f, maxLaunchMultiplier);
 
         //launch player in direction if distance allows it
-        if ((distanceFromObjForLaunch > minDistanceFromObjForLaunch) && (deltaLaunchTime > minTimeForLaunch))
-        {
-            player.GetComponent<CapsuleCollider>().enabled = false;
-            StartCoroutine(GhostMode(ghostTime, pullDirection, launchMultiplier));
-        }
+        //if ((distanceFromObjForLaunch > minDistanceFromObjForLaunch) && (deltaLaunchTime > minTimeForLaunch))
+        //{
+        //    player.GetComponent<CapsuleCollider>().enabled = false;
+        //    StartCoroutine(GhostMode(ghostTime, pullDirection, launchMultiplier));
+        //}
 
 
 
@@ -388,7 +430,7 @@ public class ConfigJoint : MonoBehaviour
         lr.positionCount = 0;
         Destroy(joint);
 
-        m_audio.m_beam.Stop();
+       // m_audio.m_beam.Stop();
     }
 
     IEnumerator GhostMode(float time, Vector3 pullDirection, float launchMultiplier)
@@ -451,5 +493,10 @@ public class ConfigJoint : MonoBehaviour
     public RaycastHit GetGrappleRayhit()
     {
         return grappleRayHit;
+    }
+
+    public bool GetCanApplyForce()
+    {
+        return canApplyForce;
     }
 }
