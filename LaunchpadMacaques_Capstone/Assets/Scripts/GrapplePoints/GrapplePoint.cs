@@ -12,6 +12,8 @@ using UnityEngine.UI;
 public class GrapplePoint : MonoBehaviour
 {
     //Variables
+    [SerializeField, Tooltip("The amount of time it takes for a grapple point to vanish after grappled to (In Seconds). ")] private float breakTime = 3f;
+
     private int remainingPoints;
     private bool breaking;
     private float timeLeft;
@@ -37,7 +39,7 @@ public class GrapplePoint : MonoBehaviour
         Debug.Log("Start Countdown");
 
         //Set Max time
-        float timeLeft = 3f;
+        float timeLeft = breakTime;
 
         //Timer
         float totalTime = 0;
