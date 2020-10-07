@@ -21,18 +21,23 @@ public class PushPullObjects : MonoBehaviour
     private GameObject cam;
     private bool grabbing = false;
     private LineRenderer lr;
+
+    GrapplingGun grapplingGun;
     #endregion
 
     void Start()
     {
         cam = FindObjectOfType<Camera>().gameObject;
         lr = this.GetComponent<LineRenderer>();
+        grapplingGun = this.GetComponent<GrapplingGun>();
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+       
+        if (Input.GetMouseButtonDown(0) /*&& !grapplingGun.IsGrappling()*/)
         {
+    
             if (grabbing)
             {
                 DropObject();
@@ -76,8 +81,9 @@ public class PushPullObjects : MonoBehaviour
     private void PickUpObject()
     {
         RaycastHit hit;
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, maxGrabDistance, canBePickedUp))
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, maxGrabDistance, canBePickedUp) && !grapplingGun.IsGrappling())
         {
+            grapplingGun.StopGrapple();
             objectRB = hit.rigidbody;
             objectRB.isKinematic = true;
 

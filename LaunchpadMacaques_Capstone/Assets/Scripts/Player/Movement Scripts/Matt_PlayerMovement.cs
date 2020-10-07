@@ -120,7 +120,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if(!pauseManager.GetPaused() && !pauseManager.GetGameWon())
+        if (!pauseManager.GetPaused() && !pauseManager.GetGameWon())
         {
             MyInput();
             Look();
@@ -199,7 +199,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             gravity = 3000;
             rb.AddForce(Vector3.down * Time.deltaTime * gravity);
         }
-        else if((grappleGunReference.IsGrappling() || grounded) && !collectibleController.GetIsActive())
+        else if ((grappleGunReference.IsGrappling() || grounded) && !collectibleController.GetIsActive())
         {
             //Add gravity
             gravity = defaultGravity;
@@ -258,49 +258,49 @@ public class Matt_PlayerMovement : MonoBehaviour
         if (grounded && crouching) multiplierV = 0f;
 
 
-        if (config.isActiveAndEnabled)
+        //if (config.isActiveAndEnabled)
+        //{
+        //    Debug.Log("Config Joint");
+        //    if (!config.IsGrappling())
+        //    {
+        //        rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
+        //        rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
+        //    }
+        //    else if (config.IsGrappling())
+        //    {
+        //        if (/*config.GetCanApplyForce())*/true)
+        //        {
+        //            rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
+        //        }
+        //    }
+        //}
+
+
+
+        if (!grappleGunReference.IsGrappling())
         {
-            Debug.Log("Config Joint");
-            if (!config.IsGrappling())
+            rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
+            rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
+        }
+        else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
+        {
+            if (grappleGunReference.GetCanApplyForce())
             {
-                rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
-                rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
+                rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
+                latestOrientation = orientation.transform.forward;
             }
-            else if (config.IsGrappling())
+        }
+        else if (grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
+        {
+            if (grappleGunReference.GetCanApplyForce())
             {
-                if (/*config.GetCanApplyForce())*/true)
+                if (latestOrientation != null)
                 {
-                    rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
+                    rb.AddForce(latestOrientation * swingSpeed * Time.deltaTime);
                 }
             }
         }
 
-        else
-        {
-            if (!grappleGunReference.IsGrappling())
-            {
-                rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
-                rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
-            }
-            else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
-            {
-                if (grappleGunReference.GetCanApplyForce())
-                {
-                    rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
-                    latestOrientation = orientation.transform.forward;
-                }
-            }
-            else if(grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
-            {
-                if (grappleGunReference.GetCanApplyForce())
-                {
-                    if(latestOrientation != null)
-                    {
-                        rb.AddForce(latestOrientation * swingSpeed * Time.deltaTime);
-                    }
-                }
-            }
-        }
     }
 
     #endregion

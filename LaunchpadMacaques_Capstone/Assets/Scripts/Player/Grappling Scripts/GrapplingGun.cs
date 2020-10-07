@@ -52,6 +52,8 @@ public class GrapplingGun : MonoBehaviour
 
     private MakeSpotNotGrappleable corruptObject;
 
+    private PushPullObjects pushPull;
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
@@ -80,6 +82,8 @@ public class GrapplingGun : MonoBehaviour
         }
 
         corruptObject = FindObjectOfType<MakeSpotNotGrappleable>();
+
+        pushPull = this.gameObject.GetComponent<PushPullObjects>();
     }
 
     void Update()
@@ -129,7 +133,7 @@ public class GrapplingGun : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && !IsGrappling())
+        if (Input.GetMouseButtonDown(0) && !IsGrappling() && !pushPull.IsGrabbing())
         {
             StartGrapple();
         }
@@ -237,10 +241,9 @@ public class GrapplingGun : MonoBehaviour
         RaycastHit secondHit;
         if (Physics.Raycast(camera.position, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
         {
+            float dist = Vector3.Distance(camera.position, hit.point);
 
-            float dist = Vector3.Distance(camera.position, hit.collider.gameObject.transform.position);
-
-            if (!(Physics.Raycast(camera.position, camera.forward, out secondHit, distance, whatIsNotGrappleable)))
+            if (!(Physics.Raycast(camera.position, camera.forward, out secondHit, dist, whatIsNotGrappleable)))
             {
                 //grapplePoint = hit.point;
                 grappleRayHit = hit;
