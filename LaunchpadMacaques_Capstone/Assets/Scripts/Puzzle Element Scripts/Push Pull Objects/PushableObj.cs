@@ -133,6 +133,7 @@ public class PushableObj : MonoBehaviour
     {
         pickedUp = false;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().isKinematic = false;
         Vector3 point1 = this.transform.position;
         float stepSize = 1.0f / predStepsPerFrame;
 
@@ -149,6 +150,7 @@ public class PushableObj : MonoBehaviour
                 if (!hit.collider.isTrigger)
                 {
                     StopPushingObject();
+                    return;
                 }
             }
 
@@ -196,6 +198,12 @@ public class PushableObj : MonoBehaviour
                     lr.positionCount = count;
                     thisDecal.SetActive(true);
                     MoveDecal(hit);
+                    break;
+                }
+
+
+                if (lr.positionCount > 100)
+                {
                     break;
                 }
 
@@ -271,7 +279,11 @@ public class PushableObj : MonoBehaviour
     /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
-        StopPushingObject();
+        if (beingPushed)
+        {
+            StopPushingObject();
+        }
+ 
     }
 
     /// <summary>
@@ -288,4 +300,5 @@ public class PushableObj : MonoBehaviour
     }
 
     #endregion
+
 }

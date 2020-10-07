@@ -13,7 +13,6 @@ public class PushPullObjects : MonoBehaviour
     [SerializeField][Tooltip("The Max Distance the player can pick up an object")] float maxGrabDistance;
     [SerializeField][Tooltip("The Empty Game Objec that the picked up object will move to")] GameObject objectHolder;
     [SerializeField][Tooltip("The Layer for object that can be picked up")] LayerMask canBePickedUp;
-    [SerializeField][Tooltip("The Speed at which the object will move to the Object Holder")] float objectFollowSpeed = 10;
     #endregion
 
     #region Private Variables
@@ -23,6 +22,8 @@ public class PushPullObjects : MonoBehaviour
     private LineRenderer lr;
 
     GrapplingGun grapplingGun;
+
+    float objectFollowSpeed = 5;
     #endregion
 
     void Start()
@@ -85,7 +86,8 @@ public class PushPullObjects : MonoBehaviour
         {
             grapplingGun.StopGrapple();
             objectRB = hit.rigidbody;
-            objectRB.isKinematic = true;
+            objectRB.useGravity = false;
+           // objectRB.isKinematic = true;
 
             grabbing = true;
 
@@ -103,6 +105,7 @@ public class PushPullObjects : MonoBehaviour
     {
         grabbing = false;
         objectRB.isKinematic = false;
+        objectRB.useGravity = true;
         objectRB.GetComponent<PushableObj>().DroppedObject();
         objectRB = null;
         lr.positionCount = 0;
