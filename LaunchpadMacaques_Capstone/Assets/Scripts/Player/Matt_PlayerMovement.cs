@@ -208,11 +208,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         if (collectibleController.GetIsActive())
         {
-                gravity = 200f;
+            gravity = collectibleController.GetNewGravity();
         }
         else if (collectibleController.GetIsActive() == false)
         {
-                gravity = defaultGravity;
+            gravity = defaultGravity;
         }
 
         //Find actual velocity relative to where player is looking

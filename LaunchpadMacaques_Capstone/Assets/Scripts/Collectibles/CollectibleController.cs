@@ -42,6 +42,8 @@ public class CollectibleController : MonoBehaviour
     [SerializeField, Tooltip("The duration of the effect of the gravity manipulation.")] 
     private float effectDuration = 5f;
 
+    [SerializeField, Tooltip("The new gravity that is set while the gravity collectible is active. ")]
+    private float newGravity = 200f;
 
     private void Awake()
     {
@@ -80,7 +82,6 @@ public class CollectibleController : MonoBehaviour
     public IEnumerator EffectTimer()
     {
         yield return new WaitForSeconds(effectDuration);
-
         isActive = false;
     }
 
@@ -111,6 +112,15 @@ public class CollectibleController : MonoBehaviour
     public bool GetIsActive()
     {
         return isActive;
+    }
+
+    /// <summary>
+    /// Returns the gravity modifier for when Gravity Collectibles are active.
+    /// </summary>
+    /// <returns></returns>
+    public float GetNewGravity()
+    {
+        return newGravity;
     }
 
     /// <summary>
