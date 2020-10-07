@@ -20,7 +20,7 @@ public class CollectibleController : MonoBehaviour
     public TextMeshProUGUI gravityText;
 
     [Header("Script References")]
-    [SerializeField] [Tooltip("Reference to the Pause Manager script.")]
+    [Tooltip("Reference to the Pause Manager script.")]
     private PauseManager pauseManager;
 
     [SerializeField] [Tooltip("Reference to the Matt Player Movement script.")]
@@ -33,14 +33,14 @@ public class CollectibleController : MonoBehaviour
     [SerializeField] [Tooltip("Total amount of collected collectibles.")]
     private int totalCollectedCollectibles;
 
-    [SerializeField] [Tooltip("Boolean used to determine if EffectTimer Coroutine is active or not.")]
+    [Tooltip("Boolean used to determine if EffectTimer Coroutine is active or not.")] 
     private bool isActive = false;
 
-    [SerializeField] [Tooltip("Is true or false depending on if the gravity collectible is collected or not.")]
+    [Tooltip("Is true or false depending on if the gravity collectible is collected or not.")]
     private bool gravityIsCollected = false;
 
-    [Tooltip("The duration of the effect of the gravity manipulation.")]
-    public float effectDuration = 5f;
+    [SerializeField, Tooltip("The duration of the effect of the gravity manipulation.")] 
+    private float effectDuration = 5f;
 
 
     private void Awake()
