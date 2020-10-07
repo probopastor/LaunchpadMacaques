@@ -1,16 +1,27 @@
-﻿using System.Collections;
+﻿/* 
+* Launchpad Macaques - Trial & Error
+* William Nomikos
+* InformationPosts.cs
+* Displays information when the player triggers an information post. 
+*/
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class InformationPost : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI informationText;
+    #region Variables
 
-    [SerializeField, TextArea] private string information;
+    [SerializeField] private TextMeshProUGUI informationText;
+    [SerializeField, TextArea, Tooltip("The information that will be displayed when player is in the information post's radius. ")] private string information;
 
     private bool isActive;
     private bool toggleFunctionality;
+
+    #endregion
 
     // Start is called before the first frame update
     void Start()
@@ -23,30 +34,43 @@ public class InformationPost : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.O))
-        {
-            if(toggleFunctionality)
-            {
-                toggleFunctionality = false;
-            }
-            else if(!toggleFunctionality)
-            {
-                toggleFunctionality = true;
-            }
+        //if(Input.GetKeyDown(KeyCode.O))
+        //{
+        //    if(toggleFunctionality)
+        //    {
+        //        toggleFunctionality = false;
+        //    }
+        //    else if(!toggleFunctionality)
+        //    {
+        //        toggleFunctionality = true;
+        //    }
 
-            SetInformation();
-        }
+        //    SetInformation();
+        //}
     }
 
+    private void OnEnable()
+    {
+        SetInformation();
+    }
+
+    private void OnDisable()
+    {
+        informationText.text = " ";
+    }
+
+    /// <summary>
+    /// Sets the text of the information post when the player enters or leaves its radius.
+    /// </summary>
     private void SetInformation()
     {
         if(informationText != null)
         {
-            if (isActive && toggleFunctionality)
+            if (isActive)
             {
                 informationText.text = information;
             }
-            else if (!isActive || !toggleFunctionality)
+            else if (!isActive)
             {
                 informationText.text = " ";
             }
@@ -79,4 +103,10 @@ public class InformationPost : MonoBehaviour
             SetInformation();
         }
     }
+
+    //public void SetActivityStatus(bool active)
+    //{
+    //    isActive = active;
+    //    SetInformation();
+    //}
 }
