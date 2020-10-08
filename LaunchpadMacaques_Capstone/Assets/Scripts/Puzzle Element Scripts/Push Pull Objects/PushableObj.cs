@@ -155,10 +155,12 @@ public class PushableObj : MonoBehaviour
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         grav.UseGravity(true);
         GetComponent<Rigidbody>().isKinematic = false;
+        GetComponent<Rigidbody>().freezeRotation = false;
         Vector3 point1 = this.transform.position;
         float stepSize = 1.0f / predStepsPerFrame;
 
 
+        /// Will run through and will predict where the object will go, creating the Line as it goes
         for (float step = 0; step < 1; step += stepSize)
         {
             objectVelocity += ((transform.up * -1) * grav.GetGravityAmmount() * Time.deltaTime) * stepSize * Time.deltaTime;
@@ -166,6 +168,7 @@ public class PushableObj : MonoBehaviour
 
             RaycastHit hit;
             Ray ray = new Ray(point1, point2 - point1);
+
             if (Physics.Raycast(ray, out hit ,(point2 - point1).magnitude))
             {
                 if (!hit.collider.isTrigger)
@@ -204,11 +207,11 @@ public class PushableObj : MonoBehaviour
 
             RaycastHit hit;
             Ray ray = new Ray(point1, point2 - point1);
+
+            /// If the thing predicts that it will run into a non trigger object it will stop the line there, and place a decal there.
+            /// It if is an objec the cube can affect the  line will turn green
             if (Physics.Raycast(ray, out hit, (point2 - point1).magnitude))
             {
-                
-
-
                 if (hit.collider.gameObject.CompareTag("Collectible") || hit.collider.gameObject.CompareTag("PassBy"))
                 {
                     hitCollectable = true;
@@ -280,6 +283,7 @@ public class PushableObj : MonoBehaviour
         pickedUp = true;
         grav.UseGravity(false);
         GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().freezeRotation = true;
 
     }
 
@@ -292,6 +296,7 @@ public class PushableObj : MonoBehaviour
         beingPushed = false;
         grav.UseGravity(true);
         GetComponent<Rigidbody>().useGravity = false;
+        GetComponent<Rigidbody>().freezeRotation = false;
         lr.positionCount = 0;
         thisDecal.SetActive(false);
     }
