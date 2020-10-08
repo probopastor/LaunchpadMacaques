@@ -120,6 +120,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        SetGravityModifier();
+
         if (!pauseManager.GetPaused() && !pauseManager.GetGameWon())
         {
             MyInput();
@@ -191,7 +193,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #region Movement
 
-    private void Movement()
+    private void SetGravityModifier()
     {
         if ((!grappleGunReference.IsGrappling() && !grounded) && !collectibleController.GetIsActive()) // If in the air // (gameObject.transform.position.y > 20)
         {
@@ -214,7 +216,10 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             gravity = defaultGravity;
         }
+    }
 
+    private void Movement()
+    {
         //Find actual velocity relative to where player is looking
         Vector2 mag = FindVelRelativeToLook();
         float xMag = mag.x, yMag = mag.y;

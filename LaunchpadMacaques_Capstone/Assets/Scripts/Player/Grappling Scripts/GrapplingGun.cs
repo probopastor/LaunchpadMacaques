@@ -113,8 +113,6 @@ public class GrapplingGun : MonoBehaviour
 
                 float angle = Vector3.Angle(objectDirection, groundDirection);
 
-                Debug.Log("angle " + angle);
-
                 if (angle < minSwingAngle || angle > maxSwingAngle)
                 {
                     canApplyForce = true;
@@ -193,7 +191,6 @@ public class GrapplingGun : MonoBehaviour
 
         else if (wheelInput > 0)
         {
-            Debug.Log("Go Down");
             distance -= wheelSensitivity;
 
             if (distance < minDistance)
@@ -310,11 +307,11 @@ public class GrapplingGun : MonoBehaviour
                 }
             }
 
-            else
-            {
-                Debug.Log(secondHit.collider.gameObject.name);
-                Debug.Log(secondHit.collider.gameObject.transform.position);
-            }
+            //else
+            //{
+            //    Debug.Log(secondHit.collider.gameObject.name);
+            //    Debug.Log(secondHit.collider.gameObject.transform.position);
+            //}
 
         }
     }
