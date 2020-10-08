@@ -142,6 +142,10 @@ public class GrapplingGun : MonoBehaviour
             StopGrapple();
             StartGrapple();
         }
+        else if (Input.GetMouseButtonDown(1) && IsGrappling())
+        {
+            StopGrapple();
+        }
 
         if (Input.GetKeyDown(KeyCode.LeftControl) && IsGrappling())
         {
