@@ -37,6 +37,7 @@ public class GravityModifierCollectibleScript : CollectibleBehavior
     /// </summary>
     public override void DestroyCollectible()
     {
+
         Destroy(gameObject);
     }
 }
