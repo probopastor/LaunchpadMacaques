@@ -12,12 +12,12 @@ using UnityEngine;
 public abstract class CollectibleBehavior : MonoBehaviour
 {
     // CollectibleController reference
-    private CollectibleController collectibleController;
+    protected CollectibleController collectibleController;
 
     // Start is called before the first frame update
     public virtual void Start()
     {
-        collectibleController = GameObject.FindGameObjectWithTag("Collectible Controller").GetComponent<CollectibleController>();
+        collectibleController = FindObjectOfType<CollectibleController>();
     }
 
     // Update is called once per frame

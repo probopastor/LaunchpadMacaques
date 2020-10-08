@@ -14,6 +14,7 @@ using UnityStandardAssets._2D;
 
 public class CollectibleController : MonoBehaviour
 {
+    #region Variables
     [Header("Text Elements")]
     public TextMeshProUGUI totalCollectiblesText;
     public TextMeshProUGUI testDisplayText;
@@ -45,11 +46,15 @@ public class CollectibleController : MonoBehaviour
     [SerializeField, Tooltip("The new gravity that is set while the gravity collectible is active. ")]
     private float newGravity = 200f;
 
+    private bool effectTimerRunning;
+    #endregion
+
     private void Awake()
     {
         pauseManager = FindObjectOfType<PauseManager>();
         playerMovement = FindObjectOfType<Matt_PlayerMovement>();
         totalCollectibles = FindObjectsOfType<CollectibleSphereScript>().Length;
+        effectTimerRunning = false;
     }
 
     // Start is called before the first frame update
@@ -65,12 +70,13 @@ public class CollectibleController : MonoBehaviour
             gravityText.SetText("Gravity: " + playerMovement.gravity);
         }
 
-        Debug.Log("Is the gravity power-up is active: " + isActive);
-        Debug.Log("The gravity mutiplier is currently: " + playerMovement.gravity);
-        Debug.Log("Gravity Object is collected: " + gravityIsCollected);
+        //Debug.Log("Is the gravity power-up is active: " + isActive);
+        //Debug.Log("The gravity mutiplier is currently: " + playerMovement.gravity);
+        //Debug.Log("Gravity Object is collected: " + gravityIsCollected);
 
-        if(gravityIsCollected)
+        if(isActive && !effectTimerRunning)
         {
+            effectTimerRunning = true;
             StartCoroutine(EffectTimer());
         }
     }
@@ -83,6 +89,7 @@ public class CollectibleController : MonoBehaviour
     {
         yield return new WaitForSeconds(effectDuration);
         isActive = false;
+        effectTimerRunning = false;
     }
 
     #region Getters
@@ -127,10 +134,10 @@ public class CollectibleController : MonoBehaviour
     /// Getter for the gravityIsCollected bool.
     /// </summary>
     /// <returns></returns>
-    public bool GetGravityIsCollected()
-    {
-        return gravityIsCollected;
-    }
+    //public bool GetGravityIsCollected()
+    //{
+    //    return gravityIsCollected;
+    //}
 
     /// <summary>
     /// Getter for the totalCollectibles int.
@@ -168,10 +175,10 @@ public class CollectibleController : MonoBehaviour
     /// Setter for the gravityIsCollected bool.
     /// </summary>
     /// <param name="true_or_false"></param>
-    public void SetGravityIsCollected(bool true_or_false)
-    {
-        gravityIsCollected = true_or_false;
-    }
+    //public void SetGravityIsCollected(bool true_or_false)
+    //{
+    //    gravityIsCollected = true_or_false;
+    //}
 
     /// <summary>
     /// Setter for the totalCollectedCollectibles int.
