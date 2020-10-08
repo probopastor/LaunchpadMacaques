@@ -230,6 +230,12 @@ public class PushableObj : MonoBehaviour
 
             }
 
+            if (lr.positionCount > 50)
+            {
+                break;
+            }
+
+
             /// Sets the new position of the Line Renderer and Resets the points
             lr.SetPosition(count, point2);
             point1 = point2;
@@ -237,11 +243,7 @@ public class PushableObj : MonoBehaviour
             lr.positionCount++;
 
             /// An If statement to stop the game from breaking if the Line becomes to big
-            if (lr.positionCount > 20)
-            {
-                break;
-            }
-
+    
 
 
         }
