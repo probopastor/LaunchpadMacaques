@@ -5,6 +5,7 @@
 * (The Script placed on object the player can pick up and throw) 
 */
 
+using FMOD;
 using UnityEngine;
 
 public class PushableObj : MonoBehaviour
@@ -38,10 +39,19 @@ public class PushableObj : MonoBehaviour
     private Color startColor;
     private Color endColor;
     private Vector3 respawnPos;
+
+    private Gravity grav;
+
+    private CollectibleController cc;
+
     #endregion
     private void Start()
     {
         CreateDecalAndLine();
+
+        grav = this.GetComponent<Gravity>();
+
+        cc = FindObjectOfType<CollectibleController>();
     }
 
     /// <summary>
@@ -72,6 +82,16 @@ public class PushableObj : MonoBehaviour
 
     private void Update()
     {
+        if (cc.GetIsActive())
+        {
+            grav.gravity = cc.GetNewGravity();
+        }
+
+        else
+        {
+            grav.gravity = grav.GetOrgGravity();
+        }
+
         if (changeDistance & pickedUp)
         {
             ChangeDistance();
@@ -133,6 +153,7 @@ public class PushableObj : MonoBehaviour
     {
         pickedUp = false;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
+        grav.UseGravity(true);
         GetComponent<Rigidbody>().isKinematic = false;
         Vector3 point1 = this.transform.position;
         float stepSize = 1.0f / predStepsPerFrame;
@@ -140,7 +161,7 @@ public class PushableObj : MonoBehaviour
 
         for (float step = 0; step < 1; step += stepSize)
         {
-            objectVelocity += (Physics.gravity * gravityScaler )* stepSize * Time.deltaTime;
+            objectVelocity += ((transform.up * -1) * grav.GetGravityAmmount() * Time.deltaTime) * stepSize * Time.deltaTime;
             Vector3 point2 = point1 + objectVelocity * stepSize * Time.deltaTime;
 
             RaycastHit hit;
@@ -178,7 +199,7 @@ public class PushableObj : MonoBehaviour
         int count = 1;
         for (float step = 0; step < 500; step += stepSize)
         {
-            predObjectVelocity += (Physics.gravity * gravityScaler) * stepSize;
+            predObjectVelocity += ((transform.up * -1) * grav.GetGravityAmmount() * Time.deltaTime) * stepSize;
             Vector3 point2 = point1 + predObjectVelocity * stepSize;
 
             RaycastHit hit;
@@ -257,6 +278,7 @@ public class PushableObj : MonoBehaviour
         tempCam = cam;
         beingPushed = false;
         pickedUp = true;
+        grav.UseGravity(false);
         GetComponent<Rigidbody>().velocity = Vector3.zero;
 
     }
@@ -268,7 +290,8 @@ public class PushableObj : MonoBehaviour
     {
         pickedUp = false;
         beingPushed = false;
-        GetComponent<Rigidbody>().useGravity = true;
+        grav.UseGravity(true);
+        GetComponent<Rigidbody>().useGravity = false;
         lr.positionCount = 0;
         thisDecal.SetActive(false);
     }
@@ -292,7 +315,7 @@ public class PushableObj : MonoBehaviour
     private void StopPushingObject()
     {
         beingPushed = false;
-        GetComponent<Rigidbody>().useGravity = true;
+        grav.UseGravity(true);
         pickedUp = false;
         lr.positionCount = 0;
         thisDecal.SetActive(false);
@@ -300,5 +323,7 @@ public class PushableObj : MonoBehaviour
     }
 
     #endregion
+
+
 
 }
