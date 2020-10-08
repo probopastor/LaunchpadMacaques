@@ -1,8 +1,8 @@
-﻿/* 
+﻿/*
 * Launchpad Macaques - Trial and Error
 * Zack Seiple
 * Pinwheel.cs
-* Handles the Pinwheel object behavior. Pinwheels rotate towards the player upon being grappled to. 
+* Handles the Pinwheel object behavior. Pinwheels rotate towards the player upon being grappled to.
 */
 
 using FMOD;
@@ -22,7 +22,7 @@ public class Pinwheel : MonoBehaviour
 
     [SerializeField, Tooltip("Amount the wheel will rotate when the player grapples onto a grapple point (in degrees)")]
     private float rotationAmount = 90f;
-    [SerializeField, Tooltip("The time it takes for the wheel to rotate to its stopping point (in seconds)")] 
+    [SerializeField, Tooltip("The time it takes for the wheel to rotate to its stopping point (in seconds)")]
     private float rotationTime = 1.0f;
     private float currentTime = 0.0f;
 
@@ -39,6 +39,11 @@ public class Pinwheel : MonoBehaviour
         numGrapplePoints = grapplePoints.Count;
     }
 
+    /// <summary>
+    /// Public function that can be called by other scripts to trigger the rotation of the pinwheel
+    /// </summary>
+    /// <param name="grapplePointUsed">The transform of the grapple point on the pinwheel that was attached to</param>
+    /// <param name="lookDir">The direcion the camera of the player is looking, used to determine the direction the pinwheel should move</param>
     public void TriggerRotation(Transform grapplePointUsed, Vector3 lookDir)
     {
         StartCoroutine(Rotate(grapplePointUsed, lookDir));
@@ -46,6 +51,12 @@ public class Pinwheel : MonoBehaviour
 
     bool clockwise;
     bool lastGrappleTop = false;
+    /// <summary>
+    /// Function that handles the rotation of the pinwheel
+    /// </summary>
+    /// <param name="grapplePoint">The transform of the grapple point on the pinwheel that was attached to</param>
+    /// <param name="lookPos">The direcion the camera of the player is looking, used to determine the direction the pinwheel should move</param>
+    /// <returns>IEnumerator</returns>
     private IEnumerator Rotate(Transform grapplePoint, Vector3 lookPos)
     {
         bool prevClockwise = clockwise;
@@ -96,6 +107,15 @@ public class Pinwheel : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Wraps a given index to be within a certain minimum (inclusive) and maximum (exclusive). If the index is greater
+    /// than or equal to the max it will wrap around to the min value. If the index is less than the min it will wrap around to the max - 1.
+    /// If the index is already within the provided range, the index will be returned unmodified
+    /// </summary>
+    /// <param name="index">The index to be wrapped</param>
+    /// <param name="min">The minimum value of the wrap (inclusive)</param>
+    /// <param name="max">The maximum value of the wrap (exclusive)</param>
+    /// <returns>An index within the given min (inclusive) and max (exclusive)</returns>
     private int WrapIndex(int index, int min, int max)
     {
         if (index >= max)
