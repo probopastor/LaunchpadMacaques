@@ -286,6 +286,7 @@ public class PushableObj : MonoBehaviour
         beingPushed = false;
         pickedUp = true;
         grav.UseGravity(false);
+        GetComponent<Transform>().rotation = Quaternion.Euler(0, 0, 0);
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         GetComponent<Rigidbody>().freezeRotation = true;
 
