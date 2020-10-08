@@ -226,12 +226,7 @@ public class PushableObj : MonoBehaviour
                 }
 
 
-                /// An If statement to stop the game from breaking if the Line becomes to big
-                if (lr.positionCount > 100)
-                {
-                    break;
-                }
-
+        
 
             }
 
@@ -240,6 +235,13 @@ public class PushableObj : MonoBehaviour
             point1 = point2;
             count++;
             lr.positionCount++;
+
+            /// An If statement to stop the game from breaking if the Line becomes to big
+            if (lr.positionCount > 20)
+            {
+                break;
+            }
+
 
 
         }
