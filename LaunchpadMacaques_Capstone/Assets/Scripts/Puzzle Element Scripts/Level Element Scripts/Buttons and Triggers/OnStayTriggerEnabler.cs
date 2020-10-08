@@ -54,7 +54,9 @@ public class OnStayTriggerEnabler : MonoBehaviour
         }
     }
 
-    //If the player or cube is on the presure plate, disable targets
+    /// <summary>
+    /// If the player or cube is on the presure plate, disable targets
+    /// </summary>
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player" || other.tag == "PlayerCube")
@@ -74,7 +76,9 @@ public class OnStayTriggerEnabler : MonoBehaviour
         }
     }
 
-    //If the player or cube is off the presure plate, enable targets
+    /// <summary>
+    /// If the player or cube is off the presure plate, enable targets
+    /// </summary>
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Player" || other.tag == "PlayerCube")
@@ -94,7 +98,9 @@ public class OnStayTriggerEnabler : MonoBehaviour
         }
     }
 
-    //waits and disables targets
+    /// <summary>
+    /// waits and disables targets
+    /// </summary>
     IEnumerator Disabler()
     {
         yield return new WaitForSecondsRealtime(timerValue);
