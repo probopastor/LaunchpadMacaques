@@ -66,14 +66,18 @@ public class GrapplePointManager : MonoBehaviour
         Notify();
     }
 
-    //NOT USED
-    //Update the remaining grapples
+    /// <summary>
+    /// Noty used. Update the remaining grapples.
+    /// </summary>
+    /// <param name="grapples"></param>
     public void SetTotalGrapples(int grapples)
     {
         remainingGrapples = grapples;
     }
 
-    //Detect if an grapplePoints is breaking and starts to remove it
+    /// <summary>
+    /// Detect if an grapplePoints is breaking and starts to remove it
+    /// </summary>
     public void Notify()
     {
         for(int i = 0; i < grapplePoints.Count; i++)
@@ -98,14 +102,19 @@ public class GrapplePointManager : MonoBehaviour
         }
     }
 
-    //Get the remaining number of grapple points active
+    /// <summary>
+    /// Get the remaining number of grapple points active
+    /// </summary>
+    /// <returns></returns>
     public int GetRemainingPoints()
     {
         return remainingPoints;
     }
 
-    //NOT USED
-    //Get the remaining number of grapples available
+    /// <summary>
+    /// Not Used. Get the remaining number of grapples available
+    /// </summary>
+    /// <returns></returns>
     public int GetRemainingGrapples()
     {
         return remainingGrapples;

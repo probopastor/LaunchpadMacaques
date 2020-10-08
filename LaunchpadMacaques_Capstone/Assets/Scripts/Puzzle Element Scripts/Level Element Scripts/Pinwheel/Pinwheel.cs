@@ -1,4 +1,11 @@
-﻿using FMOD;
+﻿/* 
+* Launchpad Macaques - Trial and Error
+* Zack Seiple
+* Pinwheel.cs
+* Handles the Pinwheel object behavior. Pinwheels rotate towards the player upon being grappled to. 
+*/
+
+using FMOD;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -87,8 +94,6 @@ public class Pinwheel : MonoBehaviour
             currRotationTime += Time.deltaTime;
             yield return null;
         }
-
-
     }
 
     private int WrapIndex(int index, int min, int max)

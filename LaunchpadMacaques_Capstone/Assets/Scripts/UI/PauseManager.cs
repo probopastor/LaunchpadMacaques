@@ -18,14 +18,14 @@ public class PauseManager : MonoBehaviour
     private bool gameLost;
     private bool gameWon;
 
-    [SerializeField] private string thisScene;
-    [SerializeField] private string mainMenuScene;
+    [SerializeField, Tooltip("The scene this pause manager is located in. ")] private string thisScene;
+    [SerializeField, Tooltip("The main menu scene name. ")] private string mainMenuScene;
 
-    [SerializeField] private GameObject PauseCanvas;
+    [SerializeField, Tooltip("The pause panel that is being used as a menu. ")] private GameObject PauseCanvas;
     //[SerializeField] private GameObject LoseCanvas;
-    [SerializeField] private GameObject WinCanvas;
-    [SerializeField] private GameObject CursorCanvas;
-    [SerializeField] private GameObject UICanvas;
+    [SerializeField, Tooltip("The win panel that is being used as a win state. ")] private GameObject WinCanvas;
+    [SerializeField, Tooltip("The cursor object. ")] private GameObject CursorCanvas;
+    [SerializeField, Tooltip("The UI panel. ")] private GameObject UICanvas;
 
     // Start is called before the first frame update
     void Start()
@@ -53,6 +53,9 @@ public class PauseManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method handles pausing and unpausing, and enabling and disabling the proper objects.
+    /// </summary>
     public void PauseGame()
     {
         if (paused == false)
@@ -77,18 +80,27 @@ public class PauseManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Reloads the current scene.
+    /// </summary>
     public void RestartGame()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(thisScene);
     }
 
+    /// <summary>
+    /// Changes the scene to the main menu scene.
+    /// </summary>
     public void ToMainMenu()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(mainMenuScene);
     }
 
+    /// <summary>
+    /// Enables the lose state of the game.
+    /// </summary>
     public void SetGameLost()
     {
         gameLost = true;
@@ -96,6 +108,9 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    /// <summary>
+    /// Enables the win state of the game.
+    /// </summary>
     public void SetGameWin()
     {
         gameWon = true;
@@ -106,16 +121,28 @@ public class PauseManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
 
+    /// <summary>
+    /// Returns true if the game is paused. False otherwise.
+    /// </summary>
+    /// <returns></returns>
     public bool GetPaused()
     {
         return paused;
     }
 
+    /// <summary>
+    /// Returns true if the game is won. False otherwise.
+    /// </summary>
+    /// <returns></returns>
     public bool GetGameWon()
     {
         return gameWon;
     }
 
+    /// <summary>
+    /// Returns true if the game is lost. False otherwise.
+    /// </summary>
+    /// <returns></returns>
     public bool GetGameLost()
     {
         return gameLost;
