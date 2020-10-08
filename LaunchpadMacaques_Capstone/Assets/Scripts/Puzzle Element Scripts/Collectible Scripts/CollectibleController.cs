@@ -14,6 +14,7 @@ using UnityStandardAssets._2D;
 
 public class CollectibleController : MonoBehaviour
 {
+    #region Variables
     [Header("Text Elements")]
     public TextMeshProUGUI totalCollectiblesText;
     public TextMeshProUGUI testDisplayText;
@@ -45,14 +46,15 @@ public class CollectibleController : MonoBehaviour
     [SerializeField, Tooltip("The new gravity that is set while the gravity collectible is active. ")]
     private float newGravity = 200f;
 
-    private bool doOnce;
+    private bool effectTimerRunning;
+    #endregion
 
     private void Awake()
     {
         pauseManager = FindObjectOfType<PauseManager>();
         playerMovement = FindObjectOfType<Matt_PlayerMovement>();
         totalCollectibles = FindObjectsOfType<CollectibleSphereScript>().Length;
-        doOnce = false;
+        effectTimerRunning = false;
     }
 
     // Start is called before the first frame update
@@ -72,9 +74,9 @@ public class CollectibleController : MonoBehaviour
         //Debug.Log("The gravity mutiplier is currently: " + playerMovement.gravity);
         //Debug.Log("Gravity Object is collected: " + gravityIsCollected);
 
-        if(isActive && !doOnce)
+        if(isActive && !effectTimerRunning)
         {
-            doOnce = true;
+            effectTimerRunning = true;
             StartCoroutine(EffectTimer());
         }
     }
@@ -87,7 +89,7 @@ public class CollectibleController : MonoBehaviour
     {
         yield return new WaitForSeconds(effectDuration);
         isActive = false;
-        doOnce = false;
+        effectTimerRunning = false;
     }
 
     #region Getters
