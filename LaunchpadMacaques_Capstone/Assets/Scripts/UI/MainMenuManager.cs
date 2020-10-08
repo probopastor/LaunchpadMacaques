@@ -29,6 +29,9 @@ public class MainMenuManager : MonoBehaviour
     //    SceneManager.LoadScene(pushPullScene);
     //}
 
+    /// <summary>
+    /// Obsolete. Previously brought players to the push pull level.
+    /// </summary>
     public void StartPushPullScene()
     {
         Time.timeScale = 1;
@@ -37,6 +40,9 @@ public class MainMenuManager : MonoBehaviour
         SceneManager.LoadScene(pushPullScene);
     }
 
+    /// <summary>
+    /// Starts the swing sandbox level upon button click.
+    /// </summary>
     public void StartSwingScene()
     {
         Time.timeScale = 1;
@@ -45,6 +51,9 @@ public class MainMenuManager : MonoBehaviour
         SceneManager.LoadScene(swingScene);
     }
 
+    /// <summary>
+    /// Exits the game.
+    /// </summary>
     public void QuitGame()
     {
         Application.Quit();

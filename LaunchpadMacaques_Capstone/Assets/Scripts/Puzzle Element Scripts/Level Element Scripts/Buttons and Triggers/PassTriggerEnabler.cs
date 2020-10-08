@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿/* 
+* (Launchpad Macaques - [Trial and Error]) 
+* (James Colleen) 
+* (PassTriggerEnabler.CS) 
+* (Implements the ability to disable and enable objects via passing by another object. Disabling may be done manually or via timer.) 
+*/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
