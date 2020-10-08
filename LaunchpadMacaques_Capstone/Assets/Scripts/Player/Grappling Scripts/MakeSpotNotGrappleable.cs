@@ -43,17 +43,20 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     /// <param name="hitObject"></param>
     public void MakeSpotNotGrappable(RaycastHit spotPos, GameObject hitObject)
     {
-        Vector3 objectVector = hitObject.GetComponent<Renderer>().bounds.size;
-        objectSize = objectVector.x + objectVector.y + objectVector.z;
-
-        if (objectSize > maxObjectSize)
+        if (spotPos.collider.gameObject.layer != LayerMask.NameToLayer("DontCorrupt"))
         {
-            MakePartOfObjectNotGrappable(spotPos, hitObject);
-        }
+            Vector3 objectVector = hitObject.GetComponent<Renderer>().bounds.size;
+            objectSize = objectVector.x + objectVector.y + objectVector.z;
 
-        else
-        {
-            MakeEntireObjectNotGrappable(hitObject, spotPos);
+            if (objectSize > maxObjectSize)
+            {
+                MakePartOfObjectNotGrappable(spotPos, hitObject);
+            }
+
+            else
+            {
+                MakeEntireObjectNotGrappable(hitObject, spotPos);
+            }
         }
     }
 

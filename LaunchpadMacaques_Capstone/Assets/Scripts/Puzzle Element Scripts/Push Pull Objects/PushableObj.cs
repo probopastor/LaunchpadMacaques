@@ -209,7 +209,7 @@ public class PushableObj : MonoBehaviour
             Ray ray = new Ray(point1, point2 - point1);
 
             /// If the thing predicts that it will run into a non trigger object it will stop the line there, and place a decal there.
-            /// It if is an objec the cube can affect the  line will turn green
+            /// It if is an object the cube can affect the  line will turn green
             if (Physics.Raycast(ray, out hit, (point2 - point1).magnitude))
             {
                 if (hit.collider.gameObject.CompareTag("Collectible") || hit.collider.gameObject.CompareTag("PassBy"))
@@ -226,6 +226,7 @@ public class PushableObj : MonoBehaviour
                 }
 
 
+                /// An If statement to stop the game from breaking if the Line becomes to big
                 if (lr.positionCount > 100)
                 {
                     break;
@@ -234,6 +235,7 @@ public class PushableObj : MonoBehaviour
 
             }
 
+            /// Sets the new position of the Line Renderer and Resets the points
             lr.SetPosition(count, point2);
             point1 = point2;
             count++;
@@ -328,7 +330,5 @@ public class PushableObj : MonoBehaviour
     }
 
     #endregion
-
-
 
 }
