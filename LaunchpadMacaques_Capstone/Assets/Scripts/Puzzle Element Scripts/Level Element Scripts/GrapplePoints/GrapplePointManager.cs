@@ -26,7 +26,9 @@ public class GrapplePointManager : MonoBehaviour
     */
 
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Start is called before the first frame update
+    /// </summary>
     void Start()
     {
         //Initialize List
@@ -44,7 +46,9 @@ public class GrapplePointManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
     void Update()
     {
         //Display UI
@@ -67,7 +71,7 @@ public class GrapplePointManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Noty used. Update the remaining grapples.
+    /// Not used. Update the remaining grapples.
     /// </summary>
     /// <param name="grapples"></param>
     public void SetTotalGrapples(int grapples)

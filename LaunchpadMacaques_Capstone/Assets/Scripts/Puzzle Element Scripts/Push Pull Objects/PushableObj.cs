@@ -5,6 +5,7 @@
 * (The Script placed on object the player can pick up and throw) 
 */
 
+using FMOD;
 using UnityEngine;
 
 public class PushableObj : MonoBehaviour
@@ -38,10 +39,19 @@ public class PushableObj : MonoBehaviour
     private Color startColor;
     private Color endColor;
     private Vector3 respawnPos;
+
+    private Gravity grav;
+
+    private CollectibleController cc;
+
     #endregion
     private void Start()
     {
         CreateDecalAndLine();
+
+        grav = this.GetComponent<Gravity>();
+
+        cc = FindObjectOfType<CollectibleController>();
     }
 
     /// <summary>
@@ -72,6 +82,16 @@ public class PushableObj : MonoBehaviour
 
     private void Update()
     {
+        if (cc.GetIsActive())
+        {
+            grav.gravity = cc.GetNewGravity();
+        }
+
+        else
+        {
+            grav.gravity = grav.GetOrgGravity();
+        }
+
         if (changeDistance & pickedUp)
         {
             ChangeDistance();
@@ -133,18 +153,22 @@ public class PushableObj : MonoBehaviour
     {
         pickedUp = false;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
+        grav.UseGravity(true);
         GetComponent<Rigidbody>().isKinematic = false;
+        GetComponent<Rigidbody>().freezeRotation = false;
         Vector3 point1 = this.transform.position;
         float stepSize = 1.0f / predStepsPerFrame;
 
 
+        /// Will run through and will predict where the object will go, creating the Line as it goes
         for (float step = 0; step < 1; step += stepSize)
         {
-            objectVelocity += (Physics.gravity * gravityScaler )* stepSize * Time.deltaTime;
+            objectVelocity += ((transform.up * -1) * grav.GetGravityAmmount() * Time.deltaTime) * stepSize * Time.deltaTime;
             Vector3 point2 = point1 + objectVelocity * stepSize * Time.deltaTime;
 
             RaycastHit hit;
             Ray ray = new Ray(point1, point2 - point1);
+
             if (Physics.Raycast(ray, out hit ,(point2 - point1).magnitude))
             {
                 if (!hit.collider.isTrigger)
@@ -178,16 +202,16 @@ public class PushableObj : MonoBehaviour
         int count = 1;
         for (float step = 0; step < 500; step += stepSize)
         {
-            predObjectVelocity += (Physics.gravity * gravityScaler) * stepSize;
+            predObjectVelocity += ((transform.up * -1) * grav.GetGravityAmmount() * Time.deltaTime) * stepSize;
             Vector3 point2 = point1 + predObjectVelocity * stepSize;
 
             RaycastHit hit;
             Ray ray = new Ray(point1, point2 - point1);
+
+            /// If the thing predicts that it will run into a non trigger object it will stop the line there, and place a decal there.
+            /// It if is an objec the cube can affect the  line will turn green
             if (Physics.Raycast(ray, out hit, (point2 - point1).magnitude))
             {
-                
-
-
                 if (hit.collider.gameObject.CompareTag("Collectible") || hit.collider.gameObject.CompareTag("PassBy"))
                 {
                     hitCollectable = true;
@@ -257,7 +281,9 @@ public class PushableObj : MonoBehaviour
         tempCam = cam;
         beingPushed = false;
         pickedUp = true;
+        grav.UseGravity(false);
         GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().freezeRotation = true;
 
     }
 
@@ -268,7 +294,9 @@ public class PushableObj : MonoBehaviour
     {
         pickedUp = false;
         beingPushed = false;
-        GetComponent<Rigidbody>().useGravity = true;
+        grav.UseGravity(true);
+        GetComponent<Rigidbody>().useGravity = false;
+        GetComponent<Rigidbody>().freezeRotation = false;
         lr.positionCount = 0;
         thisDecal.SetActive(false);
     }
@@ -292,7 +320,7 @@ public class PushableObj : MonoBehaviour
     private void StopPushingObject()
     {
         beingPushed = false;
-        GetComponent<Rigidbody>().useGravity = true;
+        grav.UseGravity(true);
         pickedUp = false;
         lr.positionCount = 0;
         thisDecal.SetActive(false);
@@ -300,5 +328,7 @@ public class PushableObj : MonoBehaviour
     }
 
     #endregion
+
+
 
 }
