@@ -18,13 +18,17 @@ public class GrapplePoint : MonoBehaviour
     private bool breaking;
     private float timeLeft;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Start is called before the first frame update
+    /// </summary>
     void Start()
     {
         breaking = false;
     }
 
-    //After the countdown ends, stop it and disable the grapple point
+    /// <summary>
+    /// After the countdown ends, stop it and disable the grapple point
+    /// </summary>
     public void UpdateSubject()
     {
         StopCoroutine("Countdown");
@@ -32,7 +36,9 @@ public class GrapplePoint : MonoBehaviour
         this.gameObject.GetComponent<Renderer>().enabled = false;
     }
 
-    //Countdown Coroutine
+    /// <summary>
+    /// Timer
+    /// </summary>
     private IEnumerator Countdown()
     {
         //Test if countdown started
