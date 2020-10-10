@@ -663,7 +663,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-32082
+  m_Name: pb_Mesh-5456
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -892,6 +892,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Moveable Cube
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330556, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2058264478890330558, guid: ab0a9ce77bfc0464e826f259cb7566a7,
         type: 3}
@@ -1122,7 +1127,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 91681bc844b2e9943bb1a600d07bba88, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3740,7 +3745,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 91681bc844b2e9943bb1a600d07bba88, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3778,7 +3783,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 643602948}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 108.34897, y: -138.6, z: 334.161}
+  m_LocalPosition: {x: 108.34897, y: -138.6, z: 161.9}
   m_LocalScale: {x: 270, y: 40, z: 1}
   m_Children: []
   m_Father: {fileID: 169453564}
@@ -5342,8 +5347,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.0828704, y: 1, z: 1.0638863}
+  m_Center: {x: 0.04143515, y: 0, z: 0.03194313}
 --- !u!23 &854093214
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5477,7 +5482,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 91681bc844b2e9943bb1a600d07bba88, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9037,7 +9042,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 91681bc844b2e9943bb1a600d07bba88, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9075,7 +9080,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1188339571}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 233.74896, y: -138.6, z: 209.36101}
+  m_LocalPosition: {x: 116.9, y: -138.6, z: 209.4}
   m_LocalScale: {x: 270, y: 40, z: 1}
   m_Children: []
   m_Father: {fileID: 169453564}
@@ -13192,7 +13197,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c88378927b7a2c488466fe1fe3e3938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerValue: 6
 --- !u!1 &2000229550
 GameObject:
   m_ObjectHideFlags: 0
@@ -15022,10 +15026,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7547051553667276174}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c88378927b7a2c488466fe1fe3e3938, type: 3}
+  m_Script: {fileID: 11500000, guid: 6cdfb9178195e2548b3e579b73ad0976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerValue: 1
+  timerValue: 6
+  respawnAfterTime: 1
 --- !u!1001 &8989612134272200345
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15047,6 +15052,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PassThroughEnabler
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808448845627388571, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1808448845627388573, guid: ec3511395a89cab468c90e26eb412159,
         type: 3}
