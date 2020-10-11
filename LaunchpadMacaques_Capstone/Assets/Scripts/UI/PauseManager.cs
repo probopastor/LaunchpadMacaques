@@ -27,6 +27,8 @@ public class PauseManager : MonoBehaviour
     [SerializeField, Tooltip("The win panel that is being used as a win state. ")] private GameObject WinCanvas;
     [SerializeField, Tooltip("The cursor object. ")] private GameObject CursorCanvas;
     [SerializeField, Tooltip("The UI panel. ")] private GameObject UICanvas;
+    [SerializeField, Tooltip("The Information Post Text ")] private GameObject InformationPostText;
+
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +42,11 @@ public class PauseManager : MonoBehaviour
         //LoseCanvas.SetActive(false);
         WinCanvas.SetActive(false);
         UICanvas.SetActive(true);
+
+        if (InformationPostText != null)
+        {
+            InformationPostText.SetActive(true);
+        }
     }
 
     // Update is called once per frame
@@ -66,6 +73,11 @@ public class PauseManager : MonoBehaviour
             PauseCanvas.SetActive(true);
             CursorCanvas.SetActive(false);
 
+            if (InformationPostText != null)
+            {
+                InformationPostText.SetActive(false);
+            }
+
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
@@ -75,6 +87,11 @@ public class PauseManager : MonoBehaviour
             paused = false;
             PauseCanvas.SetActive(false);
             CursorCanvas.SetActive(true);
+
+            if(InformationPostText != null)
+            {
+                InformationPostText.SetActive(true);
+            }
 
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
