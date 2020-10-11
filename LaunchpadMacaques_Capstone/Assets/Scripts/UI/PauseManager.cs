@@ -17,6 +17,7 @@ public class PauseManager : MonoBehaviour
     private bool paused;
     private bool gameLost;
     private bool gameWon;
+    public GameObject HTPMenu;
 
     [SerializeField, Tooltip("The scene this pause manager is located in. ")] private string thisScene;
     [SerializeField, Tooltip("The main menu scene name. ")] private string mainMenuScene;
@@ -46,7 +47,7 @@ public class PauseManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!gameLost && !gameWon)
+            if (!gameLost && !gameWon && !HTPMenu.activeSelf)
             {
                 PauseGame();
             }
