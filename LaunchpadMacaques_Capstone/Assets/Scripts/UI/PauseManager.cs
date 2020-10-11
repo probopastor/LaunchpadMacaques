@@ -27,7 +27,8 @@ public class PauseManager : MonoBehaviour
     [SerializeField, Tooltip("The win panel that is being used as a win state. ")] private GameObject WinCanvas;
     [SerializeField, Tooltip("The cursor object. ")] private GameObject CursorCanvas;
     [SerializeField, Tooltip("The UI panel. ")] private GameObject UICanvas;
-    [SerializeField, Tooltip("The Information Post Text ")] private GameObject InformationPostText;
+    [SerializeField, Tooltip("The Information Post Text. ")] private GameObject InformationPostText;
+    [SerializeField, Tooltip("The rope length text. ")] private GameObject RopeLengthText;
 
 
     // Start is called before the first frame update
@@ -46,6 +47,11 @@ public class PauseManager : MonoBehaviour
         if (InformationPostText != null)
         {
             InformationPostText.SetActive(true);
+        }
+
+        if(RopeLengthText != null)
+        {
+            RopeLengthText.SetActive(true);
         }
     }
 
@@ -78,6 +84,11 @@ public class PauseManager : MonoBehaviour
                 InformationPostText.SetActive(false);
             }
 
+            if (RopeLengthText != null)
+            {
+                RopeLengthText.SetActive(false);
+            }
+
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
@@ -93,6 +104,11 @@ public class PauseManager : MonoBehaviour
                 InformationPostText.SetActive(true);
             }
 
+            if (RopeLengthText != null)
+            {
+                RopeLengthText.SetActive(true);
+            }
+
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -104,7 +120,10 @@ public class PauseManager : MonoBehaviour
     public void RestartGame()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(thisScene);
+        //SceneManager.LoadScene(thisScene);
+
+        Scene scene = SceneManager.GetActiveScene(); 
+        SceneManager.LoadScene(scene.name);
     }
 
     /// <summary>

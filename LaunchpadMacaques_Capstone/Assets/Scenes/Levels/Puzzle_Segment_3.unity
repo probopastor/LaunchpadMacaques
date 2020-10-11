@@ -4301,6 +4301,24 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 456834259}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &456834262 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4672335421124586235, guid: 4043949ccbe61164e988501e44004acc,
+    type: 3}
+  m_PrefabInstance: {fileID: 456834259}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &456834263 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4672335421124586237, guid: 4043949ccbe61164e988501e44004acc,
+    type: 3}
+  m_PrefabInstance: {fileID: 456834259}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 456834262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &472046020 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6733871110579194056, guid: 317c024b59b4c73458261a07c70c7593,
@@ -4359,12 +4377,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HTPMenu: {fileID: 0}
-  thisScene: Combined_Features
+  thisScene: Puzzle_Segment_3
   mainMenuScene: MainMenu
   PauseCanvas: {fileID: 646010777}
   WinCanvas: {fileID: 1803148184}
   CursorCanvas: {fileID: 445166013}
   UICanvas: {fileID: 445166013}
+  InformationPostText: {fileID: 0}
+  RopeLengthText: {fileID: 456834262}
 --- !u!114 &483023265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17287,7 +17307,7 @@ MonoBehaviour:
   maxSwingAngle: 90
   grappleToggleEnabledText: {fileID: 1554196664}
   grappleToggleDisabledText: {fileID: 921230031}
-  ropeLengthText: {fileID: 1741400428}
+  ropeLengthText: {fileID: 456834263}
   whatIsNotGrappleable:
     serializedVersion: 2
     m_Bits: 3639
