@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2058264478890330554}
   - component: {fileID: 2058264478890330549}
   - component: {fileID: 3846962766668666951}
+  - component: {fileID: 7511431540884143899}
   m_Layer: 10
   m_Name: Moveable Cube
   m_TagString: PlayerCube
@@ -64,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 0f45fed2c7ba5284c80eb0982b3d1347, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -246,3 +247,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravity: 1100
+--- !u!114 &7511431540884143899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058264478890330556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958a08a5a996edb4e9c8ee5698f14db6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  corruptionState: 2
+  wireframeColor: {r: 1, g: 0, b: 1, a: 1}
+  corruptionStartPoint: {x: 0.45, y: 0, z: 0}
+  useWorldCoordinates: 0
+  corruptionDistance: 0.5

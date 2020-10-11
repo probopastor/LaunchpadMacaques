@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-1657534100724804672
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 2
 --- !u!21 &2100000
 Material:
   serializedVersion: 6
@@ -7,10 +20,10 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BarrelMat
+  m_Name: DefaultCorruptableMat
   m_Shader: {fileID: -6465566751694194690, guid: 02c2f1c9a509709438b422416344b57b,
     type: 3}
-  m_ShaderKeywords: ENUM_ECC81FAE_SEPARATE _NORMALMAP_TANGENT_SPACE
+  m_ShaderKeywords: BOOLEAN_274B64FF_ON ENUM_ECC81FAE_NONE _NORMALMAP_TANGENT_SPACE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -27,23 +40,23 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_3E1B1CB4:
-        m_Texture: {fileID: 2800000, guid: 3d0ba4666ea96db47ba2fa13f8952216, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_4BC8625A:
-        m_Texture: {fileID: 2800000, guid: 17bb041e205d3ed48990a3d5348a1beb, type: 3}
+        m_Texture: {fileID: 2800000, guid: 400190feb6f2b7445ba43f01e9efa977, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_675B059A:
-        m_Texture: {fileID: 2800000, guid: 776cdcaa6b434d545a78c4ba48eaca37, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6399a4cc0dfb28c4cb87ebfe9f9abd3d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_83CFD49A:
-        m_Texture: {fileID: 2800000, guid: 7ac73060364afc5438f36839433a5f29, type: 3}
+        m_Texture: {fileID: 2800000, guid: a5eedd1b81ea9eb47aa8633f772ad5b7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_D09F2261:
-        m_Texture: {fileID: 2800000, guid: ddf155d616669db4897e4539f447a0b7, type: 3}
+        m_Texture: {fileID: 2800000, guid: ac50ffda49b25404eac3cd0bbcb04cbd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_DDC329B3:
@@ -51,11 +64,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_F2A662B9:
-        m_Texture: {fileID: 2800000, guid: a2c2d32c1b8e1f44e9c47780d794e6ba, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_FD47B4CA:
-        m_Texture: {fileID: 2800000, guid: 2b5665fb8499e5948a284daab36fa629, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _AnisotropyMap:
@@ -122,11 +135,15 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_447E564F_Texture_1:
+    - _SampleTexture2D_A21B0EAA_Texture_1:
         m_Texture: {fileID: 2800000, guid: 1e9a697e6cba8374bb4b1025d643a49a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_A4BDE4C3_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 1e9a697e6cba8374bb4b1025d643a49a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_B56EE126_Texture_1:
         m_Texture: {fileID: 2800000, guid: 1e9a697e6cba8374bb4b1025d643a49a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -156,14 +173,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - BOOLEAN_274B64FF: 1
-    - BOOLEAN_CCB77FAA: 0
-    - Boolean_C9190BD9: 1
-    - CorruptionStartTime: 0
-    - ENUM_ECC81FAE: 0
-    - USE_ROUGHNESS: 0
-    - Vector1_17827C8A: 3
-    - Vector1_4CE5C302: 0.25
-    - Vector1_7BDBA58F: 1.3
+    - Boolean_C9190BD9: 0
+    - Boolean_DEBA3974: 1
+    - Corrupted: 0
+    - Corrupting: 1
+    - CorruptionProgress: 1.7
+    - ENUM_ECC81FAE: 2
+    - Vector1_17827C8A: 0.5
+    - Vector1_4CE5C302: 0.1
+    - Vector1_7BDBA58F: 1
     - Vector1_8D08D87B: 4
     - Vector1_97005BC4: 1
     - _AORemapMax: 1
@@ -288,7 +306,7 @@ Material:
     m_Colors:
     - AdjustmentColor: {r: 0, g: 0, b: 0, a: 0}
     - Color_D21534A1: {r: 1, g: 0, b: 1, a: 1}
-    - CorruptionStartPos: {r: 0, g: 0, b: 0, a: 0}
+    - CorruptionStartPos: {r: -0.5, g: 0, b: -0.5, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
@@ -306,16 +324,3 @@ Material:
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &1282974304534637819
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 2
