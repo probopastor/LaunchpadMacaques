@@ -17,6 +17,7 @@ public class PauseManager : MonoBehaviour
     private bool paused;
     private bool gameLost;
     private bool gameWon;
+    public GameObject HTPMenu;
 
     [SerializeField, Tooltip("The scene this pause manager is located in. ")] private string thisScene;
     [SerializeField, Tooltip("The main menu scene name. ")] private string mainMenuScene;
@@ -26,6 +27,9 @@ public class PauseManager : MonoBehaviour
     [SerializeField, Tooltip("The win panel that is being used as a win state. ")] private GameObject WinCanvas;
     [SerializeField, Tooltip("The cursor object. ")] private GameObject CursorCanvas;
     [SerializeField, Tooltip("The UI panel. ")] private GameObject UICanvas;
+    [SerializeField, Tooltip("The Information Post Text. ")] private GameObject InformationPostText;
+    [SerializeField, Tooltip("The rope length text. ")] private GameObject RopeLengthText;
+
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +43,16 @@ public class PauseManager : MonoBehaviour
         //LoseCanvas.SetActive(false);
         WinCanvas.SetActive(false);
         UICanvas.SetActive(true);
+
+        if (InformationPostText != null)
+        {
+            InformationPostText.SetActive(true);
+        }
+
+        if(RopeLengthText != null)
+        {
+            RopeLengthText.SetActive(true);
+        }
     }
 
     // Update is called once per frame
@@ -46,7 +60,7 @@ public class PauseManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!gameLost && !gameWon)
+            if (!gameLost && !gameWon && !HTPMenu.activeSelf)
             {
                 PauseGame();
             }
@@ -65,6 +79,16 @@ public class PauseManager : MonoBehaviour
             PauseCanvas.SetActive(true);
             CursorCanvas.SetActive(false);
 
+            if (InformationPostText != null)
+            {
+                InformationPostText.SetActive(false);
+            }
+
+            if (RopeLengthText != null)
+            {
+                RopeLengthText.SetActive(false);
+            }
+
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
@@ -74,6 +98,16 @@ public class PauseManager : MonoBehaviour
             paused = false;
             PauseCanvas.SetActive(false);
             CursorCanvas.SetActive(true);
+
+            if(InformationPostText != null)
+            {
+                InformationPostText.SetActive(true);
+            }
+
+            if (RopeLengthText != null)
+            {
+                RopeLengthText.SetActive(true);
+            }
 
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
@@ -86,7 +120,10 @@ public class PauseManager : MonoBehaviour
     public void RestartGame()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(thisScene);
+        //SceneManager.LoadScene(thisScene);
+
+        Scene scene = SceneManager.GetActiveScene(); 
+        SceneManager.LoadScene(scene.name);
     }
 
     /// <summary>
