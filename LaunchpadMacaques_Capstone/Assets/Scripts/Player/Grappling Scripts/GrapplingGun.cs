@@ -258,6 +258,12 @@ public class GrapplingGun : MonoBehaviour
 
                 corruptObject.MakeSpotNotGrappable(hit, grappledObj);
 
+                //CorruptableObject objectToCorrupt = grappledObj.GetComponent<CorruptableObject>();
+                //if(objectToCorrupt != null)
+                //{
+                //    objectToCorrupt.StartCorrupting(grapplePoint);
+                //}
+
                 joint = player.gameObject.AddComponent<SpringJoint>();
                 joint.autoConfigureConnectedAnchor = false;
                 joint.connectedAnchor = grapplePoint;

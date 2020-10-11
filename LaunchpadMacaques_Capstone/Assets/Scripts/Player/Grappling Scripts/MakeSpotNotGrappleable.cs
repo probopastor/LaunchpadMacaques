@@ -43,6 +43,7 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     /// <param name="hitObject"></param>
     public void MakeSpotNotGrappable(RaycastHit spotPos, GameObject hitObject)
     {
+        
         if (spotPos.collider.gameObject.layer != LayerMask.NameToLayer("DontCorrupt"))
         {
             Vector3 objectVector = hitObject.GetComponent<Renderer>().bounds.size;
@@ -89,27 +90,31 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     /// <param name="hitObject"></param>
     private void MakeEntireObjectNotGrappable(GameObject hitObject, RaycastHit hit)
     {
+        CorruptableObject objectToCorrupt = hitObject.GetComponent<CorruptableObject>();
+
+        if (objectToCorrupt != null)
+        {
+            objectToCorrupt.StartCorrupting(hitObject.transform.position);
+        }
+
         StartCoroutine(ChangeObjectLayer(hitObject));
 
-        if (hit.collider != null)
-        {
-            if (hit.collider.GetComponent<Renderer>().enabled)
-            {
-                Renderer r = hit.collider.GetComponent<Renderer>();
-                MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
+        //if (hit.collider != null)
+        //{
+        //    if (hit.collider.GetComponent<Renderer>().enabled)
+        //    {
+        //        Renderer r = hit.collider.GetComponent<Renderer>();
+        //        MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
 
-                r.GetPropertyBlock(pBlock);
+        //        r.GetPropertyBlock(pBlock);
 
-                pBlock.SetFloat("CorruptionStartTime", Time.time);
-                Vector3 localPos = hit.collider.transform.InverseTransformPoint(hit.point);
-                pBlock.SetVector("CorruptionStartPos", localPos);
+        //        pBlock.SetFloat("CorruptionStartTime", Time.time);
+        //        Vector3 localPos = hit.collider.transform.InverseTransformPoint(hit.point);
+        //        pBlock.SetVector("CorruptionStartPos", localPos);
 
-                r.SetPropertyBlock(pBlock);
-            }
-  
-
-
-        }
+        //        r.SetPropertyBlock(pBlock);
+        //    }
+        //}
 
         corruptedObjects.Add(hitObject.gameObject);
     }
