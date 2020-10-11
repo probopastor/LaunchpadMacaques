@@ -55,6 +55,11 @@ public class CollectibleController : MonoBehaviour
         playerMovement = FindObjectOfType<Matt_PlayerMovement>();
         totalCollectibles = FindObjectsOfType<CollectibleSphereScript>().Length;
         effectTimerRunning = false;
+
+        if (gravityText != null)
+        {
+            gravityText.SetText("Gravity: " + "Normal");
+        }
     }
 
     // Start is called before the first frame update
@@ -65,10 +70,6 @@ public class CollectibleController : MonoBehaviour
 
     private void Update()
     {
-        if(gravityText != null)
-        {
-            gravityText.SetText("Gravity: " + playerMovement.gravity);
-        }
 
         //Debug.Log("Is the gravity power-up is active: " + isActive);
         //Debug.Log("The gravity mutiplier is currently: " + playerMovement.gravity);
@@ -87,9 +88,19 @@ public class CollectibleController : MonoBehaviour
     /// <returns></returns>
     public IEnumerator EffectTimer()
     {
+        if (gravityText != null)
+        {
+            gravityText.SetText("Gravity: " + "Low ");
+        }
+
         yield return new WaitForSeconds(effectDuration);
         isActive = false;
         effectTimerRunning = false;
+
+        if (gravityText != null)
+        {
+            gravityText.SetText("Gravity: " + "Normal ");
+        }
     }
 
     #region Getters
