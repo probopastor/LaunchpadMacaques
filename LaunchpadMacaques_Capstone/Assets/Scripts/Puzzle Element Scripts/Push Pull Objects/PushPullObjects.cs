@@ -38,24 +38,23 @@ public class PushPullObjects : MonoBehaviour
        
         if (Input.GetMouseButtonDown(0) /*&& !grapplingGun.IsGrappling()*/)
         {
-    
+            if(!grabbing)
+            {
+                PickUpObject();
+            }
+            else if(grabbing)
+            {
+                ThrowObject();
+            }
+  
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
             if (grabbing)
             {
                 DropObject();
             }
-
-            else
-            {
-                PickUpObject();
-            }
-  
         }
-
-        if(Input.GetMouseButtonDown(1) & grabbing)
-        {
-           ThrowObject();
-        }
-
 
     }
 
