@@ -57,6 +57,11 @@ public class CorruptableObject : MonoBehaviour
     // true if corruption is stalled at a specific amount
     bool paused;
 
+    private void Start()
+    {
+        UpdateVariablesFromState();
+        UpdateShaderFull();
+    }
 
     /// <summary>
     /// Update shader properties based on inspector values
