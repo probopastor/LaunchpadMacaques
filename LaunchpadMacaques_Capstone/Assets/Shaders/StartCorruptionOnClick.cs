@@ -1,11 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * Shows how to start corrupting an object from a specific point (such as grapple point)
+ * In this example, that point is where the object was clicked.
+ */
 using UnityEngine;
 
 public class StartCorruptionOnClick : MonoBehaviour
 {
     void Update()
     {
+        // If mouse clicked, check if it was clicked on this object
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -14,16 +17,12 @@ public class StartCorruptionOnClick : MonoBehaviour
 
             if (hit.collider != null)
             {
-                Renderer r = hit.collider.GetComponent<Renderer>();
-                MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
-
-                r.GetPropertyBlock(pBlock);
-
-                pBlock.SetFloat("CorruptionStartTime", Time.time);
-                Vector3 localPos = hit.collider.transform.InverseTransformPoint(hit.point);
-                pBlock.SetVector("CorruptionStartPos", localPos);
-
-                r.SetPropertyBlock(pBlock);
+                CorruptableObject co = hit.collider.GetComponent<CorruptableObject>();
+                if (co != null)
+                {
+                    // Tell the object to start corrupting from click point
+                    co.StartCorrupting(hit.point);
+                }
             }
         }
     }
