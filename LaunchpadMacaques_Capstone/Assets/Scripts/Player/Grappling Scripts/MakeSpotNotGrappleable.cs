@@ -143,17 +143,65 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     public void ClearCorruption(Vector3 collectableLocation, float resetRadius)
     {
 
+        //for (int i = 0; i < corruptedObjects.Count; i++)
+        //{
+        //    if (Vector3.Distance(corruptedObjects.ElementAt(i).transform.position, collectableLocation) <= resetRadius)
+        //    {
+        //        GameObject temp = corruptedObjects.ElementAt(i);
+        //        temp.layer = LayerMask.NameToLayer("CanGrapple");
+        //        Renderer render = corruptedObjects.ElementAt(i).GetComponent<Renderer>();
+        //        MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
+        //        render.SetPropertyBlock(pBlock);
+        //        corruptedObjects.RemoveAt(i);
+
+        //        i--;
+        //    }
+        //}
+        //for (int i = 0; i < corruptedDecals.Count; i++)
+        //{
+        //    if (Vector3.Distance(corruptedDecals.ElementAt(i).transform.position, collectableLocation) <= resetRadius)
+        //    {
+        //        GameObject temp = corruptedDecals.ElementAt(i);
+        //        corruptedDecals.RemoveAt(i);
+        //        Destroy(temp.gameObject);
+        //        i--;
+        //    }
+        //}
+
+        //for (int i = 0; i < tempCorruptedVisuals.Count; i++)
+        //{
+        //    if (Vector3.Distance(tempCorruptedVisuals.ElementAt(i).transform.position, collectableLocation) <= resetRadius)
+        //    {
+        //        GameObject temp = tempCorruptedVisuals.ElementAt(i);
+        //        tempCorruptedVisuals.RemoveAt(i);
+        //        Destroy(temp.gameObject);
+        //        i--;
+
+        //    }
+        //}
+
+        //CorruptableObject objectToCorrupt = hitObject.GetComponent<CorruptableObject>();
+
+        //if (objectToCorrupt != null)
+        //{
+        //    objectToCorrupt.StartCorrupting(hitObject.transform.position);
+        //}
+
+
         for (int i = 0; i < corruptedObjects.Count; i++)
         {
             if (Vector3.Distance(corruptedObjects.ElementAt(i).transform.position, collectableLocation) <= resetRadius)
             {
                 GameObject temp = corruptedObjects.ElementAt(i);
                 temp.layer = LayerMask.NameToLayer("CanGrapple");
-                Renderer render = corruptedObjects.ElementAt(i).GetComponent<Renderer>();
-                MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
-                render.SetPropertyBlock(pBlock);
-                corruptedObjects.RemoveAt(i);
 
+                if (temp.GetComponent<CorruptableObject>() != null)
+                {
+                    //temp.GetComponent<CorruptableObject>().UncorruptFromPoint(gameObject.transform.position);
+                    temp.GetComponent<CorruptableObject>().UncorruptInstantly();
+
+                }
+                corruptedObjects.RemoveAt(i);
                 i--;
             }
         }
@@ -167,7 +215,6 @@ public class MakeSpotNotGrappleable : MonoBehaviour
                 i--;
             }
         }
-
         for (int i = 0; i < tempCorruptedVisuals.Count; i++)
         {
             if (Vector3.Distance(tempCorruptedVisuals.ElementAt(i).transform.position, collectableLocation) <= resetRadius)
