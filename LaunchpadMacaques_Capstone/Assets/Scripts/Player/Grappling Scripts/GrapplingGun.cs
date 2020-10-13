@@ -11,7 +11,23 @@ public class GrapplingGun : MonoBehaviour
     private LineRenderer lr;
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
-    public Transform gunTip, camera, player;
+    [SerializeField] private LayerMask whatIsNotGrappleable;
+
+    [Header("Object References")]
+    [SerializeField] private GameObject grappleToggleEnabledText;
+    [SerializeField] private GameObject grappleToggleDisabledText;
+    [SerializeField] private TextMeshProUGUI ropeLengthText;
+
+
+    private float explosionRadius = 5f;
+    private float explosionPower = 10.0f;
+
+    [Header("Grapple Settings")]
+
+    public Transform gunTip;
+    public Transform camera;
+    public Transform player;
+
     [SerializeField] private float distance = 5f;
     [SerializeField] private float minDistance = 5f;
     [SerializeField] private float maxDistance = 50f;
@@ -21,9 +37,6 @@ public class GrapplingGun : MonoBehaviour
     private SpringJoint joint;
     private float distanceFromPoint;
 
-    public float explosionRadius = 5f;
-    public float explosionPower = 10.0f;
-
     //this is the value that is updated every frame to set the grapples max distance equal to the player distance from the desired point by this value
     public float grappleSpeed = 50f;
 
@@ -32,6 +45,9 @@ public class GrapplingGun : MonoBehaviour
     public float springDamp = 10f;
     public float springMass = 5f;
 
+    [SerializeField] private float minSwingAngle = -90f;
+    [SerializeField] private float maxSwingAngle = 90f;
+
     private RaycastHit grappleRayHit;
 
     private bool swingLockToggle;
@@ -39,20 +55,23 @@ public class GrapplingGun : MonoBehaviour
 
     private GameObject grappledObj;
 
-    [SerializeField] private float minSwingAngle = -90f;
-    [SerializeField] private float maxSwingAngle = 90f;
 
 
-    [SerializeField] private GameObject grappleToggleEnabledText;
-    [SerializeField] private GameObject grappleToggleDisabledText;
-    [SerializeField] private TextMeshProUGUI ropeLengthText;
 
-    [SerializeField] private LayerMask whatIsNotGrappleable;
+
+
 
 
     private MakeSpotNotGrappleable corruptObject;
 
     private PushPullObjects pushPull;
+
+    [Header("Dash / Launch Settings")]
+    [SerializeField] public float launchSpeed = 30000;
+    [SerializeField] public float maxLaunchMultiplier = 5f;
+    [HideInInspector] public float startTime = 0f;
+    [HideInInspector] public float endTime = 0f;
+    [HideInInspector] public float launchMultiplier;
 
     void Awake()
     {
@@ -238,6 +257,9 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     void StartGrapple()
     {
+        //set start time for dash mechanic
+        startTime = Time.time;
+
         RaycastHit hit;
         RaycastHit secondHit;
         if (Physics.Raycast(camera.position, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
@@ -327,6 +349,11 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     public void StopGrapple()
     {
+        //managing variables for dash
+        endTime = Time.time;
+        launchMultiplier = Mathf.Min(endTime - startTime + 2f, maxLaunchMultiplier);
+
+
         swingLockToggle = false;
 
         //Temporary lock UI disabled after completing a grapple

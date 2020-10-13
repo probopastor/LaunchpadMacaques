@@ -13,6 +13,10 @@ public class Matt_PlayerMovement : MonoBehaviour
     //Assingables
     public Transform playerCam;
     public Transform orientation;
+    public float initialFieldofView = 90f;
+    public float desiredFieldofView = 60f;
+    public float fieldofViewTime = .5f;
+
 
     [Header("Player Rigidbody")]
     //Other
@@ -31,6 +35,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("PLayer Movement Variables")]
     //Movement
     public float moveSpeed = 4500;
+    [Range(0f,1f)]
+    public float airMoveSpeedMultiplier = .75f;
     public float swingSpeed = 4500;
     public float maxSpeed = 20;
     //public float swingSpeed = 4500;
@@ -127,7 +133,23 @@ public class Matt_PlayerMovement : MonoBehaviour
             MyInput();
             Look();
         }
+
+        //dash, when grappling
+        if (Input.GetKeyDown(KeyCode.LeftShift) && grappleGunReference.IsGrappling())
+        {
+            grappleGunReference.StopGrapple();
+            GetComponent<Rigidbody>().AddForce((playerCam.forward) * (grappleGunReference.launchSpeed * grappleGunReference.launchMultiplier) * Time.deltaTime, ForceMode.Impulse);
+            //playerCam.gameObject.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCam.gameObject.GetComponent<Camera>().fieldOfView, desiredFieldofView, fieldofViewTime);
+        }
+        else
+        {
+            //playerCam.gameObject.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCam.gameObject.GetComponent<Camera>().fieldOfView, initialFieldofView, fieldofViewTime);
+
+        }
+
     }
+
+
 
     #region Input
 
@@ -255,8 +277,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         // Movement in air
         if (!grounded)
         {
-            multiplier = 0.5f;
-            multiplierV = 0.5f;
+            multiplier = airMoveSpeedMultiplier;
+            multiplierV = airMoveSpeedMultiplier;
         }
 
         // Movement while sliding

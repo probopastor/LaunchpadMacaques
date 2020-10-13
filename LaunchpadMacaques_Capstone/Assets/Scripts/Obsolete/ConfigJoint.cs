@@ -52,8 +52,9 @@ public class ConfigJoint : MonoBehaviour
     [SerializeField] float startTime = 0f;
     [SerializeField] float endTime = 0f;
     [SerializeField] float ghostTime = 1f;
+    
 
-    [Header("Push Settings")]
+[Header("Push Settings")]
     [SerializeField, Tooltip("The maximum distance that the player is allowed to push from")]
     private float maxPushDistance = 20f;
     [SerializeField, Tooltip("The maximum time (in seconds) that the player can constantly push before being forced to stop")]
