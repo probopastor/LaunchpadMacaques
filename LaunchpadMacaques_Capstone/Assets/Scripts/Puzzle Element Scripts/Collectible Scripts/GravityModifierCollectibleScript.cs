@@ -60,13 +60,13 @@ public class GravityModifierCollectibleScript : CollectibleBehavior
     {
         Debug.Log("Script Firing");
         gameObject.GetComponent<MeshRenderer>().enabled = false;
-        gameObject.GetComponent<BoxCollider>().enabled = false;
+        gameObject.GetComponent<CapsuleCollider>().enabled = false;
 
         yield return new WaitForSecondsRealtime(timerValue);
 
         Debug.Log("Waited Succesfully");
 
         gameObject.GetComponent<MeshRenderer>().enabled = true;
-        gameObject.GetComponent<BoxCollider>().enabled = true;
+        gameObject.GetComponent<CapsuleCollider>().enabled = true;
     }
 }
