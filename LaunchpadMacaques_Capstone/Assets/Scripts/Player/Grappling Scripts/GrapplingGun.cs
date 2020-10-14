@@ -55,7 +55,7 @@ public class GrapplingGun : MonoBehaviour
 
     private GameObject grappledObj;
 
-
+    private Matt_PlayerMovement playerMovementReference;
 
 
 
@@ -76,6 +76,7 @@ public class GrapplingGun : MonoBehaviour
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
+        playerMovementReference = FindObjectOfType<Matt_PlayerMovement>();
 
         if (joint)
         {
@@ -259,6 +260,11 @@ public class GrapplingGun : MonoBehaviour
     {
         //set start time for dash mechanic
         startTime = Time.time;
+
+        if(playerMovementReference.GetCrouchStatus())
+        {
+            playerMovementReference.StopCrouch();
+        }
 
         RaycastHit hit;
         RaycastHit secondHit;

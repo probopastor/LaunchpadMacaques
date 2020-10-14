@@ -165,9 +165,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         sprinting = Input.GetKey(KeyCode.LeftShift);
 
         //Crouching
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.LeftControl) && !grappleGunReference.IsGrappling())
             StartCrouch();
-        if (Input.GetKeyUp(KeyCode.LeftControl))
+        if (Input.GetKeyUp(KeyCode.LeftControl) && !grappleGunReference.IsGrappling())
             StopCrouch();
 
         //sprinting
@@ -181,10 +181,14 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #region Crouching Stuff
 
-    private void StartCrouch()
+    /// <summary>
+    /// Starts player crouching.
+    /// </summary>
+    public void StartCrouch()
     {
         transform.localScale = crouchScale;
         transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
+
         if (rb.velocity.magnitude > 0.5f)
         {
             if (grounded)
@@ -194,10 +198,22 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
-    private void StopCrouch()
+    /// <summary>
+    /// Stops the player from crouching.
+    /// </summary>
+    public void StopCrouch()
     {
         transform.localScale = playerScale;
         transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+    }
+
+    /// <summary>
+    /// Returns true if the player is crouching. 
+    /// </summary>
+    /// <returns></returns>
+    public bool GetCrouchStatus()
+    {
+        return crouching;
     }
 
     #endregion
