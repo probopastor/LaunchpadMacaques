@@ -230,7 +230,7 @@ public class PushableObj : MonoBehaviour
 
             }
 
-            if (lr.positionCount > 50)
+            if (lr.positionCount > 200)
             {
                 break;
             }

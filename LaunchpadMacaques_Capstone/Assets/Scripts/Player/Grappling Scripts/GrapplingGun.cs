@@ -151,34 +151,38 @@ public class GrapplingGun : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && !IsGrappling() && !pushPull.IsGrabbing())
+        if(Time.timeScale > 0)
         {
-            StartGrapple();
-        }
-        else if (Input.GetMouseButtonDown(0) && IsGrappling())
-        {
-            StopGrapple();
-            StartGrapple();
-        }
-        else if (Input.GetMouseButtonDown(1) && IsGrappling())
-        {
-            StopGrapple();
-        }
+            if (Input.GetMouseButtonDown(0) && !IsGrappling() && !pushPull.IsGrabbing())
+            {
+                StartGrapple();
+            }
+            else if (Input.GetMouseButtonDown(0) && IsGrappling())
+            {
+                StopGrapple();
+                StartGrapple();
+            }
+            else if (Input.GetMouseButtonDown(1) && IsGrappling())
+            {
+                StopGrapple();
+            }
 
-        if (Input.GetKeyDown(KeyCode.LeftControl) && IsGrappling())
-        {
-            if (!swingLockToggle)
+            if (Input.GetKeyDown(KeyCode.LeftControl) && IsGrappling())
             {
-                swingLockToggle = true;
-                grappleToggleEnabledText.SetActive(true);
-                grappleToggleDisabledText.SetActive(false);
+                if (!swingLockToggle)
+                {
+                    swingLockToggle = true;
+                    grappleToggleEnabledText.SetActive(true);
+                    grappleToggleDisabledText.SetActive(false);
+                }
+                else
+                {
+                    swingLockToggle = false;
+                    grappleToggleEnabledText.SetActive(false);
+                    grappleToggleDisabledText.SetActive(true);
+                }
             }
-            else
-            {
-                swingLockToggle = false;
-                grappleToggleEnabledText.SetActive(false);
-                grappleToggleDisabledText.SetActive(true);
-            }
+
         }
 
         //if (Input.GetMouseButtonDown(1))
