@@ -128,7 +128,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         SetGravityModifier();
 
-        if (!pauseManager.GetPaused() && !pauseManager.GetGameWon())
+        if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) || Time.timeScale > 0)
         {
             MyInput();
             Look();

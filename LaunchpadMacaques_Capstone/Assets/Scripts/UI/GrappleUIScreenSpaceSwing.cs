@@ -1,11 +1,18 @@
-﻿using System.Collections;
+﻿/* 
+* (Launchpad Macaques - [Trial and Error]) 
+* (Levi Schoof) 
+* (GrappleUIScreenSpaceSwing.CS) 
+* (The Script that handles the Verlet Swing UI thing for swinging) 
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GrappleUIScreenSpaceSwing : MonoBehaviour
 {
-    #region Inspector Variables 
+    #region Inspector Variables
     [Header("UI Settings")] [SerializeField] Sprite uiSprite;
     Image uiImageHolder;
     [Tooltip("The layers the aiming decal should be enabled on.")] [SerializeField] private LayerMask whatIsGrappleable;
@@ -16,7 +23,7 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
     [SerializeField] LayerMask whatIsNotGrappleable;
     #endregion
 
-    #region Private Variables 
+    #region Private Variables
     private GrapplingGun springJoint;
     private Camera cam;
     private GameObject player;
@@ -48,7 +55,7 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (objectSet && thisCanvas)
+        if ( objectSet && thisCanvas && Time.timeScale > 0)
         {
             UpdateUIPos();
         }
@@ -76,21 +83,34 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
         RaycastHit hitInfo;
 
 
-        if ((Physics.Raycast(ray, out hitInfo, springJoint.GetMaxGrappleDistance(), whatIsGrappleable)))
+        //if (Physics.SphereCast(springJoint.GetCamera().position, springJoint.GetSphereSphereRadius(), springJoint.GetCamera().forward, out hitInfo, springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()))
+        //{
+        if (Physics.Raycast(ray, out hitInfo, springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()))
         {
-            float distance = Vector3.Distance(ray.GetPoint(0), hitInfo.point);
+            float distance = Vector3.Distance(springJoint.GetCamera().position, hitInfo.point);
 
 
-            //if (!Physics.Raycast(transform.position, dir, distance, whatIsNotGrappleable))
-            //{
-            //    uiImageHolder.rectTransform.localPosition = Vector3.zero;
-            //    CreateUI(hitInfo);
-            //}
-
-
-            if (!(Physics.Raycast(ray, distance, whatIsNotGrappleable)))
+            if (!(Physics.Raycast(ray, distance, springJoint.GetUnGrappleLayer())))
             {
-                uiImageHolder.rectTransform.localPosition = Vector3.zero;
+                //uiImageHolder.rectTransform.localPosition = Vector3.zero;
+                objectHitPoint = hitInfo.point;
+                CreateUI(hitInfo);
+            }
+            else
+            {
+                TurnOffUI();
+            }
+        }
+
+        else if (Physics.SphereCast(springJoint.GetCamera().position, springJoint.GetSphereSphereRadius(), springJoint.GetCamera().forward, out hitInfo, springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()) && player.GetComponent<Rigidbody>().velocity.magnitude > springJoint.GetAutoAimVelocity())
+        {
+            float distance = Vector3.Distance(springJoint.GetCamera().position, hitInfo.point);
+
+
+            if (!(Physics.Raycast(ray, distance, springJoint.GetUnGrappleLayer())))
+            {
+                //uiImageHolder.rectTransform.localPosition = Vector3.zero;
+                objectHitPoint = hitInfo.point;
                 CreateUI(hitInfo);
             }
             else
@@ -99,34 +119,24 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
             }
         }
         else
-        {
-            Debug.Log("Should be turning off");
+                {
             TurnOffUI();
         }
+
+
+
     }
 
     private void CreateUI(RaycastHit hitObject)
     {
         float distance = Vector3.Distance(player.transform.position, hitObject.point);
 
-        //if (configJoint.IsGrappling())
-        //{
-        //    if (!objectSet)
-        //    {
-        //        objectHitPoint = hitObject.point;
-        //        objectSet = true;
-        //    }
-
-        //    distance = Vector3.Distance(player.transform.position, objectHitPoint);
-        //    uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
-
-        //}
-
         if (true)
         {
             uiImageHolder.enabled = true;
             uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
-            objectSet = false;
+            objectSet = true;
+
         }
 
     }
@@ -142,6 +152,7 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
     {
 
         uiPos = cam.WorldToScreenPoint(objectHitPoint);
+        Debug.Log(objectHitPoint);
 
         if (uiPos.z < 0)
         {
@@ -150,7 +161,7 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
         if (uiPos.z >= 0)
         {
             uiImageHolder.enabled = true;
-            uiImageHolder.transform.position = uiPos;
+            uiImageHolder.rectTransform.position = uiPos;
         }
 
 
