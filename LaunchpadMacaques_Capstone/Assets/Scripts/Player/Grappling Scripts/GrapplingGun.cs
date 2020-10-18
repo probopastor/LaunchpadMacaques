@@ -35,7 +35,9 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] private float maxDistance = 50f;
     [SerializeField, Tooltip("The amount of length subtraced from grapple length on each subsequent grapple. ")] private float grappleLengthModifier = 10;
     [SerializeField] private float wheelSensitivity = 2;
-    private float maxGrappleDistance = 100f;
+    [SerializeField] private float maxGrappleDistance = 100f;
+    [SerializeField] private float groundCheckDistance = 5f;
+
     private SpringJoint joint;
     private float distanceFromPoint;
 
@@ -56,13 +58,6 @@ public class GrapplingGun : MonoBehaviour
     private bool canApplyForce;
 
     private GameObject grappledObj;
-
-
-
-
-
-
-
 
     private MakeSpotNotGrappleable corruptObject;
 
@@ -281,9 +276,13 @@ public class GrapplingGun : MonoBehaviour
 
         if (!Physics.Raycast(camera.position, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
         {
-            if (!Physics.SphereCast(camera.position, sphereRadius, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable) && player.GetComponent<Rigidbody>().velocity.magnitude < neededVelocityForAutoAim)
+            if (!Physics.SphereCast(camera.position, sphereRadius, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable) 
+                && player.GetComponent<Rigidbody>().velocity.magnitude < neededVelocityForAutoAim)
             {
-                return;
+                if(Physics.Raycast(camera.position, -camera.up, out hit, groundCheckDistance, whatIsGrappleable))
+                {
+                    return;
+                }
             }
         }
 
