@@ -50,14 +50,14 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //DisplayUI();
+        DisplayUI();
     }
 
     private void LateUpdate()
     {
-        if ( objectSet && thisCanvas && Time.timeScale > 0)
+        if (objectSet && thisCanvas && Time.timeScale > 0)
         {
-            //UpdateUIPos();
+            UpdateUIPos();
         }
 
         if (uiImageHolder)
@@ -77,73 +77,42 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
 
     }
 
+
+    /// <summary>
+    /// Will Check to see if the UI should be diaplayed
+    /// Will then call the relevant methods
+    /// </summary>
     private void DisplayUI()
     {
-        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //RaycastHit hitInfo;
-
-        //springJoint.GetGrappleRayhit();
-
-        if (springJoint.GetGrappleRayhit().transform.gameObject != null)
+        if (springJoint.CanFindGrappleLocation())
         {
             objectHitPoint = springJoint.GetGrappleRayhit().point;
-            CreateUI(springJoint.GetGrappleRayhit());
+            TurnOnUI(springJoint.GetGrappleRayhit());
         }
         else
         {
             TurnOffUI();
         }
-
-        //if (Physics.Raycast(ray, out hitInfo, springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()))
-        //{
-        //    float distance = Vector3.Distance(springJoint.GetCamera().position, hitInfo.point);
-
-        //    if (!(Physics.Raycast(ray, distance, springJoint.GetUnGrappleLayer())))
-        //    {
-        //        objectHitPoint = hitInfo.point;
-        //        CreateUI(hitInfo);
-        //    }
-        //    else
-        //    {
-        //        TurnOffUI();
-        //    }
-        //}
-        //else if (Physics.SphereCast(springJoint.GetCamera().position, springJoint.GetSphereSphereRadius(), springJoint.GetCamera().forward, out hitInfo, 
-        //    springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()) && 
-        //    player.GetComponent<Rigidbody>().velocity.magnitude > springJoint.GetAutoAimVelocity())
-        //{
-        //    float distance = Vector3.Distance(springJoint.GetCamera().position, hitInfo.point);
-
-        //    if (!(Physics.Raycast(ray, distance, springJoint.GetUnGrappleLayer())))
-        //    {
-        //        objectHitPoint = hitInfo.point;
-        //        CreateUI(hitInfo);
-        //    }
-        //    else
-        //    {
-        //        TurnOffUI();
-        //    }
-        //}
-        //else
-        //{
-        //    TurnOffUI();
-        //}
     }
 
-    private void CreateUI(RaycastHit hitObject)
+    /// <summary>
+    /// Will turn on the UI and will Scale it
+    /// </summary>
+    /// <param name="hitObject"></param>
+    private void TurnOnUI(RaycastHit hitObject)
     {
         float distance = Vector3.Distance(player.transform.position, hitObject.point);
 
-        if (true)
-        {
-            uiImageHolder.enabled = true;
-            uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
-            objectSet = true;
 
-        }
+        uiImageHolder.enabled = true;
+        uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
+        objectSet = true;
 
     }
 
+    /// <summary>
+    /// Turns of the UI
+    /// </summary>
     private void TurnOffUI()
     {
         objectSet = false;
@@ -151,11 +120,13 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Will update the UI box's position so it is centered around the correct point 
+    /// </summary>
     private void UpdateUIPos()
     {
 
         uiPos = cam.WorldToScreenPoint(objectHitPoint);
-        Debug.Log(objectHitPoint);
 
         if (uiPos.z < 0)
         {

@@ -43,38 +43,11 @@ public class GrappleDecal_Swing : MonoBehaviour
     /// Displays a decal onto objects that can be grappled from.
     /// </summary>
     private void DisplayDecal()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hitInfo;
-
-        if ((Physics.Raycast(ray, out hitInfo, grapplingGun.GetMaxGrappleDistance(), whatIsGrappleable)) || (grapplingGun.IsGrappling()))
+    { 
+        if (grapplingGun.CanFindGrappleLocation())
         {
-            float distance = Vector3.Distance(grapplingGun.GetCamera().position, hitInfo.point);
-
-            if (!(Physics.Raycast(ray, distance, grapplingGun.GetUnGrappleLayer())))
-            {
-                grappleDecalObj.SetActive(true);
-                MoveDecal(hitInfo);
-            }
-            else
-            {
-                grappleDecalObj.SetActive(false);
-            }
-        }
-        else if (Physics.SphereCast(grapplingGun.GetCamera().position, grapplingGun.GetSphereSphereRadius(), grapplingGun.GetCamera().forward, out hitInfo, grapplingGun.GetMaxGrappleDistance(), grapplingGun.GetGrappleLayer()) 
-            && player.GetComponent<Rigidbody>().velocity.magnitude > grapplingGun.GetAutoAimVelocity())
-        {
-            float distance = Vector3.Distance(grapplingGun.GetCamera().position, hitInfo.point);
-
-            if (!(Physics.Raycast(ray, distance, grapplingGun.GetUnGrappleLayer())))
-            {
-                grappleDecalObj.SetActive(true);
-                MoveDecal(hitInfo);
-            }
-            else
-            {
-                grappleDecalObj.SetActive(false);
-            }
+            grappleDecalObj.SetActive(true);
+            MoveDecal(grapplingGun.GetGrappleRayhit());
         }
         else
         {

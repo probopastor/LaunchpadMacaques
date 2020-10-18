@@ -262,142 +262,93 @@ public class GrapplingGun : MonoBehaviour
         }
     }
 
-    public bool UseGrappleSphereCast()
+    #region Look For Grapple Location
+    /// <summary>
+    /// Will return a bool for if a grapple location be be found
+    /// </summary>
+    /// <returns></returns>
+    public bool CanFindGrappleLocation()
     {
-        RaycastHit hit;
-        RaycastHit secondHit;
+        RaycastHit hit = new RaycastHit();
 
-        if (!Physics.Raycast(camera.position, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
+        // Cheks if the Normal Raycast returns a RayCastHit with a collider
+        if(CheckRayCast().collider != null)
         {
-            if (!Physics.SphereCast(camera.position, sphereRadius, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable)
-                && player.GetComponent<Rigidbody>().velocity.magnitude < neededVelocityForAutoAim)
+            hit = CheckRayCast();
+        }
+
+        // Cheks if the SphereCast returns a RayCastHit with a collider
+        else if (CheckSphereCast().collider != null)
+        {
+            hit = CheckSphereCast();
+        }
+
+
+        if(hit.collider != null)
+        {
+            dist = Vector3.Distance(camera.position, hit.point);
+
+            if (!(Physics.Raycast(camera.position, camera.forward, dist, whatIsNotGrappleable)))
             {
-                return false;
+
+                grappleRayHit = hit;
+                return true;
             }
-            else
+        }
+
+        return false;
+    }
+
+
+    /// <summary>
+    /// Will run a Ray Cast from player to max grapple distance
+    /// Returns a Ray Cast Hit
+    /// Retuns a Null Collider one if a grappleable object is not found
+    /// Returns a RayCastHit with a collider if a grappleable object is found
+    /// </summary>
+    /// <returns></returns>
+    private RaycastHit CheckRayCast()
+    {
+        RaycastHit returnHit = new RaycastHit();
+        Physics.Raycast(camera.position, camera.forward, out returnHit, maxGrappleDistance, whatIsGrappleable);
+        return returnHit;
+    }
+
+    /// <summary>
+    /// Will run a sphere cast from player to max grapple distance
+    /// Returns a Ray Cast Hit
+    /// Retuns a Null Collider one if a grappleable object is not found
+    /// Returns a RayCastHit with a collider if a grappleable object is found
+    /// </summary>
+    /// <returns></returns>
+    private RaycastHit CheckSphereCast()
+    {
+        RaycastHit returnHit = new RaycastHit();
+        if(player.GetComponent<Rigidbody>().velocity.magnitude >= neededVelocityForAutoAim)
+        {
+            RaycastHit grappleObject;
+            if(Physics.SphereCast(camera.position, sphereRadius, camera.forward, out grappleObject, maxGrappleDistance, whatIsGrappleable))
             {
-                if (Physics.Raycast(camera.position, -camera.up, out secondHit, groundCheckDistance, whatIsGrappleable))
+                RaycastHit checkDownHit;
+                if (Physics.Raycast(camera.position, -camera.up, out checkDownHit, groundCheckDistance, whatIsGrappleable))
                 {
-                    if(hit.collider != null)
+                    if (checkDownHit.collider.gameObject != grappleObject.collider.gameObject)
                     {
-                        if (secondHit.collider.gameObject == hit.collider.gameObject)
-                        {
-                            return false;
-                        }
+                        returnHit = grappleObject;
                     }
                 }
             }
-
         }
-
-        dist = Vector3.Distance(camera.position, hit.point);
-
-        if (!(Physics.Raycast(camera.position, camera.forward, out secondHit, dist, whatIsNotGrappleable)))
-        {
-            grappleRayHit = hit;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return returnHit;
     }
+    #endregion
 
     /// <summary>
     /// Call whenever we want to start a grapple
     /// </summary>
     void StartGrapple()
-    {
-        //set start time for dash mechanic
-        startTime = Time.time;
-
-        //RaycastHit hit;
-        //RaycastHit secondHit;
-
-        //if (!Physics.Raycast(camera.position, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
-        //{
-        //    if (!Physics.Raycast(camera.position, -camera.up, groundCheckDistance, whatIsGrappleable))
-        //    {
-        //       if (!Physics.SphereCast(camera.position, sphereRadius, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable)
-        //       && player.GetComponent<Rigidbody>().velocity.magnitude < neededVelocityForAutoAim)
-        //        {
-        //            return;
-        //        }
-        //    }
-        //}
-
-        //float dist = Vector3.Distance(camera.position, hit.point);
-
-        //if (!(Physics.Raycast(camera.position, camera.forward, out secondHit, dist, whatIsNotGrappleable)))
-        //{
-        //    canHoldDownToGrapple = false;
-
-        //    if (IsGrappling())
-        //    {
-        //        StopGrapple();
-        //    }
-
-        //    grappleRayHit = hit;
-
-        //    hitObjectClone = Instantiate(hitObject);
-        //    hitObjectClone.transform.position = hit.point;
-        //    hitObjectClone.transform.parent = hit.transform;
-        //    grapplePoint = hitObjectClone.transform.position;
-
-        //    grappledObj = hit.transform.gameObject;
-
-        //    corruptObject.MakeSpotNotGrappable(hit, grappledObj);
-
-        //    joint = player.gameObject.AddComponent<SpringJoint>();
-        //    joint.autoConfigureConnectedAnchor = false;
-        //    joint.connectedAnchor = grapplePoint;
-
-        //    float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
-        //    joint.maxDistance = distanceFromPoint;
-        //    joint.minDistance = dist;
-
-        //    distance = dist - grappleLengthModifier;
-
-        //    if (distance > maxDistance)
-        //    {
-        //        distance = maxDistance;
-        //    }
-
-        //    if (distance < minDistance)
-        //    {
-        //        distance = minDistance;
-        //    }
-
-        //    joint.enableCollision = false;
-
-        //    joint.spring = springValue;
-        //    joint.damper = springDamp;
-        //    joint.massScale = springMass;
-
-
-        //    lr.positionCount = 2;
-        //    currentGrapplePosition = hitObjectClone.transform.position;
-        //    GetComponent<FMODUnity.StudioEventEmitter>().Play();
-
-        //    //Pinwheel
-        //    Pinwheel pinwheel = null;
-        //    if (pinwheel = hit.collider.GetComponentInParent<Pinwheel>())
-        //    {
-        //        pinwheel.TriggerRotation(hit.collider.transform, camera.forward);
-        //    }
-
-        //    //Temporary lock UI disabled after completing a grapple
-        //    if (grappleToggleEnabledText != null)
-        //    {
-        //        grappleToggleEnabledText.SetActive(false);
-        //    }
-        //    if (grappleToggleDisabledText != null)
-        //    {
-        //        grappleToggleDisabledText.SetActive(true);
-        //    }
-        //}
-
-        if (UseGrappleSphereCast())
+    { 
+        if (CanFindGrappleLocation())
         {
             canHoldDownToGrapple = false;
 
@@ -406,12 +357,14 @@ public class GrapplingGun : MonoBehaviour
                 StopGrapple();
             }
 
+            startTime = Time.time;
+
             hitObjectClone = Instantiate(hitObject);
             hitObjectClone.transform.position = grappleRayHit.point;
             hitObjectClone.transform.parent = grappleRayHit.transform;
             grapplePoint = hitObjectClone.transform.position;
 
-            if(grappleRayHit.transform.gameObject != null)
+            if (grappleRayHit.collider != null)
             {
                 grappledObj = grappleRayHit.transform.gameObject;
             }
