@@ -50,14 +50,14 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DisplayUI();
+        //DisplayUI();
     }
 
     private void LateUpdate()
     {
         if ( objectSet && thisCanvas && Time.timeScale > 0)
         {
-            UpdateUIPos();
+            //UpdateUIPos();
         }
 
         if (uiImageHolder)
@@ -79,47 +79,55 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
 
     private void DisplayUI()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hitInfo;
+        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //RaycastHit hitInfo;
 
-        //if (Physics.SphereCast(springJoint.GetCamera().position, springJoint.GetSphereSphereRadius(), springJoint.GetCamera().forward, out hitInfo, springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()))
-        //{
-        if (Physics.Raycast(ray, out hitInfo, springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()))
+        //springJoint.GetGrappleRayhit();
+
+        if (springJoint.GetGrappleRayhit().transform.gameObject != null)
         {
-            float distance = Vector3.Distance(springJoint.GetCamera().position, hitInfo.point);
-
-            if (!(Physics.Raycast(ray, distance, springJoint.GetUnGrappleLayer())))
-            {
-                //uiImageHolder.rectTransform.localPosition = Vector3.zero;
-                objectHitPoint = hitInfo.point;
-                CreateUI(hitInfo);
-            }
-            else
-            {
-                TurnOffUI();
-            }
-        }
-        else if (Physics.SphereCast(springJoint.GetCamera().position, springJoint.GetSphereSphereRadius(), springJoint.GetCamera().forward, out hitInfo, 
-            springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()) && 
-            player.GetComponent<Rigidbody>().velocity.magnitude > springJoint.GetAutoAimVelocity())
-        {
-            float distance = Vector3.Distance(springJoint.GetCamera().position, hitInfo.point);
-
-            if (!(Physics.Raycast(ray, distance, springJoint.GetUnGrappleLayer())))
-            {
-                //uiImageHolder.rectTransform.localPosition = Vector3.zero;
-                objectHitPoint = hitInfo.point;
-                CreateUI(hitInfo);
-            }
-            else
-            {
-                TurnOffUI();
-            }
+            objectHitPoint = springJoint.GetGrappleRayhit().point;
+            CreateUI(springJoint.GetGrappleRayhit());
         }
         else
         {
             TurnOffUI();
         }
+
+        //if (Physics.Raycast(ray, out hitInfo, springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()))
+        //{
+        //    float distance = Vector3.Distance(springJoint.GetCamera().position, hitInfo.point);
+
+        //    if (!(Physics.Raycast(ray, distance, springJoint.GetUnGrappleLayer())))
+        //    {
+        //        objectHitPoint = hitInfo.point;
+        //        CreateUI(hitInfo);
+        //    }
+        //    else
+        //    {
+        //        TurnOffUI();
+        //    }
+        //}
+        //else if (Physics.SphereCast(springJoint.GetCamera().position, springJoint.GetSphereSphereRadius(), springJoint.GetCamera().forward, out hitInfo, 
+        //    springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()) && 
+        //    player.GetComponent<Rigidbody>().velocity.magnitude > springJoint.GetAutoAimVelocity())
+        //{
+        //    float distance = Vector3.Distance(springJoint.GetCamera().position, hitInfo.point);
+
+        //    if (!(Physics.Raycast(ray, distance, springJoint.GetUnGrappleLayer())))
+        //    {
+        //        objectHitPoint = hitInfo.point;
+        //        CreateUI(hitInfo);
+        //    }
+        //    else
+        //    {
+        //        TurnOffUI();
+        //    }
+        //}
+        //else
+        //{
+        //    TurnOffUI();
+        //}
     }
 
     private void CreateUI(RaycastHit hitObject)

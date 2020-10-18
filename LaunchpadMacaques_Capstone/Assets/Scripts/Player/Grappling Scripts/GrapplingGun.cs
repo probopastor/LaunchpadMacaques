@@ -76,6 +76,8 @@ public class GrapplingGun : MonoBehaviour
     private bool canHoldDownToGrapple;
     [SerializeField] private float neededVelocityForAutoAim = 20;
 
+    private float dist;
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
@@ -260,6 +262,46 @@ public class GrapplingGun : MonoBehaviour
         }
     }
 
+    public bool UseGrappleSphereCast()
+    {
+        RaycastHit hit;
+        RaycastHit secondHit;
+
+        if (!Physics.Raycast(camera.position, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
+        {
+            if (!Physics.SphereCast(camera.position, sphereRadius, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable)
+                && player.GetComponent<Rigidbody>().velocity.magnitude < neededVelocityForAutoAim)
+            {
+                return false;
+            }
+            else
+            {
+                if (Physics.Raycast(camera.position, -camera.up, out secondHit, groundCheckDistance, whatIsGrappleable))
+                {
+                    if(hit.collider != null)
+                    {
+                        if (secondHit.collider.gameObject == hit.collider.gameObject)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        dist = Vector3.Distance(camera.position, hit.point);
+
+        if (!(Physics.Raycast(camera.position, camera.forward, out secondHit, dist, whatIsNotGrappleable)))
+        {
+            grappleRayHit = hit;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     /// <summary>
     /// Call whenever we want to start a grapple
@@ -269,49 +311,116 @@ public class GrapplingGun : MonoBehaviour
         //set start time for dash mechanic
         startTime = Time.time;
 
-        RaycastHit hit;
-        RaycastHit secondHit;
-        //if (Physics.SphereCast(camera.position, sphereRadius, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
+        //RaycastHit hit;
+        //RaycastHit secondHit;
+
+        //if (!Physics.Raycast(camera.position, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
         //{
+        //    if (!Physics.Raycast(camera.position, -camera.up, groundCheckDistance, whatIsGrappleable))
+        //    {
+        //       if (!Physics.SphereCast(camera.position, sphereRadius, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable)
+        //       && player.GetComponent<Rigidbody>().velocity.magnitude < neededVelocityForAutoAim)
+        //        {
+        //            return;
+        //        }
+        //    }
+        //}
 
-        if (!Physics.Raycast(camera.position, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
-        {
-            if (!Physics.SphereCast(camera.position, sphereRadius, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable) 
-                && player.GetComponent<Rigidbody>().velocity.magnitude < neededVelocityForAutoAim)
-            {
-                if(Physics.Raycast(camera.position, -camera.up, out hit, groundCheckDistance, whatIsGrappleable))
-                {
-                    return;
-                }
-            }
-        }
+        //float dist = Vector3.Distance(camera.position, hit.point);
 
-        float dist = Vector3.Distance(camera.position, hit.point);
+        //if (!(Physics.Raycast(camera.position, camera.forward, out secondHit, dist, whatIsNotGrappleable)))
+        //{
+        //    canHoldDownToGrapple = false;
 
-        if (!(Physics.Raycast(camera.position, camera.forward, out secondHit, dist, whatIsNotGrappleable)))
+        //    if (IsGrappling())
+        //    {
+        //        StopGrapple();
+        //    }
+
+        //    grappleRayHit = hit;
+
+        //    hitObjectClone = Instantiate(hitObject);
+        //    hitObjectClone.transform.position = hit.point;
+        //    hitObjectClone.transform.parent = hit.transform;
+        //    grapplePoint = hitObjectClone.transform.position;
+
+        //    grappledObj = hit.transform.gameObject;
+
+        //    corruptObject.MakeSpotNotGrappable(hit, grappledObj);
+
+        //    joint = player.gameObject.AddComponent<SpringJoint>();
+        //    joint.autoConfigureConnectedAnchor = false;
+        //    joint.connectedAnchor = grapplePoint;
+
+        //    float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
+        //    joint.maxDistance = distanceFromPoint;
+        //    joint.minDistance = dist;
+
+        //    distance = dist - grappleLengthModifier;
+
+        //    if (distance > maxDistance)
+        //    {
+        //        distance = maxDistance;
+        //    }
+
+        //    if (distance < minDistance)
+        //    {
+        //        distance = minDistance;
+        //    }
+
+        //    joint.enableCollision = false;
+
+        //    joint.spring = springValue;
+        //    joint.damper = springDamp;
+        //    joint.massScale = springMass;
+
+
+        //    lr.positionCount = 2;
+        //    currentGrapplePosition = hitObjectClone.transform.position;
+        //    GetComponent<FMODUnity.StudioEventEmitter>().Play();
+
+        //    //Pinwheel
+        //    Pinwheel pinwheel = null;
+        //    if (pinwheel = hit.collider.GetComponentInParent<Pinwheel>())
+        //    {
+        //        pinwheel.TriggerRotation(hit.collider.transform, camera.forward);
+        //    }
+
+        //    //Temporary lock UI disabled after completing a grapple
+        //    if (grappleToggleEnabledText != null)
+        //    {
+        //        grappleToggleEnabledText.SetActive(false);
+        //    }
+        //    if (grappleToggleDisabledText != null)
+        //    {
+        //        grappleToggleDisabledText.SetActive(true);
+        //    }
+        //}
+
+        if (UseGrappleSphereCast())
         {
             canHoldDownToGrapple = false;
+
             if (IsGrappling())
             {
                 StopGrapple();
             }
-            //grapplePoint = hit.point;
-            grappleRayHit = hit;
 
             hitObjectClone = Instantiate(hitObject);
-            hitObjectClone.transform.position = hit.point;
-            hitObjectClone.transform.parent = hit.transform;
+            hitObjectClone.transform.position = grappleRayHit.point;
+            hitObjectClone.transform.parent = grappleRayHit.transform;
             grapplePoint = hitObjectClone.transform.position;
 
-            grappledObj = hit.transform.gameObject;
+            if(grappleRayHit.transform.gameObject != null)
+            {
+                grappledObj = grappleRayHit.transform.gameObject;
+            }
+            else
+            {
+                return;
+            }
 
-            corruptObject.MakeSpotNotGrappable(hit, grappledObj);
-
-            //CorruptableObject objectToCorrupt = grappledObj.GetComponent<CorruptableObject>();
-            //if(objectToCorrupt != null)
-            //{
-            //    objectToCorrupt.StartCorrupting(grapplePoint);
-            //}
+            corruptObject.MakeSpotNotGrappable(grappleRayHit, grappledObj);
 
             joint = player.gameObject.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
@@ -346,9 +455,9 @@ public class GrapplingGun : MonoBehaviour
 
             //Pinwheel
             Pinwheel pinwheel = null;
-            if (pinwheel = hit.collider.GetComponentInParent<Pinwheel>())
+            if (pinwheel = grappleRayHit.collider.GetComponentInParent<Pinwheel>())
             {
-                pinwheel.TriggerRotation(hit.collider.transform, camera.forward);
+                pinwheel.TriggerRotation(grappleRayHit.collider.transform, camera.forward);
             }
 
             //Temporary lock UI disabled after completing a grapple
@@ -361,12 +470,6 @@ public class GrapplingGun : MonoBehaviour
                 grappleToggleDisabledText.SetActive(true);
             }
         }
-
-        //else
-        //{
-        //    Debug.Log(secondHit.collider.gameObject.name);
-        //    Debug.Log(secondHit.collider.gameObject.transform.position);
-        //}
     }
 
     /// <summary>
@@ -489,4 +592,14 @@ public class GrapplingGun : MonoBehaviour
     {
         return neededVelocityForAutoAim;
     }
+
+    public float GetDistance()
+    {
+        return dist;
+    }
+
+    //public RaycastHit GetSecondHit()
+    //{
+    //    //return secondhit
+    //}
 }
