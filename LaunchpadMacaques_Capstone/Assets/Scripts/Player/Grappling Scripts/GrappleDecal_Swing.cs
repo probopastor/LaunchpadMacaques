@@ -21,6 +21,8 @@ public class GrappleDecal_Swing : MonoBehaviour
     #region Private Variables 
     private GrapplingGun grapplingGun;
     private GameObject grappleDecalObj;
+    private GameObject player;
+
     #endregion 
 
     // Start is called before the first frame update
@@ -28,6 +30,7 @@ public class GrappleDecal_Swing : MonoBehaviour
     {
         grapplingGun = FindObjectOfType<GrapplingGun>();
         grappleDecalObj = Instantiate(grappleAimingDecal);
+        player = FindObjectOfType<Matt_PlayerMovement>().gameObject;
     }
 
     // Update is called once per frame
@@ -46,8 +49,32 @@ public class GrappleDecal_Swing : MonoBehaviour
 
         if ((Physics.Raycast(ray, out hitInfo, grapplingGun.GetMaxGrappleDistance(), whatIsGrappleable)) || (grapplingGun.IsGrappling()))
         {
-            grappleDecalObj.SetActive(true);
-            MoveDecal(hitInfo);
+            float distance = Vector3.Distance(grapplingGun.GetCamera().position, hitInfo.point);
+
+            if (!(Physics.Raycast(ray, distance, grapplingGun.GetUnGrappleLayer())))
+            {
+                grappleDecalObj.SetActive(true);
+                MoveDecal(hitInfo);
+            }
+            else
+            {
+                grappleDecalObj.SetActive(false);
+            }
+        }
+        else if (Physics.SphereCast(grapplingGun.GetCamera().position, grapplingGun.GetSphereSphereRadius(), grapplingGun.GetCamera().forward, out hitInfo, grapplingGun.GetMaxGrappleDistance(), grapplingGun.GetGrappleLayer()) 
+            && player.GetComponent<Rigidbody>().velocity.magnitude > grapplingGun.GetAutoAimVelocity())
+        {
+            float distance = Vector3.Distance(grapplingGun.GetCamera().position, hitInfo.point);
+
+            if (!(Physics.Raycast(ray, distance, grapplingGun.GetUnGrappleLayer())))
+            {
+                grappleDecalObj.SetActive(true);
+                MoveDecal(hitInfo);
+            }
+            else
+            {
+                grappleDecalObj.SetActive(false);
+            }
         }
         else
         {

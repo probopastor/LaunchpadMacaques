@@ -82,13 +82,11 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitInfo;
 
-
         //if (Physics.SphereCast(springJoint.GetCamera().position, springJoint.GetSphereSphereRadius(), springJoint.GetCamera().forward, out hitInfo, springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()))
         //{
         if (Physics.Raycast(ray, out hitInfo, springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()))
         {
             float distance = Vector3.Distance(springJoint.GetCamera().position, hitInfo.point);
-
 
             if (!(Physics.Raycast(ray, distance, springJoint.GetUnGrappleLayer())))
             {
@@ -101,11 +99,11 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
                 TurnOffUI();
             }
         }
-
-        else if (Physics.SphereCast(springJoint.GetCamera().position, springJoint.GetSphereSphereRadius(), springJoint.GetCamera().forward, out hitInfo, springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()) && player.GetComponent<Rigidbody>().velocity.magnitude > springJoint.GetAutoAimVelocity())
+        else if (Physics.SphereCast(springJoint.GetCamera().position, springJoint.GetSphereSphereRadius(), springJoint.GetCamera().forward, out hitInfo, 
+            springJoint.GetMaxGrappleDistance(), springJoint.GetGrappleLayer()) && 
+            player.GetComponent<Rigidbody>().velocity.magnitude > springJoint.GetAutoAimVelocity())
         {
             float distance = Vector3.Distance(springJoint.GetCamera().position, hitInfo.point);
-
 
             if (!(Physics.Raycast(ray, distance, springJoint.GetUnGrappleLayer())))
             {
@@ -119,12 +117,9 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
             }
         }
         else
-                {
+        {
             TurnOffUI();
         }
-
-
-
     }
 
     private void CreateUI(RaycastHit hitObject)
