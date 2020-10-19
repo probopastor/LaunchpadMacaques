@@ -93,7 +93,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField]
     private float x, y;
     [SerializeField]
-    private bool jumping, sprinting, crouching;
+    private bool jumping, sprinting, crouching, canDash;
 
     private PauseManager pauseManager;
 
@@ -135,10 +135,18 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
 
         //dash, when grappling
-        if (Input.GetKeyDown(KeyCode.LeftShift) && grappleGunReference.IsGrappling())
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !grounded)
         {
-            grappleGunReference.StopGrapple();
-            GetComponent<Rigidbody>().AddForce((playerCam.forward) * (grappleGunReference.launchSpeed * grappleGunReference.launchMultiplier) * Time.deltaTime, ForceMode.Impulse);
+            if (grappleGunReference.IsGrappling())
+            {
+                grappleGunReference.StopGrapple();
+            }
+            if (canDash)
+            {
+                canDash = false;
+                StartCoroutine("DashCooldown");
+                GetComponent<Rigidbody>().AddForce((playerCam.forward) * (grappleGunReference.launchSpeed * grappleGunReference.launchMultiplier) * Time.deltaTime, ForceMode.Impulse);
+            }
             //playerCam.gameObject.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCam.gameObject.GetComponent<Camera>().fieldOfView, desiredFieldofView, fieldofViewTime);
         }
         else
@@ -149,6 +157,34 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     }
 
+    IEnumerator DashCooldown()
+    {
+        //Test if cooldown started
+        Debug.Log("Start Cooldown");
+
+        //Set Max CD
+        float timeLeft = 1.5f;
+
+        //CD Timer
+        float totalTime = 0;
+            while (totalTime <= timeLeft)
+            {
+                totalTime += Time.deltaTime;
+                timeLeft -= Time.deltaTime;
+                yield return null;
+            }
+
+        //Reset dash CD if grounded after CD
+        //Otherwise handled in Movement()
+        if (grounded)
+        {
+            canDash = true;
+        }
+        else
+        {
+            canDash = false;
+        }
+   }
 
 
     #region Input
@@ -300,6 +336,15 @@ public class Matt_PlayerMovement : MonoBehaviour
         // Movement while sliding
         if (grounded && crouching) multiplierV = 0f;
 
+        //Dash Cooldown reset when you hit the ground or grapple again
+        if (grounded && !canDash)
+        {
+            canDash = true;
+        }
+        else if (grappleGunReference.IsGrappling() && !canDash)
+        {
+            canDash = true;
+        }
 
         //if (config.isActiveAndEnabled)
         //{
