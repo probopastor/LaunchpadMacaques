@@ -5,91 +5,120 @@ using TMPro;
 
 public class GrapplingGun : MonoBehaviour
 {
-    [SerializeField] private GameObject hitObject;
-    private GameObject hitObjectClone;
-
-    private LineRenderer lr;
-    private Vector3 grapplePoint;
-    public LayerMask whatIsGrappleable;
-    [SerializeField] private LayerMask whatIsNotGrappleable;
-
+    #region InspectorVariables
     [Header("Object References")]
     [SerializeField] private GameObject grappleToggleEnabledText;
     [SerializeField] private GameObject grappleToggleDisabledText;
     [SerializeField] private TextMeshProUGUI ropeLengthText;
+    [SerializeField] [Tooltip("The point where the grapple is created on the playe")] Transform ejectPoint;
+    [SerializeField] [Tooltip("The Main Camera")] Transform cam;
+    [SerializeField] Transform player;
+    [SerializeField] private GameObject hitObject;
 
-
-    private float explosionRadius = 5f;
-    private float explosionPower = 10.0f;
+    [Header("Layer Settings")]
+    [SerializeField] LayerMask whatIsGrappleable;
+    [SerializeField] private LayerMask whatIsNotGrappleable;
 
     [Header("Grapple Settings")]
+    [SerializeField] [Tooltip("The Max distance the player can grapple form")] private float maxGrappleDistance = 100f;
+    [SerializeField] [Tooltip("The Speed At Which the Grapple will move the player")] float grappleSpeed = 10f;
 
-    public Transform gunTip;
-    public Transform camera;
-    public Transform player;
+    [Header("Rope Settings")]
 
-
-
-    [SerializeField] private float distance = 5f;
-    [SerializeField] private float minDistance = 5f;
-    [SerializeField] private float maxDistance = 50f;
+    [SerializeField] [Tooltip("The Min Rope Distance")] private float minDistance = 5f;
+    [SerializeField] [Tooltip("The Max Rope Distance")] private float maxDistance = 50f;
     [SerializeField, Tooltip("The amount of length subtraced from grapple length on each subsequent grapple. ")] private float grappleLengthModifier = 10;
     [SerializeField] private float wheelSensitivity = 2;
-    [SerializeField] private float maxGrappleDistance = 100f;
-    [SerializeField] private float groundCheckDistance = 5f;
 
-    private SpringJoint joint;
-    private float distanceFromPoint;
-
-    //this is the value that is updated every frame to set the grapples max distance equal to the player distance from the desired point by this value
-    public float grappleSpeed = 50f;
-
-    //values that affect how the spring joint grapple behaves
-    public float springValue = 10f;
-    public float springDamp = 10f;
-    public float springMass = 5f;
-
+    [Header("Swing Settings")]
+    [SerializeField] [Tooltip("The Force The Joint will apply to the player")] float springValue = 5f;
+    [SerializeField] [Tooltip("The amount the Joint will slow down over time")] float springDamp = 10f;
+    [SerializeField] float springMass = 5f;
     [SerializeField] private float minSwingAngle = -90f;
     [SerializeField] private float maxSwingAngle = 90f;
 
+    [Header("Dash / Launch Settings")]
+    [SerializeField] public float launchSpeed = 30000;
+    [SerializeField] public float maxLaunchMultiplier = 5f;
+   private float startTime = 0f;
+    private float endTime = 0f;
+    float launchMultiplier;
+
+    [Header("Auto Aim Settiings")]
+    [SerializeField] [Tooltip("The Radius of the Sphere that will be created to handle Auto Aim")] float sphereRadius = 2;
+    [SerializeField] private float neededVelocityForAutoAim = 20;
+    [SerializeField]
+    [Tooltip("The Distance the A Ray will be shot down to, to fix thse issue of auto aiming onto the platforming your standint on")] private float groundCheckDistance = 5f;
+    #endregion
+
+    #region PrivateVariables
+    // The current length of the rope
+    private float ropeLength = 5f;
+    private GameObject hitObjectClone;
+
+    // The Line Renderer that creates the grapple robe
+    private LineRenderer lr;
+    private Vector3 grapplePoint;
+
+    // Explosion Settings
+    private float explosionRadius = 5f;
+    private float explosionPower = 10.0f;
+
+    // The private instance of the joint
+    private SpringJoint joint;
+    private float distanceFromPoint;
+
+
+
+
+    // The Raycast that will be set to what the player is looking at
     private RaycastHit grappleRayHit;
 
     private bool swingLockToggle;
     private bool canApplyForce;
 
+    // Two private instances of the objec that the player is grappling to (Both used for different things)
     private GameObject grappledObj;
+    private GameObject currentGrappledObj;
 
+    // The position that the Joint is connected to
+    private Vector3 currentGrapplePosition;
+
+    // The object that will be called to make objects corrupted
     private MakeSpotNotGrappleable corruptObject;
 
+    // The private instance of the push pull objects
     private PushPullObjects pushPull;
-
-    [Header("Dash / Launch Settings")]
-    [SerializeField] public float launchSpeed = 30000;
-    [SerializeField] public float maxLaunchMultiplier = 5f;
-    [HideInInspector] public float startTime = 0f;
-    [HideInInspector] public float endTime = 0f;
-    [HideInInspector] public float launchMultiplier;
-
-
-    [Header("Auto Aim Settiings")]
-    [SerializeField] float sphereRadius = 2;
+    //A bool that when true will allow the player to hold down the mouse button to grapple
     private bool canHoldDownToGrapple;
-    [SerializeField] private float neededVelocityForAutoAim = 20;
+
+
 
     private float dist;
 
+
+    #endregion
+
+    #region StartFunctions
     void Awake()
+    {
+        SetObject();
+        SetText();
+    }
+
+    private void SetObject()
     {
         lr = GetComponent<LineRenderer>();
 
-        if (joint)
-        {
-            Debug.Log("Joint was created on awake");
-            Destroy(joint);
-        }
+        corruptObject = FindObjectOfType<MakeSpotNotGrappleable>();
+
+        pushPull = this.gameObject.GetComponent<PushPullObjects>();
 
         swingLockToggle = false;
+    }
 
+    private void SetText()
+    {
         if (grappleToggleEnabledText != null)
         {
             grappleToggleEnabledText.SetActive(false);
@@ -104,19 +133,25 @@ public class GrapplingGun : MonoBehaviour
         {
             ropeLengthText.text = " ";
         }
+    }
+    #endregion
 
-        corruptObject = FindObjectOfType<MakeSpotNotGrappleable>();
-
-        pushPull = this.gameObject.GetComponent<PushPullObjects>();
+    #region UpdateFunctions
+    void Update()
+    {
+        GrappleUpdateChanges();
+        GrapplingInput();
+        GrapplingLockInput();
+        ChangeDistance();
     }
 
-    void Update()
+    private void GrappleUpdateChanges()
     {
         if (IsGrappling())
         {
             if (ropeLengthText != null)
             {
-                ropeLengthText.text = "Rope Length: " + (int)distance;
+                ropeLengthText.text = "Rope Length: " + (int)ropeLength;
             }
 
             if (joint.maxDistance <= 0)
@@ -154,7 +189,15 @@ public class GrapplingGun : MonoBehaviour
                 ropeLengthText.text = " ";
             }
         }
+    }
+    #endregion
 
+    #region UserInput
+    /// <summary>
+    /// Will Get input for things relevant to grappling
+    /// </summary>
+    private void GrapplingInput()
+    {
         if (Input.GetMouseButtonUp(0) && IsGrappling())
         {
             canHoldDownToGrapple = true;
@@ -175,6 +218,15 @@ public class GrapplingGun : MonoBehaviour
             StopGrapple();
         }
 
+
+
+    }
+
+    /// <summary>
+    /// Will Get input from the player for enabling/disabling Grapple Lock
+    /// </summary>
+    private void GrapplingLockInput()
+    {
         if (Input.GetKeyDown(KeyCode.LeftControl) && IsGrappling())
         {
             if (!swingLockToggle)
@@ -190,63 +242,72 @@ public class GrapplingGun : MonoBehaviour
                 grappleToggleDisabledText.SetActive(true);
             }
         }
-
-        //if (Input.GetMouseButtonDown(1))
-        //{
-        //    Explode();
-        //}
-
-        if (lr == null && joint)
-        {
-            Debug.Log("Line Render Was Dead but Joint was still there");
-            StopGrapple();
-        }
-
-
-        ChangeDistance();
     }
-
+    
+    /// <summary>
+    /// Will change the rope length while grappling, based on mouse wheel input from player
+    /// </summary>
     private void ChangeDistance()
     {
         var wheelInput = Input.GetAxis("Mouse ScrollWheel");
 
         if (wheelInput < 0)
         {
-            distance += wheelSensitivity;
-            if (distance > maxDistance)
+            ropeLength += wheelSensitivity;
+            if (ropeLength > maxDistance)
             {
-                distance = maxDistance;
+                ropeLength = maxDistance;
             }
         }
 
         else if (wheelInput > 0)
         {
-            distance -= wheelSensitivity;
+            ropeLength -= wheelSensitivity;
 
-            if (distance < minDistance)
+            if (ropeLength < minDistance)
             {
-                distance = minDistance;
+                ropeLength = minDistance;
             }
         }
 
         if (joint)
         {
-            joint.minDistance = distance;
+            joint.minDistance = ropeLength;
         }
     }
+    #endregion
 
-    //Called after Update
+    #region LateUpdateFunctions
     void LateUpdate()
     {
         DrawRope();
+
+        /// <summary>
+        /// Draws the line from the grapple gun to the current grapple point.
+        /// </summary>
+        void DrawRope()
+        {
+            //If not grappling, don't draw rope
+            if (!joint) return;
+
+            if (lr.positionCount == 0) return;
+
+            currentGrapplePosition = grapplePoint;
+
+            lr.SetPosition(0, ejectPoint.position);
+            lr.SetPosition(1, currentGrapplePosition);
+        }
     }
 
+    #endregion
+
+    #region Explosion Settings
     //adds explosion force to raycast point when called
     void Explode()
     {
         print("Explode");
         RaycastHit hit;
-        if (Physics.Raycast(camera.position, camera.forward, out hit, maxGrappleDistance, whatIsGrappleable))
+        if (Physics.Raycast(cam.position, cam.forward, out hit, maxGrappleDistance, whatIsGrappleable))
         {
             Vector3 explosionPos = transform.position;
             Collider[] colliders = Physics.OverlapSphere(explosionPos, explosionRadius);
@@ -261,6 +322,7 @@ public class GrapplingGun : MonoBehaviour
             }
         }
     }
+    #endregion
 
     #region Look For Grapple Location
     /// <summary>
@@ -286,9 +348,9 @@ public class GrapplingGun : MonoBehaviour
 
         if(hit.collider != null)
         {
-            dist = Vector3.Distance(camera.position, hit.point);
+            dist = Vector3.Distance(cam.position, hit.point);
 
-            if (!(Physics.Raycast(camera.position, camera.forward, dist, whatIsNotGrappleable)))
+            if (!(Physics.Raycast(cam.position, cam.forward, dist, whatIsNotGrappleable)))
             {
 
                 grappleRayHit = hit;
@@ -310,7 +372,7 @@ public class GrapplingGun : MonoBehaviour
     private RaycastHit CheckRayCast()
     {
         RaycastHit returnHit = new RaycastHit();
-        Physics.Raycast(camera.position, camera.forward, out returnHit, maxGrappleDistance, whatIsGrappleable);
+        Physics.Raycast(cam.position, cam.forward, out returnHit, maxGrappleDistance, whatIsGrappleable);
         return returnHit;
     }
 
@@ -327,15 +389,21 @@ public class GrapplingGun : MonoBehaviour
         if(player.GetComponent<Rigidbody>().velocity.magnitude >= neededVelocityForAutoAim)
         {
             RaycastHit grappleObject;
-            if(Physics.SphereCast(camera.position, sphereRadius, camera.forward, out grappleObject, maxGrappleDistance, whatIsGrappleable))
+            if(Physics.SphereCast(cam.position, sphereRadius, cam.forward, out grappleObject, maxGrappleDistance, whatIsGrappleable))
             {
                 RaycastHit checkDownHit;
-                if (Physics.Raycast(camera.position, -camera.up, out checkDownHit, groundCheckDistance, whatIsGrappleable))
+                if (Physics.Raycast(cam.position, -cam.up, out checkDownHit, groundCheckDistance, whatIsGrappleable))
                 {
                     if (checkDownHit.collider.gameObject != grappleObject.collider.gameObject)
                     {
                         returnHit = grappleObject;
+                        return returnHit;
                     }
+                }
+
+                else
+                {
+                    returnHit = grappleObject;
                 }
             }
         }
@@ -343,6 +411,7 @@ public class GrapplingGun : MonoBehaviour
     }
     #endregion
 
+    #region Start/Stop Grapple
     /// <summary>
     /// Call whenever we want to start a grapple
     /// </summary>
@@ -356,6 +425,8 @@ public class GrapplingGun : MonoBehaviour
             {
                 StopGrapple();
             }
+
+            currentGrappledObj = grappleRayHit.collider.gameObject;
 
             startTime = Time.time;
 
@@ -383,16 +454,16 @@ public class GrapplingGun : MonoBehaviour
             joint.maxDistance = distanceFromPoint;
             joint.minDistance = dist;
 
-            distance = dist - grappleLengthModifier;
+            ropeLength = dist - grappleLengthModifier;
 
-            if (distance > maxDistance)
+            if (ropeLength > maxDistance)
             {
-                distance = maxDistance;
+                ropeLength = maxDistance;
             }
 
-            if (distance < minDistance)
+            if (ropeLength < minDistance)
             {
-                distance = minDistance;
+                ropeLength = minDistance;
             }
 
             joint.enableCollision = false;
@@ -410,7 +481,7 @@ public class GrapplingGun : MonoBehaviour
             Pinwheel pinwheel = null;
             if (pinwheel = grappleRayHit.collider.GetComponentInParent<Pinwheel>())
             {
-                pinwheel.TriggerRotation(grappleRayHit.collider.transform, camera.forward);
+                pinwheel.TriggerRotation(grappleRayHit.collider.transform, cam.forward);
             }
 
             //Temporary lock UI disabled after completing a grapple
@@ -430,6 +501,7 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     public void StopGrapple()
     {
+        currentGrappledObj = null;
         //managing variables for dash
         endTime = Time.time;
         launchMultiplier = Mathf.Min(endTime - startTime + 2f, maxLaunchMultiplier);
@@ -456,24 +528,9 @@ public class GrapplingGun : MonoBehaviour
         Destroy(joint);
     }
 
-    private Vector3 currentGrapplePosition;
-
-    /// <summary>
-    /// Draws the line from the grapple gun to the current grapple point.
-    /// </summary>
-    void DrawRope()
-    {
-        //If not grappling, don't draw rope
-        if (!joint) return;
-
-        if (lr.positionCount == 0) return;
-
-        currentGrapplePosition = grapplePoint;
-
-        lr.SetPosition(0, gunTip.position);
-        lr.SetPosition(1, currentGrapplePosition);
-    }
-
+    #endregion
+  
+    #region Getters/Setters
     /// <summary>
     /// Booleon function that determines if the player is grappleing or not.
     /// </summary>
@@ -520,39 +577,14 @@ public class GrapplingGun : MonoBehaviour
         return canApplyForce;
     }
 
-
-    public float GetSphereSphereRadius()
+    public GameObject GetCurrentGrappledObject()
     {
-        return sphereRadius;
+        return currentGrappledObj;
     }
 
-    public Transform GetCamera()
+    public float GetLaunchMultipler()
     {
-        return camera;
+        return launchMultiplier;
     }
-
-    public LayerMask GetGrappleLayer()
-    {
-        return whatIsGrappleable;
-    }
-
-    public LayerMask GetUnGrappleLayer()
-    {
-        return whatIsNotGrappleable;
-    }
-
-    public float GetAutoAimVelocity()
-    {
-        return neededVelocityForAutoAim;
-    }
-
-    public float GetDistance()
-    {
-        return dist;
-    }
-
-    //public RaycastHit GetSecondHit()
-    //{
-    //    //return secondhit
-    //}
+    #endregion
 }

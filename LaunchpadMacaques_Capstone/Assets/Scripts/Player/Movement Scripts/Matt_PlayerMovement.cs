@@ -138,7 +138,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && grappleGunReference.IsGrappling())
         {
             grappleGunReference.StopGrapple();
-            GetComponent<Rigidbody>().AddForce((playerCam.forward) * (grappleGunReference.launchSpeed * grappleGunReference.launchMultiplier) * Time.deltaTime, ForceMode.Impulse);
+            GetComponent<Rigidbody>().AddForce((playerCam.forward) * (grappleGunReference.launchSpeed * grappleGunReference.GetLaunchMultipler()) * Time.deltaTime, ForceMode.Impulse);
             //playerCam.gameObject.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCam.gameObject.GetComponent<Camera>().fieldOfView, desiredFieldofView, fieldofViewTime);
         }
         else

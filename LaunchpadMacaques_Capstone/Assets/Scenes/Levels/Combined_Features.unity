@@ -4371,6 +4371,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058865868}
   m_CullTransparentMesh: 0
+--- !u!4 &1061048506 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7880684068596782850, guid: ccdd945692e38b249a67f967b3d84b9f,
+    type: 3}
+  m_PrefabInstance: {fileID: 7880684068678377203}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1063145013
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7331,6 +7337,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1615265102}
   m_CullTransparentMesh: 0
+--- !u!4 &1647797123 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7880684068815890877, guid: ccdd945692e38b249a67f967b3d84b9f,
+    type: 3}
+  m_PrefabInstance: {fileID: 7880684068678377203}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1658632881 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6733871109555366780, guid: 317c024b59b4c73458261a07c70c7593,
@@ -9653,6 +9665,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2062098695}
   m_CullTransparentMesh: 0
+--- !u!4 &2067097574 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7880684068563497863, guid: ccdd945692e38b249a67f967b3d84b9f,
+    type: 3}
+  m_PrefabInstance: {fileID: 7880684068678377203}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2084724947 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
@@ -10734,11 +10752,41 @@ PrefabInstance:
     - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
         type: 3}
       propertyPath: sphereRadius
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
         type: 3}
       propertyPath: neededVelocityForAutoAim
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
+        type: 3}
+      propertyPath: groundCheckDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
+        type: 3}
+      propertyPath: ejectPoint
+      value: 
+      objectReference: {fileID: 1061048506}
+    - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1647797123}
+    - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
+        type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 2067097574}
+    - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
+        type: 3}
+      propertyPath: grappleLengthModifier
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
+        type: 3}
+      propertyPath: minDistance
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7880684069554880037, guid: ccdd945692e38b249a67f967b3d84b9f,
@@ -10746,7 +10794,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7880684069554880043, guid: ccdd945692e38b249a67f967b3d84b9f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ccdd945692e38b249a67f967b3d84b9f, type: 3}
 --- !u!4 &7880684068678377204 stripped
 Transform:
