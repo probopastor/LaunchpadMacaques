@@ -108,6 +108,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         collectibleController = FindObjectOfType<CollectibleController>();
 
         config = FindObjectOfType<ConfigJoint>();
+
+        //Fix for a bug where you can't dash until you grapple once
+        canDash = true;
     }
 
     void Start()
