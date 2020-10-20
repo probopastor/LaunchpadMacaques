@@ -37,7 +37,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     public float moveSpeed = 4500;
     [Range(0f,1f)]
     public float airMoveSpeedMultiplier = .75f;
-    public float swingSpeed = 4500;
+    
     public float maxSpeed = 20;
     //public float swingSpeed = 4500;
     public bool grounded;
@@ -313,7 +313,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             if (grappleGunReference.GetCanApplyForce())
             {
-                rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
+                rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
                 latestOrientation = orientation.transform.forward;
             }
         }
@@ -323,7 +323,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 if (latestOrientation != null)
                 {
-                    rb.AddForce(latestOrientation * swingSpeed * Time.deltaTime);
+                    rb.AddForce(latestOrientation * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
                 }
             }
         }

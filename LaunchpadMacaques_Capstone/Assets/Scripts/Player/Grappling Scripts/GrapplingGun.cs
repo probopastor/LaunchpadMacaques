@@ -36,6 +36,9 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] float springMass = 5f;
     [SerializeField] private float minSwingAngle = -90f;
     [SerializeField] private float maxSwingAngle = 90f;
+    [SerializeField, Tooltip("The force added at the bottom of a swing to keep the loop going")]
+    public float swingSpeed = 4500;
+    private float currentSwingSpeed;
 
     [Header("Dash / Launch Settings")]
     [SerializeField] public float launchSpeed = 30000;
@@ -104,6 +107,8 @@ public class GrapplingGun : MonoBehaviour
     {
         SetObject();
         SetText();
+
+        currentSwingSpeed = swingSpeed;
     }
 
     private void SetObject()
@@ -149,6 +154,13 @@ public class GrapplingGun : MonoBehaviour
     {
         if (IsGrappling())
         {
+            //Debug.Log(joint.minDistance);
+            joint.damper = springDamp * Mathf.Clamp(ropeLength * 100, 1, Mathf.Infinity);
+            joint.spring = joint.damper * 0.5f;
+            currentSwingSpeed = swingSpeed * (1 + ropeLength * 0.05f);
+
+            Debug.Log("Damper: " + joint.damper + " | Spring: " + joint.spring + " | SwingSpeed: " + currentSwingSpeed);
+
             if (ropeLengthText != null)
             {
                 ropeLengthText.text = "Rope Length: " + (int)ropeLength;
@@ -585,6 +597,11 @@ public class GrapplingGun : MonoBehaviour
     public float GetLaunchMultipler()
     {
         return launchMultiplier;
+    }
+
+    public float GetSwingSpeed()
+    {
+        return currentSwingSpeed;
     }
     #endregion
 }
