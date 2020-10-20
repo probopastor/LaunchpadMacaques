@@ -569,11 +569,15 @@ MonoBehaviour:
   grappleGunReference: {fileID: 7880684069554880032}
   playerCam: {fileID: 7880684068529821271}
   orientation: {fileID: 7880684069204234823}
+  initialFieldofView: 90
+  desiredFieldofView: 60
+  fieldofViewTime: 0.5
   rb: {fileID: 0}
   xRotation: 0
   sensitivity: 50
   sensMultiplier: 1
   moveSpeed: 4500
+  airMoveSpeedMultiplier: 0.75
   swingSpeed: 4500
   maxSpeed: 10
   grounded: 0
@@ -614,7 +618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85a1bebda23628e40947217eb747d67f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PLAYER_TOP_SPEED: 70
+  PLAYER_TOP_SPEED: 85
   collisions:
     serializedVersion: 2
     m_Bits: 256
@@ -999,6 +1003,12 @@ MonoBehaviour:
   whatIsGrappleable:
     serializedVersion: 2
     m_Bits: 4352
+  whatIsNotGrappleable:
+    serializedVersion: 2
+    m_Bits: 3639
+  grappleToggleEnabledText: {fileID: 0}
+  grappleToggleDisabledText: {fileID: 0}
+  ropeLengthText: {fileID: 0}
   gunTip: {fileID: 7880684068596782850}
   camera: {fileID: 7880684068563497863}
   player: {fileID: 7880684068815890877}
@@ -1007,20 +1017,17 @@ MonoBehaviour:
   maxDistance: 100
   grappleLengthModifier: 100
   wheelSensitivity: 2
-  explosionRadius: 1
-  explosionPower: 50
   grappleSpeed: 10
   springValue: 5
   springDamp: 10
   springMass: 5
   minSwingAngle: -90
   maxSwingAngle: 90
-  grappleToggleEnabledText: {fileID: 0}
-  grappleToggleDisabledText: {fileID: 0}
-  ropeLengthText: {fileID: 0}
-  whatIsNotGrappleable:
-    serializedVersion: 2
-    m_Bits: 3639
+  launchSpeed: 30000
+  maxLaunchMultiplier: 5
+  startTime: 0
+  endTime: 0
+  launchMultiplier: 0
 --- !u!114 &7880684069554880043
 MonoBehaviour:
   m_ObjectHideFlags: 0
