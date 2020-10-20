@@ -101,8 +101,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private Vector3 latestOrientation;
 
+    private float deafultVelocity;
+
     void Awake()
     {
+        deafultVelocity = maxVelocity;
         rb = GetComponent<Rigidbody>();
         pauseManager = FindObjectOfType<PauseManager>();
         collectibleController = FindObjectOfType<CollectibleController>();
@@ -145,6 +148,16 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             //playerCam.gameObject.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCam.gameObject.GetComponent<Camera>().fieldOfView, initialFieldofView, fieldofViewTime);
 
+        }
+
+        if (grappleGunReference.IsGrappling())
+        {
+            maxVelocity = deafultVelocity * (1 + grappleGunReference.GetRopeLength() * .01f);
+        }
+
+        else
+        {
+            maxVelocity = deafultVelocity;
         }
 
     }

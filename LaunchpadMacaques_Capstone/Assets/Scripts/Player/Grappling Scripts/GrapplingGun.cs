@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEditor.IMGUI.Controls;
 
 public class GrapplingGun : MonoBehaviour
 {
@@ -100,11 +101,15 @@ public class GrapplingGun : MonoBehaviour
     private float dist;
 
 
+    private float normalSpring = 10;
+    private float higherSwing = 10000;
+
     #endregion
 
     #region StartFunctions
     void Awake()
     {
+        normalSpring = springValue;
         SetObject();
         SetText();
 
@@ -154,10 +159,21 @@ public class GrapplingGun : MonoBehaviour
     {
         if (IsGrappling())
         {
-            //Debug.Log(joint.minDistance);
+            Debug.Log(joint.minDistance);
             joint.damper = springDamp * Mathf.Clamp(ropeLength * 100, 1, Mathf.Infinity);
             joint.spring = joint.damper * 0.5f;
+
             currentSwingSpeed = swingSpeed * (1 + ropeLength * 0.05f);
+            //joint.spring = normalSpring * (1 + ropeLength * 1);
+            //joint.damper = springDamp * (1 + ropeLength * 0.5f);
+
+            //if (ropeLength > 30)
+            //{
+            //    Debug.Log("THING");
+            //    //joint.spring = higherSpringValue;
+            //    joint.damper = 1000;
+            //   // currentSwingSpeed = higherSwing;
+            //}
 
             Debug.Log("Damper: " + joint.damper + " | Spring: " + joint.spring + " | SwingSpeed: " + currentSwingSpeed);
 
@@ -172,6 +188,7 @@ public class GrapplingGun : MonoBehaviour
             }
             else
             {
+                joint.maxDistance = Vector3.Distance(grapplePoint, player.transform.position);
                 joint.maxDistance = distanceFromPoint - grappleSpeed * Time.deltaTime;
             }
 
@@ -285,6 +302,7 @@ public class GrapplingGun : MonoBehaviour
         if (joint)
         {
             joint.minDistance = ropeLength;
+           
         }
     }
     #endregion
@@ -602,6 +620,11 @@ public class GrapplingGun : MonoBehaviour
     public float GetSwingSpeed()
     {
         return currentSwingSpeed;
+    }
+
+    public float GetRopeLength()
+    {
+        return ropeLength;
     }
     #endregion
 }
