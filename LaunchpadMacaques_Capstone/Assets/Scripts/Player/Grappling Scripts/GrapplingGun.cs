@@ -91,6 +91,8 @@ public class GrapplingGun : MonoBehaviour
     // The object that will be called to make objects corrupted
     private MakeSpotNotGrappleable corruptObject;
 
+    private Matt_PlayerMovement playerMovementReference;
+
     // The private instance of the push pull objects
     private PushPullObjects pushPull;
     //A bool that when true will allow the player to hold down the mouse button to grapple
@@ -119,6 +121,7 @@ public class GrapplingGun : MonoBehaviour
     private void SetObject()
     {
         lr = GetComponent<LineRenderer>();
+        playerMovementReference = FindObjectOfType<Matt_PlayerMovement>();
 
         corruptObject = FindObjectOfType<MakeSpotNotGrappleable>();
 
@@ -258,21 +261,39 @@ public class GrapplingGun : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftControl) && IsGrappling())
         {
-            if (!swingLockToggle)
+            if (Input.GetMouseButtonDown(0) && !IsGrappling() && !pushPull.IsGrabbing())
             {
-                swingLockToggle = true;
-                grappleToggleEnabledText.SetActive(true);
-                grappleToggleDisabledText.SetActive(false);
+                StartGrapple();
             }
-            else
+            else if (Input.GetMouseButtonDown(0) && IsGrappling())
             {
-                swingLockToggle = false;
-                grappleToggleEnabledText.SetActive(false);
-                grappleToggleDisabledText.SetActive(true);
+                StopGrapple();
+                StartGrapple();
             }
+            else if (Input.GetMouseButtonDown(1) && IsGrappling())
+            {
+                StopGrapple();
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftControl) && IsGrappling())
+            {
+                if (!swingLockToggle)
+                {
+                    swingLockToggle = true;
+                    grappleToggleEnabledText.SetActive(true);
+                    grappleToggleDisabledText.SetActive(false);
+                }
+                else
+                {
+                    swingLockToggle = false;
+                    grappleToggleEnabledText.SetActive(false);
+                    grappleToggleDisabledText.SetActive(true);
+                }
+            }
+
         }
     }
-    
+
     /// <summary>
     /// Will change the rope length while grappling, based on mouse wheel input from player
     /// </summary>
@@ -302,7 +323,7 @@ public class GrapplingGun : MonoBehaviour
         if (joint)
         {
             joint.minDistance = ropeLength;
-           
+
         }
     }
     #endregion
@@ -446,7 +467,7 @@ public class GrapplingGun : MonoBehaviour
     /// Call whenever we want to start a grapple
     /// </summary>
     void StartGrapple()
-    { 
+    {
         if (CanFindGrappleLocation())
         {
             canHoldDownToGrapple = false;
@@ -559,7 +580,7 @@ public class GrapplingGun : MonoBehaviour
     }
 
     #endregion
-  
+
     #region Getters/Setters
     /// <summary>
     /// Booleon function that determines if the player is grappleing or not.

@@ -37,7 +37,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     public float moveSpeed = 4500;
     [Range(0f,1f)]
     public float airMoveSpeedMultiplier = .75f;
-    
+
     public float maxSpeed = 20;
     //public float swingSpeed = 4500;
     public bool grounded;
@@ -93,7 +93,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField]
     private float x, y;
     [SerializeField]
-    private bool jumping, sprinting, crouching;
+    private bool jumping, sprinting, crouching, canDash;
 
     private PauseManager pauseManager;
 
@@ -111,6 +111,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         collectibleController = FindObjectOfType<CollectibleController>();
 
         config = FindObjectOfType<ConfigJoint>();
+
+        //Fix for a bug where you can't dash until you grapple once
+        canDash = true;
     }
 
     void Start()
@@ -138,10 +141,19 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
 
         //dash, when grappling
-        if (Input.GetKeyDown(KeyCode.LeftShift) && grappleGunReference.IsGrappling())
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !grounded)
         {
-            grappleGunReference.StopGrapple();
-            GetComponent<Rigidbody>().AddForce((playerCam.forward) * (grappleGunReference.launchSpeed * grappleGunReference.GetLaunchMultipler()) * Time.deltaTime, ForceMode.Impulse);
+
+            if (grappleGunReference.IsGrappling())
+            {
+                grappleGunReference.StopGrapple();
+            }
+            if (canDash)
+            {
+                canDash = false;
+                StartCoroutine("DashCooldown");
+                GetComponent<Rigidbody>().AddForce((playerCam.forward) * (grappleGunReference.launchSpeed * grappleGunReference.launchMultiplier) * Time.deltaTime, ForceMode.Impulse);
+            }
             //playerCam.gameObject.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCam.gameObject.GetComponent<Camera>().fieldOfView, desiredFieldofView, fieldofViewTime);
         }
         else
@@ -162,6 +174,34 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     }
 
+    IEnumerator DashCooldown()
+    {
+        //Test if cooldown started
+        Debug.Log("Start Cooldown");
+
+        //Set Max CD
+        float timeLeft = 1.5f;
+
+        //CD Timer
+        float totalTime = 0;
+            while (totalTime <= timeLeft)
+            {
+                totalTime += Time.deltaTime;
+                timeLeft -= Time.deltaTime;
+                yield return null;
+            }
+
+        //Reset dash CD if grounded after CD
+        //Otherwise handled in Movement()
+        if (grounded)
+        {
+            canDash = true;
+        }
+        else
+        {
+            canDash = false;
+        }
+   }
 
 
     #region Input
@@ -178,9 +218,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         sprinting = Input.GetKey(KeyCode.LeftShift);
 
         //Crouching
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.LeftControl) && !grappleGunReference.IsGrappling())
             StartCrouch();
-        if (Input.GetKeyUp(KeyCode.LeftControl))
+        if (Input.GetKeyUp(KeyCode.LeftControl) && !grappleGunReference.IsGrappling())
             StopCrouch();
 
         //sprinting
@@ -194,10 +234,14 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #region Crouching Stuff
 
-    private void StartCrouch()
+    /// <summary>
+    /// Starts player crouching.
+    /// </summary>
+    public void StartCrouch()
     {
         transform.localScale = crouchScale;
         transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
+
         if (rb.velocity.magnitude > 0.5f)
         {
             if (grounded)
@@ -207,10 +251,22 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
-    private void StopCrouch()
+    /// <summary>
+    /// Stops the player from crouching.
+    /// </summary>
+    public void StopCrouch()
     {
         transform.localScale = playerScale;
         transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+    }
+
+    /// <summary>
+    /// Returns true if the player is crouching.
+    /// </summary>
+    /// <returns></returns>
+    public bool GetCrouchStatus()
+    {
+        return crouching;
     }
 
     #endregion
@@ -297,6 +353,15 @@ public class Matt_PlayerMovement : MonoBehaviour
         // Movement while sliding
         if (grounded && crouching) multiplierV = 0f;
 
+        //Dash Cooldown reset when you hit the ground or grapple again
+        if (grounded && !canDash)
+        {
+            canDash = true;
+        }
+        else if (grappleGunReference.IsGrappling() && !canDash)
+        {
+            canDash = true;
+        }
 
         //if (config.isActiveAndEnabled)
         //{
