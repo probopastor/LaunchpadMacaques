@@ -1,0 +1,20 @@
+The Example Scripts folder includes the necessary CorruptableObject script as well as a couple of examples of how to use the Corruption Shader. I decided to also include these instructions in an effort to make it as easy as possible to use the shader.
+
+When importing these folders and files into the unity project, the project may already contain older versions of some of these files in the Shaders folder. Any older versions of these files should be replaced with the newer versions
+
+
+To set up an object with the corruption shader
+1. Make sure the material on the object is using ShaderGraphs/CorruptionShader as its shader.
+2. Make sure the object has a CorruptableObject script attached (this script manages the shader, including starting the corruption, stopping it, and reversing it)
+3. If the object is a cube, then the default textures will work fine, but anything else will most likely need at least custom wireframe texture
+4. In order to start the corruption effect on an object from script, you need to get a reference to the CorruptableObject component of the object and call the StartCorrupting function, passing in the position to start corrupting from (such as where the grapple hit the object)
+
+
+CorruptableObject Script
+- The public variables on the CorruptableObject component can be used to control the effect on the object from the inspector. The main thing you would change is the wireframe color. The other variables can control how corrupted the object is at the start of a level and whether or not that corruption will spread
+- An example of the use of this is to have part of a wall or floor be in the PausedCorruption state so that it will be partially corrupted and will not change when the scene starts playing
+- In order to have corruption across multiple objects (such as 2 adjacent walls) you should make sure Use World Coordinates is checked and set the same Corruption Start Point and Corruption Distance on each object
+
+If you have any questions about the shader or have any problems getting it working, let me (Anthony) know and I'll help out.
+
+

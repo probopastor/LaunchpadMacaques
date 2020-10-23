@@ -43,12 +43,16 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DisplayUI();
+        if(Time.timeScale > 0)
+        {
+            DisplayUI();
+        }
+
     }
 
     private void LateUpdate()
     {
-        if (objectSet && thisCanvas)
+        if (objectSet && thisCanvas && Time.timeScale > 0)
         {
             UpdateUIPos();
         }

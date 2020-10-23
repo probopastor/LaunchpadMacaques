@@ -1,19 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * Shows how to start corrupting an object from a specific point (such as grapple point)
+ * In this example, that point is where the object was clicked.
+ */
 using UnityEngine;
-using FMODUnity;
 
 public class StartCorruptionOnClick : MonoBehaviour
 {
-    private StudioEventEmitter emitter;
-
-    private void Start()
-    {
-        emitter = GetComponent<StudioEventEmitter>();
-    }
-
     void Update()
     {
+        // If mouse clicked, check if it was clicked on this object
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -22,32 +17,13 @@ public class StartCorruptionOnClick : MonoBehaviour
 
             if (hit.collider != null)
             {
-                Renderer r = hit.collider.GetComponent<Renderer>();
-                MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
-
-                r.GetPropertyBlock(pBlock);
-
-                pBlock.SetFloat("CorruptionStartTime", Time.time);
-                emitter.Play();
-                StartCoroutine(FallOff());
-                Vector3 localPos = hit.collider.transform.InverseTransformPoint(hit.point);
-                pBlock.SetVector("CorruptionStartPos", localPos);
-
-                r.SetPropertyBlock(pBlock);
+                CorruptableObject co = hit.collider.GetComponent<CorruptableObject>();
+                if (co != null)
+                {
+                    // Tell the object to start corrupting from click point
+                    co.StartCorrupting(hit.point);
+                }
             }
-        }
-    }
-
-    IEnumerator FallOff()
-    {
-        byte fall = 0;
-        emitter.SetParameter("Fall", fall);
-        while (emitter.IsPlaying())
-        {
-            fall++;
-            emitter.SetParameter("Fall", (float)fall/100);
-            yield return new WaitForFixedUpdate();
-            if (fall >= 100) emitter.Stop();
         }
     }
 }
