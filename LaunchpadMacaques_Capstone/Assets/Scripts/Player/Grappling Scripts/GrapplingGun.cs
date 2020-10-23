@@ -118,6 +118,8 @@ public class GrapplingGun : MonoBehaviour
 
     private void SetObject()
     {
+        cam = Camera.main.transform;
+
         lr = GetComponent<LineRenderer>();
         playerMovementReference = FindObjectOfType<Matt_PlayerMovement>();
 
