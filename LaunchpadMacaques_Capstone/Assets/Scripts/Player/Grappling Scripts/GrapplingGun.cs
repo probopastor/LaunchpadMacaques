@@ -13,6 +13,7 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] [Tooltip("The Main Camera")] Transform cam;
     [SerializeField] Transform player;
     [SerializeField] private GameObject hitObject;
+    [SerializeField] private TextMeshProUGUI currentSwingSpeedText;
 
     [Header("Layer Settings")]
     [SerializeField] LayerMask whatIsGrappleable;
@@ -37,6 +38,8 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] private float maxSwingAngle = 90f;
     [SerializeField, Tooltip("The force added at the bottom of a swing to keep the loop going")]
     public float swingSpeed = 4500;
+    [SerializeField] private float maxSwingVelocity = 18;
+    [SerializeField] private bool useConstantVelocity = false;
     private float currentSwingSpeed;
 
     [Header("Dash / Launch Settings")]
@@ -162,7 +165,6 @@ public class GrapplingGun : MonoBehaviour
     {
         if (IsGrappling())
         {
-            Debug.Log(joint.minDistance);
             joint.damper = springDamp * Mathf.Clamp(ropeLength * 100, 1, Mathf.Infinity);
             joint.spring = joint.damper * 0.5f;
 
@@ -213,12 +215,34 @@ public class GrapplingGun : MonoBehaviour
                     canApplyForce = false;
                 }
             }
+
+            if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !useConstantVelocity)
+            {
+                player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxSwingVelocity);
+            }
+
+            if (useConstantVelocity)
+            {
+                player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxSwingVelocity, maxSwingVelocity);
+            }
+
+
+            if (currentSwingSpeedText != null)
+            {
+                currentSwingSpeedText.text = "Current Swing Magnitude: " + player.GetComponent<Rigidbody>().velocity.magnitude;
+            }
+
         }
         else if (!IsGrappling())
         {
             if (ropeLengthText != null)
             {
                 ropeLengthText.text = " ";
+            }
+
+            if(currentSwingSpeedText != null)
+            {
+                currentSwingSpeedText.text = "";
             }
         }
     }
@@ -505,7 +529,7 @@ public class GrapplingGun : MonoBehaviour
             joint.maxDistance = distanceFromPoint;
             joint.minDistance = dist;
 
-            ropeLength = dist - grappleLengthModifier;
+            ropeLength = distanceFromPoint / 2; /*dist - grappleLengthModifier;*/
 
             if (ropeLength > maxDistance)
             {
@@ -648,4 +672,12 @@ public class GrapplingGun : MonoBehaviour
         return ropeLength;
     }
     #endregion
+
+    private Vector3 CustomClampMagnitude(Vector3 v, float max, float min)
+    {
+        double sm = v.sqrMagnitude;
+        if (sm > (max * max)) return v.normalized * max;
+        else if (sm < min * min) return v.normalized * min;
+        return v;
+    }
 }

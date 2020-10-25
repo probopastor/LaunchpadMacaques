@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
+    [SerializeField] TextMeshProUGUI currentGravityText;
     [SerializeField]
     private GrapplingGun grappleGunReference;
 
@@ -35,7 +37,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("PLayer Movement Variables")]
     //Movement
     public float moveSpeed = 4500;
-    [Range(0f,1f)]
+    [Range(0f, 1f)]
     public float airMoveSpeedMultiplier = .75f;
 
     public float maxSpeed = 20;
@@ -76,8 +78,15 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField]
     private float jumpCooldown = 0.25f;
     public float jumpForce = 550f;
-    public float gravity = 1500f;
-    public float defaultGravity = 1500f;
+    //public float gravity = 1500f;
+    //public float defaultGravity = 1500f;
+
+    [Header("Gravity Settings")]
+    [SerializeField] float gravity = -9.81f;
+    [SerializeField] float inAirGravity = -12f;
+    [SerializeField] float grapplingGravity = -6;
+    private float defaultGravity;
+    private Vector3 gravityVector;
 
     [Header("Sprinting")]
     //Sprinting
@@ -105,8 +114,10 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Awake()
     {
+        defaultGravity = gravity;
         deafultVelocity = maxVelocity;
         rb = GetComponent<Rigidbody>();
+        rb.useGravity = false;
         pauseManager = FindObjectOfType<PauseManager>();
         collectibleController = FindObjectOfType<CollectibleController>();
 
@@ -162,15 +173,15 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         }
 
-        if (grappleGunReference.IsGrappling())
-        {
-            maxVelocity = deafultVelocity * (1 + grappleGunReference.GetRopeLength() * .01f);
-        }
+        //if (grappleGunReference.IsGrappling())
+        //{
+        //    maxVelocity = deafultVelocity * (1 + grappleGunReference.GetRopeLength() * .01f);
+        //}
 
-        else
-        {
-            maxVelocity = deafultVelocity;
-        }
+        //else
+        //{
+        //    maxVelocity = deafultVelocity;
+        //}
 
     }
 
@@ -276,7 +287,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// </summary>
     private void LimitVelocity()
     {
-        if (rb.velocity.magnitude > maxVelocity)
+        if (rb.velocity.magnitude > maxVelocity && !grappleGunReference.IsGrappling())
         {
             rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxVelocity);
         }
@@ -286,19 +297,6 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void SetGravityModifier()
     {
-        if ((!grappleGunReference.IsGrappling() && !grounded) && !collectibleController.GetIsActive()) // If in the air // (gameObject.transform.position.y > 20)
-        {
-            //Add gravity
-            gravity = 3000;
-            rb.AddForce(Vector3.down * Time.deltaTime * gravity);
-        }
-        else if ((grappleGunReference.IsGrappling() || grounded) && !collectibleController.GetIsActive())
-        {
-            //Add gravity
-            gravity = defaultGravity;
-            rb.AddForce(Vector3.down * Time.deltaTime * gravity);
-        }
-
         if (collectibleController.GetIsActive())
         {
             gravity = collectibleController.GetNewGravity();
@@ -306,6 +304,27 @@ public class Matt_PlayerMovement : MonoBehaviour
         else if (collectibleController.GetIsActive() == false)
         {
             gravity = defaultGravity;
+        }
+
+        if ((!grappleGunReference.IsGrappling() && !grounded) && !collectibleController.GetIsActive()) // If in the air // (gameObject.transform.position.y > 20)
+        {
+            gravityVector = new Vector3(0, inAirGravity, 0);
+        }
+        else if ((grappleGunReference.IsGrappling()) && !collectibleController.GetIsActive())
+        {
+            gravityVector = new Vector3(0, grapplingGravity, 0);
+        }
+
+        else
+        {
+            gravityVector = new Vector3(0, gravity, 0);
+        }
+
+        rb.AddForce(gravityVector * Time.deltaTime, ForceMode.Acceleration);
+
+        if (currentGravityText)
+        {
+            currentGravityText.text = "Gravity In M/S: " + gravityVector.y;
         }
     }
 
