@@ -139,11 +139,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         Movement();
         LimitVelocity();
+        SetGravityModifier();
     }
 
     private void Update()
     {
-        SetGravityModifier();
+       
 
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) || Time.timeScale > 0)
         {
@@ -163,7 +164,12 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 canDash = false;
                 StartCoroutine("DashCooldown");
-                GetComponent<Rigidbody>().AddForce((playerCam.forward) * (grappleGunReference.launchSpeed * grappleGunReference.GetLaunchMultipler()) * Time.deltaTime, ForceMode.Impulse);
+                float currentMag = rb.velocity.magnitude;
+                //GetComponent<Rigidbody>().AddForce((playerCam.forward) * (currentMag), ForceMode.Impulse);
+
+                rb.velocity += playerCam.forward * currentMag;
+
+                rb.velocity = grappleGunReference.CustomClampMagnitude(rb.velocity, currentMag, currentMag);
             }
             //playerCam.gameObject.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCam.gameObject.GetComponent<Camera>().fieldOfView, desiredFieldofView, fieldofViewTime);
         }
@@ -320,8 +326,9 @@ public class Matt_PlayerMovement : MonoBehaviour
             gravityVector = new Vector3(0, gravity, 0);
         }
 
-        rb.AddForce(gravityVector * Time.deltaTime, ForceMode.Acceleration);
+        // rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Acceleration);
 
+        rb.velocity += gravityVector * Time.fixedDeltaTime;
         if (currentGravityText)
         {
             currentGravityText.text = "Gravity In M/S: " + gravityVector.y;

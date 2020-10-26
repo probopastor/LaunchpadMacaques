@@ -14,6 +14,7 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] private GameObject hitObject;
     [SerializeField] private TextMeshProUGUI currentSwingSpeedText;
+    [SerializeField] TextMeshProUGUI actualVelocityText;
 
     [Header("Layer Settings")]
     [SerializeField] LayerMask whatIsGrappleable;
@@ -155,6 +156,17 @@ public class GrapplingGun : MonoBehaviour
     #region UpdateFunctions
     void Update()
     {
+        if (actualVelocityText)
+        {
+            actualVelocityText.text = "Velocity: (" + (int)player.GetComponent<Rigidbody>().velocity.x + ", " + 
+                (int)player.GetComponent<Rigidbody>().velocity.y + ", " + (int)player.GetComponent<Rigidbody>().velocity.z +")";
+        }
+
+
+        if (currentSwingSpeedText != null)
+        {
+            currentSwingSpeedText.text = "Magnitude: " + (int)player.GetComponent<Rigidbody>().velocity.magnitude;
+        }
         GrappleUpdateChanges();
         GrapplingInput();
         GrapplingLockInput();
@@ -227,10 +239,6 @@ public class GrapplingGun : MonoBehaviour
             }
 
 
-            if (currentSwingSpeedText != null)
-            {
-                currentSwingSpeedText.text = "Current Swing Magnitude: " + player.GetComponent<Rigidbody>().velocity.magnitude;
-            }
 
         }
         else if (!IsGrappling())
@@ -238,11 +246,6 @@ public class GrapplingGun : MonoBehaviour
             if (ropeLengthText != null)
             {
                 ropeLengthText.text = " ";
-            }
-
-            if(currentSwingSpeedText != null)
-            {
-                currentSwingSpeedText.text = "";
             }
         }
     }
@@ -673,7 +676,14 @@ public class GrapplingGun : MonoBehaviour
     }
     #endregion
 
-    private Vector3 CustomClampMagnitude(Vector3 v, float max, float min)
+    /// <summary>
+    /// Will clamp the Velocity between a min and a max
+    /// </summary>
+    /// <param name="v"></param>
+    /// <param name="max"></param>
+    /// <param name="min"></param>
+    /// <returns></returns>
+    public Vector3 CustomClampMagnitude(Vector3 v, float max, float min)
     {
         double sm = v.sqrMagnitude;
         if (sm > (max * max)) return v.normalized * max;

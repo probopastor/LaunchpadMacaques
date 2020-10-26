@@ -3415,6 +3415,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 493609381}
   m_CullTransparentMesh: 0
+--- !u!114 &506809303 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3681608812126858577, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+    type: 3}
+  m_PrefabInstance: {fileID: 3602824266255970892}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &515627800
 GameObject:
   m_ObjectHideFlags: 0
@@ -14909,6 +14921,11 @@ PrefabInstance:
       propertyPath: maxSwingVelocity
       value: 35
       objectReference: {fileID: 0}
+    - target: {fileID: 3602824265111065247, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: actualVelocityText
+      value: 
+      objectReference: {fileID: 506809303}
     - target: {fileID: 3602824266023969730, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -14921,23 +14938,13 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: e0a93d791301536449d57b7f4df9153e, type: 2}
     - target: {fileID: 3602824266386916637, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
-      propertyPath: jumpForce
-      value: 1000
+      propertyPath: inAirGravity
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 3602824266386916637, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
       propertyPath: grapplingGravity
-      value: -10
-      objectReference: {fileID: 0}
-    - target: {fileID: 3602824266386916637, guid: 16dda4d6fd8b00f4c8955d68c821c107,
-        type: 3}
-      propertyPath: maxVelocity
-      value: 1e+9
-      objectReference: {fileID: 0}
-    - target: {fileID: 3602824266386916637, guid: 16dda4d6fd8b00f4c8955d68c821c107,
-        type: 3}
-      propertyPath: inAirGravity
-      value: -2000
+      value: -4.4
       objectReference: {fileID: 0}
     - target: {fileID: 6073992194043073705, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
