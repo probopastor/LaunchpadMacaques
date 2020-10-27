@@ -590,8 +590,6 @@ MonoBehaviour:
   initialFieldofView: 90
   desiredFieldofView: 60
   fieldofViewTime: 0.5
-  rb: {fileID: 0}
-  xRotation: 0
   sensitivity: 50
   sensMultiplier: 1
   moveSpeed: 4500
@@ -601,30 +599,20 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 256
-  maxVelocity: 1e+9
   counterMovement: 0.175
   threshold: 0.01
   maxSlopeAngle: 35
-  crouchScale: {x: 1, y: 0.5, z: 1}
-  playerScale: {x: 0, y: 0, z: 0}
-  slideForce: 400
-  slideCounterMovement: 0.2
-  normalVector: {x: 0, y: 1, z: 0}
-  wallNormalVector: {x: 0, y: 0, z: 0}
-  readyToJump: 1
   jumpCooldown: 0.25
   jumpForce: 400
   gravity: -9.81
   inAirGravity: -20
   grapplingGravity: -5
-  readyToSprint: 1
   sprintMultiplier: 1.75
-  x: 0
-  y: 0
-  jumping: 0
-  sprinting: 0
-  crouching: 0
-  canDash: 0
+  impulseDashAmmount: 50
+  courtineDashAmmount: 500
+  dashLength: 0.1
+  useAddForceDash: 0
+  useCourtineDash: 1
 --- !u!114 &7880684068815890855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1047,8 +1035,6 @@ MonoBehaviour:
   swingSpeed: 4500
   maxSwingVelocity: 18
   useConstantVelocity: 0
-  launchSpeed: 30000
-  maxLaunchMultiplier: 5
   sphereRadius: 4
   neededVelocityForAutoAim: 0
   groundCheckDistance: 5

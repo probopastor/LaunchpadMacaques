@@ -43,13 +43,6 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] private bool useConstantVelocity = false;
     private float currentSwingSpeed;
 
-    [Header("Dash / Launch Settings")]
-    [SerializeField] public float launchSpeed = 30000;
-    [SerializeField] public float maxLaunchMultiplier = 5f;
-   private float startTime = 0f;
-    private float endTime = 0f;
-    float launchMultiplier;
-
     [Header("Auto Aim Settiings")]
     [SerializeField] [Tooltip("The Radius of the Sphere that will be created to handle Auto Aim")] float sphereRadius = 2;
     [SerializeField] private float neededVelocityForAutoAim = 20;
@@ -105,15 +98,11 @@ public class GrapplingGun : MonoBehaviour
     private float dist;
 
 
-    private float normalSpring = 10;
-    private float higherSwing = 10000;
-
     #endregion
 
     #region StartFunctions
     void Awake()
-    {
-        normalSpring = springValue;
+    { 
         SetObject();
         SetText();
 
@@ -506,8 +495,6 @@ public class GrapplingGun : MonoBehaviour
 
             currentGrappledObj = grappleRayHit.collider.gameObject;
 
-            startTime = Time.time;
-
             hitObjectClone = Instantiate(hitObject);
             hitObjectClone.transform.position = grappleRayHit.point;
             hitObjectClone.transform.parent = grappleRayHit.transform;
@@ -581,9 +568,6 @@ public class GrapplingGun : MonoBehaviour
     {
         currentGrappledObj = null;
         //managing variables for dash
-        endTime = Time.time;
-        launchMultiplier = Mathf.Min(endTime - startTime + 2f, maxLaunchMultiplier);
-
 
         swingLockToggle = false;
 
@@ -658,11 +642,6 @@ public class GrapplingGun : MonoBehaviour
     public GameObject GetCurrentGrappledObject()
     {
         return currentGrappledObj;
-    }
-
-    public float GetLaunchMultipler()
-    {
-        return launchMultiplier;
     }
 
     public float GetSwingSpeed()

@@ -19,15 +19,11 @@ public class Matt_PlayerMovement : MonoBehaviour
     public float desiredFieldofView = 60f;
     public float fieldofViewTime = .5f;
 
-
-    [Header("Player Rigidbody")]
     //Other
-    [SerializeField]
     private Rigidbody rb;
 
     [Header("Player Rotation and Look")]
     //Rotation and look
-    [SerializeField]
     private float xRotation;
     [SerializeField]
     private float sensitivity = 50f;
@@ -42,12 +38,10 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     public float maxSpeed = 20;
     //public float swingSpeed = 4500;
-    public bool grounded;
+   [HideInInspector] public bool grounded;
     public LayerMask whatIsGround;
 
-    [Header("Max Player Velocity")]
     // Max velocity for the character
-    [SerializeField]
     private float maxVelocity = 50f;
 
     [Header("Counter Movement")]
@@ -56,52 +50,55 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float threshold = 0.01f;
     public float maxSlopeAngle = 35f;
 
-    [Header("Crouch & Slide")]
+
     //Crouch & Slide
-    [SerializeField]
     private Vector3 crouchScale = new Vector3(1, 0.5f, 1);
-    [SerializeField]
     private Vector3 playerScale;
-    public float slideForce = 400;
-    public float slideCounterMovement = 0.2f;
+    private float slideForce = 400;
+    private float slideCounterMovement = 0.2f;
 
     //Sliding
-    [SerializeField]
     private Vector3 normalVector = Vector3.up;
-    [SerializeField]
     private Vector3 wallNormalVector;
 
     [Header("Jumping")]
     //Jumping
     [SerializeField]
-    private bool readyToJump = true;
-    [SerializeField]
     private float jumpCooldown = 0.25f;
     public float jumpForce = 550f;
+    private bool readyToJump = true;
+
     //public float gravity = 1500f;
     //public float defaultGravity = 1500f;
 
     [Header("Gravity Settings")]
-    [SerializeField] float gravity = -9.81f;
-    [SerializeField] float inAirGravity = -12f;
-    [SerializeField] float grapplingGravity = -6;
+    [SerializeField, Tooltip("The Gravity that will be applied to the player when they are on the ground")] float gravity = -9.81f;
+    [SerializeField, Tooltip("The Gravtiy that will be applied to the player when they are in the air")] float inAirGravity = -12f;
+    [SerializeField, Tooltip("The Gravity that will be applied to the player when they are swinging")] float grapplingGravity = -6;
     private float defaultGravity;
     private Vector3 gravityVector;
 
     [Header("Sprinting")]
-    //Sprinting
-    [SerializeField]
-    private bool readyToSprint = true;
-    private float speedStorage;
     [SerializeField]
     private float sprintMultiplier = 1.75f;
+    //Sprinting
+    private bool readyToSprint = true;
+    private float speedStorage;
+
+    [Header("Dash Settings")]
+    [SerializeField, Tooltip("The dash ammount that will be applied to the player, when using the addForceDah" +
+        "This ammount is only applied to the player for one frame")] private float impulseDashAmmount = 4000;
+    [SerializeField, Tooltip("The dash ammount that will be applied to the player , when using the CourtineDash" +
+        "Will be scaled with time.delta time and will be applied for a set ammount of time")] private float courtineDashAmmount = 100;
+    [SerializeField, Tooltip("How long the courtineDash will apply force to the player")] private float dashLength = .5f;
+    [SerializeField] private bool useAddForceDash;
+    [SerializeField] private bool useCourtineDash = true;
+
 
 
     [Header("Player Input")]
     //Input
-    [SerializeField]
     private float x, y;
-    [SerializeField]
     private bool jumping, sprinting, crouching, canDash;
 
     private PauseManager pauseManager;
@@ -144,51 +141,83 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-       
-
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) || Time.timeScale > 0)
         {
             MyInput();
             Look();
         }
+    }
 
-        //dash, when grappling
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !grounded)
+
+    #region Dash Stuff
+
+    /// <summary>
+    /// The method that is called to start the player dash
+    /// </summary>
+    private void Dash()
+    {
+        if (grappleGunReference.IsGrappling())
         {
-
-            if (grappleGunReference.IsGrappling())
-            {
-                grappleGunReference.StopGrapple();
-            }
-            if (canDash)
-            {
-                canDash = false;
-                StartCoroutine("DashCooldown");
-                float currentMag = rb.velocity.magnitude;
-                //GetComponent<Rigidbody>().AddForce((playerCam.forward) * (currentMag), ForceMode.Impulse);
-
-                rb.velocity += playerCam.forward * currentMag;
-
-                rb.velocity = grappleGunReference.CustomClampMagnitude(rb.velocity, currentMag, currentMag);
-            }
-            //playerCam.gameObject.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCam.gameObject.GetComponent<Camera>().fieldOfView, desiredFieldofView, fieldofViewTime);
+            grappleGunReference.StopGrapple();
         }
-        else
+        if (canDash)
         {
-            //playerCam.gameObject.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCam.gameObject.GetComponent<Camera>().fieldOfView, initialFieldofView, fieldofViewTime);
+            canDash = false;
+            StartCoroutine("DashCooldown");
 
+            if (useAddForceDash)
+            {
+                AddForceDash();
+            }
+
+            else if (useCourtineDash)
+            {
+                StartCoroutine(DashCourtine());
+            }
+
+            else
+            {
+                ChangeDirectionDash();
+            }
         }
+    }
+    /// <summary>
+    /// The dash that will only change the player's direction does not change their speed
+    /// </summary>
+    private void ChangeDirectionDash()
+    {
+       float currentMag = rb.velocity.magnitude;
+        rb.velocity += playerCam.forward * currentMag;
+        rb.velocity = grappleGunReference.CustomClampMagnitude(rb.velocity, currentMag, currentMag);
+    }
 
-        //if (grappleGunReference.IsGrappling())
-        //{
-        //    maxVelocity = deafultVelocity * (1 + grappleGunReference.GetRopeLength() * .01f);
-        //}
+    /// <summary>
+    /// Will apply a force dash for one frame (Causes player to teleport)
+    /// </summary>
+    private void AddForceDash()
+    {
+        GetComponent<Rigidbody>().AddForce((playerCam.forward) * impulseDashAmmount, ForceMode.Impulse);
+    }
 
-        //else
-        //{
-        //    maxVelocity = deafultVelocity;
-        //}
+    /// <summary>
+    /// Will apply a dash force over time of dash length
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DashCourtine()
+    {
+        float currentTime = 0;
 
+        yield return new WaitForEndOfFrame();
+        while(currentTime < dashLength)
+        {
+            if (grounded || grappleGunReference.IsGrappling())
+            {
+                break;
+            }
+            GetComponent<Rigidbody>().AddForce((playerCam.forward) * courtineDashAmmount * Time.deltaTime, ForceMode.Impulse);
+            currentTime += Time.deltaTime;
+            yield return new WaitForSeconds(0);
+        }
     }
 
     IEnumerator DashCooldown()
@@ -220,6 +249,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
    }
 
+    #endregion
 
     #region Input
 
@@ -245,6 +275,12 @@ public class Matt_PlayerMovement : MonoBehaviour
             Sprint();
         if (Input.GetKeyUp(KeyCode.LeftShift))
             StopSprint();
+
+        //dash, when grappling
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !grounded)
+        {
+            Dash();
+        }
     }
 
     #endregion
