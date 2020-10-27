@@ -12,11 +12,11 @@ public class CorruptableObject : MonoBehaviour
 {
     // The renderer of this object
     Renderer r;
-    
+
     // The material property block of the renderer
     MaterialPropertyBlock pBlock;
 
-    
+
     public enum CorruptionState
     {
         Uncorrupted, // Fully uncorrupted (normal object)
@@ -36,13 +36,17 @@ public class CorruptableObject : MonoBehaviour
     [Tooltip("Origin point of the corruption")]
     public Vector3 corruptionStartPoint;
 
+    [Tooltip("How far the corruption has spread (>0)")]
+    public float corruptionDistance;
+
+    [Tooltip("XYZ: Origin point of corruption. W: Corruption progress")]
+    public Vector4[] staticCorruptionPoints;
+    Matrix4x4 corruptionPoints;
+
     // Local coordinates move with object
     // World coordinates are easier for corrupting multiple objects from same point
     [Tooltip("true: Use world coordinates\nfalse: Use local coordinates")]
     public bool useWorldCoordinates;
-
-    [Tooltip("How far the corruption has spread (>0)")]
-    public float corruptionDistance;
 
 
     // true if object is fully corrupted
@@ -57,16 +61,29 @@ public class CorruptableObject : MonoBehaviour
     // true if corruption is stalled at a specific amount
     bool paused;
 
-    private void Start()
-    {
-        UpdateVariablesFromState();
-        UpdateShaderFull();
-    }
 
     /// <summary>
     /// Update shader properties based on inspector values
     /// </summary>
     private void OnValidate()
+    {
+        if (corruptionPoints == null) corruptionPoints = new Matrix4x4();
+        for (int i = 0; i < 4; i++)
+        {
+            if (staticCorruptionPoints != null && i < staticCorruptionPoints.Length)
+                corruptionPoints.SetRow(i, staticCorruptionPoints[i]);
+            else
+                corruptionPoints.SetRow(i, new Vector4(0, 0, 0, 0));
+        }
+
+        UpdateVariablesFromState();
+        UpdateShaderFull();
+    }
+
+    /// <summary>
+    /// Update shader properties on scene start
+    /// </summary>
+    private void Start()
     {
         UpdateVariablesFromState();
         UpdateShaderFull();
@@ -77,7 +94,7 @@ public class CorruptableObject : MonoBehaviour
         if (corrupting && !paused)
         {
             // increase the corruption amount
-            corruptionDistance += Time.deltaTime;
+            corruptionDistance += Time.deltaTime * (reversed ? 5 : 1);
             corruptionDistance = Mathf.Max(0, corruptionDistance);
 
             // update shader
@@ -212,6 +229,8 @@ public class CorruptableObject : MonoBehaviour
         pBlock.SetFloat("Corrupted", corrupted ? 1 : 0);
         pBlock.SetFloat("Corrupting", corrupting ? 1 : 0);
         pBlock.SetFloat("Reversed", reversed ? 1 : 0);
+
+        pBlock.SetMatrix("CorruptionPoints", corruptionPoints);
 
         // Set new property block in renderer
         r.SetPropertyBlock(pBlock);
