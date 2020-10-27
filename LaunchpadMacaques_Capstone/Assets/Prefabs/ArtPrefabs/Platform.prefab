@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5510407692410413126}
   - component: {fileID: 7754092244476564620}
   - component: {fileID: 8961464458312517642}
+  - component: {fileID: 6962597661288414461}
   m_Layer: 0
   m_Name: Platform
   m_TagString: Untagged
@@ -94,9 +95,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 958a08a5a996edb4e9c8ee5698f14db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  corruptionState: 0
+  corruptionState: 2
   wireframeColor: {r: 1, g: 0, b: 1, a: 1}
   corruptionStartPoint: {x: 0, y: 0, z: 0}
   corruptionDistance: 0
-  staticCorruptionPoints: []
+  staticCorruptionPoints:
+  - {x: 0, y: 0, z: 0, w: 5.11}
   useWorldCoordinates: 0
+--- !u!65 &6962597661288414461
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8114621900284278105}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 12, y: 2.5000017, z: 12}
+  m_Center: {x: 0, y: 0, z: 0}
