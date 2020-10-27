@@ -1550,18 +1550,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3602824265073434812}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3681608812126858577 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 209556066950237677, guid: 4043949ccbe61164e988501e44004acc,
-    type: 3}
-  m_PrefabInstance: {fileID: 3602824265073434812}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3138565714430890306 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1905481653770498558, guid: 4043949ccbe61164e988501e44004acc,
@@ -1973,12 +1961,17 @@ PrefabInstance:
     - target: {fileID: 7880684068815890850, guid: ccdd945692e38b249a67f967b3d84b9f,
         type: 3}
       propertyPath: inAirGravity
-      value: -9.81
+      value: -36.7875
       objectReference: {fileID: 0}
     - target: {fileID: 7880684068815890850, guid: ccdd945692e38b249a67f967b3d84b9f,
         type: 3}
       propertyPath: grapplingGravity
       value: -9.81
+      objectReference: {fileID: 0}
+    - target: {fileID: 7880684068815890850, guid: ccdd945692e38b249a67f967b3d84b9f,
+        type: 3}
+      propertyPath: airMoveSpeedMultiplier
+      value: 0.931
       objectReference: {fileID: 0}
     - target: {fileID: 7880684068815890879, guid: ccdd945692e38b249a67f967b3d84b9f,
         type: 3}
@@ -2048,7 +2041,7 @@ PrefabInstance:
     - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
         type: 3}
       propertyPath: maxDistance
-      value: 25
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
         type: 3}
@@ -2068,18 +2061,18 @@ PrefabInstance:
     - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
         type: 3}
       propertyPath: springValue
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
         type: 3}
       propertyPath: maxSwingVelocity
-      value: 35
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
         type: 3}
       propertyPath: actualVelocityText
       value: 
-      objectReference: {fileID: 3681608812126858577}
+      objectReference: {fileID: 0}
     - target: {fileID: 7880684069554880032, guid: ccdd945692e38b249a67f967b3d84b9f,
         type: 3}
       propertyPath: launchSpeed
