@@ -305,7 +305,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         if (collectibleController.GetIsActive())
         {
-            gravity = collectibleController.GetNewGravity();
+            gravity = collectibleController.GetNewPlayerGravity();
         }
         else if (collectibleController.GetIsActive() == false)
         {
