@@ -37,7 +37,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     public float moveSpeed = 4500;
     [Range(0f,1f)]
     public float airMoveSpeedMultiplier = .75f;
-    public float swingSpeed = 4500;
+
     public float maxSpeed = 20;
     //public float swingSpeed = 4500;
     public bool grounded;
@@ -93,7 +93,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField]
     private float x, y;
     [SerializeField]
-    private bool jumping, sprinting, crouching;
+    private bool jumping, sprinting, crouching, canDash;
 
     private PauseManager pauseManager;
 
@@ -101,13 +101,19 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private Vector3 latestOrientation;
 
+    private float deafultVelocity;
+
     void Awake()
     {
+        deafultVelocity = maxVelocity;
         rb = GetComponent<Rigidbody>();
         pauseManager = FindObjectOfType<PauseManager>();
         collectibleController = FindObjectOfType<CollectibleController>();
 
         config = FindObjectOfType<ConfigJoint>();
+
+        //Fix for a bug where you can't dash until you grapple once
+        canDash = true;
     }
 
     void Start()
@@ -128,17 +134,26 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         SetGravityModifier();
 
-        if (!pauseManager.GetPaused() && !pauseManager.GetGameWon())
+        if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) || Time.timeScale > 0)
         {
             MyInput();
             Look();
         }
 
         //dash, when grappling
-        if (Input.GetKeyDown(KeyCode.LeftShift) && grappleGunReference.IsGrappling())
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !grounded)
         {
-            grappleGunReference.StopGrapple();
-            GetComponent<Rigidbody>().AddForce((playerCam.forward) * (grappleGunReference.launchSpeed * grappleGunReference.launchMultiplier) * Time.deltaTime, ForceMode.Impulse);
+
+            if (grappleGunReference.IsGrappling())
+            {
+                grappleGunReference.StopGrapple();
+            }
+            if (canDash)
+            {
+                canDash = false;
+                StartCoroutine("DashCooldown");
+                GetComponent<Rigidbody>().AddForce((playerCam.forward) * (grappleGunReference.launchSpeed * grappleGunReference.GetLaunchMultipler()) * Time.deltaTime, ForceMode.Impulse);
+            }
             //playerCam.gameObject.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCam.gameObject.GetComponent<Camera>().fieldOfView, desiredFieldofView, fieldofViewTime);
         }
         else
@@ -147,8 +162,46 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         }
 
+        if (grappleGunReference.IsGrappling())
+        {
+            maxVelocity = deafultVelocity * (1 + grappleGunReference.GetRopeLength() * .01f);
+        }
+
+        else
+        {
+            maxVelocity = deafultVelocity;
+        }
+
     }
 
+    IEnumerator DashCooldown()
+    {
+        //Test if cooldown started
+        Debug.Log("Start Cooldown");
+
+        //Set Max CD
+        float timeLeft = 1.5f;
+
+        //CD Timer
+        float totalTime = 0;
+            while (totalTime <= timeLeft)
+            {
+                totalTime += Time.deltaTime;
+                timeLeft -= Time.deltaTime;
+                yield return null;
+            }
+
+        //Reset dash CD if grounded after CD
+        //Otherwise handled in Movement()
+        if (grounded)
+        {
+            canDash = true;
+        }
+        else
+        {
+            canDash = false;
+        }
+   }
 
 
     #region Input
@@ -208,7 +261,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns true if the player is crouching. 
+    /// Returns true if the player is crouching.
     /// </summary>
     /// <returns></returns>
     public bool GetCrouchStatus()
@@ -300,6 +353,15 @@ public class Matt_PlayerMovement : MonoBehaviour
         // Movement while sliding
         if (grounded && crouching) multiplierV = 0f;
 
+        //Dash Cooldown reset when you hit the ground or grapple again
+        if (grounded && !canDash)
+        {
+            canDash = true;
+        }
+        else if (grappleGunReference.IsGrappling() && !canDash)
+        {
+            canDash = true;
+        }
 
         //if (config.isActiveAndEnabled)
         //{
@@ -329,7 +391,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             if (grappleGunReference.GetCanApplyForce())
             {
-                rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
+                rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
                 latestOrientation = orientation.transform.forward;
             }
         }
@@ -339,7 +401,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 if (latestOrientation != null)
                 {
-                    rb.AddForce(latestOrientation * swingSpeed * Time.deltaTime);
+                    rb.AddForce(latestOrientation * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
                 }
             }
         }

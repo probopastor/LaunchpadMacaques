@@ -70,7 +70,6 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     {
         GameObject temporaryCorruptedVisual = Instantiate(corruptedVisual);
         temporaryCorruptedVisual.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), spotPos.normal);
-        Debug.Log("Object Rotation: " + transform.rotation);
         temporaryCorruptedVisual.transform.position = spotPos.point;
         temporaryCorruptedVisual.transform.localScale = new Vector3(notGrappableSize, notGrappableSize, .5f);
         tempCorruptedVisuals.Add(temporaryCorruptedVisual);
@@ -98,23 +97,6 @@ public class MakeSpotNotGrappleable : MonoBehaviour
         }
 
         StartCoroutine(ChangeObjectLayer(hitObject));
-
-        //if (hit.collider != null)
-        //{
-        //    if (hit.collider.GetComponent<Renderer>().enabled)
-        //    {
-        //        Renderer r = hit.collider.GetComponent<Renderer>();
-        //        MaterialPropertyBlock pBlock = new MaterialPropertyBlock();
-
-        //        r.GetPropertyBlock(pBlock);
-
-        //        pBlock.SetFloat("CorruptionStartTime", Time.time);
-        //        Vector3 localPos = hit.collider.transform.InverseTransformPoint(hit.point);
-        //        pBlock.SetVector("CorruptionStartPos", localPos);
-
-        //        r.SetPropertyBlock(pBlock);
-        //    }
-        //}
 
         corruptedObjects.Add(hitObject.gameObject);
     }

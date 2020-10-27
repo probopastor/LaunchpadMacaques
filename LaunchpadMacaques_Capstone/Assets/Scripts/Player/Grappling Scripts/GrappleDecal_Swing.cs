@@ -21,6 +21,8 @@ public class GrappleDecal_Swing : MonoBehaviour
     #region Private Variables 
     private GrapplingGun grapplingGun;
     private GameObject grappleDecalObj;
+    private GameObject player;
+
     #endregion 
 
     // Start is called before the first frame update
@@ -28,6 +30,7 @@ public class GrappleDecal_Swing : MonoBehaviour
     {
         grapplingGun = FindObjectOfType<GrapplingGun>();
         grappleDecalObj = Instantiate(grappleAimingDecal);
+        player = FindObjectOfType<Matt_PlayerMovement>().gameObject;
     }
 
     // Update is called once per frame
@@ -40,14 +43,11 @@ public class GrappleDecal_Swing : MonoBehaviour
     /// Displays a decal onto objects that can be grappled from.
     /// </summary>
     private void DisplayDecal()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hitInfo;
-
-        if ((Physics.Raycast(ray, out hitInfo, grapplingGun.GetMaxGrappleDistance(), whatIsGrappleable)) || (grapplingGun.IsGrappling()))
+    { 
+        if (grapplingGun.CanFindGrappleLocation())
         {
             grappleDecalObj.SetActive(true);
-            MoveDecal(hitInfo);
+            MoveDecal(grapplingGun.GetGrappleRayhit());
         }
         else
         {
