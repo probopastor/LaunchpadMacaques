@@ -798,7 +798,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 142505802}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.33, y: 16.5, z: -55.6}
+  m_LocalPosition: {x: -0.33, y: 16.5, z: 22.4}
   m_LocalScale: {x: 0.75, y: 1, z: 0.75}
   m_Children:
   - {fileID: 1733823668}
@@ -860,12 +860,15 @@ MonoBehaviour:
   grappleGunReference: {fileID: 2084724947}
   playerCam: {fileID: 1063995556}
   orientation: {fileID: 1733823668}
+  initialFieldofView: 90
+  desiredFieldofView: 60
+  fieldofViewTime: 0.5
   rb: {fileID: 0}
   xRotation: 0
   sensitivity: 50
   sensMultiplier: 1
   moveSpeed: 4500
-  swingSpeed: 4500
+  airMoveSpeedMultiplier: 0.75
   maxSpeed: 10
   grounded: 0
   whatIsGround:
@@ -893,6 +896,7 @@ MonoBehaviour:
   jumping: 0
   sprinting: 0
   crouching: 0
+  canDash: 0
 --- !u!114 &142505810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3886,12 +3890,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 981a0fc3c4d79f14eb41074311777a44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HTPMenu: {fileID: 0}
   thisScene: PushPull_Test_Level
   mainMenuScene: MainMenu
   PauseCanvas: {fileID: 646010777}
   WinCanvas: {fileID: 64306221}
   CursorCanvas: {fileID: 445166013}
   UICanvas: {fileID: 445166013}
+  InformationPostText: {fileID: 0}
+  RopeLengthText: {fileID: 0}
 --- !u!114 &483023265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8243,6 +8250,80 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 975623324}
   m_CullTransparentMesh: 0
+--- !u!1001 &992393979
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.22
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 9.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330555, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330556, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_Name
+      value: Moveable Cube
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ab0a9ce77bfc0464e826f259cb7566a7, type: 3}
 --- !u!1 &997001712
 GameObject:
   m_ObjectHideFlags: 0
@@ -13917,25 +13998,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2db3bcdbec063fc439e4e9bea7338987, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grappleToggleEnabledText: {fileID: 0}
+  grappleToggleDisabledText: {fileID: 0}
+  ropeLengthText: {fileID: 0}
+  ejectPoint: {fileID: 0}
+  cam: {fileID: 0}
+  player: {fileID: 142505806}
   hitObject: {fileID: 1736345935115610924, guid: 0294f38c6695ef344b4efa4c29f1c223,
     type: 3}
   whatIsGrappleable:
     serializedVersion: 2
     m_Bits: 256
-  gunTip: {fileID: 997001713}
-  camera: {fileID: 963194228}
-  player: {fileID: 142505806}
-  minDistance: 0
-  explosionRadius: 1
-  explosionPower: 50
+  whatIsNotGrappleable:
+    serializedVersion: 2
+    m_Bits: 0
+  maxGrappleDistance: 100
   grappleSpeed: 10
+  minDistance: 0
+  maxDistance: 50
+  grappleLengthModifier: 10
+  wheelSensitivity: 2
   springValue: 5
   springDamp: 10
   springMass: 5
   minSwingAngle: -90
   maxSwingAngle: 90
-  grappleToggleEnabledText: {fileID: 0}
-  grappleToggleDisabledText: {fileID: 0}
+  swingSpeed: 4500
+  launchSpeed: 30000
+  maxLaunchMultiplier: 5
+  sphereRadius: 2
+  neededVelocityForAutoAim: 20
+  groundCheckDistance: 5
 --- !u!120 &2084724948
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -14155,7 +14248,6 @@ MonoBehaviour:
   canBePickedUp:
     serializedVersion: 2
     m_Bits: 0
-  objectFollowSpeed: 10
 --- !u!114 &2084724954
 MonoBehaviour:
   m_ObjectHideFlags: 0
