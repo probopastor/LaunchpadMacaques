@@ -38,7 +38,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     public float maxSpeed = 20;
     //public float swingSpeed = 4500;
-   [HideInInspector] public bool grounded;
+    [HideInInspector] public bool grounded;
     public LayerMask whatIsGround;
 
     // Max velocity for the character
@@ -86,13 +86,17 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float speedStorage;
 
     [Header("Dash Settings")]
-    [SerializeField, Tooltip("The dash ammount that will be applied to the player, when using the addForceDah" +
-        "This ammount is only applied to the player for one frame")] private float impulseDashAmmount = 4000;
+
     [SerializeField, Tooltip("The dash ammount that will be applied to the player , when using the CourtineDash" +
-        "Will be scaled with time.delta time and will be applied for a set ammount of time")] private float courtineDashAmmount = 100;
-    [SerializeField, Tooltip("How long the courtineDash will apply force to the player")] private float dashLength = .5f;
-    [SerializeField] private bool useAddForceDash;
-    [SerializeField] private bool useCourtineDash = true;
+        "Will be scaled with time.delta time and will be applied for a set ammount of time")]
+    private float courtineDashAmmount = 100;
+    [SerializeField, Tooltip("How long the courtineDash will apply force to the player")] [Range(0, 1)] private float dashLength = .5f;
+
+    [Tooltip("The dash ammount that will be applied to the player, when using the addForceDah" +
+    "This ammount is only applied to the player for one frame")]
+    private float impulseDashAmmount = 4000;
+    private bool useAddForceDash = false;
+    private bool useCourtineDash = true;
 
 
 
@@ -186,7 +190,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// </summary>
     private void ChangeDirectionDash()
     {
-       float currentMag = rb.velocity.magnitude;
+        float currentMag = rb.velocity.magnitude;
         rb.velocity += playerCam.forward * currentMag;
         rb.velocity = grappleGunReference.CustomClampMagnitude(rb.velocity, currentMag, currentMag);
     }
@@ -208,7 +212,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         float currentTime = 0;
 
         yield return new WaitForEndOfFrame();
-        while(currentTime < dashLength)
+        while (currentTime < dashLength)
         {
             if (grounded || grappleGunReference.IsGrappling())
             {
@@ -230,12 +234,12 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         //CD Timer
         float totalTime = 0;
-            while (totalTime <= timeLeft)
-            {
-                totalTime += Time.deltaTime;
-                timeLeft -= Time.deltaTime;
-                yield return null;
-            }
+        while (totalTime <= timeLeft)
+        {
+            totalTime += Time.deltaTime;
+            timeLeft -= Time.deltaTime;
+            yield return null;
+        }
 
         //Reset dash CD if grounded after CD
         //Otherwise handled in Movement()
@@ -247,7 +251,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             canDash = false;
         }
-   }
+    }
 
     #endregion
 
