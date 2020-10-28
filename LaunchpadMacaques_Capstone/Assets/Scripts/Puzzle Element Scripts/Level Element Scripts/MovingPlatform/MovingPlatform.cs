@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
@@ -24,9 +25,7 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField, Tooltip("Should the platform accelerate or deaccelerate around each point?")]
     private bool easeInAndOut;
     [SerializeField, Tooltip("The distance from the start and end positions where the easing will start")]
-    private float easeInAndOutDistance = 2;
-
-
+    private float easeDistance = 2;
     //Non-Inspector:
     private int currentPointIndex = 0;
 
@@ -37,6 +36,7 @@ public class MovingPlatform : MonoBehaviour
             transform.position = points[currentPointIndex];
             StartCoroutine(Move());
         }
+
     }
 
     IEnumerator Move()
@@ -75,7 +75,7 @@ public class MovingPlatform : MonoBehaviour
                 {
                     newPoint = Vector3.MoveTowards(transform.position, targetPoint,
                         Mathf.Lerp(0, movementSpeed,
-                                   Mathf.Clamp((Mathf.Min(Vector3.Distance(transform.position, startPoint), Vector3.Distance(transform.position, targetPoint)) / easeInAndOutDistance), 
+                                   Mathf.Clamp((Mathf.Min(Vector3.Distance(transform.position, startPoint), Vector3.Distance(transform.position, targetPoint)) / easeDistance), 
                                                0.05f, 
                                                Mathf.Infinity))
                                    * Time.deltaTime);
@@ -93,4 +93,16 @@ public class MovingPlatform : MonoBehaviour
             yield return new WaitForSeconds(holdTime);
         }
     }
+
+    #region Getters & Setters
+    public void SetPoint(int index, Vector3 value)
+    {
+        points[index] = value;
+    }
+
+    public Vector3 GetPoint(int index)
+    {
+        return points[index];
+    }
+    #endregion
 }
