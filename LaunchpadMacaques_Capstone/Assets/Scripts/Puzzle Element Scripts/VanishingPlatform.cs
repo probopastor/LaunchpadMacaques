@@ -47,7 +47,10 @@ public class VanishingPlatform : MonoBehaviour
         {
             Debug.Log("Dissappearing...");
 
-            grappleGun.StopGrapple();
+            if(grappleGun.IsGrappling() && (grappleGun.GetCurrentGrappledObject() == gameObject))
+            {
+                grappleGun.StopGrapple();
+            }
 
             gameObject.GetComponent<MeshRenderer>().enabled = false;
             gameObject.GetComponent<BoxCollider>().enabled = false;
@@ -73,5 +76,4 @@ public class VanishingPlatform : MonoBehaviour
             StartCoroutine(Vanish());
         }
     }
-
 }
