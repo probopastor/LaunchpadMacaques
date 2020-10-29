@@ -1,8 +1,8 @@
 ﻿/* 
-* (Launchpad Macaques - [Game Name Here]) 
-* (Contributors/Author(s)) 
-* (File Name) 
-* (Describe, in general, the code contained.) 
+* (Launchpad Macaques - [Neon Oblivion]) 
+* (CJ Green) 
+* (VanishingPlatform.cs) 
+* (This script handles the functionality of the platforms disappearing and reappearing.) 
 */
 
 using System.Collections;
@@ -22,58 +22,94 @@ public class VanishingPlatform : MonoBehaviour
 
     private GrapplingGun grappleGun;
 
+    private VanishingManager vanishingManager;
+
     // Start is called before the first frame update
     void Start()
     {
+        vanishingManager = FindObjectOfType<VanishingManager>();
 
-        grappleGun = FindObjectOfType<GrapplingGun>().GetComponent<GrapplingGun>();
+        grappleGun = FindObjectOfType<GrapplingGun>();
 
-
-        if (gameObject.tag == tagNames[0])
+        foreach (GameObject vaninshingPlatform in vanishingManager.GetPrimaryVanishingPlatforms())
         {
             isVisible = true;
-            StartCoroutine(Vanish());
+            StartCoroutine(Vanish(vanishingManager.GetPrimaryVanishingPlatforms()));
         }
-        else if (gameObject.tag == tagNames[1])
+        foreach (GameObject vaninshingPlatform in vanishingManager.GetSecondaryVanishingPlatforms())
         {
             isVisible = false;
-            StartCoroutine(Vanish());
+            StartCoroutine(Vanish(vanishingManager.GetSecondaryVanishingPlatforms()));
         }
     }
 
-    IEnumerator Vanish()
+    /// <summary>
+    /// A Coroutine that handles the disappearing and reappearing of the platforms.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator Vanish(List<GameObject> desiredList)
     {
-        if (isVisible)
+        if(isVisible)
         {
             Debug.Log("Dissappearing...");
 
-            if(grappleGun.IsGrappling() && (grappleGun.GetCurrentGrappledObject() == gameObject))
+            for (int index = 0; index <= desiredList.Count - 1; index++)
             {
-                grappleGun.StopGrapple();
+                if (grappleGun.IsGrappling() && (vanishingManager.GetPrimaryVanishingPlatforms()[index]))
+                {
+                    grappleGun.StopGrapple();
+                }
             }
 
-            gameObject.GetComponent<MeshRenderer>().enabled = false;
-            gameObject.GetComponent<BoxCollider>().enabled = false;
+            //if (grappleGun.IsGrappling() && (grappleGun.GetCurrentGrappledObject() == gameObject))
+            //{
+            //    grappleGun.StopGrapple();
+            //}
+
+            Disappear(desiredList);
 
             yield return new WaitForSecondsRealtime(timerValue);
 
             isVisible = false;
 
-            StartCoroutine(Vanish());
+            StartCoroutine(Vanish(desiredList));
         }
-
-        if (!isVisible)
+        else if(!isVisible)
         {
             Debug.Log("Reappearing!!");
 
-            gameObject.GetComponent<MeshRenderer>().enabled = true;
-            gameObject.GetComponent<BoxCollider>().enabled = true;
+            Reappear(desiredList);
 
             yield return new WaitForSecondsRealtime(timerValue);
 
             isVisible = true;
 
-            StartCoroutine(Vanish());
+            StartCoroutine(Vanish(desiredList));
         }
     }
+
+    /// <summary>
+    /// Makes the game object disappear.
+    /// </summary>
+    public void Disappear(List<GameObject> desiredList)
+    {
+        foreach (GameObject platform in desiredList)
+        {
+            platform.GetComponent<MeshRenderer>().enabled = false;
+            platform.GetComponent<BoxCollider>().enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// Makes the game object reappear.
+    /// </summary>
+    public void Reappear(List<GameObject> desiredList)
+    {
+        foreach (GameObject platform in desiredList)
+        {
+            platform.GetComponent<MeshRenderer>().enabled = true;
+            platform.GetComponent<BoxCollider>().enabled = true;
+        }
+    }
+
 }
