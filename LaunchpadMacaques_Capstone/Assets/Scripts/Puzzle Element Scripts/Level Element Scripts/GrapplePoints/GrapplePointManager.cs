@@ -58,12 +58,23 @@ public class GrapplePointManager : MonoBehaviour
         //Starts to corrupt the grappling point
         if (grapplingGun.IsGrappling())
         {
-            GameObject currentCube = grapplingGun.GetGrappleRayhit().transform.gameObject;
-
-            if(currentCube.GetComponent<GrapplePoint>() != null)
+            if (grapplingGun.GetGrappleRayhit().collider)
             {
-                currentCube.GetComponent<GrapplePoint>().StartCoroutine("Countdown");
+                GameObject currentCube = grapplingGun.GetGrappleRayhit().transform.gameObject;
+
+                if(grapplingGun.GetCurrentGrappledObject() != null)
+                {
+                    if(currentCube == grapplingGun.GetCurrentGrappledObject())
+                    {
+                        if (currentCube.GetComponent<GrapplePoint>() != null)
+                        {
+                            currentCube.GetComponent<GrapplePoint>().StartCoroutine("Countdown");
+                        }
+                    }
+                }
+      
             }
+
         }
 
         //Checks if any grappling points are being corrputed

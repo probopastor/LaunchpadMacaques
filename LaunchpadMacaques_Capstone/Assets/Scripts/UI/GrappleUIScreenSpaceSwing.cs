@@ -1,11 +1,18 @@
-﻿using System.Collections;
+﻿/* 
+* (Launchpad Macaques - [Trial and Error]) 
+* (Levi Schoof) 
+* (GrappleUIScreenSpaceSwing.CS) 
+* (The Script that handles the Verlet Swing UI thing for swinging) 
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GrappleUIScreenSpaceSwing : MonoBehaviour
 {
-    #region Inspector Variables 
+    #region Inspector Variables
     [Header("UI Settings")] [SerializeField] Sprite uiSprite;
     Image uiImageHolder;
     [Tooltip("The layers the aiming decal should be enabled on.")] [SerializeField] private LayerMask whatIsGrappleable;
@@ -16,7 +23,7 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
     [SerializeField] LayerMask whatIsNotGrappleable;
     #endregion
 
-    #region Private Variables 
+    #region Private Variables
     private GrapplingGun springJoint;
     private Camera cam;
     private GameObject player;
@@ -74,67 +81,42 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
 
     }
 
+
+    /// <summary>
+    /// Will Check to see if the UI should be diaplayed
+    /// Will then call the relevant methods
+    /// </summary>
     private void DisplayUI()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hitInfo;
-
-
-        if ((Physics.Raycast(ray, out hitInfo, springJoint.GetMaxGrappleDistance(), whatIsGrappleable)))
+        if (springJoint.CanFindGrappleLocation())
         {
-            float distance = Vector3.Distance(ray.GetPoint(0), hitInfo.point);
-
-
-            //if (!Physics.Raycast(transform.position, dir, distance, whatIsNotGrappleable))
-            //{
-            //    uiImageHolder.rectTransform.localPosition = Vector3.zero;
-            //    CreateUI(hitInfo);
-            //}
-
-
-            if (!(Physics.Raycast(ray, distance, whatIsNotGrappleable)))
-            {
-                uiImageHolder.rectTransform.localPosition = Vector3.zero;
-                CreateUI(hitInfo);
-            }
-            else
-            {
-                TurnOffUI();
-            }
+            objectHitPoint = springJoint.GetGrappleRayhit().point;
+            TurnOnUI(springJoint.GetGrappleRayhit());
         }
         else
         {
-            Debug.Log("Should be turning off");
             TurnOffUI();
         }
     }
 
-    private void CreateUI(RaycastHit hitObject)
+    /// <summary>
+    /// Will turn on the UI and will Scale it
+    /// </summary>
+    /// <param name="hitObject"></param>
+    private void TurnOnUI(RaycastHit hitObject)
     {
         float distance = Vector3.Distance(player.transform.position, hitObject.point);
 
-        //if (configJoint.IsGrappling())
-        //{
-        //    if (!objectSet)
-        //    {
-        //        objectHitPoint = hitObject.point;
-        //        objectSet = true;
-        //    }
 
-        //    distance = Vector3.Distance(player.transform.position, objectHitPoint);
-        //    uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
-
-        //}
-
-        if (true)
-        {
-            uiImageHolder.enabled = true;
-            uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
-            objectSet = false;
-        }
+        uiImageHolder.enabled = true;
+        uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
+        objectSet = true;
 
     }
 
+    /// <summary>
+    /// Turns of the UI
+    /// </summary>
     private void TurnOffUI()
     {
         objectSet = false;
@@ -142,6 +124,9 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Will update the UI box's position so it is centered around the correct point 
+    /// </summary>
     private void UpdateUIPos()
     {
 
@@ -154,7 +139,7 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
         if (uiPos.z >= 0)
         {
             uiImageHolder.enabled = true;
-            uiImageHolder.transform.position = uiPos;
+            uiImageHolder.rectTransform.position = uiPos;
         }
 
 

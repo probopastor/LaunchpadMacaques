@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
+    [SerializeField] TextMeshProUGUI currentGravityText;
     [SerializeField]
     private GrapplingGun grappleGunReference;
 
@@ -17,15 +19,11 @@ public class Matt_PlayerMovement : MonoBehaviour
     public float desiredFieldofView = 60f;
     public float fieldofViewTime = .5f;
 
-
-    [Header("Player Rigidbody")]
     //Other
-    [SerializeField]
     private Rigidbody rb;
 
     [Header("Player Rotation and Look")]
     //Rotation and look
-    [SerializeField]
     private float xRotation;
     [SerializeField]
     private float sensitivity = 50f;
@@ -35,17 +33,15 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("PLayer Movement Variables")]
     //Movement
     public float moveSpeed = 4500;
-    [Range(0f,1f)]
+    [Range(0f, 1f)]
     public float airMoveSpeedMultiplier = .75f;
-    public float swingSpeed = 4500;
+
     public float maxSpeed = 20;
     //public float swingSpeed = 4500;
-    public bool grounded;
+    [HideInInspector] public bool grounded;
     public LayerMask whatIsGround;
 
-    [Header("Max Player Velocity")]
     // Max velocity for the character
-    [SerializeField]
     private float maxVelocity = 50f;
 
     [Header("Counter Movement")]
@@ -54,46 +50,60 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float threshold = 0.01f;
     public float maxSlopeAngle = 35f;
 
-    [Header("Crouch & Slide")]
+
     //Crouch & Slide
-    [SerializeField]
     private Vector3 crouchScale = new Vector3(1, 0.5f, 1);
-    [SerializeField]
     private Vector3 playerScale;
-    public float slideForce = 400;
-    public float slideCounterMovement = 0.2f;
+    private float slideForce = 400;
+    private float slideCounterMovement = 0.2f;
 
     //Sliding
-    [SerializeField]
     private Vector3 normalVector = Vector3.up;
-    [SerializeField]
     private Vector3 wallNormalVector;
 
     [Header("Jumping")]
     //Jumping
     [SerializeField]
-    private bool readyToJump = true;
-    [SerializeField]
     private float jumpCooldown = 0.25f;
     public float jumpForce = 550f;
-    public float gravity = 1500f;
-    public float defaultGravity = 1500f;
+    private bool readyToJump = true;
+
+    //public float gravity = 1500f;
+    //public float defaultGravity = 1500f;
+
+    [Header("Gravity Settings")]
+    [SerializeField, Tooltip("The Gravity that will be applied to the player when they are on the ground")] float gravity = -9.81f;
+    [SerializeField, Tooltip("The Gravtiy that will be applied to the player when they are in the air")] float inAirGravity = -12f;
+    [SerializeField, Tooltip("The Gravity that will be applied to the player when they are swinging")] float grapplingGravity = -6;
+    private float defaultGravity;
+    private Vector3 gravityVector;
 
     [Header("Sprinting")]
-    //Sprinting
-    [SerializeField]
-    private bool readyToSprint = true;
-    private float speedStorage;
     [SerializeField]
     private float sprintMultiplier = 1.75f;
+    //Sprinting
+    private bool readyToSprint = true;
+    private float speedStorage;
+
+    [Header("Dash Settings")]
+
+    [SerializeField, Tooltip("The dash ammount that will be applied to the player , when using the CourtineDash" +
+        "Will be scaled with time.delta time and will be applied for a set ammount of time")]
+    private float courtineDashAmmount = 100;
+    [SerializeField, Tooltip("How long the courtineDash will apply force to the player")] [Range(0, 1)] private float dashLength = .5f;
+
+    [Tooltip("The dash ammount that will be applied to the player, when using the addForceDah" +
+    "This ammount is only applied to the player for one frame")]
+    private float impulseDashAmmount = 4000;
+    private bool useAddForceDash = false;
+    private bool useCourtineDash = true;
+
 
 
     [Header("Player Input")]
     //Input
-    [SerializeField]
     private float x, y;
-    [SerializeField]
-    private bool jumping, sprinting, crouching;
+    private bool jumping, sprinting, crouching, canDash;
 
     private PauseManager pauseManager;
 
@@ -101,13 +111,21 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private Vector3 latestOrientation;
 
+    private float deafultVelocity;
+
     void Awake()
     {
+        defaultGravity = gravity;
+        deafultVelocity = maxVelocity;
         rb = GetComponent<Rigidbody>();
+        rb.useGravity = false;
         pauseManager = FindObjectOfType<PauseManager>();
         collectibleController = FindObjectOfType<CollectibleController>();
 
         config = FindObjectOfType<ConfigJoint>();
+
+        //Fix for a bug where you can't dash until you grapple once
+        canDash = true;
     }
 
     void Start()
@@ -122,34 +140,120 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         Movement();
         LimitVelocity();
+        SetGravityModifier();
     }
 
     private void Update()
     {
-        SetGravityModifier();
-
-        if (!pauseManager.GetPaused() && !pauseManager.GetGameWon())
+        if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) || Time.timeScale > 0)
         {
             MyInput();
             Look();
         }
-
-        //dash, when grappling
-        if (Input.GetKeyDown(KeyCode.LeftShift) && grappleGunReference.IsGrappling())
-        {
-            grappleGunReference.StopGrapple();
-            GetComponent<Rigidbody>().AddForce((playerCam.forward) * (grappleGunReference.launchSpeed * grappleGunReference.launchMultiplier) * Time.deltaTime, ForceMode.Impulse);
-            //playerCam.gameObject.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCam.gameObject.GetComponent<Camera>().fieldOfView, desiredFieldofView, fieldofViewTime);
-        }
-        else
-        {
-            //playerCam.gameObject.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCam.gameObject.GetComponent<Camera>().fieldOfView, initialFieldofView, fieldofViewTime);
-
-        }
-
     }
 
 
+    #region Dash Stuff
+
+    /// <summary>
+    /// The method that is called to start the player dash
+    /// </summary>
+    private void Dash()
+    {
+        if (grappleGunReference.IsGrappling())
+        {
+            grappleGunReference.StopGrapple();
+        }
+        if (canDash)
+        {
+            canDash = false;
+            StartCoroutine("DashCooldown");
+
+            if (useAddForceDash)
+            {
+                AddForceDash();
+            }
+
+            else if (useCourtineDash)
+            {
+                StartCoroutine(DashCourtine());
+            }
+
+            else
+            {
+                ChangeDirectionDash();
+            }
+        }
+    }
+    /// <summary>
+    /// The dash that will only change the player's direction does not change their speed
+    /// </summary>
+    private void ChangeDirectionDash()
+    {
+        float currentMag = rb.velocity.magnitude;
+        rb.velocity += playerCam.forward * currentMag;
+        rb.velocity = grappleGunReference.CustomClampMagnitude(rb.velocity, currentMag, currentMag);
+    }
+
+    /// <summary>
+    /// Will apply a force dash for one frame (Causes player to teleport)
+    /// </summary>
+    private void AddForceDash()
+    {
+        GetComponent<Rigidbody>().AddForce((playerCam.forward) * impulseDashAmmount, ForceMode.Impulse);
+    }
+
+    /// <summary>
+    /// Will apply a dash force over time of dash length
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DashCourtine()
+    {
+        float currentTime = 0;
+
+        yield return new WaitForEndOfFrame();
+        while (currentTime < dashLength)
+        {
+            if (grounded || grappleGunReference.IsGrappling())
+            {
+                break;
+            }
+            GetComponent<Rigidbody>().AddForce((playerCam.forward) * courtineDashAmmount * Time.deltaTime, ForceMode.Impulse);
+            currentTime += Time.deltaTime;
+            yield return new WaitForSeconds(0);
+        }
+    }
+
+    IEnumerator DashCooldown()
+    {
+        //Test if cooldown started
+        Debug.Log("Start Cooldown");
+
+        //Set Max CD
+        float timeLeft = 1.5f;
+
+        //CD Timer
+        float totalTime = 0;
+        while (totalTime <= timeLeft)
+        {
+            totalTime += Time.deltaTime;
+            timeLeft -= Time.deltaTime;
+            yield return null;
+        }
+
+        //Reset dash CD if grounded after CD
+        //Otherwise handled in Movement()
+        if (grounded)
+        {
+            canDash = true;
+        }
+        else
+        {
+            canDash = false;
+        }
+    }
+
+    #endregion
 
     #region Input
 
@@ -175,6 +279,12 @@ public class Matt_PlayerMovement : MonoBehaviour
             Sprint();
         if (Input.GetKeyUp(KeyCode.LeftShift))
             StopSprint();
+
+        //dash, when grappling
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !grounded)
+        {
+            Dash();
+        }
     }
 
     #endregion
@@ -208,7 +318,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns true if the player is crouching. 
+    /// Returns true if the player is crouching.
     /// </summary>
     /// <returns></returns>
     public bool GetCrouchStatus()
@@ -223,7 +333,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// </summary>
     private void LimitVelocity()
     {
-        if (rb.velocity.magnitude > maxVelocity)
+        if (rb.velocity.magnitude > maxVelocity && !grappleGunReference.IsGrappling())
         {
             rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxVelocity);
         }
@@ -233,26 +343,35 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void SetGravityModifier()
     {
-        if ((!grappleGunReference.IsGrappling() && !grounded) && !collectibleController.GetIsActive()) // If in the air // (gameObject.transform.position.y > 20)
-        {
-            //Add gravity
-            gravity = 3000;
-            rb.AddForce(Vector3.down * Time.deltaTime * gravity);
-        }
-        else if ((grappleGunReference.IsGrappling() || grounded) && !collectibleController.GetIsActive())
-        {
-            //Add gravity
-            gravity = defaultGravity;
-            rb.AddForce(Vector3.down * Time.deltaTime * gravity);
-        }
-
         if (collectibleController.GetIsActive())
         {
-            gravity = collectibleController.GetNewGravity();
+            gravity = collectibleController.GetNewPlayerGravity();
         }
         else if (collectibleController.GetIsActive() == false)
         {
             gravity = defaultGravity;
+        }
+
+        if ((!grappleGunReference.IsGrappling() && !grounded) && !collectibleController.GetIsActive()) // If in the air // (gameObject.transform.position.y > 20)
+        {
+            gravityVector = new Vector3(0, inAirGravity, 0);
+        }
+        else if ((grappleGunReference.IsGrappling()) && !collectibleController.GetIsActive())
+        {
+            gravityVector = new Vector3(0, grapplingGravity, 0);
+        }
+
+        else
+        {
+            gravityVector = new Vector3(0, gravity, 0);
+        }
+
+        // rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Acceleration);
+
+        rb.velocity += gravityVector * Time.fixedDeltaTime;
+        if (currentGravityText)
+        {
+            currentGravityText.text = "Gravity In M/S: " + gravityVector.y;
         }
     }
 
@@ -300,6 +419,15 @@ public class Matt_PlayerMovement : MonoBehaviour
         // Movement while sliding
         if (grounded && crouching) multiplierV = 0f;
 
+        //Dash Cooldown reset when you hit the ground or grapple again
+        if (grounded && !canDash)
+        {
+            canDash = true;
+        }
+        else if (grappleGunReference.IsGrappling() && !canDash)
+        {
+            canDash = true;
+        }
 
         //if (config.isActiveAndEnabled)
         //{
@@ -329,7 +457,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             if (grappleGunReference.GetCanApplyForce())
             {
-                rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
+                rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
                 latestOrientation = orientation.transform.forward;
             }
         }
@@ -339,7 +467,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 if (latestOrientation != null)
                 {
-                    rb.AddForce(latestOrientation * swingSpeed * Time.deltaTime);
+                    rb.AddForce(latestOrientation * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
                 }
             }
         }
