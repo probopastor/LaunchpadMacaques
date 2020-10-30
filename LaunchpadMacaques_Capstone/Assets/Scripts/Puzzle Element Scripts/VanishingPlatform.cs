@@ -17,9 +17,6 @@ public class VanishingPlatform : MonoBehaviour
     [SerializeField, Tooltip("This is whether the platform is visible or not.")]
     private bool isVisible = true;
 
-    [SerializeField, Tooltip("This is an array of tag names that determine the variation of ")]
-    private string[] tagNames = { "Platform 1", "Platform 2" };
-
     private GrapplingGun grappleGun;
 
     private VanishingManager vanishingManager;
