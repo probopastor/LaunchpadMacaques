@@ -15,8 +15,18 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private string pushPullScene;
     [SerializeField] private string swingScene;
 
+    [SerializeField]
+    private GameObject mainMenu_Panel;
+
+    [SerializeField]
+    private GameObject levelSelect_Panel;
+
     private void Start()
     {
+
+        mainMenu_Panel.SetActive(true);
+        levelSelect_Panel.SetActive(false);
+
         Time.timeScale = 1;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -56,6 +66,10 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void QuitGame()
     {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
         Application.Quit();
+#endif
     }
 }
