@@ -11,29 +11,25 @@ using UnityEngine;
 
 public class VanishingManager : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField, Tooltip("All objects in this list will be active and inactive opposite to objects in the secondary vanishing platforms list. ")]
     private List<GameObject> primaryVanishingPlatforms = new List<GameObject>();
 
-    [SerializeField]
+    [SerializeField, Tooltip("All objects in this list will be active and inactive opposite to objects in the primary vanishing platforms list. ")]
     private List<GameObject> secondaryVanishingPlatforms = new List<GameObject>();
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    /// <summary>
+    /// Returns the primary vanishing platforms list. 
+    /// </summary>
+    /// <returns></returns>
     public List<GameObject> GetPrimaryVanishingPlatforms()
     {
         return primaryVanishingPlatforms;
     }
 
+    /// <summary>
+    /// Returns the secondary vanishing platforms list. 
+    /// </summary>
+    /// <returns></returns>
     public List<GameObject> GetSecondaryVanishingPlatforms()
     {
         return secondaryVanishingPlatforms;
