@@ -31,15 +31,22 @@ public class VanishingPlatform : MonoBehaviour
 
         grappleGun = FindObjectOfType<GrapplingGun>();
 
-        foreach (GameObject vaninshingPlatform in vanishingManager.GetPrimaryVanishingPlatforms())
+        if(vanishingManager.GetPrimaryVanishingPlatforms() != null)
         {
-            isVisible = true;
-            StartCoroutine(Vanish(vanishingManager.GetPrimaryVanishingPlatforms()));
+            foreach (GameObject vaninshingPlatform in vanishingManager.GetPrimaryVanishingPlatforms())
+            {
+                isVisible = true;
+                StartCoroutine(Vanish(vanishingManager.GetPrimaryVanishingPlatforms()));
+            }
         }
-        foreach (GameObject vaninshingPlatform in vanishingManager.GetSecondaryVanishingPlatforms())
+
+        if(vanishingManager.GetSecondaryVanishingPlatforms() != null)
         {
-            isVisible = false;
-            StartCoroutine(Vanish(vanishingManager.GetSecondaryVanishingPlatforms()));
+            foreach (GameObject vaninshingPlatform in vanishingManager.GetSecondaryVanishingPlatforms())
+            {
+                isVisible = false;
+                StartCoroutine(Vanish(vanishingManager.GetSecondaryVanishingPlatforms()));
+            }
         }
     }
 
