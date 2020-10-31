@@ -11,27 +11,16 @@ using UnityEngine;
 
 public class VanishingManager : MonoBehaviour
 {
-    [SerializeField, Tooltip("All objects in this list will be active and inactive opposite to objects in the secondary vanishing platforms list. ")]
-    private List<GameObject> primaryVanishingPlatforms = new List<GameObject>();
-
-    [SerializeField, Tooltip("All objects in this list will be active and inactive opposite to objects in the primary vanishing platforms list. ")]
-    private List<GameObject> secondaryVanishingPlatforms = new List<GameObject>();
-
-    /// <summary>
-    /// Returns the primary vanishing platforms list. 
-    /// </summary>
-    /// <returns></returns>
-    public List<GameObject> GetPrimaryVanishingPlatforms()
+    [System.Serializable]
+    public struct PlatformTracks
     {
-        return primaryVanishingPlatforms;
+        public List<GameObject> gameObjects;
     }
 
-    /// <summary>
-    /// Returns the secondary vanishing platforms list. 
-    /// </summary>
-    /// <returns></returns>
-    public List<GameObject> GetSecondaryVanishingPlatforms()
+    [SerializeField, Tooltip("Groups of vanishing objects. Enabled objects will cycle through these groups. ")] private List<PlatformTracks> vanishingGroups;
+
+    public List<PlatformTracks> GetPlatformTracks()
     {
-        return secondaryVanishingPlatforms;
+        return vanishingGroups;
     }
 }
