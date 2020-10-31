@@ -11,19 +11,24 @@ using UnityEngine;
 
 public class VanishingPlatform : MonoBehaviour
 {
-    [SerializeField, Tooltip("This is the timer for how long the timer will dissappear and reappear for.")]
+    #region variables 
+    [SerializeField, Tooltip("This is the timer for how long each group of vanishing objects will be enabled for. ")]
     private float timerValue = 2.5f;
 
-    //private bool isVisible = true;
-
+    //Grappling Gun reference
     private GrapplingGun grappleGun;
 
+    //Vanishing Manager reference
     private VanishingManager vanishingManager;
 
+    //The platform tracks from Vanishing Manager
     private List<VanishingManager.PlatformTracks> platformTracks;
 
-    private int currentEnabledTrack;
+    //Index for the current track enabled 
+    private int currentEnabledTrack = 0;
+    #endregion
 
+    #region Start Functions
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +36,9 @@ public class VanishingPlatform : MonoBehaviour
         StartCoroutine(Vanish());
     }
 
+    /// <summary>
+    /// Assigns values to necessary objects.
+    /// </summary>
     private void AssignValues()
     {
         vanishingManager = FindObjectOfType<VanishingManager>();
@@ -41,6 +49,9 @@ public class VanishingPlatform : MonoBehaviour
         EnableDisableObjects();
     }
 
+    #endregion
+
+    #region Vanishing Methods
     /// <summary>
     /// A Coroutine that handles the disappearing and reappearing of the platforms.
     /// </summary>
@@ -49,23 +60,30 @@ public class VanishingPlatform : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(timerValue);
 
+        // Increments the current enabled track reference.
         currentEnabledTrack++;
         if(currentEnabledTrack > platformTracks.Count - 1)
         {
             currentEnabledTrack = 0;
         }
 
+        // Enable and disable objects after the current track is incremented.
         EnableDisableObjects();
-
         StartCoroutine(Vanish());
     }
 
+    /// <summary>
+    /// Enables and disables groups of objects based on the current value for currentEnabledTrack. 
+    /// </summary>
     private void EnableDisableObjects()
     {
+        // Cycles through all platformTracks structs.
         for (int i = 0; i <= platformTracks.Count - 1; i++)
         {
+            // Stores the gameObject list found in each platformTracks object
             List<GameObject> objectsInPlatformTrack = platformTracks[i].gameObjects;
 
+            // If the current enabled track is equal to i, then all game objects in this list are set to active.
             if (i == currentEnabledTrack)
             {
                 foreach (GameObject currentObject in objectsInPlatformTrack)
@@ -73,12 +91,14 @@ public class VanishingPlatform : MonoBehaviour
                     currentObject.SetActive(true);
                 }
             }
+            // If the current enabled track does not equal i, disable all game objects in this list.
             else
             {
                 foreach (GameObject currentObject in objectsInPlatformTrack)
                 {
                     currentObject.SetActive(false);
 
+                    // If the player is grappling to the object that was disabled, break the grapple. 
                     if (grappleGun.IsGrappling() && grappleGun.GetCurrentGrappledObject() == currentObject)
                     {
                         grappleGun.StopGrapple();
@@ -87,4 +107,6 @@ public class VanishingPlatform : MonoBehaviour
             }
         }
     }
+
+    #endregion
 }
