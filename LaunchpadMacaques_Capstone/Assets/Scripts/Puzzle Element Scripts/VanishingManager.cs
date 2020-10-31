@@ -1,8 +1,8 @@
 ﻿/* 
-* (Launchpad Macaques - [Game Name Here]) 
-* (Contributors/Author(s)) 
-* (File Name) 
-* (Describe, in general, the code contained.) 
+* Launchpad Macaques - Neon Oblivion
+* CJ Green, William Nomikos
+* VanishingManager.cs
+* Creates a struct for PlatformTracks, and provides a getter to access a list of PlatformTracks.
 */
 
 using System.Collections;

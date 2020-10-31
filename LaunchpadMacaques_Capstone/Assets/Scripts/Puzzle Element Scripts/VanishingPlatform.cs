@@ -1,8 +1,8 @@
 ﻿/* 
-* (Launchpad Macaques - [Neon Oblivion]) 
-* (CJ Green) 
-* (VanishingPlatform.cs) 
-* (This script handles the functionality of the platforms disappearing and reappearing.) 
+* Launchpad Macaques - Neon Oblivion
+* CJ Green, William Nomikos 
+* VanishingPlatform.cs)
+* This script handles the functionality for platforms disappearing and reappearing. 
 */
 
 using System.Collections;
