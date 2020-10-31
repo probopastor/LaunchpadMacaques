@@ -28,7 +28,7 @@ public class GrapplingGun : MonoBehaviour
 
     [SerializeField] [Tooltip("The Min Rope Distance")] private float minDistance = 5f;
     [SerializeField] [Tooltip("The Max Rope Distance")] private float maxDistance = 50f;
-    [SerializeField, Tooltip("The amount of length subtraced from grapple length on each subsequent grapple. ")] private float grappleLengthModifier = 10;
+    [SerializeField, Tooltip("The grapple length on regrapple. ")] private float newSwingGrappleLength = 10;
     [SerializeField] private float wheelSensitivity = 2;
 
     [Header("Swing Settings")]
@@ -519,7 +519,9 @@ public class GrapplingGun : MonoBehaviour
             joint.maxDistance = distanceFromPoint;
             joint.minDistance = dist;
 
-            ropeLength = distanceFromPoint / 2; /*dist - grappleLengthModifier;*/
+            //ropeLength = distanceFromPoint / 2; /*dist - grappleLengthModifier;*/
+
+            ropeLength = newSwingGrappleLength;
 
             if (ropeLength > maxDistance)
             {
