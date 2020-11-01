@@ -90,7 +90,7 @@ public class OnStayTriggerEnabler : MonoBehaviour
             }
             targetEnabled = false;
             triggers = 0;
-            GetComponent<MeshRenderer>().material = active;
+            GetComponent<MeshRenderer>().material = inactive;
         }
         Debug.Log("Door is Inactive");
 
@@ -119,7 +119,7 @@ public class OnStayTriggerEnabler : MonoBehaviour
                     }
                     targetEnabled = false;
                     triggers = 0;
-                    GetComponent<MeshRenderer>().material = inactive;
+                    GetComponent<MeshRenderer>().material = active;
                 }
                 Debug.Log("Door is Inactive");
             }

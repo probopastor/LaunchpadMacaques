@@ -745,7 +745,7 @@ PrefabInstance:
     - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 38.83
+      value: 18.4
       objectReference: {fileID: 0}
     - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
         type: 3}
@@ -755,7 +755,7 @@ PrefabInstance:
     - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.4
+      value: -1.13
       objectReference: {fileID: 0}
     - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
         type: 3}
@@ -4560,7 +4560,7 @@ PrefabInstance:
     - target: {fileID: 1800836450178001960, guid: ec3511395a89cab468c90e26eb412159,
         type: 3}
       propertyPath: targetEnabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1800836450178001960, guid: ec3511395a89cab468c90e26eb412159,
         type: 3}
@@ -4570,12 +4570,27 @@ PrefabInstance:
     - target: {fileID: 1800836450178001960, guid: ec3511395a89cab468c90e26eb412159,
         type: 3}
       propertyPath: triggerEnableGoal
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1800836450178001960, guid: ec3511395a89cab468c90e26eb412159,
         type: 3}
       propertyPath: targets.Array.data[1]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1800836450178001960, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: inactive
+      value: 
+      objectReference: {fileID: 2100000, guid: 8977bed8b4cdd914cbff374991bdcfd7, type: 2}
+    - target: {fileID: 1800836450178001960, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: active
+      value: 
+      objectReference: {fileID: 2100000, guid: 52911fab0f355d741bfb8247c7dd595c, type: 2}
+    - target: {fileID: 1800836450178001960, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: triggerDisableGoal
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1808448845627388569, guid: ec3511395a89cab468c90e26eb412159,
         type: 3}
@@ -4600,7 +4615,7 @@ PrefabInstance:
     - target: {fileID: 1808448845627388573, guid: ec3511395a89cab468c90e26eb412159,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.3
+      value: 17.1
       objectReference: {fileID: 0}
     - target: {fileID: 1808448845627388573, guid: ec3511395a89cab468c90e26eb412159,
         type: 3}
@@ -4661,11 +4676,21 @@ PrefabInstance:
         type: 3}
       propertyPath: targets.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 829577110}
     - target: {fileID: 6835715914426637552, guid: ec3511395a89cab468c90e26eb412159,
         type: 3}
       propertyPath: triggerEnableGoal
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6835715914426637552, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: targetEnabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6835715914426637552, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec3511395a89cab468c90e26eb412159, type: 3}
@@ -8274,7 +8299,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh45290
+  m_Name: pb_Mesh60174
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -12765,7 +12790,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-10442
+  m_Name: pb_Mesh-74400
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -13682,7 +13707,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-43792
+  m_Name: pb_Mesh60524
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -14664,7 +14689,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-10206
+  m_Name: pb_Mesh-74164
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -15654,11 +15679,26 @@ PrefabInstance:
     - target: {fileID: 1800836450178001960, guid: ec3511395a89cab468c90e26eb412159,
         type: 3}
       propertyPath: targetEnabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1800836450178001960, guid: ec3511395a89cab468c90e26eb412159,
         type: 3}
       propertyPath: reverse
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1800836450178001960, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: active
+      value: 
+      objectReference: {fileID: 2100000, guid: 52911fab0f355d741bfb8247c7dd595c, type: 2}
+    - target: {fileID: 1800836450178001960, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: triggerEnableGoal
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1800836450178001960, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: triggerDisableGoal
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1808448845627388569, guid: ec3511395a89cab468c90e26eb412159,
@@ -15741,10 +15781,30 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1477456689}
+    - target: {fileID: 1808448845627388575, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 50434509fa955744ab404935fdcfa73a, type: 2}
     - target: {fileID: 6835715914426637552, guid: ec3511395a89cab468c90e26eb412159,
         type: 3}
       propertyPath: triggerEnableGoal
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6835715914426637552, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: targets.Array.data[0]
+      value: 
+      objectReference: {fileID: 1594242770}
+    - target: {fileID: 6835715914426637552, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: targetEnabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6835715914426637552, guid: ec3511395a89cab468c90e26eb412159,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec3511395a89cab468c90e26eb412159, type: 3}
