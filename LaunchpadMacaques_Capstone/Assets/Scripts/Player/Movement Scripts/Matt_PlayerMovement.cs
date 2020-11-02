@@ -341,6 +341,9 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #region Movement
 
+    /// <summary>
+    /// Handles the player gravity when the player is moving normally and grappling. 
+    /// </summary>
     private void SetGravityModifier()
     {
         if (collectibleController.GetIsActive())
@@ -375,38 +378,41 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Handles player movement. 
+    /// </summary>
     private void Movement()
     {
-        //Find actual velocity relative to where player is looking
+        // Find actual velocity relative to where player is looking
         Vector2 mag = FindVelRelativeToLook();
         float xMag = mag.x, yMag = mag.y;
 
-        //Counteract sliding and sloppy movement
+        // Counteract sliding and sloppy movement
         CounterMovement(x, y, mag);
 
-        //If holding jump && ready to jump, then jump
+        // If holding jump && ready to jump, then jump
         if (readyToJump && jumping) Jump();
 
-        //If holding sprint && ready to sprint, then sprint
+        // If holding sprint && ready to sprint, then sprint
         if (readyToSprint && sprinting) Sprint();
 
-        //Set max speed
+        // Set max speed
         float maxSpeed = this.maxSpeed;
 
-        //If sliding down a ramp, add force down so player stays grounded and also builds speed
+        // If sliding down a ramp, add force down so player stays grounded and also builds speed
         if (crouching && grounded && readyToJump)
         {
             rb.AddForce(Vector3.down * Time.deltaTime * 3000);
             return;
         }
 
-        //If speed is larger than maxspeed, cancel out the input so you don't go over max speed
+        // If speed is larger than maxspeed, cancel out the input so you don't go over max speed
         if (x > 0 && xMag > maxSpeed) x = 0;
         if (x < 0 && xMag < -maxSpeed) x = 0;
         if (y > 0 && yMag > maxSpeed) y = 0;
         if (y < 0 && yMag < -maxSpeed) y = 0;
 
-        //Some multipliers
+        // Some multipliers
         float multiplier = 1f, multiplierV = 1f;
 
         // Movement in air
@@ -447,19 +453,23 @@ public class Matt_PlayerMovement : MonoBehaviour
         //    }
         //}
 
+        // If the player is not grappling, add a force in the direction they are moving in.
         if (!grappleGunReference.IsGrappling())
         {
             rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
             rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
         }
+        // If Swing Lock is not active, and the player is grappling, add a force in the player's orientation
         else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
         {
+            // If the force can be applied, add a force in the direction of the player's orientation. 
             if (grappleGunReference.GetCanApplyForce())
             {
                 rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
                 latestOrientation = orientation.transform.forward;
             }
         }
+        // If the swing lock is enabled and the player is grappling, apply force to the player in the most recent orientation they were facing.
         else if (grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
         {
             if (grappleGunReference.GetCanApplyForce())
@@ -476,7 +486,10 @@ public class Matt_PlayerMovement : MonoBehaviour
     #endregion
 
     #region Sprinting Stuff
-    //sprinting
+    
+    /// <summary>
+    /// Handles the player sprinting.
+    /// </summary>
     private void Sprint()
     {
         if (grounded && readyToSprint)
@@ -486,6 +499,10 @@ public class Matt_PlayerMovement : MonoBehaviour
             maxSpeed = speedStorage * sprintMultiplier;
         }
     }
+
+    /// <summary>
+    /// Stops the player from sprinting. 
+    /// </summary>
     private void StopSprint()
     {
         maxSpeed = speedStorage;
@@ -496,6 +513,9 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #region Jumping Stuff
 
+    /// <summary>
+    /// Handles the player jumping.
+    /// </summary>
     private void Jump()
     {
         if (grounded && readyToJump)
@@ -517,6 +537,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Resets the jump parameter to true. When true, the player may jump again.
+    /// </summary>
     private void ResetJump()
     {
         readyToJump = true;
@@ -525,6 +548,10 @@ public class Matt_PlayerMovement : MonoBehaviour
     #endregion
 
     private float desiredX;
+
+    /// <summary>
+    /// Rotates the player in the direction they are looking in. 
+    /// </summary>
     private void Look()
     {
         float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime;
@@ -543,6 +570,12 @@ public class Matt_PlayerMovement : MonoBehaviour
         orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
     }
 
+    /// <summary>
+    /// Handles movement counter measures to maintain smooth movement. 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="mag"></param>
     private void CounterMovement(float x, float y, Vector2 mag)
     {
         if (!grounded || jumping) return;
@@ -594,6 +627,11 @@ public class Matt_PlayerMovement : MonoBehaviour
         return new Vector2(xMag, yMag);
     }
 
+    /// <summary>
+    /// Returns true if the angle between the player and a vector is less than the max slope angle.
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
     private bool IsFloor(Vector3 v)
     {
         float angle = Vector3.Angle(Vector3.up, v);
@@ -634,6 +672,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets ground state to false. 
+    /// </summary>
     private void StopGrounded()
     {
         grounded = false;
