@@ -30,68 +30,68 @@ public class Matt_PlayerMovement : MonoBehaviour
     //Other
     private Rigidbody rb;
 
+    #region Player Sensitivity 
     [Header("Player Rotation and Look")]
-    //Rotation and look
     private float xRotation;
     [SerializeField, Tooltip("The player's look sensitivity. Higher value lets the player look around quicker. ")] private float sensitivity = 50f;
+    #endregion
 
-    [Header("PLayer Movement Variables")]
-    //Movement
-    public float moveSpeed = 4500;
-    [Range(0f, 1f)]
-    public float airMoveSpeedMultiplier = .75f;
+    #region Player Movement Variables
+    [Header("Player Movement Variables")]
+    [SerializeField, Tooltip("The player's movement speed. ")] private float moveSpeed = 4500;
+    [Range(0f, 1f), SerializeField, Tooltip("The movement speed multiplier while the player is airborn. ")] private float airMoveSpeedMultiplier = .75f;
+    [SerializeField, Tooltip("The player's max speed. ")] private float maxSpeed = 20;
+    #endregion 
 
-    public float maxSpeed = 20;
-    //public float swingSpeed = 4500;
     [HideInInspector] public bool grounded;
-    public LayerMask whatIsGround;
+    [SerializeField, Tooltip("The layer for the ground. Anything on this layer will be considered ground. ")] private LayerMask whatIsGround;
 
-    // Max velocity for the character
     private float maxVelocity = 50f;
 
+    #region Movement Stabilization Variables
     [Header("Counter Movement")]
     public float counterMovement = 0.175f;
-    [SerializeField]
-    private float threshold = 0.01f;
-    public float maxSlopeAngle = 35f;
+    [SerializeField] private float threshold = 0.01f;
+    [SerializeField] private float maxSlopeAngle = 35f;
+    #endregion
 
-
-    //Crouch & Slide
+    #region Crouch and Slide Variables
     private Vector3 crouchScale = new Vector3(1, 0.5f, 1);
     private Vector3 playerScale;
     private float slideForce = 400;
     private float slideCounterMovement = 0.2f;
+    #endregion 
 
-    //Sliding
+    #region Sliding Variables
     private Vector3 normalVector = Vector3.up;
     private Vector3 wallNormalVector;
+    #endregion 
 
+    #region Jumping Variables
     [Header("Jumping")]
-    //Jumping
     [SerializeField]
     private float jumpCooldown = 0.25f;
     public float jumpForce = 550f;
     private bool readyToJump = true;
+    #endregion
 
-    //public float gravity = 1500f;
-    //public float defaultGravity = 1500f;
-
+    #region Gravity Variables
     [Header("Gravity Settings")]
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are on the ground")] float gravity = -9.81f;
     [SerializeField, Tooltip("The Gravtiy that will be applied to the player when they are in the air")] float inAirGravity = -12f;
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are swinging")] float grapplingGravity = -6;
     private float defaultGravity;
     private Vector3 gravityVector;
+    #endregion
 
+    #region Sprinting Variables
     [Header("Sprinting")]
-    [SerializeField]
-    private float sprintMultiplier = 1.75f;
-    //Sprinting
+    [SerializeField] private float sprintMultiplier = 1.75f;
     private bool readyToSprint = true;
     private float speedStorage;
+    #endregion
 
     #region Dash Settings
-
     [Header("Dash Settings")]
 
     [SerializeField, Tooltip("The dash ammount that will be applied to the player , when using the CourtineDash" +
@@ -105,7 +105,6 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float impulseDashAmmount = 4000;
     private bool useAddForceDash = false;
     private bool useCourtineDash = true;
-
     #endregion
 
 
