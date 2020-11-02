@@ -133,8 +133,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         config = FindObjectOfType<ConfigJoint>();
 
-        //Fix for a bug where you can't dash until you grapple once
-        canDash = true;
+        //Cannot dash while on the ground. 
+        canDash = false;
     }
 
     void Start()
@@ -183,7 +183,6 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 AddForceDash();
             }
-
             else if (useCourtineDash)
             {
                 StartCoroutine(DashCourtine());
@@ -222,6 +221,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         float currentTime = 0;
 
         yield return new WaitForEndOfFrame();
+
         while (currentTime < dashLength)
         {
             if (grounded || grappleGunReference.IsGrappling())
@@ -250,17 +250,6 @@ public class Matt_PlayerMovement : MonoBehaviour
             totalTime += Time.deltaTime;
             timeLeft -= Time.deltaTime;
             yield return null;
-        }
-
-        //Reset dash CD if grounded after CD
-        //Otherwise handled in Movement()
-        if (grounded)
-        {
-            canDash = true;
-        }
-        else
-        {
-            canDash = false;
         }
     }
 
@@ -430,11 +419,12 @@ public class Matt_PlayerMovement : MonoBehaviour
         // Movement while sliding
         if (grounded && crouching) multiplierV = 0f;
 
-        //Dash Cooldown reset when you hit the ground or grapple again
-        if (grounded && !canDash)
+        // If the player is grounded, they cannot dash.
+        if(grounded)
         {
-            canDash = true;
+            canDash = false;
         }
+        // Dash cooldown is reset if the player grapples again. 
         else if (grappleGunReference.IsGrappling() && !canDash)
         {
             canDash = true;
