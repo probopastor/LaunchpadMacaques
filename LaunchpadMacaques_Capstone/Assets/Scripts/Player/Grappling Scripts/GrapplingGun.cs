@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿/* 
+* Launchpad Macaques - Neon Oblivion
+* Matt Kirchoff, Levi Schoof, William Nomikos
+* GrapplingGun.cs
+* Script handles grappling and ungrappling from objects, and swinging mechanics. 
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -67,9 +74,6 @@ public class GrapplingGun : MonoBehaviour
     private SpringJoint joint;
     private float distanceFromPoint;
 
-
-
-
     // The Raycast that will be set to what the player is looking at
     private RaycastHit grappleRayHit;
 
@@ -93,10 +97,7 @@ public class GrapplingGun : MonoBehaviour
     //A bool that when true will allow the player to hold down the mouse button to grapple
     private bool canHoldDownToGrapple;
 
-
-
     private float dist;
-
 
     #endregion
 

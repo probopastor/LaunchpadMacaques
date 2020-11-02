@@ -1,23 +1,31 @@
-﻿using System.Collections;
+﻿/* 
+* Launchpad Macaques - Neon Oblivion
+* Matt Kirchoff, Levi Schoof, William Nomikos, Jamey Colleen
+* Matt_PlayerMovement.cs
+* Script handles player movement, player gravity, and dashing. 
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI currentGravityText;
-    [SerializeField]
+    #region References
+    [SerializeField, Tooltip("The text element that displays the current gravity. ")] TextMeshProUGUI currentGravityText;
     private GrapplingGun grappleGunReference;
-
     private CollectibleController collectibleController;
+    #endregion
 
+    #region Player Camera Variables
     [Header("Player Transform Assignables")]
-    //Assingables
-    public Transform playerCam;
-    public Transform orientation;
-    public float initialFieldofView = 90f;
-    public float desiredFieldofView = 60f;
-    public float fieldofViewTime = .5f;
+    [SerializeField, Tooltip("The transform of the player's camera. ")] private Transform playerCam;
+    [SerializeField, Tooltip("The transform of the player's orientation ")] private Transform orientation;
+    //public float initialFieldofView = 90f;
+    //public float desiredFieldofView = 60f;
+    //public float fieldofViewTime = .5f;
+    #endregion
 
     //Other
     private Rigidbody rb;
@@ -25,10 +33,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Player Rotation and Look")]
     //Rotation and look
     private float xRotation;
-    [SerializeField]
-    private float sensitivity = 50f;
-    [SerializeField]
-    private float sensMultiplier = 1f;
+    [SerializeField, Tooltip("The player's look sensitivity. Higher value lets the player look around quicker. ")] private float sensitivity = 50f;
 
     [Header("PLayer Movement Variables")]
     //Movement
@@ -85,12 +90,15 @@ public class Matt_PlayerMovement : MonoBehaviour
     private bool readyToSprint = true;
     private float speedStorage;
 
+    #region Dash Settings
+
     [Header("Dash Settings")]
 
     [SerializeField, Tooltip("The dash ammount that will be applied to the player , when using the CourtineDash" +
         "Will be scaled with time.delta time and will be applied for a set ammount of time")]
     private float courtineDashAmmount = 100;
     [SerializeField, Tooltip("How long the courtineDash will apply force to the player")] [Range(0, 1)] private float dashLength = .5f;
+    [SerializeField, Tooltip("The cooldown before the player can dash again in seconds (While the player is still in the air). ")] private float dashCooldown = 1.5f;
 
     [Tooltip("The dash ammount that will be applied to the player, when using the addForceDah" +
     "This ammount is only applied to the player for one frame")]
@@ -98,10 +106,11 @@ public class Matt_PlayerMovement : MonoBehaviour
     private bool useAddForceDash = false;
     private bool useCourtineDash = true;
 
+    #endregion
 
 
     [Header("Player Input")]
-    //Input
+
     private float x, y;
     private bool jumping, sprinting, crouching, canDash;
 
@@ -121,6 +130,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         rb.useGravity = false;
         pauseManager = FindObjectOfType<PauseManager>();
         collectibleController = FindObjectOfType<CollectibleController>();
+        grappleGunReference = FindObjectOfType<GrapplingGun>();
 
         config = FindObjectOfType<ConfigJoint>();
 
@@ -164,10 +174,11 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             grappleGunReference.StopGrapple();
         }
+
         if (canDash)
         {
             canDash = false;
-            StartCoroutine("DashCooldown");
+            StartCoroutine(DashCooldown());
 
             if (useAddForceDash)
             {
@@ -230,10 +241,11 @@ public class Matt_PlayerMovement : MonoBehaviour
         Debug.Log("Start Cooldown");
 
         //Set Max CD
-        float timeLeft = 1.5f;
+        float timeLeft = dashCooldown;
 
         //CD Timer
         float totalTime = 0;
+
         while (totalTime <= timeLeft)
         {
             totalTime += Time.deltaTime;
@@ -446,8 +458,6 @@ public class Matt_PlayerMovement : MonoBehaviour
         //    }
         //}
 
-
-
         if (!grappleGunReference.IsGrappling())
         {
             rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
@@ -528,8 +538,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float desiredX;
     private void Look()
     {
-        float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime * sensMultiplier;
-        float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime * sensMultiplier;
+        float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime;
 
         //Find current look rotation
         Vector3 rot = playerCam.transform.localRotation.eulerAngles;
