@@ -16,26 +16,31 @@ public class PressureButton : MonoBehaviour
     [SerializeField, Tooltip("The triggers that the button should read. Other triggers are ignored. ")] private string[] triggerTags;
     [SerializeField, Tooltip("The amount of objects on a pressure button required for it to be activated. ")] private int triggerEnableGoal = 2;
 
+    [SerializeField, Tooltip("If active, objects linked to the button will be deactivated after a period of time from when activated. ")] private bool useTimer;
+    [SerializeField, Tooltip("Used only if useTimer is true. The amount of seconds waited before deactive objects are reactivated. ")] private float timeUntilReactivation = 1f;
+
     [SerializeField, Tooltip("Material of active object. ")] private Material activeButtonMaterial;
     [SerializeField, Tooltip("Material of inactive object. ")] private Material inactiveButtonMaterial;
 
     private int objectsOnButton = 0;
     private bool activeStatus;
-    private Material buttonMaterial;
+    private Renderer buttonRend;
 
     // Start is called before the first frame update
     void Start()
     {
-        objectsOnButton = 0;
-        activeStatus = false;
-        buttonMaterial = GetComponent<MeshRenderer>().material;
-        ActivateDeactivateButton(false);
+        SetValues();
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// Sets start variables and values.
+    /// </summary>
+    private void SetValues()
     {
-        
+        objectsOnButton = 0;
+        activeStatus = false;
+        buttonRend = GetComponent<MeshRenderer>();
+        ActivateDeactivateButton(false);
     }
 
     /// <summary>
@@ -55,21 +60,35 @@ public class PressureButton : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Handles activating and deactiving button. Pass in true for if the button should be activated,
+    /// false if it should be deactivated. 
+    /// </summary>
+    /// <param name="isActive"></param>
     private void ActivateDeactivateButton(bool isActive)
     {
         if(isActive)
         {
-            buttonMaterial = activeButtonMaterial;
 
+            buttonRend.material = activeButtonMaterial;
+
+            // Deactivates all the objectes in the objectsLinkedToButton array.
             for (int i = 0; i < objectsLinkedToButton.Length; i++)
             {
                 objectsLinkedToButton[i].SetActive(false);
             }
+
+            // If a timer should be used
+            if(useTimer)
+            {
+                StartCoroutine(DisableAfterTime());
+            }
         }
         else if(!isActive)
         {
-            buttonMaterial = inactiveButtonMaterial;
+            buttonRend.material = inactiveButtonMaterial;
 
+            // Activates all objects in the objectsLinkedToButton array. 
             for (int i = 0; i < objectsLinkedToButton.Length; i++)
             {
                 objectsLinkedToButton[i].SetActive(true);
@@ -77,10 +96,24 @@ public class PressureButton : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Disables objects after a period of time from when they are activated. 
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator DisableAfterTime()
+    {
+        yield return new WaitForSecondsRealtime(timeUntilReactivation);
+
+        activeStatus = false;
+        ActivateDeactivateButton(false);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        // Checks the triggerTags array to determine if the object should be checked. 
         for(int i = 0; i < triggerTags.Length; i++)
         {
+            // If the object should be checked, increase the amount of objects on the button and check if it should be made active. 
             if(other.CompareTag(triggerTags[i]))
             {
                 objectsOnButton++;
@@ -91,8 +124,10 @@ public class PressureButton : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        // Checks the triggerTags array to determine if the object should be checked. 
         for (int i = 0; i < triggerTags.Length; i++)
         {
+            // If the object should be checked, decrease the amount of objects on the button and check if it should be made inactive. 
             if (other.CompareTag(triggerTags[i]))
             {
                 objectsOnButton--;
