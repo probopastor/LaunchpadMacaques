@@ -802,6 +802,16 @@ PrefabInstance:
       propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330555, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058264478890330555, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2058264478890330556, guid: ab0a9ce77bfc0464e826f259cb7566a7,
         type: 3}
       propertyPath: m_Name
@@ -3251,7 +3261,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 430367008}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Object Holder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8299,7 +8309,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh60174
+  m_Name: pb_Mesh28480
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -9117,7 +9127,7 @@ GameObject:
   - component: {fileID: 963194230}
   - component: {fileID: 963194231}
   - component: {fileID: 963194226}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -9631,7 +9641,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 997001713}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Eject Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10247,7 +10257,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1063995556}
   - component: {fileID: 1063995555}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17980,6 +17990,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hand (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ccd2a116ed569894184ea23e5ca9bb3f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ccd2a116ed569894184ea23e5ca9bb3f, type: 3}
 --- !u!4 &2012716985 stripped
@@ -18270,7 +18285,7 @@ GameObject:
   - component: {fileID: 2084724952}
   - component: {fileID: 2084724954}
   - component: {fileID: 2084724953}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18555,6 +18570,9 @@ MonoBehaviour:
   canBePickedUp:
     serializedVersion: 2
     m_Bits: 1024
+  clipLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &2084724954
 MonoBehaviour:
   m_ObjectHideFlags: 0

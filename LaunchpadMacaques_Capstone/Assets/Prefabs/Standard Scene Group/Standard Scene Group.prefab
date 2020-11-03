@@ -449,23 +449,6 @@ MonoBehaviour:
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 0
---- !u!114 &3602824265604008491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4413145302730618744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 958a08a5a996edb4e9c8ee5698f14db6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  corruptionState: 4
-  wireframeColor: {r: 1, g: 0, b: 0.8454075, a: 1}
-  corruptionStartPoint: {x: 0, y: 0, z: 0}
-  useWorldCoordinates: 0
-  corruptionDistance: 1
 --- !u!1 &3602824266153560778
 GameObject:
   m_ObjectHideFlags: 0
@@ -670,6 +653,23 @@ MonoBehaviour:
   m_AreaLightEmissiveMeshShadowCastingMode: 0
   m_AreaLightEmissiveMeshMotionVectorGenerationMode: 0
   m_AreaLightEmissiveMeshLayer: -1
+--- !u!114 &3602824265604008491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413145302730618744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958a08a5a996edb4e9c8ee5698f14db6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  corruptionState: 4
+  wireframeColor: {r: 1, g: 0, b: 0.8454075, a: 1}
+  corruptionStartPoint: {x: 0, y: 0, z: 0}
+  useWorldCoordinates: 0
+  corruptionDistance: 1
 --- !u!1 &6073992194043073705
 GameObject:
   m_ObjectHideFlags: 0
@@ -1759,6 +1759,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7880684069554880042, guid: ccdd945692e38b249a67f967b3d84b9f,
+        type: 3}
+      propertyPath: ClipLayer.m_Bits
+      value: 7991
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7880684069554880043, guid: ccdd945692e38b249a67f967b3d84b9f, type: 3}

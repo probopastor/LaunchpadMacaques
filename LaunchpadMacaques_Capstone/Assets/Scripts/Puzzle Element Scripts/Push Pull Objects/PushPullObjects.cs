@@ -6,6 +6,7 @@
 */
 
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class PushPullObjects : MonoBehaviour
 {
@@ -23,7 +24,9 @@ public class PushPullObjects : MonoBehaviour
 
     GrapplingGun grapplingGun;
 
-    float objectFollowSpeed = 5;
+    public LayerMask clipLayer;
+
+    float objectFollowSpeed = 10;
     #endregion
 
     void Start()
@@ -62,8 +65,27 @@ public class PushPullObjects : MonoBehaviour
     {
         if (grabbing)
         {
-            objectRB.MovePosition(Vector3.Lerp(objectRB.position, objectHolder.transform.position, Time.deltaTime * objectFollowSpeed));
+
+            Debug.DrawRay(objectRB.position, objectHolder.transform.position - objectRB.transform.position);
+
+            RaycastHit hit;
+            if (!Physics.Raycast(objectRB.gameObject.transform.position, objectHolder.transform.position  - objectRB.transform.position, out hit, .6f))
+            {
+                objectRB.MovePosition(Vector3.Lerp(objectRB.position, objectHolder.transform.position, Time.deltaTime * objectFollowSpeed));
+                // objectRB.gameObject.transform.position = Vector3.MoveTowards(objectRB.gameObject.transform.position, objectHolder.transform.position, Time.fixedDeltaTime * objectFollowSpeed);
+            }
+
+            else
+            {
+                if (hit.collider.isTrigger)
+                {
+                    objectRB.MovePosition(Vector3.Lerp(objectRB.position, objectHolder.transform.position, Time.deltaTime * objectFollowSpeed));
+                    //objectRB.gameObject.transform.position = Vector3.MoveTowards(objectRB.gameObject.transform.position, objectHolder.transform.position, Time.fixedDeltaTime * objectFollowSpeed);
+                }
+                Debug.Log(hit.collider.gameObject.name);
+            }
         }
+
     }
 
     private void LateUpdate()
