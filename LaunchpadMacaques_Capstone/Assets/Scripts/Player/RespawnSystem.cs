@@ -27,6 +27,11 @@ public class RespawnSystem : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if(other.gameObject.CompareTag("KillZone"))
+        {
+            RespawnPlayer();
+        }
+
         if (other.gameObject.CompareTag("Checkpoint") && other.gameObject != currentRespawnObject)
         {
             currentRespawnObject = other.gameObject;
