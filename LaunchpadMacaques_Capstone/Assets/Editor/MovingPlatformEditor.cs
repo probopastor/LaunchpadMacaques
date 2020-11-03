@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿/*
+ * Launchpad Macaques - Neon Oblivion
+ * Zackary Seiple
+ * MovingPlatformEditor.cs
+ * This script defines the editor for the Moving Platform asset, namely the clickable buttons that 
+ * can quickly set and edit the points the platform will travel to
+ */
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;

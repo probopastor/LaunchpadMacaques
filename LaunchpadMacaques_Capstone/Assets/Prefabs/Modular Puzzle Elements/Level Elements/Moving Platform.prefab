@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7132801033380652429}
+  - component: {fileID: 7132801033380652417}
   - component: {fileID: 7132801033380652418}
   - component: {fileID: 7132801033380652419}
   - component: {fileID: 7132801033380652416}
-  - component: {fileID: 7132801033380652417}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Moving Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,6 +34,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7132801033380652417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7132801033380652422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a3186a8795474842ba69fd13db89a93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  points: []
+  movementSpeed: 5
+  holdTime: 3
+  loopPattern: 0
+  easeInAndOut: 1
+  easeDistance: 2
 --- !u!33 &7132801033380652418
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -96,21 +114,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7132801033380652417
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7132801033380652422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a3186a8795474842ba69fd13db89a93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  points: []
-  movementSpeed: 5
-  holdTime: 3
-  loopPattern: 0
-  easeInAndOut: 1
-  easeDistance: 2
