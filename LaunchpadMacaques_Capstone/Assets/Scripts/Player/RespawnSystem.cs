@@ -13,6 +13,9 @@ public class RespawnSystem : MonoBehaviour
     private void Start()
     {
         gg = FindObjectOfType<GrapplingGun>();
+
+
+        currentRespawnPosition = transform.position;
     }
     private void Update()
     {
