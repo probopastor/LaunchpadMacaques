@@ -9,19 +9,19 @@
 // 
 *****************************************************************************/
 
-
+using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LevelSelectPictures : MonoBehaviour
+public class LevelSelectPictures : MonoBehaviour, ISelectHandler
 {
-    public Button level1Button;
-    public Button level2Button;
-    public Button level3Button;
-    public Button level4Button;
-    public Button level5Button;
-    public Button backButton;
+    public GameObject level1Button;
+    public GameObject level2Button;
+    public GameObject level3Button;
+    public GameObject level4Button;
+    public GameObject level5Button;
+    public GameObject backButton;
 
     public Image pictureHolder;
 
@@ -31,43 +31,78 @@ public class LevelSelectPictures : MonoBehaviour
     public Sprite sprite4;
     public Sprite sprite5;
 
+    private EventSystem eventSystem;
 
     void Start()
     {
-
+        eventSystem = GetComponent<EventSystem>();
     }
 
     // Update is called once per frame
     void Update()
     {
-       
+        
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        GetComponent<Image>().sprite = pictureHolder.GetComponent<Image>().sprite;
+        //GetComponent<Image>().sprite = GetComponent<Button>().spriteState.highlightedSprite;
+        if (eventSystem.currentSelectedGameObject == level1Button)
+        {
+            pictureHolder.GetComponent<Image>().sprite = sprite1;
+            //print("level 1 selected");
+        }
+        else if (eventSystem.currentSelectedGameObject == (level2Button))
+        {
+            //print("level 2 selected");
+            pictureHolder.GetComponent<Image>().sprite = sprite2;
+        }
+        else if (eventSystem.currentSelectedGameObject == (level3Button))
+        {
+            pictureHolder.GetComponent<Image>().sprite = sprite3;
+        }
+        else if (eventSystem.currentSelectedGameObject == (level4Button))
+        {
+            pictureHolder.GetComponent<Image>().sprite = sprite4;
+        }
+        else if (eventSystem.currentSelectedGameObject == (level5Button))
+        {
+            pictureHolder.GetComponent<Image>().sprite = sprite5;
+        }
+        else if (eventSystem.currentSelectedGameObject == (backButton))
+        {
+            pictureHolder.sprite = null;
+        }
     }
 
     public void OnSelect(BaseEventData eventData)
     {
         GetComponent<Image>().sprite = pictureHolder.GetComponent<Image>().sprite;
         //GetComponent<Image>().sprite = GetComponent<Button>().spriteState.highlightedSprite;
-        if (EventSystem.current.currentSelectedGameObject.Equals(level1Button))
+        if (eventSystem.currentSelectedGameObject == level1Button)
         {
-            pictureHolder.sprite = sprite1;
+            pictureHolder.GetComponent<Image>().sprite = sprite1;
+            //print("level 1 selected");
         }
-        else if (EventSystem.current.currentSelectedGameObject.Equals(level2Button))
+        else if (eventSystem.currentSelectedGameObject == (level2Button))
         {
-            pictureHolder.sprite = sprite2;
+            //print("level 2 selected");
+            pictureHolder.GetComponent<Image>().sprite = sprite2;
         }
-        else if (EventSystem.current.currentSelectedGameObject.Equals(level3Button))
+        else if (eventSystem.currentSelectedGameObject == (level3Button))
         {
-            pictureHolder.sprite = sprite3;
+            pictureHolder.GetComponent<Image>().sprite = sprite3;
         }
-        else if (EventSystem.current.currentSelectedGameObject.Equals(level4Button))
+        else if (eventSystem.currentSelectedGameObject == (level4Button))
         {
-            pictureHolder.sprite = sprite4;
+            pictureHolder.GetComponent<Image>().sprite = sprite4;
         }
-        else if (EventSystem.current.currentSelectedGameObject.Equals(level5Button))
+        else if (eventSystem.currentSelectedGameObject == (level5Button))
         {
-            pictureHolder.sprite = sprite5;
+            pictureHolder.GetComponent<Image>().sprite = sprite5;
         }
-        else if (EventSystem.current.currentSelectedGameObject.Equals(backButton))
+        else if (eventSystem.currentSelectedGameObject == (backButton))
         {
             pictureHolder.sprite = null;
         }
