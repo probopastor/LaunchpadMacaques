@@ -1,8 +1,8 @@
 ﻿/* 
 * Launchpad Macaques 
-* Jamey Colleen
+* Jamey Colleen, William Nomikos
 * CubeRespawn.cs 
-* Handles Cubeside actions for respawning of the throwable cube
+* Handles Throwable Cube respawning. 
 */
 using System.Collections;
 using System.Collections.Generic;
