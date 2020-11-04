@@ -15,17 +15,20 @@ public class VanishingPlatform : MonoBehaviour
     [SerializeField, Tooltip("This is the timer for how long each group of vanishing objects will be enabled for. ")]
     private float timerValue = 2.5f;
 
-    //Grappling Gun reference
+    // Grappling Gun reference
     private GrapplingGun grappleGun;
 
-    //Vanishing Manager reference
+    // Vanishing Manager reference
     private VanishingManager vanishingManager;
 
-    //The platform tracks from Vanishing Manager
+    // The platform tracks from Vanishing Manager
     private List<VanishingManager.PlatformTracks> platformTracks;
 
-    //Index for the current track enabled 
+    // Index for the current track enabled 
     private int currentEnabledTrack = 0;
+
+    // The pause manager in the scene. 
+    private PauseManager pauseManagerReference;
     #endregion
 
     #region Start Functions
@@ -43,6 +46,7 @@ public class VanishingPlatform : MonoBehaviour
     {
         vanishingManager = FindObjectOfType<VanishingManager>();
         grappleGun = FindObjectOfType<GrapplingGun>();
+        pauseManagerReference = FindObjectOfType<PauseManager>();
         platformTracks = vanishingManager.GetPlatformTracks();
 
         currentEnabledTrack = 0;
@@ -58,7 +62,13 @@ public class VanishingPlatform : MonoBehaviour
     /// <returns></returns>
     IEnumerator Vanish()
     {
-        yield return new WaitForSecondsRealtime(timerValue);
+        // If the game is paused, do not disable or reenable platforms. 
+        while (pauseManagerReference.GetPaused())
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(timerValue);
 
         // Increments the current enabled track reference.
         currentEnabledTrack++;
