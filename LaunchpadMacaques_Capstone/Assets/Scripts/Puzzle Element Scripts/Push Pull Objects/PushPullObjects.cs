@@ -5,7 +5,6 @@
 * (The Script that is placed on the player to handle picking and throwing objects) 
 */
 
-using Cinemachine.Editor;
 using UnityEngine;
 
 public class PushPullObjects : MonoBehaviour
