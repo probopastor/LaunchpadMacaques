@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2058264478890330549}
   - component: {fileID: 3846962766668666951}
   - component: {fileID: 7511431540884143899}
+  - component: {fileID: 1419916330316983612}
   m_Layer: 10
   m_Name: Moveable Cube
   m_TagString: PlayerCube
@@ -262,5 +263,22 @@ MonoBehaviour:
   corruptionState: 2
   wireframeColor: {r: 1, g: 0, b: 1, a: 1}
   corruptionStartPoint: {x: 0.45, y: 0, z: 0}
-  useWorldCoordinates: 0
   corruptionDistance: 0.5
+  staticCorruptionPoints: []
+  useWorldCoordinates: 0
+--- !u!114 &1419916330316983612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058264478890330556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a1d72d7428531542b7d96f484349824, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerTags:
+  - KillZone
+  respawnPos: {fileID: 0}
+  respawnPosModifiers: {x: 0, y: 4, z: 0}

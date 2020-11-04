@@ -44,7 +44,7 @@ public class PushPullObjects : MonoBehaviour
     float objectFollowSpeed = 7;
     #endregion
 
-    void Start()
+    private void Awake()
     {
         cam = FindObjectOfType<Camera>().gameObject;
         lr = this.GetComponent<LineRenderer>();
@@ -157,7 +157,7 @@ public class PushPullObjects : MonoBehaviour
     /// <summary>
     /// Method that is called to drop the currently held object
     /// </summary>
-    private void DropObject()
+    public void DropObject()
     {
         grabbing = false;
         objectRB.isKinematic = false;

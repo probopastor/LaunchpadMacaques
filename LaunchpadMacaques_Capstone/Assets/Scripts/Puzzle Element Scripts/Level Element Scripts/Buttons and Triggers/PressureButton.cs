@@ -69,7 +69,6 @@ public class PressureButton : MonoBehaviour
     {
         if(isActive)
         {
-
             buttonRend.material = activeButtonMaterial;
 
             // Deactivates all the objectes in the objectsLinkedToButton array.
