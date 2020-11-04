@@ -10,9 +10,24 @@ using UnityEngine;
 public class PushPullObjects : MonoBehaviour
 {
     #region Inspector Values
+
+    [Header("The Held Cube Positions")]
+    [SerializeField] GameObject topLeft;
+    [SerializeField] GameObject bottomLeft;
+
+    [SerializeField] GameObject topRight;
+    [SerializeField] GameObject bottomRight;
+
+    [SerializeField] GameObject topMiddle;
+    [SerializeField] GameObject bottomMiddle;
     [SerializeField][Tooltip("The Max Distance the player can pick up an object")] float maxGrabDistance;
-    [SerializeField][Tooltip("The Empty Game Objec that the picked up object will move to")] GameObject objectHolder;
     [SerializeField][Tooltip("The Layer for object that can be picked up")] LayerMask canBePickedUp;
+
+
+
+    enum ObjectFollowPostion { topLeft, bottomLeft, topRight, bottomRight, topMiddle, bottomMiddle};
+
+    [SerializeField, Tooltip("Which position the moveable cube will move towards")] ObjectFollowPostion objectFollowPos;
     #endregion
 
     #region Private Variables
@@ -23,14 +38,39 @@ public class PushPullObjects : MonoBehaviour
 
     GrapplingGun grapplingGun;
 
-    float objectFollowSpeed = 5;
+
+    GameObject objectHolder;
+
+    float objectFollowSpeed = 7;
     #endregion
 
-    void Start()
+    private void Awake()
     {
         cam = FindObjectOfType<Camera>().gameObject;
         lr = this.GetComponent<LineRenderer>();
         grapplingGun = this.GetComponent<GrapplingGun>();
+
+        switch (objectFollowPos)
+        {
+            case ObjectFollowPostion.topLeft:
+                objectHolder = topLeft;
+                break;
+            case ObjectFollowPostion.bottomLeft:
+                objectHolder = bottomLeft;
+                break;
+            case ObjectFollowPostion.topRight:
+                objectHolder = topRight;
+                break;
+            case ObjectFollowPostion.bottomRight:
+                objectHolder = bottomRight;
+                break;
+            case ObjectFollowPostion.topMiddle:
+                objectHolder = topMiddle;
+                break;
+            case ObjectFollowPostion.bottomMiddle:
+                objectHolder = bottomMiddle;
+                break;
+        }
     }
 
     void Update()
@@ -62,8 +102,25 @@ public class PushPullObjects : MonoBehaviour
     {
         if (grabbing)
         {
-            objectRB.MovePosition(Vector3.Lerp(objectRB.position, objectHolder.transform.position, Time.deltaTime * objectFollowSpeed));
+            Debug.DrawRay(objectRB.position, objectHolder.transform.position - objectRB.transform.position);
+
+            RaycastHit hit;
+            if (!Physics.Raycast(objectRB.gameObject.transform.position, objectHolder.transform.position - objectRB.transform.position, out hit, .6f))
+            {
+                objectRB.MovePosition(Vector3.Lerp(objectRB.position, objectHolder.transform.position, Time.fixedDeltaTime * objectFollowSpeed));
+          
+            }
+
+            else
+            {
+                if (hit.collider.isTrigger)
+                {
+                    objectRB.MovePosition(Vector3.Lerp(objectRB.position, objectHolder.transform.position, Time.fixedDeltaTime * objectFollowSpeed));
+        
+                }
+            }
         }
+
     }
 
     private void LateUpdate()
@@ -100,7 +157,7 @@ public class PushPullObjects : MonoBehaviour
     /// <summary>
     /// Method that is called to drop the currently held object
     /// </summary>
-    private void DropObject()
+    public void DropObject()
     {
         grabbing = false;
         objectRB.isKinematic = false;

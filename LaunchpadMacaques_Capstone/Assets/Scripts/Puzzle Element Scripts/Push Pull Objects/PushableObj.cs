@@ -45,7 +45,8 @@ public class PushableObj : MonoBehaviour
     private CollectibleController cc;
 
     #endregion
-    private void Start()
+
+    private void Awake()
     {
         CreateDecalAndLine();
 
@@ -324,7 +325,7 @@ public class PushableObj : MonoBehaviour
     /// <summary>
     /// Method that is called to stop pushing this object
     /// </summary>
-    private void StopPushingObject()
+    public void StopPushingObject()
     {
         beingPushed = false;
         grav.UseGravity(true);
@@ -332,6 +333,15 @@ public class PushableObj : MonoBehaviour
         lr.positionCount = 0;
         thisDecal.SetActive(false);
 
+    }
+
+    /// <summary>
+    /// Returns true if the object is being pushed from a throw. 
+    /// </summary>
+    /// <returns></returns>
+    public bool GetPushStatus()
+    {
+        return beingPushed;
     }
 
     #endregion
