@@ -188,12 +188,12 @@ MonoBehaviour:
   Path: event:/BGM Castles
   guid: ce56f3ad345205409b8219902979d480
   Banks:
-  - {fileID: -4712185724365468800}
+  - {fileID: -584824208940670482}
   IsStream: 1
   Is3D: 0
   IsOneShot: 1
   Parameters:
-  - {fileID: 4572522906448581673}
+  - {fileID: -3332095923926567860}
   MinDistance: 0
   MaxDistance: 0
   Length: 126328
@@ -316,6 +316,23 @@ MonoBehaviour:
   lastModified: 637377465266103324
   LoadResult: 0
   FileSizes: []
+  Exists: 1
+--- !u!114 &-5060574148098164076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Landing/Volume
+  m_EditorClassIdentifier: 
+  Name: Volume
+  Min: 0
+  Max: 1
+  Default: 0
   Exists: 1
 --- !u!114 &-5009477401952010216
 MonoBehaviour:
@@ -506,15 +523,32 @@ MonoBehaviour:
   Path: event:/Beam
   guid: 61ae0241c62d3e44b9772230c83b9696
   Banks:
-  - {fileID: -1839934245676435967}
+  - {fileID: 7645869948934825033}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
   Parameters:
-  - {fileID: 1607754112733974775}
+  - {fileID: 5730245264015325033}
   MinDistance: 1
   MaxDistance: 20
   Length: 18800
+--- !u!114 &-3332095923926567860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/BGM Castles/Volume
+  m_EditorClassIdentifier: 
+  Name: Volume
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
 --- !u!114 &-3008825413510679162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -654,6 +688,23 @@ MonoBehaviour:
   Max: 1
   Default: 0
   Exists: 1
+--- !u!114 &-890367745638790298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Walking/Volume
+  m_EditorClassIdentifier: 
+  Name: Volume
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
 --- !u!114 &-846315264704870692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -688,6 +739,24 @@ MonoBehaviour:
   Min: 0
   Max: 1
   Default: 0
+  Exists: 1
+--- !u!114 &-584824208940670482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/BGM.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Audio/FMOD/Desktop/BGM.bank
+  SubDir: 
+  lastModified: 637377465266103324
+  LoadResult: 0
+  FileSizes: []
   Exists: 1
 --- !u!114 &-544852531864088778
 MonoBehaviour:
@@ -755,7 +824,7 @@ MonoBehaviour:
   Path: event:/Grapple
   guid: 5013f26025e5ea4698116df0fee6c08c
   Banks:
-  - {fileID: -1839934245676435967}
+  - {fileID: 7645869948934825033}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -794,8 +863,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: 4335819680001484825}
-  - {fileID: -4712185724365468800}
-  - {fileID: -1839934245676435967}
+  - {fileID: -584824208940670482}
+  - {fileID: 7645869948934825033}
   EditorEvents:
   - {fileID: -120835721715315250}
   - {fileID: -3388702723864042257}
@@ -807,10 +876,10 @@ MonoBehaviour:
   - {fileID: -6504251706436692493}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -1839934245676435967}
+  - {fileID: 7645869948934825033}
   StringsBanks:
   - {fileID: 4335819680001484825}
-  stringsBankWriteTime: 637397512493671399
+  stringsBankWriteTime: 637393196598388062
   cacheVersion: 3
 --- !u!114 &297842604629629598
 MonoBehaviour:
@@ -844,15 +913,32 @@ MonoBehaviour:
   Path: event:/BGM Cursed
   guid: 9b4d3568f57e354b80dee61a58d05edf
   Banks:
-  - {fileID: -4712185724365468800}
+  - {fileID: -584824208940670482}
   IsStream: 1
   Is3D: 0
   IsOneShot: 1
   Parameters:
-  - {fileID: 6806948913484597277}
+  - {fileID: 1045172062180715359}
   MinDistance: 0
   MaxDistance: 0
   Length: 88058
+--- !u!114 &1045172062180715359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/BGM Cursed/Volume
+  m_EditorClassIdentifier: 
+  Name: Volume
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
 --- !u!114 &1395393693833476214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -994,12 +1080,12 @@ MonoBehaviour:
   Path: event:/Landing
   guid: 665b1696597d3c49889575455bd1e619
   Banks:
-  - {fileID: -1839934245676435967}
+  - {fileID: 7645869948934825033}
   IsStream: 0
   Is3D: 1
   IsOneShot: 0
   Parameters:
-  - {fileID: 8289528528958245894}
+  - {fileID: -5060574148098164076}
   MinDistance: 1
   MaxDistance: 20
   Length: 592
@@ -1070,7 +1156,7 @@ MonoBehaviour:
   Path: event:/Push Off
   guid: 9f2f58b4d12d6546bae97c809ef6fdec
   Banks:
-  - {fileID: -1839934245676435967}
+  - {fileID: 7645869948934825033}
   IsStream: 1
   Is3D: 1
   IsOneShot: 1
@@ -1126,7 +1212,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: Assets/Audio/FMOD/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637397512493671399
+  lastModified: 637393196598388062
   LoadResult: 0
   FileSizes:
   - Name: 
@@ -1160,6 +1246,23 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
   m_Name: parameter:/Swinging/Volume
+  m_EditorClassIdentifier: 
+  Name: Volume
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
+--- !u!114 &5730245264015325033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Beam/Volume
   m_EditorClassIdentifier: 
   Name: Volume
   Min: 0
@@ -1249,15 +1352,33 @@ MonoBehaviour:
   Path: event:/Swinging
   guid: 7c415646f39cde47a76bb46702d19e9f
   Banks:
-  - {fileID: -1839934245676435967}
+  - {fileID: 7645869948934825033}
   IsStream: 0
   Is3D: 1
   IsOneShot: 0
   Parameters:
-  - {fileID: 5614997340569341767}
+  - {fileID: 8536073962833541669}
   MinDistance: 1
   MaxDistance: 20
   Length: 1000
+--- !u!114 &7645869948934825033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Audio/FMOD/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637393196598378087
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &7765342381075598658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1344,6 +1465,23 @@ MonoBehaviour:
   Max: 1
   Default: 0
   Exists: 1
+--- !u!114 &8536073962833541669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Swinging/Volume
+  m_EditorClassIdentifier: 
+  Name: Volume
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
 --- !u!114 &8762450667639155323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1359,12 +1497,12 @@ MonoBehaviour:
   Path: event:/Walking
   guid: fe01894a42db7a468fa0ae3562a75ac1
   Banks:
-  - {fileID: -1839934245676435967}
+  - {fileID: 7645869948934825033}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
   Parameters:
-  - {fileID: -6075201081130905932}
+  - {fileID: -890367745638790298}
   MinDistance: 1
   MaxDistance: 20
   Length: 250
