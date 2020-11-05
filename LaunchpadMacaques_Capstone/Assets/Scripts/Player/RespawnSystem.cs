@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class RespawnSystem : MonoBehaviour
 {
-    [SerializeField, Tooltip("The tags that will respawn the player if collided with. ")] private string[] respawnTags;
     Vector3 currentRespawnPosition;
 
     GameObject currentRespawnObject;
@@ -28,12 +27,9 @@ public class RespawnSystem : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        for (int i = 0; i < respawnTags.Length; i++)
+        if(other.gameObject.CompareTag("KillZone"))
         {
-            if (other.gameObject.CompareTag(respawnTags[i]))
-            {
-                RespawnPlayer();
-            }
+            RespawnPlayer();
         }
 
         if (other.gameObject.CompareTag("Checkpoint") && other.gameObject != currentRespawnObject)
