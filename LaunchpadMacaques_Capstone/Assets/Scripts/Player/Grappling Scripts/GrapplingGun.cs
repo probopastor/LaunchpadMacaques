@@ -9,6 +9,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+
 public class GrapplingGun : MonoBehaviour
 {
     #region InspectorVariables
@@ -22,6 +24,8 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] private GameObject hitObject;
     [SerializeField] private TextMeshProUGUI currentSwingSpeedText;
     [SerializeField] TextMeshProUGUI actualVelocityText;
+    [SerializeField] Slider ropeLengthSlider;
+    [SerializeField] GameObject postText;
 
     [Header("Layer Settings")]
     [SerializeField] LayerMask whatIsGrappleable;
@@ -103,11 +107,21 @@ public class GrapplingGun : MonoBehaviour
 
     #region StartFunctions
     void Awake()
-    { 
+    {
+        if (postText)
+        {
+            postText.SetActive(false);
+        }
+     
         SetObject();
         SetText();
 
         currentSwingSpeed = swingSpeed;
+
+        if (ropeLengthSlider)
+        {
+            ropeLengthSlider.gameObject.SetActive(false);
+        }
     }
 
     private void SetObject()
@@ -229,6 +243,10 @@ public class GrapplingGun : MonoBehaviour
             }
 
 
+            if (ropeLengthSlider)
+            {
+                ropeLengthSlider.value = ropeLength;
+            }
 
         }
         else if (!IsGrappling())
@@ -494,7 +512,14 @@ public class GrapplingGun : MonoBehaviour
                 StopGrapple();
             }
 
-            currentGrappledObj = grappleRayHit.collider.gameObject;
+            if (ropeLengthSlider)
+            {
+                ropeLengthSlider.gameObject.SetActive(true);
+                ropeLengthSlider.maxValue = maxDistance;
+                ropeLengthSlider.minValue = minDistance;
+                currentGrappledObj = grappleRayHit.collider.gameObject;
+            }
+          
 
             hitObjectClone = Instantiate(hitObject);
             hitObjectClone.transform.position = grappleRayHit.point;
@@ -569,6 +594,11 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     public void StopGrapple()
     {
+
+        if (ropeLengthSlider)
+        {
+            ropeLengthSlider.gameObject.SetActive(false);
+        }
         currentGrappledObj = null;
         //managing variables for dash
 
