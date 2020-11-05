@@ -12,6 +12,7 @@ public class OnStayTriggerEnabler : MonoBehaviour
     [SerializeField, Tooltip("An array of targets to be altered by the Pass-By Trigger. ")] private GameObject[] targets;
     public bool activated = false;
     public bool targetEnabled = false;
+    public bool reverse = false;
     [SerializeField, Tooltip("If enabled, disables all targets after a period of time. ")] private bool timer = false;
     [SerializeField, Tooltip("Time before targets are disabled after button click (Only if useTimer is used). ")] private int timerValue = 5;
     private int triggers = 0;
@@ -53,26 +54,77 @@ public class OnStayTriggerEnabler : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// Does the reverse of a Normal function
+    /// On Enter the Object is activated, instead of dectivated
+    /// </summary>
+    void ReverseOnEnter()
+    {
+        //enables targets
+        if (targets != null && targetEnabled == false)
+        {
+            for (int i = 0; i < targets.Length; i++)
+            {
+                targets[i].SetActive(true);
+            }
+            targetEnabled = true;
+            triggers = 0;
+            GetComponent<MeshRenderer>().material = active;
+        }
+        Debug.Log("Door is Active");
+    }
+
+
+    /// <summary>
+    /// Does the reverse of a normal function
+    /// On Exit the Object is deactivated, instead of activated
+    /// </summary>
+    void ReverseOnExit()
+    {
+        //disables targets
+        if (targets != null && targetEnabled == true)
+        {
+            for (int i = 0; i < targets.Length; i++)
+            {
+                targets[i].SetActive(false);
+            }
+            targetEnabled = false;
+            triggers = 0;
+            GetComponent<MeshRenderer>().material = inactive;
+        }
+        Debug.Log("Door is Inactive");
+
+    }
 
     /// <summary>
     /// If the player or cube is on the presure plate, disable targets
     /// </summary>
     private void OnTriggerEnter(Collider other)
     {
+
         if (other.tag == "Player" || other.tag == "PlayerCube")
         {
-            //disables targets
-            if (targets != null && targetEnabled == true)
+            if(reverse == true)
             {
-                for (int i = 0; i < targets.Length; i++)
-                {
-                    targets[i].SetActive(false);
-                }
-                targetEnabled = false;
-                triggers = 0;
-                GetComponent<MeshRenderer>().material = inactive;
+
+                ReverseOnEnter();
             }
-            Debug.Log("Door is Inactive");
+            else
+            {
+                if (targets != null && targetEnabled == true)
+                {
+                    for (int i = 0; i < targets.Length; i++)
+                    {
+                        targets[i].SetActive(false);
+                    }
+                    targetEnabled = false;
+                    triggers = 0;
+                    GetComponent<MeshRenderer>().material = active;
+                }
+                Debug.Log("Door is Inactive");
+            }
+            //disables targets
+          
         }
     }
 
@@ -83,18 +135,24 @@ public class OnStayTriggerEnabler : MonoBehaviour
     {
         if (other.tag == "Player" || other.tag == "PlayerCube")
         {
-            //enables targets
-            if (targets != null && targetEnabled == false)
+            if(reverse == true)
             {
-                for (int i = 0; i < targets.Length; i++)
-                {
-                    targets[i].SetActive(true);
-                }
-                targetEnabled = true;
-                triggers = 0;
-                GetComponent<MeshRenderer>().material = active;
+                ReverseOnExit();
             }
-            Debug.Log("Door is Active");
+            else
+            {
+                if (targets != null && targetEnabled == false)
+                {
+                    for (int i = 0; i < targets.Length; i++)
+                    {
+                        targets[i].SetActive(true);
+                    }
+                    targetEnabled = true;
+                    triggers = 0;
+                    GetComponent<MeshRenderer>().material = inactive;
+                }
+                Debug.Log("Door is Active");
+            }
         }
     }
 
