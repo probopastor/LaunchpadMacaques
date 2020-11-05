@@ -69,7 +69,6 @@ public class PressureButton : MonoBehaviour
             else
             {
                 ActivateDeactivateButton(true);
-
             }
         }
         else if ((objectsOnButton < triggerEnableGoal) && activeStatus)
@@ -101,7 +100,6 @@ public class PressureButton : MonoBehaviour
             // Deactivates all the objectes in the objectsLinkedToButton array.
             for (int i = 0; i < objectsLinkedToButton.Length; i++)
             {
-                //objectsLinkedToButton[i].SetActive(false);
                 if (objectsLinkedToButton[i].GetComponent<ActivationDoor>() != null)
                 {
                     objectsLinkedToButton[i].GetComponent<ActivationDoor>().SetActiveButtons(1);
@@ -127,7 +125,7 @@ public class PressureButton : MonoBehaviour
             {
                 if (objectsLinkedToButton[i].GetComponent<ActivationDoor>() != null)
                 {
-                    objectsLinkedToButton[i].GetComponent<ActivationDoor>().SetActiveButtons(-1);
+                    objectsLinkedToButton[i].GetComponent<ActivationDoor>().SetCurrentButtonsPressed(0);
                 }
                 else
                 {
