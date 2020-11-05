@@ -141,4 +141,14 @@ public class PressureButton : MonoBehaviour
             }
         }
     }
+
+    public bool GetButtonActivity()
+    {
+        return activeStatus;
+    }
+
+    public GameObject[] GetObjectsLinkedToButton()
+    {
+        return objectsLinkedToButton;
+    }
 }
