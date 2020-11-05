@@ -7,13 +7,44 @@ public class ActivationDoor : MonoBehaviour
     [SerializeField, Tooltip("All of the doors handled by this activation door. ")] private GameObject[] doors;
 
     [SerializeField, Tooltip("The amount of buttons that need to be triggered to activate these doors. ")] private int buttonsToActivate = 0;
+    [SerializeField, Tooltip("")] private float activationBuffer;
+    private float activationBufferStorage = 0;
+
     private int currentButtonsPressed = 0;
     private bool doorsDectivated;
 
     private void Awake()
     {
+        activationBufferStorage = activationBuffer;
+        activationBuffer = 0;
         currentButtonsPressed = 0;
         doorsDectivated = false;
+    }
+
+    private void Start()
+    {
+        activationBuffer = activationBufferStorage;
+    }
+
+    private IEnumerator BufferDoorActivity(bool enable)
+    {
+        if(activationBuffer != 0)
+        {
+            yield return new WaitForSeconds(activationBuffer);
+        }
+        else
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        if(enable)
+        {
+            EnableDoor();
+        }
+        else if(!enable)
+        {
+            DisableDoor();
+        }
     }
 
     /// <summary>
@@ -40,12 +71,14 @@ public class ActivationDoor : MonoBehaviour
         if((currentButtonsPressed >= buttonsToActivate) && !doorsDectivated)
         {
             doorsDectivated = true;
-            DisableDoor();
+            StartCoroutine(BufferDoorActivity(false));
+            //DisableDoor();
         }
         else if ((currentButtonsPressed < buttonsToActivate) && doorsDectivated)
         {
             doorsDectivated = false;
-            EnableDoor();
+            StartCoroutine(BufferDoorActivity(true));
+            //EnableDoor();
         }
     }
 
