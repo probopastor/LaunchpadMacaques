@@ -7,7 +7,7 @@ public class ActivationDoor : MonoBehaviour
     [SerializeField, Tooltip("All of the doors handled by this activation door. ")] private GameObject[] doors;
 
     [SerializeField, Tooltip("The amount of buttons that need to be triggered to activate these doors. ")] private int buttonsToActivate = 0;
-    [SerializeField, Tooltip("")] private float activationBuffer;
+    [SerializeField, Tooltip("The amount of time waited after doors are activated / deactivated before their activity status is actually set. ")] private float activationBuffer;
     private float activationBufferStorage = 0;
 
     private int currentButtonsPressed = 0;
@@ -26,6 +26,11 @@ public class ActivationDoor : MonoBehaviour
         activationBuffer = activationBufferStorage;
     }
 
+    /// <summary>
+    /// Waits a period of time before activating / deactivating doors. 
+    /// </summary>
+    /// <param name="enable"></param>
+    /// <returns></returns>
     private IEnumerator BufferDoorActivity(bool enable)
     {
         if(activationBuffer != 0)
