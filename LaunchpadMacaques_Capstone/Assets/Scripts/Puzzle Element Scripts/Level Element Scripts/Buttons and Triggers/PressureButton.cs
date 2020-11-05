@@ -21,6 +21,7 @@ public class PressureButton : MonoBehaviour
 
     [SerializeField, Tooltip("Material of active object. ")] private Material activeButtonMaterial;
     [SerializeField, Tooltip("Material of inactive object. ")] private Material inactiveButtonMaterial;
+    [SerializeField] private bool EnableOnActivation; 
 
     private int objectsOnButton = 0;
     private bool activeStatus;
@@ -40,7 +41,15 @@ public class PressureButton : MonoBehaviour
         objectsOnButton = 0;
         activeStatus = false;
         buttonRend = GetComponent<MeshRenderer>();
-        ActivateDeactivateButton(false);
+
+        if(EnableOnActivation)
+        {
+            ActivateDeactivateButton(true);
+        }
+        else
+        {
+            ActivateDeactivateButton(false);
+        }
     }
 
     /// <summary>
@@ -51,13 +60,29 @@ public class PressureButton : MonoBehaviour
         if ((objectsOnButton >= triggerEnableGoal) && !activeStatus)
         {
             activeStatus = true;
-            ActivateDeactivateButton(true);
 
+            if (EnableOnActivation)
+            {
+                ActivateDeactivateButton(false); ;
+            }
+            else
+            {
+                ActivateDeactivateButton(true);
+
+            }
         }
         else if ((objectsOnButton < triggerEnableGoal) && activeStatus)
         {
             activeStatus = false;
-            ActivateDeactivateButton(false);
+
+            if (EnableOnActivation)
+            {
+                ActivateDeactivateButton(true);
+            }
+            else
+            {
+                ActivateDeactivateButton(false);
+            }
         }
     }
 
