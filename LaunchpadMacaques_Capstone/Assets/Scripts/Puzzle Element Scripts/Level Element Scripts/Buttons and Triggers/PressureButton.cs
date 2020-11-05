@@ -52,6 +52,7 @@ public class PressureButton : MonoBehaviour
         {
             activeStatus = true;
             ActivateDeactivateButton(true);
+
         }
         else if ((objectsOnButton < triggerEnableGoal) && activeStatus)
         {
@@ -67,30 +68,45 @@ public class PressureButton : MonoBehaviour
     /// <param name="isActive"></param>
     private void ActivateDeactivateButton(bool isActive)
     {
-        if(isActive)
+        if (isActive)
         {
             buttonRend.material = activeButtonMaterial;
 
             // Deactivates all the objectes in the objectsLinkedToButton array.
             for (int i = 0; i < objectsLinkedToButton.Length; i++)
             {
-                objectsLinkedToButton[i].SetActive(false);
+                //objectsLinkedToButton[i].SetActive(false);
+                if (objectsLinkedToButton[i].GetComponent<ActivationDoor>() != null)
+                {
+                    objectsLinkedToButton[i].GetComponent<ActivationDoor>().SetActiveButtons(1);
+                }
+                else
+                {
+                    objectsLinkedToButton[i].SetActive(false);
+                }
             }
 
             // If a timer should be used
-            if(useTimer)
+            if (useTimer)
             {
                 StartCoroutine(DisableAfterTime());
             }
         }
-        else if(!isActive)
+        else if (!isActive)
         {
             buttonRend.material = inactiveButtonMaterial;
 
             // Activates all objects in the objectsLinkedToButton array. 
             for (int i = 0; i < objectsLinkedToButton.Length; i++)
             {
-                objectsLinkedToButton[i].SetActive(true);
+                if (objectsLinkedToButton[i].GetComponent<ActivationDoor>() != null)
+                {
+                    objectsLinkedToButton[i].GetComponent<ActivationDoor>().SetActiveButtons(-1);
+                }
+                else
+                {
+                    objectsLinkedToButton[i].SetActive(true);
+                }
             }
         }
     }
@@ -103,6 +119,14 @@ public class PressureButton : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(timeUntilReactivation);
 
+        for (int i = 0; i < objectsLinkedToButton.Length; i++)
+        {
+            if (objectsLinkedToButton[i].GetComponent<ActivationDoor>() != null)
+            {
+                objectsLinkedToButton[i].GetComponent<ActivationDoor>().SetCurrentButtonsPressed(0);
+            }
+        }
+
         activeStatus = false;
         ActivateDeactivateButton(false);
     }
@@ -110,10 +134,10 @@ public class PressureButton : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // Checks the triggerTags array to determine if the object should be checked. 
-        for(int i = 0; i < triggerTags.Length; i++)
+        for (int i = 0; i < triggerTags.Length; i++)
         {
             // If the object should be checked, increase the amount of objects on the button and check if it should be made active. 
-            if(other.CompareTag(triggerTags[i]))
+            if (other.CompareTag(triggerTags[i]))
             {
                 objectsOnButton++;
                 CheckButtonActivity();
