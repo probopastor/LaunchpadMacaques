@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ActivationDoor : MonoBehaviour
 {
-    [SerializeField] private GameObject[] doors;
+    [SerializeField, Tooltip("All of the doors handled by this activation door. ")] private GameObject[] doors;
 
-    [SerializeField] private int buttonsToActivate = 0;
+    [SerializeField, Tooltip("The amount of buttons that need to be triggered to activate these doors. ")] private int buttonsToActivate = 0;
     private int currentButtonsPressed = 0;
     private bool doorsDectivated;
 
@@ -16,12 +16,10 @@ public class ActivationDoor : MonoBehaviour
         doorsDectivated = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    /// <summary>
+    /// Increases or decreases the amount of active buttons. 
+    /// </summary>
+    /// <param name="activeGain"></param>
     public void SetActiveButtons(int activeGain)
     {
         currentButtonsPressed += activeGain;
@@ -34,6 +32,9 @@ public class ActivationDoor : MonoBehaviour
         CheckButtonActivation();
     }
 
+    /// <summary>
+    /// Checks to see if doors should be disabled or enabled based on the current amount of pressed buttons.
+    /// </summary>
     private void CheckButtonActivation()
     {
         if((currentButtonsPressed >= buttonsToActivate) && !doorsDectivated)
@@ -48,31 +49,45 @@ public class ActivationDoor : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Disables all doors connected to this activation door.
+    /// </summary>
     private void DisableDoor()
     {
-        for(int i = 0; i < doors.Length; i++)
+        // Cycles through door array and disables all door game objects.
+        for (int i = 0; i < doors.Length; i++)
         {
             doors[i].SetActive(false);
         }
     }
 
+    /// <summary>
+    /// Enables all doors connected to this activation door.
+    /// </summary>
     private void EnableDoor()
     {
+        // Cycles through door array and enables all door game objects.
         for (int i = 0; i < doors.Length; i++)
         {
             doors[i].SetActive(true);
         }
     }
 
+    /// <summary>
+    /// Directly sets the current number of buttons pressed to the passed in amount.
+    /// </summary>
+    /// <param name="newButtonPressedAmount"></param>
     public void SetCurrentButtonsPressed(int newButtonPressedAmount)
     {
         currentButtonsPressed = newButtonPressedAmount;
 
+        // Make sure buttons pressed does not fall below 0.
         if (currentButtonsPressed < 0)
         {
             currentButtonsPressed = 0;
         }
 
+        // Recheck the door's activation status after the buttons pressed number changed. 
         CheckButtonActivation();
     }
 
