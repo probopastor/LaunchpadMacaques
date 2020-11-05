@@ -18,8 +18,11 @@ public class InformationPost : MonoBehaviour
     [SerializeField] private TextMeshProUGUI informationText;
     [SerializeField, TextArea, Tooltip("The information that will be displayed when player is in the information post's radius. ")] private string information;
 
+
     private bool isActive;
     private bool toggleFunctionality;
+
+    private bool playerInRange;
 
     #endregion
 
@@ -34,19 +37,19 @@ public class InformationPost : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if(Input.GetKeyDown(KeyCode.O))
-        //{
-        //    if(toggleFunctionality)
-        //    {
-        //        toggleFunctionality = false;
-        //    }
-        //    else if(!toggleFunctionality)
-        //    {
-        //        toggleFunctionality = true;
-        //    }
+        if(playerInRange && Input.GetKeyDown(KeyCode.E))
+        {
+            if (informationText.text.Equals(information))
+            {
+                playerInRange = false;
+            }
 
-        //    SetInformation();
-        //}
+            else
+            {
+                informationText.text = information;
+            }
+    
+        }
     }
 
     private void OnEnable()
@@ -77,21 +80,18 @@ public class InformationPost : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.tag == "Player")
-        {
-            isActive = true;
-            SetInformation();
-        }
-    }
-
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && !playerInRange)
         {
-            isActive = true;
-            SetInformation();
+            
+            if (informationText)
+            {
+                informationText.gameObject.transform.parent.gameObject.SetActive(true);
+                informationText.text = "Press E To Read";
+                playerInRange = true;
+            }
+  
         }
     }
 
@@ -99,14 +99,8 @@ public class InformationPost : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            isActive = false;
-            SetInformation();
+            informationText.gameObject.transform.parent.gameObject.SetActive(false);
+            playerInRange = false;
         }
     }
-
-    //public void SetActivityStatus(bool active)
-    //{
-    //    isActive = active;
-    //    SetInformation();
-    //}
 }
