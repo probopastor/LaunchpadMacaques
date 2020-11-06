@@ -22,7 +22,7 @@ public class CubeRespawn : MonoBehaviour
 
     #region Start Functions
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         SetValues();
     }

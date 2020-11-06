@@ -19,8 +19,11 @@ public class ActivationDoor : MonoBehaviour
     {
         currentButtonsPressed = 0;
         doorsDeactivated = false;
+    }
 
-        if(enableOnActivation)
+    private void Start()
+    {
+        if (enableOnActivation)
         {
             DisableDoor();
         }
@@ -28,11 +31,6 @@ public class ActivationDoor : MonoBehaviour
         {
             EnableDoor();
         }
-    }
-
-    private void Start()
-    {
-       // activationBuffer = activationBufferStorage;
     }
 
     /// <summary>
@@ -144,6 +142,12 @@ public class ActivationDoor : MonoBehaviour
         // Cycles through door array and disables all door game objects.
         for (int i = 0; i < doors.Length; i++)
         {
+            // If the object is a cube, respawn the cube
+            if(doors[i].GetComponent<CubeRespawn>() != null)
+            {
+                doors[i].GetComponent<CubeRespawn>().RespawnCube();
+            }
+
             doors[i].SetActive(false);
         }
     }
