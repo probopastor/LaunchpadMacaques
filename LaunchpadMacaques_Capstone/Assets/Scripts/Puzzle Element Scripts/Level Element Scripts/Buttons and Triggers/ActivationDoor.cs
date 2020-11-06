@@ -8,22 +8,31 @@ public class ActivationDoor : MonoBehaviour
 
     [SerializeField, Tooltip("The amount of buttons that need to be triggered to activate these doors. ")] private int buttonsToActivate = 0;
     [SerializeField, Tooltip("The amount of time waited after doors are activated / deactivated before their activity status is actually set. ")] private float activationBuffer;
-    private float activationBufferStorage = 0;
+    
+    [SerializeField, Tooltip("If true, items handled by this button will be enabled (from a disabled state) when the button is pressed. Otherwise, " +
+     "items handled by this button will be disabled when the button is activated. ")] private bool enableOnActivation;
 
     private int currentButtonsPressed = 0;
-    private bool doorsDectivated;
+    private bool doorsDeactivated;
 
     private void Awake()
     {
-        activationBufferStorage = activationBuffer;
-        activationBuffer = 0;
         currentButtonsPressed = 0;
-        doorsDectivated = false;
+        doorsDeactivated = false;
+
+        if(enableOnActivation)
+        {
+            DisableDoor();
+        }
+        else
+        {
+            EnableDoor();
+        }
     }
 
     private void Start()
     {
-        activationBuffer = activationBufferStorage;
+       // activationBuffer = activationBufferStorage;
     }
 
     /// <summary>
@@ -42,14 +51,37 @@ public class ActivationDoor : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        if(enable)
+        if (enable)
         {
             EnableDoor();
         }
-        else if(!enable)
+        else if (!enable)
         {
             DisableDoor();
         }
+
+        //if(!enableOnActivation)
+        //{
+        //    if (enable)
+        //    {
+        //        EnableDoor();
+        //    }
+        //    else if (!enable)
+        //    {
+        //        DisableDoor();
+        //    }
+        //}
+        //else if(enableOnActivation)
+        //{
+        //    if (enable)
+        //    {
+        //        DisableDoor();
+        //    }
+        //    else if (!enable)
+        //    {
+        //        EnableDoor();
+        //    }
+        //}
     }
 
     /// <summary>
@@ -73,16 +105,33 @@ public class ActivationDoor : MonoBehaviour
     /// </summary>
     private void CheckButtonActivation()
     {
-        if((currentButtonsPressed >= buttonsToActivate) && !doorsDectivated)
+        if((currentButtonsPressed >= buttonsToActivate) && !doorsDeactivated)
         {
-            doorsDectivated = true;
-            StartCoroutine(BufferDoorActivity(false));
+            doorsDeactivated = true;
+
+            if (enableOnActivation)
+            {
+                StartCoroutine(BufferDoorActivity(true));
+            }
+            else if (!enableOnActivation)
+            {
+                StartCoroutine(BufferDoorActivity(false));
+            }
             //DisableDoor();
         }
-        else if ((currentButtonsPressed < buttonsToActivate) && doorsDectivated)
+        else if ((currentButtonsPressed < buttonsToActivate) && doorsDeactivated)
         {
-            doorsDectivated = false;
-            StartCoroutine(BufferDoorActivity(true));
+            doorsDeactivated = false;
+
+            if(enableOnActivation)
+            {
+                StartCoroutine(BufferDoorActivity(false));
+            }
+            else if(!enableOnActivation)
+            {
+                StartCoroutine(BufferDoorActivity(true));
+            }
+            //StartCoroutine(BufferDoorActivity(true));
             //EnableDoor();
         }
     }
