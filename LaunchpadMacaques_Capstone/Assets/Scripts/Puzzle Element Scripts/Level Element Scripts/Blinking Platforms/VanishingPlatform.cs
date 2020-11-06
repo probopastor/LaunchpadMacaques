@@ -44,7 +44,7 @@ public class VanishingPlatform : MonoBehaviour
     /// </summary>
     private void AssignValues()
     {
-        vanishingManager = FindObjectOfType<VanishingManager>();
+        vanishingManager = GetComponent<VanishingManager>();
         grappleGun = FindObjectOfType<GrapplingGun>();
         pauseManagerReference = FindObjectOfType<PauseManager>();
         platformTracks = vanishingManager.GetPlatformTracks();
