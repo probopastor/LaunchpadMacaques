@@ -10,11 +10,12 @@ public class RespawnSystem : MonoBehaviour
     GameObject currentRespawnObject;
 
     private GrapplingGun gg;
+    private PushPullObjects pushPullObjectsRef;
 
     private void Start()
     {
         gg = FindObjectOfType<GrapplingGun>();
-
+        pushPullObjectsRef = FindObjectOfType<PushPullObjects>();
 
         currentRespawnPosition = transform.position;
     }
@@ -54,8 +55,14 @@ public class RespawnSystem : MonoBehaviour
 
     public void RespawnPlayer()
     {
+        // If the player is holding an object, stop holding the object. 
+        if (pushPullObjectsRef.IsGrabbing())
+        {
+            pushPullObjectsRef.DropObject();
+        }
+
+        gg.StopGrapple();
         this.transform.position = currentRespawnPosition;
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        gg.StopGrapple();
     }
 }
