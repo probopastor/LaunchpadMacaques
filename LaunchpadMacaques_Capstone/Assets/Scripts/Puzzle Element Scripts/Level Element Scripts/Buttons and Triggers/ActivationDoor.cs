@@ -57,29 +57,6 @@ public class ActivationDoor : MonoBehaviour
         {
             DisableDoor();
         }
-
-        //if(!enableOnActivation)
-        //{
-        //    if (enable)
-        //    {
-        //        EnableDoor();
-        //    }
-        //    else if (!enable)
-        //    {
-        //        DisableDoor();
-        //    }
-        //}
-        //else if(enableOnActivation)
-        //{
-        //    if (enable)
-        //    {
-        //        DisableDoor();
-        //    }
-        //    else if (!enable)
-        //    {
-        //        EnableDoor();
-        //    }
-        //}
     }
 
     /// <summary>
@@ -115,7 +92,6 @@ public class ActivationDoor : MonoBehaviour
             {
                 StartCoroutine(BufferDoorActivity(false));
             }
-            //DisableDoor();
         }
         else if ((currentButtonsPressed < buttonsToActivate) && doorsDeactivated)
         {
@@ -129,8 +105,6 @@ public class ActivationDoor : MonoBehaviour
             {
                 StartCoroutine(BufferDoorActivity(true));
             }
-            //StartCoroutine(BufferDoorActivity(true));
-            //EnableDoor();
         }
     }
 

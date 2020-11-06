@@ -21,8 +21,9 @@ public class PressureButton : MonoBehaviour
 
     [SerializeField, Tooltip("Material of active object. ")] private Material activeButtonMaterial;
     [SerializeField, Tooltip("Material of inactive object. ")] private Material inactiveButtonMaterial;
-    //[SerializeField, Tooltip("If true, items handled by this button will be enabled (from a disabled state) when the button is pressed. Otherwise, " +
-    //    "items handled by this button will be disabled when the button is activated. ")] private bool enableOnActivation; 
+
+    [SerializeField, Tooltip("If true, button can be activated in a proximity. ")] private bool proximityTrigger;
+    [SerializeField, Tooltip("The area around this button that will trigger it. Only active if proximityTrigger is true. ")] private Vector3 proximityTriggerArea;
 
     private int objectsOnButton = 0;
     private bool activeStatus;
@@ -42,17 +43,27 @@ public class PressureButton : MonoBehaviour
         objectsOnButton = 0;
         activeStatus = false;
         buttonRend = GetComponent<MeshRenderer>();
-
+        CheckIfProximityTrigger();
         ActivateDeactivateButton(false);
+    }
 
-        //if(enableOnActivation)
-        //{
-        //    ActivateDeactivateButton(true);
-        //}
-        //else
-        //{
-        //    ActivateDeactivateButton(false);
-        //}
+    /// <summary>
+    /// If the button is a proximity trigger, adjust its trigger collider to set length. 
+    /// </summary>
+    private void CheckIfProximityTrigger()
+    {
+        if (proximityTrigger)
+        {
+            BoxCollider[] buttonColliders = gameObject.GetComponents<BoxCollider>();
+
+            for (int i = 0; i < buttonColliders.Length; i++)
+            {
+                if (buttonColliders[i].isTrigger)
+                {
+                    buttonColliders[i].size = proximityTriggerArea;
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -64,30 +75,11 @@ public class PressureButton : MonoBehaviour
         {
             activeStatus = true;
             ActivateDeactivateButton(true);
-
-            //if (enableOnActivation)
-            //{
-            //    ActivateDeactivateButton(false); ;
-            //}
-            //else
-            //{
-            //    ActivateDeactivateButton(true);
-            //}
         }
         else if ((objectsOnButton < triggerEnableGoal) && activeStatus)
         {
             activeStatus = false;
-
             ActivateDeactivateButton(false);
-
-            //if (enableOnActivation)
-            //{
-            //    ActivateDeactivateButton(true);
-            //}
-            //else
-            //{
-            //    ActivateDeactivateButton(false);
-            //}
         }
     }
 
@@ -196,11 +188,19 @@ public class PressureButton : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Returns the current button status. If button is active, return true. 
+    /// </summary>
+    /// <returns></returns>
     public bool GetButtonActivity()
     {
         return activeStatus;
     }
 
+    /// <summary>
+    /// Returns all objects linked to this button. 
+    /// </summary>
+    /// <returns></returns>
     public GameObject[] GetObjectsLinkedToButton()
     {
         return objectsLinkedToButton;
