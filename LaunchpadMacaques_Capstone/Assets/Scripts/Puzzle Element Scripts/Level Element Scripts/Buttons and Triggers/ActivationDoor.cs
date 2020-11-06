@@ -8,23 +8,28 @@ public class ActivationDoor : MonoBehaviour
 
     [SerializeField, Tooltip("The amount of buttons that need to be triggered to activate these doors. ")] private int buttonsToActivate = 0;
     [SerializeField, Tooltip("The amount of time waited after doors are activated / deactivated before their activity status is actually set. ")] private float activationBuffer;
-    private float activationBufferStorage = 0;
+
+    [SerializeField, Tooltip("If true, items handled by this button will be enabled (from a disabled state) when the button is pressed. Otherwise, " +
+    "items handled by this button will be disabled when the button is activated. ")] private bool enableOnActivation;
 
     private int currentButtonsPressed = 0;
     private bool doorsDectivated;
 
     private void Awake()
     {
-        activationBufferStorage = activationBuffer;
-        activationBuffer = 0;
         currentButtonsPressed = 0;
         doorsDectivated = false;
+
+        if (enableOnActivation)
+        {
+            DisableDoor();
+        }
+        else
+        {
+            EnableDoor();
+        }
     }
 
-    private void Start()
-    {
-        activationBuffer = activationBufferStorage;
-    }
 
     /// <summary>
     /// Waits a period of time before activating / deactivating doors. 
@@ -76,14 +81,28 @@ public class ActivationDoor : MonoBehaviour
         if((currentButtonsPressed >= buttonsToActivate) && !doorsDectivated)
         {
             doorsDectivated = true;
-            StartCoroutine(BufferDoorActivity(false));
-            //DisableDoor();
+
+            if (enableOnActivation)
+            {
+                StartCoroutine(BufferDoorActivity(true));
+            }
+            else if (!enableOnActivation)
+            {
+                StartCoroutine(BufferDoorActivity(false));
+            }
         }
         else if ((currentButtonsPressed < buttonsToActivate) && doorsDectivated)
         {
             doorsDectivated = false;
-            StartCoroutine(BufferDoorActivity(true));
-            //EnableDoor();
+
+            if (enableOnActivation)
+            {
+                StartCoroutine(BufferDoorActivity(false));
+            }
+            else if (!enableOnActivation)
+            {
+                StartCoroutine(BufferDoorActivity(true));
+            }
         }
     }
 

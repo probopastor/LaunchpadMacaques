@@ -21,8 +21,8 @@ public class PressureButton : MonoBehaviour
 
     [SerializeField, Tooltip("Material of active object. ")] private Material activeButtonMaterial;
     [SerializeField, Tooltip("Material of inactive object. ")] private Material inactiveButtonMaterial;
-    [SerializeField, Tooltip("If true, items handled by this button will be enabled (from a disabled state) when the button is pressed. Otherwise, " +
-        "items handled by this button will be disabled when the button is activated. ")] private bool enableOnActivation; 
+    //[SerializeField, Tooltip("If true, items handled by this button will be enabled (from a disabled state) when the button is pressed. Otherwise, " +
+     //   "items handled by this button will be disabled when the button is activated. ")] private bool enableOnActivation; 
 
     private int objectsOnButton = 0;
     private bool activeStatus;
@@ -43,14 +43,16 @@ public class PressureButton : MonoBehaviour
         activeStatus = false;
         buttonRend = GetComponent<MeshRenderer>();
 
-        if(enableOnActivation)
-        {
-            ActivateDeactivateButton(true);
-        }
-        else
-        {
-            ActivateDeactivateButton(false);
-        }
+        ActivateDeactivateButton(false);
+
+        //if(enableOnActivation)
+        //{
+        //    ActivateDeactivateButton(true);
+        //}
+        //else
+        //{
+        //    ActivateDeactivateButton(false);
+        //}
     }
 
     /// <summary>
@@ -61,28 +63,30 @@ public class PressureButton : MonoBehaviour
         if ((objectsOnButton >= triggerEnableGoal) && !activeStatus)
         {
             activeStatus = true;
+            ActivateDeactivateButton(true);
 
-            if (enableOnActivation)
-            {
-                ActivateDeactivateButton(false); ;
-            }
-            else
-            {
-                ActivateDeactivateButton(true);
-            }
+            //if (enableOnActivation)
+            //{
+            //    ActivateDeactivateButton(false); ;
+            //}
+            //else
+            //{
+            //    ActivateDeactivateButton(true);
+            //}
         }
         else if ((objectsOnButton < triggerEnableGoal) && activeStatus)
         {
             activeStatus = false;
+            ActivateDeactivateButton(false);
 
-            if (enableOnActivation)
-            {
-                ActivateDeactivateButton(true);
-            }
-            else
-            {
-                ActivateDeactivateButton(false);
-            }
+            //if (enableOnActivation)
+            //{
+            //    ActivateDeactivateButton(true);
+            //}
+            //else
+            //{
+            //    ActivateDeactivateButton(false);
+            //}
         }
     }
 
@@ -110,11 +114,10 @@ public class PressureButton : MonoBehaviour
                 }
             }
 
-            // If a timer should be used
-            if (useTimer)
-            {
-                StartCoroutine(DisableAfterTime());
-            }
+            //if (useTimer)
+            //{
+            //    StartCoroutine(DisableAfterTime());
+            //}
         }
         else if (!isActive)
         {
@@ -125,7 +128,7 @@ public class PressureButton : MonoBehaviour
             {
                 if (objectsLinkedToButton[i].GetComponent<ActivationDoor>() != null)
                 {
-                    objectsLinkedToButton[i].GetComponent<ActivationDoor>().SetCurrentButtonsPressed(0);
+                    objectsLinkedToButton[i].GetComponent<ActivationDoor>().SetActiveButtons(-1);
                 }
                 else
                 {
