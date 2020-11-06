@@ -40,19 +40,20 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Player Movement Variables")]
     [SerializeField, Tooltip("The player's movement speed. ")] private float moveSpeed = 4500;
     [Range(0f, 1f), SerializeField, Tooltip("The movement speed multiplier while the player is airborn. ")] private float airMoveSpeedMultiplier = .75f;
-    [SerializeField, Tooltip("The player's max speed. ")] private float maxSpeed = 20;
+    [SerializeField, Tooltip("The player's max speed. when walking, doesnt affect swing speed ")] private float maxSpeed = 20;
     #endregion 
 
     [HideInInspector] public bool grounded;
     [SerializeField, Tooltip("The layer for the ground. Anything on this layer will be considered ground. ")] private LayerMask whatIsGround;
 
+    [SerializeField, Tooltip("This is the max speed that the player can achieve when swinging. ")]
     private float maxVelocity = 50f;
 
     #region Movement Stabilization Variables
     [Header("Counter Movement")]
-    public float counterMovement = 0.175f;
+    [Tooltip("This is the variable that affects the speed of counter movement applied to the player, which slows the player down to a stop")] public float counterMovement = 0.175f;
     [SerializeField] private float threshold = 0.01f;
-    [SerializeField] private float maxSlopeAngle = 35f;
+    [SerializeField, Tooltip("The angle that the player starts to be unable to walk up ")] private float maxSlopeAngle = 35f;
     #endregion
 
     #region Crouch and Slide Variables
@@ -587,7 +588,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             return;
         }
 
-        //Counter movement
+        //Counter movement (this makes it so that the player slows down and slides to a stop) counterMovement to affect speed of this
         if (Mathf.Abs(mag.x) > threshold && Mathf.Abs(x) < 0.05f || (mag.x < -threshold && x > 0) || (mag.x > threshold && x < 0))
         {
             rb.AddForce(moveSpeed * orientation.transform.right * Time.deltaTime * -mag.x * counterMovement);
