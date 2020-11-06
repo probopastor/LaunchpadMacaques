@@ -14,9 +14,9 @@ public class LockToWorldGrid : MonoBehaviour
     void Update()
     {
         Vector3 pos = transform.position;
-        pos.x -= pos.x % 0.625f;
-        pos.y -= pos.y % 0.625f;
-        pos.z -= pos.z % 0.625f;
+        pos.x -= pos.x % 0.875f;
+        pos.y -= pos.y % 0.875f;
+        pos.z -= pos.z % 0.875f;
 
         transform.position = pos;
     }
