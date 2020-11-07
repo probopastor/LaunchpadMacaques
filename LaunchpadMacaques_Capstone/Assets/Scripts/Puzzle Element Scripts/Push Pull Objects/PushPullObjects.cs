@@ -5,6 +5,7 @@
 * (The Script that is placed on the player to handle picking and throwing objects) 
 */
 
+using System.Collections;
 using UnityEngine;
 
 public class PushPullObjects : MonoBehaviour
@@ -42,6 +43,8 @@ public class PushPullObjects : MonoBehaviour
     GameObject objectHolder;
 
     float objectFollowSpeed = 7;
+
+    private bool inTempFix = false;
     #endregion
 
     private void Awake()
@@ -100,7 +103,7 @@ public class PushPullObjects : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (grabbing)
+        if (grabbing && !inTempFix)
         {
             Debug.DrawRay(objectRB.position, objectHolder.transform.position - objectRB.transform.position);
 
@@ -159,7 +162,7 @@ public class PushPullObjects : MonoBehaviour
     /// </summary>
     public void DropObject()
     {
-        grabbing = false;
+        StartCoroutine(GrabbingFalse());
         objectRB.isKinematic = false;
         objectRB.useGravity = true;
         objectRB.GetComponent<PushableObj>().DroppedObject();
@@ -177,7 +180,7 @@ public class PushPullObjects : MonoBehaviour
         objectRB.isKinematic = false;
         objectRB.GetComponent<PushableObj>().StartPush(cam);
         objectRB.useGravity = false;
-        grabbing = false;
+        StartCoroutine(GrabbingFalse());
         lr.positionCount = 0;
         objectRB = null;
 
@@ -194,6 +197,18 @@ public class PushPullObjects : MonoBehaviour
             lr.SetPosition(1, this.transform.position);
         }
 
+    }
+
+    IEnumerator GrabbingFalse()
+    {
+        inTempFix = true;
+        while (Input.GetMouseButton(0))
+        {
+            yield return new WaitForSeconds(0);
+        }
+
+        grabbing = false;
+        inTempFix = false;
     }
 
     /// <summary>
