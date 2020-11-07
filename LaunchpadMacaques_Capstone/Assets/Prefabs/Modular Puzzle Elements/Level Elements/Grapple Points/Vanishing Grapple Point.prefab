@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1997736921237231861}
   - component: {fileID: 1997736921432594391}
   - component: {fileID: 1997736921170382734}
+  - component: {fileID: 1672762426600260343}
   m_Layer: 8
   m_Name: Vanishing Grapple Point
   m_TagString: GrapplePoint
@@ -141,3 +142,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   breakTime: 3
+--- !u!114 &1672762426600260343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1997736921237231863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958a08a5a996edb4e9c8ee5698f14db6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  corruptionState: 0
+  wireframeColor: {r: 0.7490196, g: 0, b: 0, a: 1}
+  corruptionStartPoint: {x: 0, y: 0, z: 0}
+  corruptionDistance: 0
+  staticCorruptionPoints: []
+  useWorldCoordinates: 0
