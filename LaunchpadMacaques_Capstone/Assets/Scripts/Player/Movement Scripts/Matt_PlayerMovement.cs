@@ -108,6 +108,13 @@ public class Matt_PlayerMovement : MonoBehaviour
     private bool useCourtineDash = true;
     #endregion
 
+    #region Getters/Setters
+    public float GetMaxVelocity()
+    {
+        return maxVelocity;
+    }
+    #endregion
+
 
     [Header("Player Input")]
 
@@ -159,6 +166,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             MyInput();
             Look();
+            grappleGunReference.UpdateHandRotation(rb.velocity);
         }
     }
 

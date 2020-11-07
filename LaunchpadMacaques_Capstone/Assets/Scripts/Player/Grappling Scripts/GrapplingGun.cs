@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.PlayerLoop;
+using FMOD.Studio;
 
 public class GrapplingGun : MonoBehaviour
 {
@@ -59,6 +61,12 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] private float neededVelocityForAutoAim = 20;
     [SerializeField]
     [Tooltip("The Distance the A Ray will be shot down to, to fix thse issue of auto aiming onto the platforming your standint on")] private float groundCheckDistance = 5f;
+
+    [Header("Hand Movement Settings")]
+    [SerializeField, Tooltip("The max amount the hand will tilt up and down based on movement")]
+    private float xRotationMax = 15.0f;
+    [SerializeField, Tooltip("The max amount the hand will tilt left and right based on movement")]
+    private float yRotationMax = 15.0f;
     #endregion
 
     #region PrivateVariables
@@ -621,6 +629,41 @@ public class GrapplingGun : MonoBehaviour
 
         lr.positionCount = 0;
         Destroy(joint);
+    }
+
+    #endregion
+
+    #region Hand Movement
+    public void UpdateHandRotation(Vector3 currentVelocity)
+    {
+        //Find where hand should move horizontally
+        Vector3 camReferenceX = Vector3.ProjectOnPlane(cam.right, Vector3.up);
+        Vector3 velocityX = Vector3.ProjectOnPlane(currentVelocity, Vector3.up);
+        float angleX = Vector3.Angle(camReferenceX, velocityX);
+        float cos = Mathf.Cos(angleX * Mathf.Deg2Rad);
+        if (Mathf.Abs(cos) < 0.2f)
+            cos = 0;
+        else if (Mathf.Abs(cos) > 0.8f)
+            cos = 1 * Mathf.Sign(cos);
+        float horizontalRotationEulerAngle = Mathf.Lerp(0, xRotationMax, (currentVelocity.magnitude / playerMovementReference.GetMaxVelocity())) * cos;
+        //
+        if (IsGrappling())
+            horizontalRotationEulerAngle = 0;
+
+        //Find where hand should move vertically
+        Vector3 velocityY = currentVelocity;
+        float angleY = Vector3.Angle(Vector3.down, velocityY);
+        float sin = Mathf.Cos(angleY * Mathf.Deg2Rad);
+        if (Mathf.Abs(sin) < 0.2f)
+            sin = 0;
+        else if (Mathf.Abs(sin) > 0.8f)
+            sin = 1 * Mathf.Sign(sin);
+        float verticalRotationEulerAngle = Mathf.Lerp(0, yRotationMax, (currentVelocity.magnitude / playerMovementReference.GetMaxVelocity())) * sin;
+
+        //UnityEngine.Debug.Log("Angle: " + angleX + " | Sin: " + sin);
+        UnityEngine.Debug.Log("Angle: " + angleY + " | Cos: " + cos);
+
+        transform.localRotation = Quaternion.Euler(verticalRotationEulerAngle, horizontalRotationEulerAngle, 0);
     }
 
     #endregion
