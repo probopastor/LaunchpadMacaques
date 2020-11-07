@@ -13,7 +13,7 @@ public class CubeRespawn : MonoBehaviour
     #region Variables
     [SerializeField, Tooltip("The triggers that the button should read. Other triggers are ignored. ")] private string[] triggerTags;
     [SerializeField, Tooltip("The Game Object at the position that this cube is respawned to. ")] private GameObject respawnPos;
-    [SerializeField, Tooltip("A modifier to the position the Game Object should be respawned at. ")] private Vector3 respawnPosModifiers = new Vector3(0,0,0);
+    [SerializeField, Tooltip("A modifier to the position the Game Object should be respawned at. ")] private Vector3 respawnPosModifiers = new Vector3(0, 0, 0);
 
     private Quaternion respawnAngle;
     private PushPullObjects pushPullObjectsRef;
@@ -64,13 +64,13 @@ public class CubeRespawn : MonoBehaviour
     public void RespawnCube()
     {
         // If the player is holding the object, stop holding the object. 
-        if(pushPullObjectsRef.IsGrabbing())
+        if (pushPullObjectsRef.IsGrabbing() && gameObject == pushPullObjectsRef.GetHeldCube())
         {
             pushPullObjectsRef.DropObject();
         }
 
         // If the cube is being pushed from a throw, stop the push. 
-        if(pushableObjRef.GetPushStatus())
+        if (pushableObjRef.GetPushStatus())
         {
             pushableObjRef.StopPushingObject();
         }
@@ -79,7 +79,7 @@ public class CubeRespawn : MonoBehaviour
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
-        if(respawnPos != null)
+        if (respawnPos != null)
         {
             // Set the respawn position, and the respawn rotation. 
             float xPos = respawnPos.transform.position.x + respawnPosModifiers.x;

@@ -21,12 +21,12 @@ public class PushPullObjects : MonoBehaviour
 
     [SerializeField] GameObject topMiddle;
     [SerializeField] GameObject bottomMiddle;
-    [SerializeField][Tooltip("The Max Distance the player can pick up an object")] float maxGrabDistance;
-    [SerializeField][Tooltip("The Layer for object that can be picked up")] LayerMask canBePickedUp;
+    [SerializeField] [Tooltip("The Max Distance the player can pick up an object")] float maxGrabDistance;
+    [SerializeField] [Tooltip("The Layer for object that can be picked up")] LayerMask canBePickedUp;
 
 
 
-    enum ObjectFollowPostion { topLeft, bottomLeft, topRight, bottomRight, topMiddle, bottomMiddle};
+    enum ObjectFollowPostion { topLeft, bottomLeft, topRight, bottomRight, topMiddle, bottomMiddle };
 
     [SerializeField, Tooltip("Which position the moveable cube will move towards")] ObjectFollowPostion objectFollowPos;
     #endregion
@@ -78,18 +78,18 @@ public class PushPullObjects : MonoBehaviour
 
     void Update()
     {
-       
+
         if (Input.GetMouseButtonDown(0) /*&& !grapplingGun.IsGrappling()*/)
         {
-            if(!grabbing)
+            if (!grabbing)
             {
                 PickUpObject();
             }
-            else if(grabbing)
+            else if (grabbing)
             {
                 ThrowObject();
             }
-  
+
         }
         else if (Input.GetMouseButtonDown(1))
         {
@@ -111,7 +111,7 @@ public class PushPullObjects : MonoBehaviour
             if (!Physics.Raycast(objectRB.gameObject.transform.position, objectHolder.transform.position - objectRB.transform.position, out hit, .6f))
             {
                 objectRB.MovePosition(Vector3.Lerp(objectRB.position, objectHolder.transform.position, Time.fixedDeltaTime * objectFollowSpeed));
-          
+
             }
 
             else
@@ -119,7 +119,7 @@ public class PushPullObjects : MonoBehaviour
                 if (hit.collider.isTrigger)
                 {
                     objectRB.MovePosition(Vector3.Lerp(objectRB.position, objectHolder.transform.position, Time.fixedDeltaTime * objectFollowSpeed));
-        
+
                 }
             }
         }
@@ -146,7 +146,7 @@ public class PushPullObjects : MonoBehaviour
             grapplingGun.StopGrapple();
             objectRB = hit.rigidbody;
             objectRB.useGravity = false;
-           // objectRB.isKinematic = true;
+            // objectRB.isKinematic = true;
 
             grabbing = true;
 
@@ -190,8 +190,8 @@ public class PushPullObjects : MonoBehaviour
     /// Will Draw The Rope from the players hand to the grabbed object
     /// </summary>
     void DrawRope()
-    { 
-        if(lr.positionCount > 0)
+    {
+        if (lr.positionCount > 0)
         {
             lr.SetPosition(0, objectRB.transform.position);
             lr.SetPosition(1, this.transform.position);
@@ -218,6 +218,15 @@ public class PushPullObjects : MonoBehaviour
     public bool IsGrabbing()
     {
         return grabbing;
+    }
+
+    /// <summary>
+    /// Returns the game object of the currently held cube. 
+    /// </summary>
+    /// <returns></returns>
+    public GameObject GetHeldCube()
+    {
+        return objectRB.gameObject;
     }
 
 }
