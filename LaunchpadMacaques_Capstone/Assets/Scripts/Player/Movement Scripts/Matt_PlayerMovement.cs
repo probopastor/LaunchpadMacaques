@@ -246,8 +246,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             GetComponent<Rigidbody>().AddForce((playerCam.forward) * courtineDashAmmount * Time.deltaTime, ForceMode.Impulse);
             currentTime += Time.deltaTime;
             yield return new WaitForSeconds(0);
-        }
-        anim.ResetTrigger("Dash");
+        }        
     }
 
     IEnumerator DashCooldown()

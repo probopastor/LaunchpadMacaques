@@ -530,6 +530,7 @@ public class GrapplingGun : MonoBehaviour
         {
             canHoldDownToGrapple = false;
 
+            anim.ResetTrigger("Dash");
             anim.ResetTrigger("GrappleEnd");
             anim.SetTrigger("GrappleStart");
 
