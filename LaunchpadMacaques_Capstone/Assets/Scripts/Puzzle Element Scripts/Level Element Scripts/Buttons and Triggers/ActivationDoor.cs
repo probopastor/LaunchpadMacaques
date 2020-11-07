@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿/* 
+* Launchpad Macaques - Neon Oblivion
+* William Nomikos, Jamey Colleen
+* ActivationDoor.cs
+* Script handles enabling or disabling objects activation doors (and their objects) upon the buttons 
+* being activated. 
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
