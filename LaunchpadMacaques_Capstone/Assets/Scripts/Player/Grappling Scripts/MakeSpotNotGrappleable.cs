@@ -109,7 +109,7 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     IEnumerator ChangeObjectLayer(GameObject obj)
     {
         yield return new WaitForSeconds(.1f);
-        obj.layer = LayerMask.NameToLayer("CantGrapple");
+        //obj.layer = LayerMask.NameToLayer("CantGrapple");
     }
 
 
