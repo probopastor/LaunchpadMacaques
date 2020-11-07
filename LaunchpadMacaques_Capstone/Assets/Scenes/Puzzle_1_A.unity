@@ -1630,7 +1630,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-42102
+  m_Name: pb_Mesh-1312
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1958,7 +1958,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38970
+  m_Name: pb_Mesh20746
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2482,6 +2482,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kill Zone
       objectReference: {fileID: 0}
+    - target: {fileID: 5873859347371790906, guid: ba5e363a4756fc64f8bb55af8b994a42,
+        type: 3}
+      propertyPath: m_TagString
+      value: RespawnCube
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba5e363a4756fc64f8bb55af8b994a42, type: 3}
 --- !u!4 &492396681 stripped
@@ -2508,7 +2513,7 @@ GameObject:
   - component: {fileID: 509071789}
   m_Layer: 0
   m_Name: DespawnCube
-  m_TagString: Untagged
+  m_TagString: RespawnCube
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2530,7 +2535,7 @@ MonoBehaviour:
   buttonsToActivate: 1
   activationBuffer: 0
   enableOnActivation: 0
-  stayDeactivated: 1
+  stayDeactivated: 0
 --- !u!4 &509071790
 Transform:
   m_ObjectHideFlags: 0
@@ -2864,7 +2869,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38912
+  m_Name: pb_Mesh20688
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3148,6 +3153,11 @@ PrefabInstance:
       propertyPath: respawnPos
       value: 
       objectReference: {fileID: 1745318353}
+    - target: {fileID: 1419916330316983612, guid: ab0a9ce77bfc0464e826f259cb7566a7,
+        type: 3}
+      propertyPath: triggerTags.Array.data[0]
+      value: RespawnCube
+      objectReference: {fileID: 0}
     - target: {fileID: 2058264478890330552, guid: ab0a9ce77bfc0464e826f259cb7566a7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3556,6 +3566,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4870338019074189926, guid: 0b6b05165cf6d614cb37e53b398fff99,
+        type: 3}
+      propertyPath: triggerTags.Array.data[0]
+      value: RespawnCube
+      objectReference: {fileID: 0}
     - target: {fileID: 5676710158715038629, guid: 0b6b05165cf6d614cb37e53b398fff99,
         type: 3}
       propertyPath: m_Name
@@ -3936,7 +3951,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38898
+  m_Name: pb_Mesh20674
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4751,7 +4766,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-42034
+  m_Name: pb_Mesh-1212
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4916,6 +4931,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1291348120475291996, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -175
+      objectReference: {fileID: 0}
     - target: {fileID: 2289285556304831788, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4952,6 +4972,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952655047161991991, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -3.4000158
       objectReference: {fileID: 0}
     - target: {fileID: 3032509958985170225, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
@@ -5007,6 +5032,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035834617317046475, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 3341310330116897524, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
@@ -5107,6 +5137,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Standard Scene Group
+      objectReference: {fileID: 0}
+    - target: {fileID: 6671878520312896168, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 22.399984
       objectReference: {fileID: 0}
     - target: {fileID: 6919585669480410492, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
