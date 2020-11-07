@@ -93,7 +93,10 @@ public class MakeSpotNotGrappleable : MonoBehaviour
 
         if (objectToCorrupt != null)
         {
-            objectToCorrupt.StartCorrupting(hitObject.transform.position);
+            if (!corruptedObjects.Contains(hitObject))
+            {
+                objectToCorrupt.StartCorrupting(hitObject.transform.position);
+            }
         }
 
         StartCoroutine(ChangeObjectLayer(hitObject));
