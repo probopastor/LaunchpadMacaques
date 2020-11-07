@@ -1,7 +1,7 @@
 ﻿/* 
 * Launchpad Macaques - Neon Oblivion
 * CJ Green, William Nomikos 
-* VanishingPlatform.cs)
+* VanishingPlatform.cs
 * This script handles the functionality for platforms disappearing and reappearing. 
 */
 
