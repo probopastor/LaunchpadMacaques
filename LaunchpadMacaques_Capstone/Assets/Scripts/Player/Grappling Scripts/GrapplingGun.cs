@@ -64,9 +64,18 @@ public class GrapplingGun : MonoBehaviour
 
     [Header("Hand Movement Settings")]
     [SerializeField, Tooltip("The max amount the hand will tilt up and down based on movement")]
-    private float xRotationMax = 15.0f;
+    private float horizontalRotationMax = 15.0f;
     [SerializeField, Tooltip("The max amount the hand will tilt left and right based on movement")]
-    private float yRotationMax = 15.0f;
+    private float verticalRotationMax = 15.0f;
+    [SerializeField, Tooltip("When True, the hand will tilt left and right while grappling")]
+    private bool useHorizontalMovementWhileGrappling = true;
+    [SerializeField, Tooltip("When True, the hand will tilt up and down while grpapling")]
+    private bool useVerticalMovementWhileGrappling = true;
+    [SerializeField, Range(0, 1), Tooltip("When the Cosine calculations are preformed and the result is within this value of 0 or 1, it" +
+    "will be rounded either down or up respecitvely. Increasing this value can decrease twitching-like movements of the hand, but will decrease" +
+    "the fluidity of the movement")]
+    private float roundingRange = 0.2f;
+
     #endregion
 
     #region PrivateVariables
@@ -634,35 +643,46 @@ public class GrapplingGun : MonoBehaviour
     #endregion
 
     #region Hand Movement
+    /// <summary>
+    /// Called Every Frame by Matt_PlayerMovement.cs, takes the players current velocity and uses it to determine how the hand should move
+    /// </summary>
+    /// <param name="currentVelocity">The vector current velocity of the player</param>
     public void UpdateHandRotation(Vector3 currentVelocity)
     {
         //Find where hand should move horizontally
-        Vector3 camReferenceX = Vector3.ProjectOnPlane(cam.right, Vector3.up);
-        Vector3 velocityX = Vector3.ProjectOnPlane(currentVelocity, Vector3.up);
-        float angleX = Vector3.Angle(camReferenceX, velocityX);
-        float cos = Mathf.Cos(angleX * Mathf.Deg2Rad);
-        if (Mathf.Abs(cos) < 0.2f)
-            cos = 0;
-        else if (Mathf.Abs(cos) > 0.8f)
-            cos = 1 * Mathf.Sign(cos);
-        float horizontalRotationEulerAngle = Mathf.Lerp(0, xRotationMax, (currentVelocity.magnitude / playerMovementReference.GetMaxVelocity())) * cos;
-        //
-        if (IsGrappling())
+        Vector3 camReferenceX = Vector3.ProjectOnPlane(cam.right, Vector3.up); //Project the camera's right onto a horizontal plane
+        Vector3 velocityX = Vector3.ProjectOnPlane(currentVelocity, Vector3.up); //Project the player's velocity onto the same horizontal plane
+        float angleX = Vector3.Angle(camReferenceX, velocityX); //Get the angle between the two vectors (Since they're on the same horizontal plane, this will be the direction the velocity is relative to the player
+        float horizontalCos = Mathf.Cos(angleX * Mathf.Deg2Rad);  //Get the cosine of the angle (1 when to the left or right of the player, 0 when to the front or back
+        //Prevent precision issues, if the number is small or big enough just set it to 0 or 1
+        if (Mathf.Abs(horizontalCos) < roundingRange)
+            horizontalCos = 0;
+        else if (Mathf.Abs(horizontalCos) > 1 - roundingRange)
+            horizontalCos = 1 * Mathf.Sign(horizontalCos);
+        //Lerp between no movement and the xRotationMax variable based on how close the players velocity is to the max velocity
+        float horizontalRotationEulerAngle = Mathf.Lerp(0, horizontalRotationMax, (currentVelocity.magnitude / playerMovementReference.GetMaxVelocity())) * horizontalCos;
+
+        //If option is selected, don't use horizontal movement while grappling (can have slightly weird effects)
+        if (!useHorizontalMovementWhileGrappling && IsGrappling())
             horizontalRotationEulerAngle = 0;
 
         //Find where hand should move vertically
         Vector3 velocityY = currentVelocity;
-        float angleY = Vector3.Angle(Vector3.down, velocityY);
-        float sin = Mathf.Cos(angleY * Mathf.Deg2Rad);
-        if (Mathf.Abs(sin) < 0.2f)
-            sin = 0;
-        else if (Mathf.Abs(sin) > 0.8f)
-            sin = 1 * Mathf.Sign(sin);
-        float verticalRotationEulerAngle = Mathf.Lerp(0, yRotationMax, (currentVelocity.magnitude / playerMovementReference.GetMaxVelocity())) * sin;
+        float angleY = Vector3.Angle(Vector3.down, velocityY); //Get the angle between the global down and the player's velocity
+        float verticalCos = Mathf.Cos(angleY * Mathf.Deg2Rad); //Get the cos of the angle such that down and up directions are one and everything to the side is 0
+       //Prevent precision issues, if the cos is close to 1 or 0, round it to one or 0
+        if (Mathf.Abs(verticalCos) < roundingRange)
+            verticalCos = 0;
+        else if (Mathf.Abs(verticalCos) > 1 - roundingRange)
+            verticalCos = 1 * Mathf.Sign(verticalCos);
+        //Get the rotation amount based on a lerp between 0 and the maximum rotation amount
+        float verticalRotationEulerAngle = Mathf.Lerp(0, verticalRotationMax, (currentVelocity.magnitude / playerMovementReference.GetMaxVelocity())) * verticalCos;
 
-        //UnityEngine.Debug.Log("Angle: " + angleX + " | Sin: " + sin);
-        UnityEngine.Debug.Log("Angle: " + angleY + " | Cos: " + cos);
+        //If option is selected, don't use vertical movement while grappling
+        if (!useVerticalMovementWhileGrappling && IsGrappling())
+            horizontalRotationEulerAngle = 0;
 
+        //Set the rotation
         transform.localRotation = Quaternion.Euler(verticalRotationEulerAngle, horizontalRotationEulerAngle, 0);
     }
 
