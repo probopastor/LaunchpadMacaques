@@ -5,7 +5,7 @@
 * (The Script placed on object the player can pick up and throw) 
 */
 
-using FMOD;
+using FMODUnity;
 using UnityEngine;
 
 public class PushableObj : MonoBehaviour
@@ -25,6 +25,7 @@ public class PushableObj : MonoBehaviour
     [SerializeField] [Tooltip("The Bool which will determine if the player can change the Object Fly Distance")]  bool changeDistance = true;
     [SerializeField] [Tooltip("The Min Fly Distance for the Object")]float minDistance = 5;
     [SerializeField] [Tooltip("The Max Fly Distance for the Object")]float maxDistance = 40;
+
     #endregion
 
     #region Private Vars
@@ -44,6 +45,7 @@ public class PushableObj : MonoBehaviour
 
     private CollectibleController cc;
 
+    private StudioEventEmitter soundEmitter;
     #endregion
 
     private void Awake()
@@ -51,8 +53,8 @@ public class PushableObj : MonoBehaviour
         CreateDecalAndLine();
 
         grav = this.GetComponent<Gravity>();
-
         cc = FindObjectOfType<CollectibleController>();
+        soundEmitter = GetComponent<StudioEventEmitter>();
     }
 
     /// <summary>
@@ -184,6 +186,7 @@ public class PushableObj : MonoBehaviour
         }
 
         this.transform.position = point1;
+        soundEmitter.EventInstance.triggerCue();
     }
 
     #region Line
@@ -293,6 +296,9 @@ public class PushableObj : MonoBehaviour
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         GetComponent<Rigidbody>().freezeRotation = true;
 
+        if (soundEmitter.IsPlaying()) soundEmitter.Stop();
+        soundEmitter.Play();
+
     }
 
     /// <summary>
@@ -307,6 +313,7 @@ public class PushableObj : MonoBehaviour
         GetComponent<Rigidbody>().freezeRotation = false;
         lr.positionCount = 0;
         thisDecal.SetActive(false);
+        soundEmitter.EventInstance.triggerCue();
     }
 
     /// <summary>
