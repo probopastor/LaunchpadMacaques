@@ -14,11 +14,13 @@ public class ActivationDoor : MonoBehaviour
 
     private int currentButtonsPressed = 0;
     private bool doorsDeactivated;
+    private GrapplingGun grapplingGunReference;
 
     private void Awake()
     {
         currentButtonsPressed = 0;
         doorsDeactivated = false;
+        grapplingGunReference = FindObjectOfType<GrapplingGun>();
     }
 
     private void Start()
@@ -120,6 +122,13 @@ public class ActivationDoor : MonoBehaviour
             if(doors[i].GetComponent<CubeRespawn>() != null)
             {
                 doors[i].GetComponent<CubeRespawn>().RespawnCube();
+            }
+
+
+            // If the player is grappling to the object that was disabled, break the grapple. 
+            if (grapplingGunReference.IsGrappling() && grapplingGunReference.GetCurrentGrappledObject() == doors[i])
+            {
+                grapplingGunReference.StopGrapple();
             }
 
             doors[i].SetActive(false);
