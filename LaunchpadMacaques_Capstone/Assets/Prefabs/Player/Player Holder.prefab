@@ -1051,6 +1051,7 @@ MonoBehaviour:
   courtineDashAmmount: 500
   dashLength: 0.1
   dashCooldown: 1.5
+  anim: {fileID: 2125406432066585191}
 --- !u!114 &7880684068815890855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1466,6 +1467,7 @@ MonoBehaviour:
   useHorizontalMovementWhileGrappling: 1
   useVerticalMovementWhileGrappling: 1
   roundingRange: 0.2
+  anim: {fileID: 2125406432066585191}
 --- !u!114 &7880684069554880041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1711,7 +1713,12 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ccd2a116ed569894184ea23e5ca9bb3f,
         type: 3}
       propertyPath: m_Name
-      value: Hand (1)
+      value: Hand Model
+      objectReference: {fileID: 0}
+    - target: {fileID: 2296393078715663276, guid: ccd2a116ed569894184ea23e5ca9bb3f,
+        type: 3}
+      propertyPath: m_Name
+      value: Hand Mesh
       objectReference: {fileID: 0}
     - target: {fileID: 6128140153830238031, guid: ccd2a116ed569894184ea23e5ca9bb3f,
         type: 3}
