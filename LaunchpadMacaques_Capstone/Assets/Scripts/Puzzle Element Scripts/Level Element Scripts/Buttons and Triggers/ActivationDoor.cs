@@ -12,13 +12,17 @@ public class ActivationDoor : MonoBehaviour
     [SerializeField, Tooltip("If true, items handled by this button will be enabled (from a disabled state) when the button is pressed. Otherwise, " +
      "items handled by this button will be disabled when the button is activated. ")] private bool enableOnActivation;
 
+    [SerializeField, Tooltip("If set to true, this activated object will never be deactivated once it is activated. ")] private bool stayDeactivated;
+
     private int currentButtonsPressed = 0;
     private bool doorsDeactivated;
+    private GrapplingGun grapplingGunReference;
 
     private void Awake()
     {
         currentButtonsPressed = 0;
         doorsDeactivated = false;
+        grapplingGunReference = FindObjectOfType<GrapplingGun>();
     }
 
     private void Start()
@@ -57,29 +61,6 @@ public class ActivationDoor : MonoBehaviour
         {
             DisableDoor();
         }
-
-        //if(!enableOnActivation)
-        //{
-        //    if (enable)
-        //    {
-        //        EnableDoor();
-        //    }
-        //    else if (!enable)
-        //    {
-        //        DisableDoor();
-        //    }
-        //}
-        //else if(enableOnActivation)
-        //{
-        //    if (enable)
-        //    {
-        //        DisableDoor();
-        //    }
-        //    else if (!enable)
-        //    {
-        //        EnableDoor();
-        //    }
-        //}
     }
 
     /// <summary>
@@ -115,9 +96,8 @@ public class ActivationDoor : MonoBehaviour
             {
                 StartCoroutine(BufferDoorActivity(false));
             }
-            //DisableDoor();
         }
-        else if ((currentButtonsPressed < buttonsToActivate) && doorsDeactivated)
+        else if ((currentButtonsPressed < buttonsToActivate) && doorsDeactivated && !stayDeactivated)
         {
             doorsDeactivated = false;
 
@@ -129,8 +109,6 @@ public class ActivationDoor : MonoBehaviour
             {
                 StartCoroutine(BufferDoorActivity(true));
             }
-            //StartCoroutine(BufferDoorActivity(true));
-            //EnableDoor();
         }
     }
 
@@ -146,6 +124,13 @@ public class ActivationDoor : MonoBehaviour
             if(doors[i].GetComponent<CubeRespawn>() != null)
             {
                 doors[i].GetComponent<CubeRespawn>().RespawnCube();
+            }
+
+
+            // If the player is grappling to the object that was disabled, break the grapple. 
+            if (grapplingGunReference.IsGrappling() && grapplingGunReference.GetCurrentGrappledObject() == doors[i])
+            {
+                grapplingGunReference.StopGrapple();
             }
 
             doors[i].SetActive(false);
