@@ -6,6 +6,9 @@ using System.Collections;
 
 public class MusicManager : MonoBehaviour
 {
+    [Tooltip("Enable this if you want the music to automatically play in the scene on loop.")]
+    public bool autoPlay;
+
     public static MusicManager instance;
 
     private ScriptableEmitter curEmitter;
@@ -20,6 +23,8 @@ public class MusicManager : MonoBehaviour
         instance = this;
         volumeFrom = 1;
         volumeTo = 0;
+        if (autoPlay)
+            SwitchTrack("Castles");
     }
 
     public void SwitchTrack(string trackName)
@@ -65,15 +70,17 @@ public class MusicManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        if (!autoPlay)
         {
-            SwitchTrack("Cursed");
-        }
+            if (Input.GetKeyDown(KeyCode.LeftBracket))
+            {
+                SwitchTrack("Cursed");
+            }
 
-        if (Input.GetKeyDown(KeyCode.RightBracket))
-        {
-            SwitchTrack("Castles");
+            if (Input.GetKeyDown(KeyCode.RightBracket))
+            {
+                SwitchTrack("Castles");
+            }
         }
-
     }
 }
