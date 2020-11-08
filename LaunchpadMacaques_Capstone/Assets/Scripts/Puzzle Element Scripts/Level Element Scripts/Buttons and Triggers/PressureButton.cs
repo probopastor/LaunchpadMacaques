@@ -1,6 +1,6 @@
 ﻿/* 
 * Launchpad Macaques - Neon Oblivion
-* Jamey Colleen, Jake Buri, William Nomikos
+* Jamey Colleen, Jake Buri, William Nomikos, Connor Wolf
 * PressureButton.cs
 * Handles button activation when objects are on a button. Button disables set game objects when the amount of objects
 * required by the button are placed onto it. 
@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class PressureButton : MonoBehaviour
 {
@@ -29,10 +30,13 @@ public class PressureButton : MonoBehaviour
     private bool activeStatus;
     private Renderer buttonRend;
 
+    private StudioEventEmitter soundEmitter;
+
     // Start is called before the first frame update
     void Awake()
     {
         SetValues();
+        soundEmitter = GetComponent<StudioEventEmitter>();
     }
 
     /// <summary>
@@ -75,11 +79,15 @@ public class PressureButton : MonoBehaviour
         {
             activeStatus = true;
             ActivateDeactivateButton(true);
+
+            if (soundEmitter.IsPlaying()) soundEmitter.Stop();
+            soundEmitter.Play();
         }
         else if ((objectsOnButton < triggerEnableGoal) && activeStatus)
         {
             activeStatus = false;
             ActivateDeactivateButton(false);
+            soundEmitter.EventInstance.triggerCue();
         }
     }
 
@@ -161,6 +169,8 @@ public class PressureButton : MonoBehaviour
             // If the object should be checked, increase the amount of objects on the button and check if it should be made active. 
             if (other.CompareTag(triggerTags[i]))
             {
+
+
                 objectsOnButton++;
                 CheckButtonActivity();
             }
