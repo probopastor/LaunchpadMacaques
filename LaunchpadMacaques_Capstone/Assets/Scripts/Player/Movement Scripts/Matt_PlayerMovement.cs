@@ -108,6 +108,9 @@ public class Matt_PlayerMovement : MonoBehaviour
     private bool useCourtineDash = true;
     #endregion
 
+    [SerializeField]
+    Animator anim;
+
     #region Getters/Setters
     public float GetMaxVelocity()
     {
@@ -178,6 +181,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// </summary>
     private void Dash()
     {
+
         if (grappleGunReference.IsGrappling())
         {
             grappleGunReference.StopGrapple();
@@ -185,6 +189,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         if (canDash)
         {
+            anim.SetTrigger("Dash");
+
             canDash = false;
             StartCoroutine(DashCooldown());
 

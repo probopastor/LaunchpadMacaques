@@ -31,6 +31,9 @@ public class PushPullObjects : MonoBehaviour
     [SerializeField, Tooltip("Which position the moveable cube will move towards")] ObjectFollowPostion objectFollowPos;
     #endregion
 
+    [SerializeField]
+    Animator anim;
+
     #region Private Variables
     private Rigidbody objectRB;
     private GameObject cam;
@@ -143,6 +146,12 @@ public class PushPullObjects : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, maxGrabDistance, canBePickedUp) && !grapplingGun.IsGrappling())
         {
+
+            anim.ResetTrigger("Throw");
+            anim.ResetTrigger("Drop");
+            anim.SetTrigger("PickUp");
+
+
             grapplingGun.StopGrapple();
             objectRB = hit.rigidbody;
             objectRB.useGravity = false;
@@ -162,6 +171,9 @@ public class PushPullObjects : MonoBehaviour
     /// </summary>
     public void DropObject()
     {
+        anim.ResetTrigger("PickUp");
+        anim.SetTrigger("Drop");
+
         StartCoroutine(GrabbingFalse());
         objectRB.isKinematic = false;
         objectRB.useGravity = true;
@@ -177,6 +189,9 @@ public class PushPullObjects : MonoBehaviour
     /// </summary>
     private void ThrowObject()
     {
+        anim.ResetTrigger("PickUp");
+        anim.SetTrigger("Throw");
+
         objectRB.isKinematic = false;
         objectRB.GetComponent<PushableObj>().StartPush(cam);
         objectRB.useGravity = false;
