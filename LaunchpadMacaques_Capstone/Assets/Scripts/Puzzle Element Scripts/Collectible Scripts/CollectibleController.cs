@@ -66,7 +66,10 @@ public class CollectibleController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        totalCollectiblesText.SetText("Total Sphere Count: " + totalCollectedCollectibles + " / " + totalCollectibles);
+        if(totalCollectiblesText != null)
+        {
+            totalCollectiblesText.SetText("Total Sphere Count: " + totalCollectedCollectibles + " / " + totalCollectibles);
+        }
     }
 
     private void Update()
