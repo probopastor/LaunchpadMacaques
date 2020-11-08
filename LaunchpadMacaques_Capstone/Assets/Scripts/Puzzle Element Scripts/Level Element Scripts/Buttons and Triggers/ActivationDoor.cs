@@ -1,6 +1,6 @@
 ﻿/* 
 * Launchpad Macaques - Neon Oblivion
-* William Nomikos, Jamey Colleen
+* William Nomikos, Jamey Colleen, C
 * ActivationDoor.cs
 * Script handles enabling or disabling objects activation doors (and their objects) upon the buttons 
 * being activated. 
@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class ActivationDoor : MonoBehaviour
 {
@@ -26,11 +27,15 @@ public class ActivationDoor : MonoBehaviour
     private bool doorsDeactivated;
     private GrapplingGun grapplingGunReference;
 
+    private StudioEventEmitter soundEmitter;
+
     private void Awake()
     {
         currentButtonsPressed = 0;
         doorsDeactivated = false;
         grapplingGunReference = FindObjectOfType<GrapplingGun>();
+
+        soundEmitter = GetComponent<StudioEventEmitter>();
     }
 
     private void Start()
@@ -143,6 +148,13 @@ public class ActivationDoor : MonoBehaviour
 
             doors[i].SetActive(false);
         }
+
+        if (!soundEmitter.IsPlaying())
+        {
+            soundEmitter.Play();
+        }
+
+        soundEmitter.EventInstance.triggerCue();
     }
 
     /// <summary>
@@ -155,6 +167,8 @@ public class ActivationDoor : MonoBehaviour
         {
             doors[i].SetActive(true);
         }
+
+        soundEmitter.Play();
     }
 
     /// <summary>

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7435346393424069823}
   - component: {fileID: 7435346393424069822}
+  - component: {fileID: 1964656034992957963}
   m_Layer: 0
   m_Name: Door Holder
   m_TagString: Untagged
@@ -48,6 +49,31 @@ MonoBehaviour:
   - {fileID: 7435346393278569418}
   buttonsToActivate: 1
   activationBuffer: 0
+  enableOnActivation: 0
+  stayDeactivated: 0
+--- !u!114 &1964656034992957963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7435346393424069821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Door Open and Close
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &6848918159427940480
 PrefabInstance:
   m_ObjectHideFlags: 0
