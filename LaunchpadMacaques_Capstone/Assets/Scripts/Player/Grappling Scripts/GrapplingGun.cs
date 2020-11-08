@@ -76,10 +76,6 @@ public class GrapplingGun : MonoBehaviour
     "the fluidity of the movement")]
     private float roundingRange = 0.2f;
 
-    [Header("Animation Settings")]
-    [SerializeField]
-    Animator anim;
-
     #endregion
 
     #region PrivateVariables
@@ -530,10 +526,6 @@ public class GrapplingGun : MonoBehaviour
         {
             canHoldDownToGrapple = false;
 
-            anim.ResetTrigger("Dash");
-            anim.ResetTrigger("GrappleEnd");
-            anim.SetTrigger("GrappleStart");
-
             if (IsGrappling())
             {
                 StopGrapple();
@@ -621,8 +613,7 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     public void StopGrapple()
     {
-        anim.ResetTrigger("GrappleStart");
-        anim.SetTrigger("GrappleEnd");
+
         if (ropeLengthSlider)
         {
             ropeLengthSlider.gameObject.SetActive(false);
@@ -648,7 +639,7 @@ public class GrapplingGun : MonoBehaviour
         }
 
         lr.positionCount = 0;
-        Destroy(joint);   
+        Destroy(joint);
     }
 
     #endregion

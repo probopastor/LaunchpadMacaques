@@ -129,10 +129,6 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private float deafultVelocity;
 
-    [Header("Animation")]
-    [SerializeField]
-    Animator anim;
-
     void Awake()
     {
         defaultGravity = gravity;
@@ -189,8 +185,6 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         if (canDash)
         {
-            anim.ResetTrigger("GrappleStart");
-            anim.SetTrigger("Dash");
             canDash = false;
             StartCoroutine(DashCooldown());
 
@@ -246,7 +240,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             GetComponent<Rigidbody>().AddForce((playerCam.forward) * courtineDashAmmount * Time.deltaTime, ForceMode.Impulse);
             currentTime += Time.deltaTime;
             yield return new WaitForSeconds(0);
-        }        
+        }
     }
 
     IEnumerator DashCooldown()
