@@ -118,6 +118,8 @@ public class GrapplingGun : MonoBehaviour
     //A bool that when true will allow the player to hold down the mouse button to grapple
     private bool canHoldDownToGrapple;
 
+    
+
     private float dist;
 
     #endregion
@@ -453,7 +455,7 @@ public class GrapplingGun : MonoBehaviour
         {
             dist = Vector3.Distance(cam.position, hit.point);
 
-            if (!(Physics.Raycast(cam.position, cam.forward, dist, whatIsNotGrappleable)))
+            if (!(Physics.Raycast(cam.position, cam.forward, dist, whatIsNotGrappleable)) && !pushPull.IsGrabbing())
             {
 
                 grappleRayHit = hit;

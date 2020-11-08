@@ -93,7 +93,10 @@ public class MakeSpotNotGrappleable : MonoBehaviour
 
         if (objectToCorrupt != null)
         {
-            objectToCorrupt.StartCorrupting(hitObject.transform.position);
+            if (!corruptedObjects.Contains(hitObject))
+            {
+                objectToCorrupt.StartCorrupting(hitObject.transform.position);
+            }
         }
 
         StartCoroutine(ChangeObjectLayer(hitObject));
@@ -109,7 +112,7 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     IEnumerator ChangeObjectLayer(GameObject obj)
     {
         yield return new WaitForSeconds(.1f);
-        obj.layer = LayerMask.NameToLayer("CantGrapple");
+        //obj.layer = LayerMask.NameToLayer("CantGrapple");
     }
 
 
