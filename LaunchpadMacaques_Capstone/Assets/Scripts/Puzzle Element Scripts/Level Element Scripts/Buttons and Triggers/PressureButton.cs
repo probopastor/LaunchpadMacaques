@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class PressureButton : MonoBehaviour
 {
@@ -28,11 +29,13 @@ public class PressureButton : MonoBehaviour
     private int objectsOnButton = 0;
     private bool activeStatus;
     private Renderer buttonRend;
+    private StudioEventEmitter soundEmitter;
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         SetValues();
+        soundEmitter = GetComponent<StudioEventEmitter>();
     }
 
     /// <summary>
@@ -75,11 +78,15 @@ public class PressureButton : MonoBehaviour
         {
             activeStatus = true;
             ActivateDeactivateButton(true);
+
+            if (soundEmitter.IsPlaying()) soundEmitter.Stop();
+            soundEmitter.Play();
         }
         else if ((objectsOnButton < triggerEnableGoal) && activeStatus)
         {
             activeStatus = false;
             ActivateDeactivateButton(false);
+            soundEmitter.EventInstance.triggerCue();
         }
     }
 

@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class ActivationDoor : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class ActivationDoor : MonoBehaviour
     private int currentButtonsPressed = 0;
     private bool doorsDeactivated;
     private GrapplingGun grapplingGunReference;
+    private DoorAudio doorAudio;
 
     private void Awake()
     {
@@ -142,6 +144,12 @@ public class ActivationDoor : MonoBehaviour
             }
 
             doors[i].SetActive(false);
+
+            if(doors[i].GetComponent<DoorAudio>()!= null)
+            {
+                doorAudio = doors[i].GetComponent<DoorAudio>();
+                doorAudio.PlayDoorSound(false);
+            }
         }
     }
 
@@ -154,6 +162,12 @@ public class ActivationDoor : MonoBehaviour
         for (int i = 0; i < doors.Length; i++)
         {
             doors[i].SetActive(true);
+
+            if(doors[i].GetComponent<DoorAudio>() != null)
+            {
+                doorAudio = doors[i].GetComponent<DoorAudio>();
+                doorAudio.PlayDoorSound(false);
+            }
         }
     }
 
