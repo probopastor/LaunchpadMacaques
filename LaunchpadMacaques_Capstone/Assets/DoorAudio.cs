@@ -19,18 +19,21 @@ public class DoorAudio : MonoBehaviour
     /// <param name="enable"></param>
     public void PlayDoorSound(bool enable)
     {
-        if(!enable)
+        if(soundEmitter != null)
         {
-            if (!soundEmitter.IsPlaying())
+            if (!enable)
+            {
+                if (!soundEmitter.IsPlaying())
+                {
+                    soundEmitter.Play();
+                }
+
+                soundEmitter.EventInstance.triggerCue();
+            }
+            else if (enable)
             {
                 soundEmitter.Play();
             }
-
-            soundEmitter.EventInstance.triggerCue();
-        }
-        else if(enable)
-        {
-            soundEmitter.Play();
         }
     }
 }
