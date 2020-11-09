@@ -19,14 +19,18 @@ public class MusicManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
-        volumeFrom = 1;
-        volumeTo = 0;
-        
-        if (autoplay)
+        if (instance == null)
         {
-            SwitchTrack("Castles");
+            instance = this;
+            volumeFrom = 1;
+            volumeTo = 0;
+
+            if (autoplay)
+            {
+                SwitchTrack("Castles");
+            }
         }
+        
     }
 
     public void SwitchTrack(string trackName)
