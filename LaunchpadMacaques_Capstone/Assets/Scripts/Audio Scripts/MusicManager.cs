@@ -8,6 +8,8 @@ public class MusicManager : MonoBehaviour
 {
     public static MusicManager instance;
 
+    public bool autoplay;
+
     private ScriptableEmitter curEmitter;
 
     public ScriptableEmitter[] emitters;
@@ -17,9 +19,18 @@ public class MusicManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
-        volumeFrom = 1;
-        volumeTo = 0;
+        if (instance == null)
+        {
+            instance = this;
+            volumeFrom = 1;
+            volumeTo = 0;
+
+            if (autoplay)
+            {
+                SwitchTrack("Castles");
+            }
+        }
+        
     }
 
     public void SwitchTrack(string trackName)
@@ -30,7 +41,6 @@ public class MusicManager : MonoBehaviour
         {
             StartCoroutine(FadeOut(curEmitter));
         }
-        
 
         curEmitter = AudioUtilities.FindScriptableEmitter(emitters, trackName);
 

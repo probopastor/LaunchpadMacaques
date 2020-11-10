@@ -1,7 +1,18 @@
-﻿using System.Collections;
+﻿/* 
+* Launchpad Macaques - Neon Oblivion
+* Matt Kirchoff, Levi Schoof, William Nomikos
+* GrapplingGun.cs
+* Script handles grappling and ungrappling from objects, and swinging mechanics. 
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using UnityEngine.PlayerLoop;
+using FMOD.Studio;
+
 public class GrapplingGun : MonoBehaviour
 {
     #region InspectorVariables
@@ -13,6 +24,10 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] [Tooltip("The Main Camera")] Transform cam;
     [SerializeField] Transform player;
     [SerializeField] private GameObject hitObject;
+    [SerializeField] private TextMeshProUGUI currentSwingSpeedText;
+    [SerializeField] TextMeshProUGUI actualVelocityText;
+    [SerializeField] Slider ropeLengthSlider;
+    [SerializeField] GameObject postText;
 
     [Header("Layer Settings")]
     [SerializeField] LayerMask whatIsGrappleable;
@@ -26,7 +41,7 @@ public class GrapplingGun : MonoBehaviour
 
     [SerializeField] [Tooltip("The Min Rope Distance")] private float minDistance = 5f;
     [SerializeField] [Tooltip("The Max Rope Distance")] private float maxDistance = 50f;
-    [SerializeField, Tooltip("The amount of length subtraced from grapple length on each subsequent grapple. ")] private float grappleLengthModifier = 10;
+    [SerializeField, Tooltip("The grapple length on regrapple. ")] private float newSwingGrappleLength = 10;
     [SerializeField] private float wheelSensitivity = 2;
 
     [Header("Swing Settings")]
@@ -37,20 +52,33 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] private float maxSwingAngle = 90f;
     [SerializeField, Tooltip("The force added at the bottom of a swing to keep the loop going")]
     public float swingSpeed = 4500;
+    [SerializeField] private float maxSwingVelocity = 18;
+    [SerializeField] private bool useConstantVelocity = false;
     private float currentSwingSpeed;
-
-    [Header("Dash / Launch Settings")]
-    [SerializeField] public float launchSpeed = 30000;
-    [SerializeField] public float maxLaunchMultiplier = 5f;
-   private float startTime = 0f;
-    private float endTime = 0f;
-    float launchMultiplier;
 
     [Header("Auto Aim Settiings")]
     [SerializeField] [Tooltip("The Radius of the Sphere that will be created to handle Auto Aim")] float sphereRadius = 2;
     [SerializeField] private float neededVelocityForAutoAim = 20;
     [SerializeField]
     [Tooltip("The Distance the A Ray will be shot down to, to fix thse issue of auto aiming onto the platforming your standint on")] private float groundCheckDistance = 5f;
+
+    [Header("Hand Movement Settings")]
+    [SerializeField, Tooltip("The max amount the hand will tilt up and down based on movement")]
+    private float horizontalRotationMax = 15.0f;
+    [SerializeField, Tooltip("The max amount the hand will tilt left and right based on movement")]
+    private float verticalRotationMax = 15.0f;
+    [SerializeField, Tooltip("When True, the hand will tilt left and right while grappling")]
+    private bool useHorizontalMovementWhileGrappling = true;
+    [SerializeField, Tooltip("When True, the hand will tilt up and down while grpapling")]
+    private bool useVerticalMovementWhileGrappling = true;
+    [SerializeField, Range(0, 1), Tooltip("When the Cosine calculations are preformed and the result is within this value of 0 or 1, it" +
+    "will be rounded either down or up respecitvely. Increasing this value can decrease twitching-like movements of the hand, but will decrease" +
+    "the fluidity of the movement")]
+    private float roundingRange = 0.2f;
+
+    [SerializeField]
+    Animator anim;
+
     #endregion
 
     #region PrivateVariables
@@ -69,9 +97,6 @@ public class GrapplingGun : MonoBehaviour
     // The private instance of the joint
     private SpringJoint joint;
     private float distanceFromPoint;
-
-
-
 
     // The Raycast that will be set to what the player is looking at
     private RaycastHit grappleRayHit;
@@ -96,24 +121,29 @@ public class GrapplingGun : MonoBehaviour
     //A bool that when true will allow the player to hold down the mouse button to grapple
     private bool canHoldDownToGrapple;
 
-
+    
 
     private float dist;
-
-
-    private float normalSpring = 10;
-    private float higherSwing = 10000;
 
     #endregion
 
     #region StartFunctions
     void Awake()
     {
-        normalSpring = springValue;
+        if (postText)
+        {
+            postText.SetActive(false);
+        }
+     
         SetObject();
         SetText();
 
         currentSwingSpeed = swingSpeed;
+
+        if (ropeLengthSlider)
+        {
+            ropeLengthSlider.gameObject.SetActive(false);
+        }
     }
 
     private void SetObject()
@@ -152,6 +182,17 @@ public class GrapplingGun : MonoBehaviour
     #region UpdateFunctions
     void Update()
     {
+        if (actualVelocityText)
+        {
+            actualVelocityText.text = "Velocity: (" + (int)player.GetComponent<Rigidbody>().velocity.x + ", " + 
+                (int)player.GetComponent<Rigidbody>().velocity.y + ", " + (int)player.GetComponent<Rigidbody>().velocity.z +")";
+        }
+
+
+        if (currentSwingSpeedText != null)
+        {
+            currentSwingSpeedText.text = "Magnitude: " + (int)player.GetComponent<Rigidbody>().velocity.magnitude;
+        }
         GrappleUpdateChanges();
         GrapplingInput();
         GrapplingLockInput();
@@ -162,7 +203,6 @@ public class GrapplingGun : MonoBehaviour
     {
         if (IsGrappling())
         {
-            Debug.Log(joint.minDistance);
             joint.damper = springDamp * Mathf.Clamp(ropeLength * 100, 1, Mathf.Infinity);
             joint.spring = joint.damper * 0.5f;
 
@@ -213,6 +253,23 @@ public class GrapplingGun : MonoBehaviour
                     canApplyForce = false;
                 }
             }
+
+            if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !useConstantVelocity)
+            {
+                player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxSwingVelocity);
+            }
+
+            if (useConstantVelocity)
+            {
+                player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxSwingVelocity, maxSwingVelocity);
+            }
+
+
+            if (ropeLengthSlider)
+            {
+                ropeLengthSlider.value = ropeLength;
+            }
+
         }
         else if (!IsGrappling())
         {
@@ -401,7 +458,7 @@ public class GrapplingGun : MonoBehaviour
         {
             dist = Vector3.Distance(cam.position, hit.point);
 
-            if (!(Physics.Raycast(cam.position, cam.forward, dist, whatIsNotGrappleable)))
+            if (!(Physics.Raycast(cam.position, cam.forward, dist, whatIsNotGrappleable)) && !pushPull.IsGrabbing())
             {
 
                 grappleRayHit = hit;
@@ -472,14 +529,24 @@ public class GrapplingGun : MonoBehaviour
         {
             canHoldDownToGrapple = false;
 
+            anim.ResetTrigger("Dash");
+            anim.ResetTrigger("GrappleEnd");
+            anim.SetTrigger("GrappleStart");
+            
+
             if (IsGrappling())
             {
                 StopGrapple();
             }
 
-            currentGrappledObj = grappleRayHit.collider.gameObject;
-
-            startTime = Time.time;
+            if (ropeLengthSlider)
+            {
+                ropeLengthSlider.gameObject.SetActive(true);
+                ropeLengthSlider.maxValue = maxDistance;
+                ropeLengthSlider.minValue = minDistance;
+                currentGrappledObj = grappleRayHit.collider.gameObject;
+            }
+          
 
             hitObjectClone = Instantiate(hitObject);
             hitObjectClone.transform.position = grappleRayHit.point;
@@ -505,7 +572,9 @@ public class GrapplingGun : MonoBehaviour
             joint.maxDistance = distanceFromPoint;
             joint.minDistance = dist;
 
-            ropeLength = dist - grappleLengthModifier;
+            //ropeLength = distanceFromPoint / 2; /*dist - grappleLengthModifier;*/
+
+            ropeLength = newSwingGrappleLength;
 
             if (ropeLength > maxDistance)
             {
@@ -552,11 +621,15 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     public void StopGrapple()
     {
+        anim.ResetTrigger("GrappleStart");
+        anim.SetTrigger("GrappleEnd");
+
+        if (ropeLengthSlider)
+        {
+            ropeLengthSlider.gameObject.SetActive(false);
+        }
         currentGrappledObj = null;
         //managing variables for dash
-        endTime = Time.time;
-        launchMultiplier = Mathf.Min(endTime - startTime + 2f, maxLaunchMultiplier);
-
 
         swingLockToggle = false;
 
@@ -577,6 +650,52 @@ public class GrapplingGun : MonoBehaviour
 
         lr.positionCount = 0;
         Destroy(joint);
+    }
+
+    #endregion
+
+    #region Hand Movement
+    /// <summary>
+    /// Called Every Frame by Matt_PlayerMovement.cs, takes the players current velocity and uses it to determine how the hand should move
+    /// </summary>
+    /// <param name="currentVelocity">The vector current velocity of the player</param>
+    public void UpdateHandRotation(Vector3 currentVelocity)
+    {
+        //Find where hand should move horizontally
+        Vector3 camReferenceX = Vector3.ProjectOnPlane(cam.right, Vector3.up); //Project the camera's right onto a horizontal plane
+        Vector3 velocityX = Vector3.ProjectOnPlane(currentVelocity, Vector3.up); //Project the player's velocity onto the same horizontal plane
+        float angleX = Vector3.Angle(camReferenceX, velocityX); //Get the angle between the two vectors (Since they're on the same horizontal plane, this will be the direction the velocity is relative to the player
+        float horizontalCos = Mathf.Cos(angleX * Mathf.Deg2Rad);  //Get the cosine of the angle (1 when to the left or right of the player, 0 when to the front or back
+        //Prevent precision issues, if the number is small or big enough just set it to 0 or 1
+        if (Mathf.Abs(horizontalCos) < roundingRange)
+            horizontalCos = 0;
+        else if (Mathf.Abs(horizontalCos) > 1 - roundingRange)
+            horizontalCos = 1 * Mathf.Sign(horizontalCos);
+        //Lerp between no movement and the xRotationMax variable based on how close the players velocity is to the max velocity
+        float horizontalRotationEulerAngle = Mathf.Lerp(0, horizontalRotationMax, (currentVelocity.magnitude / playerMovementReference.GetMaxVelocity())) * horizontalCos;
+
+        //If option is selected, don't use horizontal movement while grappling (can have slightly weird effects)
+        if (!useHorizontalMovementWhileGrappling && IsGrappling())
+            horizontalRotationEulerAngle = 0;
+
+        //Find where hand should move vertically
+        Vector3 velocityY = currentVelocity;
+        float angleY = Vector3.Angle(Vector3.down, velocityY); //Get the angle between the global down and the player's velocity
+        float verticalCos = Mathf.Cos(angleY * Mathf.Deg2Rad); //Get the cos of the angle such that down and up directions are one and everything to the side is 0
+       //Prevent precision issues, if the cos is close to 1 or 0, round it to one or 0
+        if (Mathf.Abs(verticalCos) < roundingRange)
+            verticalCos = 0;
+        else if (Mathf.Abs(verticalCos) > 1 - roundingRange)
+            verticalCos = 1 * Mathf.Sign(verticalCos);
+        //Get the rotation amount based on a lerp between 0 and the maximum rotation amount
+        float verticalRotationEulerAngle = Mathf.Lerp(0, verticalRotationMax, (currentVelocity.magnitude / playerMovementReference.GetMaxVelocity())) * verticalCos;
+
+        //If option is selected, don't use vertical movement while grappling
+        if (!useVerticalMovementWhileGrappling && IsGrappling())
+            horizontalRotationEulerAngle = 0;
+
+        //Set the rotation
+        transform.localRotation = Quaternion.Euler(verticalRotationEulerAngle, horizontalRotationEulerAngle, 0);
     }
 
     #endregion
@@ -633,11 +752,6 @@ public class GrapplingGun : MonoBehaviour
         return currentGrappledObj;
     }
 
-    public float GetLaunchMultipler()
-    {
-        return launchMultiplier;
-    }
-
     public float GetSwingSpeed()
     {
         return currentSwingSpeed;
@@ -648,4 +762,19 @@ public class GrapplingGun : MonoBehaviour
         return ropeLength;
     }
     #endregion
+
+    /// <summary>
+    /// Will clamp the Velocity between a min and a max
+    /// </summary>
+    /// <param name="v"></param>
+    /// <param name="max"></param>
+    /// <param name="min"></param>
+    /// <returns></returns>
+    public Vector3 CustomClampMagnitude(Vector3 v, float max, float min)
+    {
+        double sm = v.sqrMagnitude;
+        if (sm > (max * max)) return v.normalized * max;
+        else if (sm < min * min) return v.normalized * min;
+        return v;
+    }
 }

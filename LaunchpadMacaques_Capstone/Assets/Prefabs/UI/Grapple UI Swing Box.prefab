@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3017156583046541416}
   - component: {fileID: 4829246689268611165}
+  - component: {fileID: 3047386779048528815}
   m_Layer: 0
   m_Name: Grapple UI Swing Box
   m_TagString: Untagged
@@ -38,7 +39,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4829246689268611166}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1482a7fec7d65994ca10e266b202b826, type: 3}
   m_Name: 
@@ -55,3 +56,18 @@ MonoBehaviour:
   whatIsNotGrappleable:
     serializedVersion: 2
     m_Bits: 3639
+--- !u!114 &3047386779048528815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4829246689268611166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e315e9707691d084d9f6ce8a37081f12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deafultReticle: {fileID: 21300000, guid: 9af03be292c51ae4ebb4873b29c63619, type: 3}
+  activeReticle: {fileID: 21300000, guid: 75f600e260f2f824095dd8d9c1b26848, type: 3}
+  retiicle: {fileID: 0}

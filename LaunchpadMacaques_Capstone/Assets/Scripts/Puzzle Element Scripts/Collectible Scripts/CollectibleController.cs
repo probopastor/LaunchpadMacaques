@@ -45,6 +45,7 @@ public class CollectibleController : MonoBehaviour
 
     [SerializeField, Tooltip("The new gravity that is set while the gravity collectible is active. ")]
     private float newGravity = 200f;
+    private float newPlayerGravity = -4.4f;
 
     private bool effectTimerRunning;
     #endregion
@@ -65,7 +66,10 @@ public class CollectibleController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        totalCollectiblesText.SetText("Total Sphere Count: " + totalCollectedCollectibles + " / " + totalCollectibles);
+        if(totalCollectiblesText != null)
+        {
+            totalCollectiblesText.SetText("Total Sphere Count: " + totalCollectedCollectibles + " / " + totalCollectibles);
+        }
     }
 
     private void Update()
@@ -139,6 +143,11 @@ public class CollectibleController : MonoBehaviour
     public float GetNewGravity()
     {
         return newGravity;
+    }
+
+    public float GetNewPlayerGravity()
+    {
+        return newPlayerGravity;
     }
 
     /// <summary>

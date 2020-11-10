@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1713684439825300273}
   - component: {fileID: 1713684439696541872}
   m_Layer: 8
-  m_Name: Cube (21)
+  m_Name: Corruptable Grapple Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0f45fed2c7ba5284c80eb0982b3d1347, type: 2}
+  - {fileID: 2100000, guid: 98a3af48e72293d4089da77903ad250e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -130,5 +130,6 @@ MonoBehaviour:
   corruptionState: 0
   wireframeColor: {r: 1, g: 0, b: 1, a: 1}
   corruptionStartPoint: {x: 0, y: 0, z: 0}
-  useWorldCoordinates: 0
   corruptionDistance: 0
+  staticCorruptionPoints: []
+  useWorldCoordinates: 0
