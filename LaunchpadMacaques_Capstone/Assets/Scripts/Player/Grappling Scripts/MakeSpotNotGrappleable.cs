@@ -77,7 +77,7 @@ public class MakeSpotNotGrappleable : MonoBehaviour
         grappleDecalObj = Instantiate(decal);
         grappleDecalObj.transform.position = spotPos.point;
         grappleDecalObj.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), spotPos.normal);
-        grappleDecalObj.GetComponent<DecalProjector>().size = new Vector3(notGrappableSize * 1.25f, notGrappableSize * 1.25f, notGrappableSize * 1.25f);
+        grappleDecalObj.GetComponent<DecalProjector>().size = new Vector3(notGrappableSize * 1.25f, notGrappableSize * 1.25f, 0.1f);
         corruptedDecals.Add(grappleDecalObj);
         grappleDecalObj.transform.parent = hitObject.transform;
         temporaryCorruptedVisual.transform.parent = hitObject.transform;
