@@ -12,10 +12,14 @@ public class RespawnSystem : MonoBehaviour
     private GrapplingGun gg;
     private PushPullObjects pushPullObjectsRef;
 
+    private GrapplePointManager gpm;
+
     private void Start()
     {
         gg = FindObjectOfType<GrapplingGun>();
         pushPullObjectsRef = FindObjectOfType<PushPullObjects>();
+
+        gpm = FindObjectOfType<GrapplePointManager>();
 
         currentRespawnPosition = transform.position;
     }
@@ -55,6 +59,11 @@ public class RespawnSystem : MonoBehaviour
 
     public void RespawnPlayer()
     {
+        if (gpm)
+        {
+            gpm.TurnOnPoints();
+        }
+
         // If the player is holding an object, stop holding the object. 
         if (pushPullObjectsRef.IsGrabbing())
         {

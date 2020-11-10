@@ -25,6 +25,7 @@ public class GrapplePointManager : MonoBehaviour
     public Text remainingPointsText;
     */
 
+    private GrapplePoint[] allPoints;
 
     /// <summary>
     /// Start is called before the first frame update
@@ -44,6 +45,8 @@ public class GrapplePointManager : MonoBehaviour
             GrapplePoint thisGPScript = thisGP.GetComponent<GrapplePoint>();
             grapplePoints.Add(thisGPScript);
         }
+
+        allPoints = FindObjectsOfType<GrapplePoint>();
     }
 
     /// <summary>
@@ -104,9 +107,12 @@ public class GrapplePointManager : MonoBehaviour
                 //Remove renderer and mesh
                 gp.UpdateSubject();
 
-                //Force the Grapple to Stop
-                //For protection, add this check in GrappleGun.cs
-                grapplingGun.StopGrapple();
+                if (gp.gameObject == grapplingGun.GetCurrentGrappledObject())
+                {
+                    //Force the Grapple to Stop
+                    //For protection, add this check in GrappleGun.cs
+                    grapplingGun.StopGrapple();
+                }
 
                 //Remove grapplePoints to update remaining
                 grapplePoints.Remove(gp);
@@ -133,5 +139,22 @@ public class GrapplePointManager : MonoBehaviour
     public int GetRemainingGrapples()
     {
         return remainingGrapples;
+    }
+
+    public void TurnOnPoints()
+    {
+        foreach(GrapplePoint gp in allPoints)
+        {
+            gp.TurnOnPoint();
+        }
+
+
+        grapplePoints.Clear();
+        foreach (GameObject thisGP in GameObject.FindGameObjectsWithTag("GrapplePoint"))
+        {
+            remainingPoints++;
+            GrapplePoint thisGPScript = thisGP.GetComponent<GrapplePoint>();
+            grapplePoints.Add(thisGPScript);
+        }
     }
 }

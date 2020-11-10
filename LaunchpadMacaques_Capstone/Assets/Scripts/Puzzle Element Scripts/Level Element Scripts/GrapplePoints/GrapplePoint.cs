@@ -36,6 +36,14 @@ public class GrapplePoint : MonoBehaviour
         this.gameObject.GetComponent<Renderer>().enabled = false;
     }
 
+    public void TurnOnPoint()
+    {
+        this.gameObject.GetComponent<Collider>().enabled = true;
+        this.gameObject.GetComponent<Renderer>().enabled = true;
+
+        breaking = false;
+    }
+
     /// <summary>
     /// Timer
     /// </summary>
