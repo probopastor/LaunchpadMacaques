@@ -68,14 +68,33 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     /// <param name="hitObject"></param>
     private void MakePartOfObjectNotGrappable(RaycastHit spotPos, GameObject hitObject)
     {
+        // Get the highest value of the 3 axis in the normal vector
+        float maxNormal = Mathf.Max(Mathf.Max(Mathf.Abs(spotPos.normal.x), Mathf.Abs(spotPos.normal.y)), Mathf.Abs(spotPos.normal.z));
+
+        Vector3 point = spotPos.point;
+
+        // Lock the decal to a grid, but ignore the axis that is closest to the normal. (to prevent the decal being forced off of the surface)
+        if (Mathf.Abs(spotPos.normal.x) != maxNormal)
+        {
+            point.x -= (point.x % 0.625f);
+        }
+        if (Mathf.Abs(spotPos.normal.y) != maxNormal)
+        {
+            point.y -= (point.y % 0.625f);
+        }
+        if (Mathf.Abs(spotPos.normal.z) != maxNormal)
+        {
+            point.z -= (point.z % 0.625f);
+        }
+
         GameObject temporaryCorruptedVisual = Instantiate(corruptedVisual);
         temporaryCorruptedVisual.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), spotPos.normal);
-        temporaryCorruptedVisual.transform.position = spotPos.point;
+        temporaryCorruptedVisual.transform.position = point;
         temporaryCorruptedVisual.transform.localScale = new Vector3(notGrappableSize, notGrappableSize, .5f);
         tempCorruptedVisuals.Add(temporaryCorruptedVisual);
 
         grappleDecalObj = Instantiate(decal);
-        grappleDecalObj.transform.position = spotPos.point;
+        grappleDecalObj.transform.position = point;
         grappleDecalObj.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), spotPos.normal);
         grappleDecalObj.GetComponent<DecalProjector>().size = new Vector3(notGrappableSize * 1.25f, notGrappableSize * 1.25f, 0.1f);
         corruptedDecals.Add(grappleDecalObj);
