@@ -40,6 +40,7 @@ public class GrapplePoint : MonoBehaviour
     {
         this.gameObject.GetComponent<Collider>().enabled = true;
         this.gameObject.GetComponent<Renderer>().enabled = true;
+        StopCoroutine("Countdown");
 
         breaking = false;
     }

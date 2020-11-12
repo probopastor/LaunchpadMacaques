@@ -146,6 +146,18 @@ public class GrapplePointManager : MonoBehaviour
         foreach(GrapplePoint gp in allPoints)
         {
             gp.TurnOnPoint();
+
+            //resets corruptable shader on obj
+            try
+            {
+
+                gp.gameObject.GetComponent<CorruptableObject>().UncorruptInstantly();
+
+            }
+            catch (System.Exception ex)
+            {
+                //exception (probably not needed to throw)
+            }
         }
 
 
