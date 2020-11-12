@@ -7,12 +7,13 @@
 
 using FMODUnity;
 using UnityEngine;
+using UnityEngine.Rendering.HighDefinition;
 
 public class PushableObj : MonoBehaviour
 {
     #region Inspector Vars
     [Header("Visual Settings")]
-    [SerializeField] [Tooltip("The Decal that will be placed to make part of object look Corrupted")] GameObject throwDecal;
+    [SerializeField][Tooltip("The Decal that will be placed to make part of object look Corrupted")] GameObject throwDecal;
 
     [Header("Movement Settings")]
     [SerializeField] [Tooltip("The Variable that will be multiplyed by deafult grabity to apply gravity to this object")] float gravityScaler = 1.75f;
@@ -56,6 +57,7 @@ public class PushableObj : MonoBehaviour
         cc = FindObjectOfType<CollectibleController>();
         soundEmitter = GetComponent<StudioEventEmitter>();
     }
+
 
     /// <summary>
     /// Will Create and Set the decals and Line Renderer
