@@ -41,6 +41,9 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The player's movement speed. ")] private float moveSpeed = 4500;
     [Range(0f, 1f), SerializeField, Tooltip("The movement speed multiplier while the player is airborn. ")] private float airMoveSpeedMultiplier = .75f;
     [SerializeField, Tooltip("The player's max speed. when walking, doesnt affect swing speed ")] private float maxSpeed = 20;
+
+    private bool killForce = false;
+
     #endregion 
 
     [HideInInspector] public bool grounded;
@@ -116,6 +119,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         return maxVelocity;
     }
+
+    public bool GetKillForce()
+    {
+        return killForce;
+    }
+
     #endregion
 
 
@@ -170,6 +179,18 @@ public class Matt_PlayerMovement : MonoBehaviour
             MyInput();
             Look();
             grappleGunReference.UpdateHandRotation(rb.velocity);
+        }
+
+        Debug.Log("canApplyForce is: " + grappleGunReference.GetCanApplyForce());
+        Debug.Log("kill force is: " + killForce);
+
+        // Press K, when grappling, to start the "Kill Force" Coroutine.
+        if (Input.GetKeyDown(KeyCode.Minus) && !killForce)
+        {
+            if(grappleGunReference.IsGrappling())
+            {
+                StartCoroutine(KillForces());
+            }
         }
     }
 
@@ -266,6 +287,26 @@ public class Matt_PlayerMovement : MonoBehaviour
             timeLeft -= Time.deltaTime;
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// Coroutine that stops forces from being applied to the player and resets the rope length. (Needs better description, i think)
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator KillForces()
+    {
+
+        grappleGunReference.SetRopeLength(5f);
+        killForce = true;
+
+        rb.velocity = -rb.velocity/2;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        killForce = false;
+
     }
 
     #endregion
@@ -495,7 +536,6 @@ public class Matt_PlayerMovement : MonoBehaviour
                 }
             }
         }
-
     }
 
     #endregion

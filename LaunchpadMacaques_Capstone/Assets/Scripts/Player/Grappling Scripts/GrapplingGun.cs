@@ -244,7 +244,7 @@ public class GrapplingGun : MonoBehaviour
 
                 float angle = Vector3.Angle(objectDirection, groundDirection);
 
-                if (angle < minSwingAngle || angle > maxSwingAngle)
+                if ((angle < minSwingAngle || angle > maxSwingAngle) && !playerMovementReference.GetKillForce())
                 {
                     canApplyForce = true;
                 }
@@ -761,6 +761,12 @@ public class GrapplingGun : MonoBehaviour
     {
         return ropeLength;
     }
+
+    public float SetRopeLength(float value)
+    {
+        return ropeLength = value;
+    }
+
     #endregion
 
     /// <summary>
