@@ -21,13 +21,15 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BannerMat
-  m_Shader: {fileID: 4800000, guid: 6e4ae4064600d784cac1e41a9e6f2e59, type: 3}
-  m_ShaderKeywords: _MASKMAP _NORMALMAP _NORMALMAP_TANGENT_SPACE
+  m_Shader: {fileID: -6465566751694194690, guid: 4e6cdb83a6e004b4a8984c8d00ec5497,
+    type: 3}
+  m_ShaderKeywords: BOOLEAN_274B64FF_ON _MASKMAP _NORMALMAP _NORMALMAP_TANGENT_SPACE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    MotionVector: User
   disabledShaderPasses:
   - DistortionVectors
   - MOTIONVECTORS
@@ -37,6 +39,42 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_2147E829:
+        m_Texture: {fileID: 2800000, guid: 5b0928f93c111574981089e29450b373, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_48D593DB:
+        m_Texture: {fileID: 2800000, guid: 4671522348b85254dbebed08de76ec53, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_4BC8625A:
+        m_Texture: {fileID: 2800000, guid: 9cbe458711c9c8e419ad4c472c372a17, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_675B059A:
+        m_Texture: {fileID: 2800000, guid: 6399a4cc0dfb28c4cb87ebfe9f9abd3d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_83CFD49A:
+        m_Texture: {fileID: 2800000, guid: 807c4e03484e9a54c80b379fc4cf846c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_8F90D2E3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_9C84F07:
+        m_Texture: {fileID: 2800000, guid: fecdcae0d0f897b4eb6ac8cfd2c39094, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_CAAC3625:
+        m_Texture: {fileID: 2800000, guid: 5faab171ba9f8c94ba1a046af52c2c35, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_D09F2261:
+        m_Texture: {fileID: 2800000, guid: fecdcae0d0f897b4eb6ac8cfd2c39094, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _AnisotropyMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -122,6 +160,14 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - BOOLEAN_274B64FF: 1
+    - Boolean_C9190BD9: 0
+    - UncorruptionRange: 1000
+    - Vector1_17827C8A: 3
+    - Vector1_4CE5C302: 0.025
+    - Vector1_7BDBA58F: 0.75
+    - Vector1_8D08D87B: 4
+    - Vector1_97005BC4: 0.5
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
@@ -189,7 +235,7 @@ Material:
     - _IridescenceThickness: 1
     - _LinkDetailsWithBase: 1
     - _MaterialID: 1
-    - _Metallic: 0
+    - _Metallic: 1
     - _NormalMapSpace: 0
     - _NormalScale: 1
     - _PPDLodThreshold: 5
@@ -201,7 +247,7 @@ Material:
     - _RefractionModel: 0
     - _SSRefractionProjectionModel: 0
     - _Smoothness: 0.5
-    - _SmoothnessRemapMax: 1
+    - _SmoothnessRemapMax: 1.0000002
     - _SmoothnessRemapMin: 0
     - _SpecularAAScreenSpaceVariance: 0.1
     - _SpecularAAThreshold: 0.2
@@ -242,6 +288,11 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
+    - AdjustmentColor: {r: 0, g: 0, b: 0, a: 0}
+    - Color_11B06569: {r: 0, g: 0, b: 0, a: 0}
+    - Color_AA493FF4: {r: 0.3490566, g: 0.015120344, b: 0.008232466, a: 0}
+    - Color_C9851790: {r: 1, g: 1, b: 1, a: 0}
+    - EmissionColor: {r: 1, g: 1, b: 1, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
