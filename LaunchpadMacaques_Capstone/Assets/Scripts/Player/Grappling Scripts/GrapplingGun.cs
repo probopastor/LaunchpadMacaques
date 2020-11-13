@@ -84,6 +84,7 @@ public class GrapplingGun : MonoBehaviour
     #region PrivateVariables
     // The current length of the rope
     private float ropeLength = 5f;
+    private float startingRopeLength = 0;
     private GameObject hitObjectClone;
 
     // The Line Renderer that creates the grapple robe
@@ -158,6 +159,7 @@ public class GrapplingGun : MonoBehaviour
         pushPull = this.gameObject.GetComponent<PushPullObjects>();
 
         swingLockToggle = false;
+        startingRopeLength = ropeLength;
     }
 
     private void SetText()
@@ -760,6 +762,11 @@ public class GrapplingGun : MonoBehaviour
     public float GetRopeLength()
     {
         return ropeLength;
+    }
+
+    public float GetStartingRopeLength()
+    {
+        return startingRopeLength;
     }
 
     public float SetRopeLength(float value)

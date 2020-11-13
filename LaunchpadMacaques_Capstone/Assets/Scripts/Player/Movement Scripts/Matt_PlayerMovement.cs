@@ -64,6 +64,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The X velocity range (between -x and x) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float xVelocityResetRange = 1;
     [SerializeField, Tooltip("The Y velocity range (between -y and y) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float yVelocityResetRange = 1;
     [SerializeField, Tooltip("The Z velocity range (between -z and z) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float zVelocityResetRange = 1;
+    [SerializeField, Tooltip("The time the player must have low velocity for in order to have Velocity and Rope Length reset. ")] private float lowVelocityDuration = 0.01f;
     #endregion
 
     #region Crouch and Slide Variables
@@ -334,18 +335,33 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <returns></returns>
     IEnumerator KillForces()
     {
-        grapplingGravity = grapplingResetGravity;
-        grappleGunReference.SetRopeLength(5f);
         killForce = true;
 
-        rb.velocity = -rb.velocity / 2;
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        if(lowVelocityDuration != 0)
+        {
+            yield return new WaitForSeconds(lowVelocityDuration);
+        }
+        else
+        {
+            yield return new WaitForEndOfFrame();
+        }
 
-        yield return new WaitForSecondsRealtime(1.5f);
+        if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) &&
+           (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) &&
+           (rb.velocity.z < zVelocityResetRange && rb.velocity.z > -zVelocityResetRange))
+        {
+            grapplingGravity = grapplingResetGravity;
+            grappleGunReference.SetRopeLength(grappleGunReference.GetStartingRopeLength());
+
+            rb.velocity = -rb.velocity / 2;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+
+            yield return new WaitForSecondsRealtime(1.5f);
+            grapplingGravity = grapplingGravityReference;
+        }
 
         killForce = false;
-        grapplingGravity = grapplingGravityReference;
     }
 
     #endregion 
