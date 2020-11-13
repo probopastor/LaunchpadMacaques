@@ -25,7 +25,7 @@ public class CorruptionDecalSpread : MonoBehaviour
     void Update()
     {
         progress += spreadSpeed * Time.deltaTime;
-        if (progress >= 0.75f)
+        if (progress >= 1f)
         {
             projector.material = finishedMaterial;
             Destroy(tempMat);
