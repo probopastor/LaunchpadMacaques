@@ -59,6 +59,13 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The angle that the player starts to be unable to walk up ")] private float maxSlopeAngle = 35f;
     #endregion
 
+    #region Grappling Velocity Reset Variables 
+    [Header("Velocity Reset Variables")]
+    [SerializeField, Tooltip("The X velocity range (between -x and x) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float xVelocityResetRange = 1;
+    [SerializeField, Tooltip("The Y velocity range (between -y and y) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float yVelocityResetRange = 1;
+    [SerializeField, Tooltip("The Z velocity range (between -z and z) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float zVelocityResetRange = 1;
+    #endregion
+
     #region Crouch and Slide Variables
     private Vector3 crouchScale = new Vector3(1, 0.5f, 1);
     private Vector3 playerScale;
@@ -84,6 +91,10 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are on the ground")] float gravity = -9.81f;
     [SerializeField, Tooltip("The Gravtiy that will be applied to the player when they are in the air")] float inAirGravity = -12f;
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are swinging")] float grapplingGravity = -6;
+    [SerializeField, Tooltip("The Gravity that will be applied when resetting rope velocity and rope length. The greater this value, " +
+        "the faster velocity and rope length are reset. ")] float grapplingResetGravity = -78.48f;
+
+    // grapplingGravityReference stores the grapplingGravity at Start, so that grapplingGravity may be reverted to its default easily. 
     private float grapplingGravityReference = 0;
     private float defaultGravity;
     private Vector3 gravityVector;
@@ -165,6 +176,20 @@ public class Matt_PlayerMovement : MonoBehaviour
         Cursor.visible = false;
         speedStorage = maxSpeed;
         grapplingGravityReference = grapplingGravity;
+
+        // Makes xVelocityResetRange, yVelocityResetRange, and zVelocityResetRange positive if they are negative. 
+        if(xVelocityResetRange < 0)
+        {
+            xVelocityResetRange *= -1;
+        }
+        if(yVelocityResetRange < 0)
+        {
+            yVelocityResetRange *= -1;
+        }
+        if(zVelocityResetRange < 0)
+        {
+            zVelocityResetRange *= -1;
+        }
     }
 
     private void FixedUpdate()
@@ -183,8 +208,8 @@ public class Matt_PlayerMovement : MonoBehaviour
             grappleGunReference.UpdateHandRotation(rb.velocity);
         }
 
-        Debug.Log("canApplyForce is: " + grappleGunReference.GetCanApplyForce());
-        Debug.Log("kill force is: " + killForce);
+        //Debug.Log("canApplyForce is: " + grappleGunReference.GetCanApplyForce());
+        //Debug.Log("kill force is: " + killForce);
 
         // Press K, when grappling, to start the "Kill Force" Coroutine.
         //if (Input.GetKeyDown(KeyCode.Minus) && !killForce)
@@ -195,15 +220,15 @@ public class Matt_PlayerMovement : MonoBehaviour
         //    }
         //}
 
-        if ((rb.velocity.x < 1 && rb.velocity.x > -1) && (rb.velocity.y < 1 && rb.velocity.y > -1) && (rb.velocity.z < 1 && rb.velocity.z > -1) && !killForce)
+        if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) && 
+            (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) && 
+            (rb.velocity.z < zVelocityResetRange && rb.velocity.z > -zVelocityResetRange) && !killForce)
         {
             if (grappleGunReference.IsGrappling())
             {
                 StartCoroutine(KillForces());
             }
         }
-
-        Debug.Log(rb.velocity);
     }
 
 
@@ -300,18 +325,20 @@ public class Matt_PlayerMovement : MonoBehaviour
             yield return null;
         }
     }
+    #endregion
 
+    #region Velocity and Momentum Reset 
     /// <summary>
     /// Coroutine that stops forces from being applied to the player and resets the rope length. (Needs better description, i think)
     /// </summary>
     /// <returns></returns>
     IEnumerator KillForces()
     {
-        grapplingGravity *= 8;
+        grapplingGravity = grapplingResetGravity;
         grappleGunReference.SetRopeLength(5f);
         killForce = true;
 
-        rb.velocity = -rb.velocity/2;
+        rb.velocity = -rb.velocity / 2;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
@@ -321,7 +348,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         grapplingGravity = grapplingGravityReference;
     }
 
-    #endregion
+    #endregion 
 
     #region Input
 
