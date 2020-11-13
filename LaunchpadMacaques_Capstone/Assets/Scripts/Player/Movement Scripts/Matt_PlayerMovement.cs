@@ -84,6 +84,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are on the ground")] float gravity = -9.81f;
     [SerializeField, Tooltip("The Gravtiy that will be applied to the player when they are in the air")] float inAirGravity = -12f;
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are swinging")] float grapplingGravity = -6;
+    private float grapplingGravityReference = 0;
     private float defaultGravity;
     private Vector3 gravityVector;
     #endregion
@@ -163,6 +164,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         speedStorage = maxSpeed;
+        grapplingGravityReference = grapplingGravity;
     }
 
     private void FixedUpdate()
@@ -185,13 +187,23 @@ public class Matt_PlayerMovement : MonoBehaviour
         Debug.Log("kill force is: " + killForce);
 
         // Press K, when grappling, to start the "Kill Force" Coroutine.
-        if (Input.GetKeyDown(KeyCode.Minus) && !killForce)
+        //if (Input.GetKeyDown(KeyCode.Minus) && !killForce)
+        //{
+        //    if(grappleGunReference.IsGrappling())
+        //    {
+        //        StartCoroutine(KillForces());
+        //    }
+        //}
+
+        if ((rb.velocity.x < 1 && rb.velocity.x > -1) && (rb.velocity.y < 1 && rb.velocity.y > -1) && (rb.velocity.z < 1 && rb.velocity.z > -1) && !killForce)
         {
-            if(grappleGunReference.IsGrappling())
+            if (grappleGunReference.IsGrappling())
             {
                 StartCoroutine(KillForces());
             }
         }
+
+        Debug.Log(rb.velocity);
     }
 
 
@@ -295,7 +307,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <returns></returns>
     IEnumerator KillForces()
     {
-
+        grapplingGravity *= 8;
         grappleGunReference.SetRopeLength(5f);
         killForce = true;
 
@@ -306,7 +318,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         yield return new WaitForSecondsRealtime(1.5f);
 
         killForce = false;
-
+        grapplingGravity = grapplingGravityReference;
     }
 
     #endregion
