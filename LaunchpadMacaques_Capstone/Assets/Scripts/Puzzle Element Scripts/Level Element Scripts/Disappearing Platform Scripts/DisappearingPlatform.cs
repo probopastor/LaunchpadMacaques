@@ -58,6 +58,7 @@ public class DisappearingPlatform : MonoBehaviour
     /// <returns></returns>
     private IEnumerator BreakPlatform()
     {
+        // Wait for the end of the frame if there is no set timeUntilDisappear. 
         if(timeUntilDisappear != 0)
         {
             yield return new WaitForSeconds(timeUntilDisappear);
@@ -67,12 +68,38 @@ public class DisappearingPlatform : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+        // If the player is grappling to this platform, break the grapple. 
         if(grapplingGunRef.IsGrappling() && grapplingGunRef.GetCurrentGrappledObject() == gameObject)
         {
             grapplingGunRef.StopGrapple();
         }
 
-        gameObject.SetActive(false);
+        Collider[] colliders = gameObject.GetComponents<Collider>();
+
+        // Disables each collider on this platform.
+        foreach(Collider collider in colliders)
+        {
+            collider.enabled = false;
+        }
+
+        this.gameObject.GetComponent<Renderer>().enabled = false;
+    }
+
+    /// <summary>
+    /// Reenables disappearing platform.
+    /// </summary>
+    public void EnablePlatform()
+    {
+        Collider[] colliders = gameObject.GetComponents<Collider>();
+
+        // Turns off each collider on the platform.
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = true;
+        }
+
+        this.gameObject.GetComponent<Renderer>().enabled = true;
+        platformBroken = false;
     }
     #endregion 
 }

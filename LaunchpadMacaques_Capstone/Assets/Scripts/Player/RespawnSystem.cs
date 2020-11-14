@@ -13,6 +13,7 @@ public class RespawnSystem : MonoBehaviour
     private PushPullObjects pushPullObjectsRef;
 
     private GrapplePointManager gpm;
+    private DisappearingPlatform[] disappearingPlatforms;
 
     private void Start()
     {
@@ -20,7 +21,7 @@ public class RespawnSystem : MonoBehaviour
         pushPullObjectsRef = FindObjectOfType<PushPullObjects>();
 
         gpm = FindObjectOfType<GrapplePointManager>();
-
+        disappearingPlatforms = FindObjectsOfType<DisappearingPlatform>();
         currentRespawnPosition = transform.position;
     }
     private void Update()
@@ -62,6 +63,11 @@ public class RespawnSystem : MonoBehaviour
         if (gpm)
         {
             gpm.TurnOnPoints();
+        }
+
+        foreach(DisappearingPlatform platform in disappearingPlatforms)
+        {
+            platform.EnablePlatform();
         }
 
         // If the player is holding an object, stop holding the object. 
