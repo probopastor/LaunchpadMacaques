@@ -17,6 +17,10 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] Slider musicVolume;
     [SerializeField] Slider soundEffectsVolume;
 
+    [Header("Gameplay Settings")]
+    [SerializeField] Toggle invertY;
+    [SerializeField] Slider mouseSensitivity;
+
     [Header("Settings Holder")]
     [SerializeField] GameObject settingsHolder;
 
@@ -28,6 +32,8 @@ public class SettingsManager : MonoBehaviour
     private float deafultDialouge = 50;
     private float deafultMusic = 50;
     private float deafultSoundEffects = 50;
+
+    private float deafultMouseSensitivity = 50;
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +42,8 @@ public class SettingsManager : MonoBehaviour
         InitialDialouge();
         InitialMusic();
         InitialSFX();
+        InitialInvertY();
+        InitialMouseSensitivity();
         SetResolutionsDropDown();
 
         settingsHolder.SetActive(false);
@@ -101,6 +109,43 @@ public class SettingsManager : MonoBehaviour
         {
             fullScreenToggle.SetIsOnWithoutNotify(true);
             SetFullScreen(true);
+        }
+    }
+
+    private void InitialInvertY()
+    {
+        if (PlayerPrefs.HasKey("InvertY"))
+        {
+            if(PlayerPrefs.GetInt("InvertY") == 1)
+            {
+                invertY.SetIsOnWithoutNotify(true);
+            }
+
+            else
+            {
+                invertY.SetIsOnWithoutNotify(false);
+            }
+        }
+
+        else
+        {
+            invertY.SetIsOnWithoutNotify(true);
+            SetInvertY(true);
+        }
+    }
+
+    private void InitialMouseSensitivity()
+    {
+        if (PlayerPrefs.HasKey("MouseSensitivity"))
+        {
+            mouseSensitivity.SetValueWithoutNotify(PlayerPrefs.GetFloat("MouseSensitivity"));
+            SetMouseSensitivty(PlayerPrefs.GetFloat("MouseSensitivity"));
+        }
+
+        else
+        {
+            mouseSensitivity.SetValueWithoutNotify(deafultMouseSensitivity);
+            SetMouseSensitivty(deafultMouseSensitivity);
         }
     }
 
@@ -196,6 +241,23 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    public void SetMouseSensitivty(float sensitivy)
+    {
+        PlayerPrefs.SetFloat("MouseSensitivity", sensitivy);
+    }
+
+    public void SetInvertY(bool invert)
+    {
+        if (invert)
+        {
+            PlayerPrefs.SetInt("InvertY", 1);
+        }
+
+        else
+        {
+            PlayerPrefs.SetInt("InvertY", 0);
+        }
+    }
     public void SetQuality(int qualityLevel)
     {
         QualitySettings.SetQualityLevel(qualityLevel);
