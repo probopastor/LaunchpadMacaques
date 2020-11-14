@@ -7,6 +7,7 @@
 
 using System.Collections;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class PushPullObjects : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class PushPullObjects : MonoBehaviour
     enum ObjectFollowPostion { topLeft, bottomLeft, topRight, bottomRight, topMiddle, bottomMiddle };
 
     [SerializeField, Tooltip("Which position the moveable cube will move towards")] ObjectFollowPostion objectFollowPos;
+
+    [SerializeField, Tooltip("The Speed at which the cube will follow the player")] float objectFollowSpeed = 20;
     #endregion
 
     [SerializeField]
@@ -45,7 +48,7 @@ public class PushPullObjects : MonoBehaviour
 
     GameObject objectHolder;
 
-    float objectFollowSpeed = 7;
+
 
     private bool inTempFix = false;
     #endregion
@@ -104,16 +107,17 @@ public class PushPullObjects : MonoBehaviour
 
     }
 
+    
     private void FixedUpdate()
     {
         if (grabbing && !inTempFix)
         {
             Debug.DrawRay(objectRB.position, objectHolder.transform.position - objectRB.transform.position);
-
+            float distance = Vector3.Distance(objectHolder.transform.position, objectRB.gameObject.transform.position);
             RaycastHit hit;
-            if (!Physics.Raycast(objectRB.gameObject.transform.position, objectHolder.transform.position - objectRB.transform.position, out hit, .6f))
+            if (!Physics.Raycast(objectRB.gameObject.transform.position, objectHolder.transform.position - objectRB.transform.position, out hit, distance))
             {
-                objectRB.MovePosition(Vector3.Lerp(objectRB.position, objectHolder.transform.position, Time.fixedDeltaTime * objectFollowSpeed));
+               objectRB.MovePosition(Vector3.Lerp(objectRB.position, objectHolder.transform.position, Time.fixedDeltaTime * objectFollowSpeed));
 
             }
 

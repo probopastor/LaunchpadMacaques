@@ -26,6 +26,8 @@ public class PushableObj : MonoBehaviour
     [SerializeField] [Tooltip("The Min Fly Distance for the Object")]float minDistance = 5;
     [SerializeField] [Tooltip("The Max Fly Distance for the Object")]float maxDistance = 40;
 
+    [SerializeField, Tooltip("The Layer that is ground")] LayerMask ground;
+
     #endregion
 
     #region Private Vars
@@ -101,6 +103,8 @@ public class PushableObj : MonoBehaviour
         }
 
         ResetObjectPos();
+
+
     }
 
 
@@ -200,7 +204,7 @@ public class PushableObj : MonoBehaviour
         Vector3 point1 = this.transform.position;
         Vector3 predObjectVelocity = objectVelocity;
         predObjectVelocity = tempSpeed * tempCam.transform.forward;
-        float stepSize = .1f;
+        float stepSize = .01f;
         lr.positionCount = 2;
         lr.SetPosition(0, this.transform.position);
         int count = 1;
@@ -234,7 +238,7 @@ public class PushableObj : MonoBehaviour
 
             }
 
-            if (lr.positionCount > 200)
+            if (lr.positionCount > 1000)
             {
                 break;
             }
@@ -258,12 +262,48 @@ public class PushableObj : MonoBehaviour
             lr.endColor = Color.green;
         }
 
-        else
+        else if (CheckForLanding())
         {
-            lr.startColor = startColor;
-            lr.endColor = endColor;
+            lr.startColor = Color.white;
+            lr.endColor = Color.white;
         }
 
+        else
+        {
+            lr.startColor = Color.red;
+            lr.endColor = Color.red;
+        }
+
+    }
+
+    private bool CheckForLanding()
+    {
+        int pos = lr.positionCount;
+
+        Vector3 posLocation;
+        if(pos > 5)
+        {
+            posLocation = lr.GetPosition(pos - 5);
+        }
+
+        else
+        {
+            posLocation = lr.GetPosition(pos - 1);
+        }
+    
+        RaycastHit hit;
+
+        if (Physics.Raycast(posLocation,Vector3.down,out hit, 20, ground))
+        {
+            Debug.Log(hit.collider.name);
+            return true;
+
+        }
+
+        else
+        {
+            return false;
+        }
     }
 
     #endregion

@@ -41,6 +41,9 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The player's movement speed. ")] private float moveSpeed = 4500;
     [Range(0f, 1f), SerializeField, Tooltip("The movement speed multiplier while the player is airborn. ")] private float airMoveSpeedMultiplier = .75f;
     [SerializeField, Tooltip("The player's max speed. when walking, doesnt affect swing speed ")] private float maxSpeed = 20;
+
+    private bool killForce = false;
+
     #endregion 
 
     [HideInInspector] public bool grounded;
@@ -54,6 +57,14 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Tooltip("This is the variable that affects the speed of counter movement applied to the player, which slows the player down to a stop")] public float counterMovement = 0.175f;
     [SerializeField] private float threshold = 0.01f;
     [SerializeField, Tooltip("The angle that the player starts to be unable to walk up ")] private float maxSlopeAngle = 35f;
+    #endregion
+
+    #region Grappling Velocity Reset Variables 
+    [Header("Velocity Reset Variables")]
+    [SerializeField, Tooltip("The X velocity range (between -x and x) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float xVelocityResetRange = 1;
+    [SerializeField, Tooltip("The Y velocity range (between -y and y) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float yVelocityResetRange = 1;
+    [SerializeField, Tooltip("The Z velocity range (between -z and z) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float zVelocityResetRange = 1;
+    [SerializeField, Tooltip("The time the player must have low velocity for in order to have Velocity and Rope Length reset. ")] private float lowVelocityDuration = 0.01f;
     #endregion
 
     #region Crouch and Slide Variables
@@ -81,6 +92,11 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are on the ground")] float gravity = -9.81f;
     [SerializeField, Tooltip("The Gravtiy that will be applied to the player when they are in the air")] float inAirGravity = -12f;
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are swinging")] float grapplingGravity = -6;
+    [SerializeField, Tooltip("The Gravity that will be applied when resetting rope velocity and rope length. The greater this value, " +
+        "the faster velocity and rope length are reset. ")] float grapplingResetGravity = -78.48f;
+
+    // grapplingGravityReference stores the grapplingGravity at Start, so that grapplingGravity may be reverted to its default easily. 
+    private float grapplingGravityReference = 0;
     private float defaultGravity;
     private Vector3 gravityVector;
     #endregion
@@ -116,6 +132,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         return maxVelocity;
     }
+
+    public bool GetKillForce()
+    {
+        return killForce;
+    }
+
     #endregion
 
 
@@ -154,6 +176,21 @@ public class Matt_PlayerMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         speedStorage = maxSpeed;
+        grapplingGravityReference = grapplingGravity;
+
+        // Makes xVelocityResetRange, yVelocityResetRange, and zVelocityResetRange positive if they are negative. 
+        if(xVelocityResetRange < 0)
+        {
+            xVelocityResetRange *= -1;
+        }
+        if(yVelocityResetRange < 0)
+        {
+            yVelocityResetRange *= -1;
+        }
+        if(zVelocityResetRange < 0)
+        {
+            zVelocityResetRange *= -1;
+        }
     }
 
     private void FixedUpdate()
@@ -170,6 +207,28 @@ public class Matt_PlayerMovement : MonoBehaviour
             MyInput();
             Look();
             grappleGunReference.UpdateHandRotation(rb.velocity);
+        }
+
+        //Debug.Log("canApplyForce is: " + grappleGunReference.GetCanApplyForce());
+        //Debug.Log("kill force is: " + killForce);
+
+        // Press K, when grappling, to start the "Kill Force" Coroutine.
+        //if (Input.GetKeyDown(KeyCode.Minus) && !killForce)
+        //{
+        //    if(grappleGunReference.IsGrappling())
+        //    {
+        //        StartCoroutine(KillForces());
+        //    }
+        //}
+
+        if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) && 
+            (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) && 
+            (rb.velocity.z < zVelocityResetRange && rb.velocity.z > -zVelocityResetRange) && !killForce)
+        {
+            if (grappleGunReference.IsGrappling())
+            {
+                StartCoroutine(KillForces());
+            }
         }
     }
 
@@ -267,8 +326,45 @@ public class Matt_PlayerMovement : MonoBehaviour
             yield return null;
         }
     }
-
     #endregion
+
+    #region Velocity and Momentum Reset 
+    /// <summary>
+    /// Coroutine that stops forces from being applied to the player and resets the rope length. (Needs better description, i think)
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator KillForces()
+    {
+        killForce = true;
+
+        if(lowVelocityDuration != 0)
+        {
+            yield return new WaitForSeconds(lowVelocityDuration);
+        }
+        else
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) &&
+           (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) &&
+           (rb.velocity.z < zVelocityResetRange && rb.velocity.z > -zVelocityResetRange))
+        {
+            grapplingGravity = grapplingResetGravity;
+            grappleGunReference.SetRopeLength(grappleGunReference.GetStartingRopeLength());
+
+            rb.velocity = -rb.velocity / 2;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+
+            yield return new WaitForSecondsRealtime(1.5f);
+            grapplingGravity = grapplingGravityReference;
+        }
+
+        killForce = false;
+    }
+
+    #endregion 
 
     #region Input
 
@@ -495,7 +591,6 @@ public class Matt_PlayerMovement : MonoBehaviour
                 }
             }
         }
-
     }
 
     #endregion

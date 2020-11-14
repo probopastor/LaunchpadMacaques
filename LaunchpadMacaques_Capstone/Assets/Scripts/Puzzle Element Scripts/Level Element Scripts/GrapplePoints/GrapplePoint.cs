@@ -1,8 +1,10 @@
 ﻿/*
-* Jake Buri
+* Launchpad Macaques - Neon Oblivion
+* Jake Buri, William Nomikos
 * GrapplePoint.cs
-* Removes a grapple point if used
+* Handles behavior for Grapple Points that break after a period of time when grappled to.
 */
+
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,63 +13,107 @@ using UnityEngine.UI;
 
 public class GrapplePoint : MonoBehaviour
 {
-    //Variables
+    #region Variables
     [SerializeField, Tooltip("The amount of time it takes for a grapple point to vanish after grappled to (In Seconds). ")] private float breakTime = 3f;
+    [Tooltip("The remaining break time left in the breaking coroutine. ")] private float remainingBreakTime = 0f;
+    [Tooltip("Stores the default break time. ")] private float breakTimeRef = 0f;
 
-    private int remainingPoints;
-    private bool breaking;
-    private float timeLeft;
+    [Tooltip("Bool is true if the object is in the process of breaking. False otherwise. ")] private bool breaking;
+    [Tooltip("Bool is true if breaking has not been starting. Used to determine whether or not breaking should be continued on enable. ")] private bool breakingNotStarted;
+    [Tooltip("Determines if On Enable enabled condition has already been checked. ")] private bool checkEnableConditionsOnce;
+    [Tooltip("Grappling gun reference. ")] private GrapplingGun grapplingGun;
+    [Tooltip("MakeSpotNotGrappleable reference. Used to uncorrupt grapple points on player respawn. ")] private MakeSpotNotGrappleable notGrappleableReference;
+    #endregion 
+
+    private void Awake()
+    {
+        breakingNotStarted = true;
+        checkEnableConditionsOnce = false;
+        grapplingGun = FindObjectOfType<GrapplingGun>();
+        notGrappleableReference = FindObjectOfType<MakeSpotNotGrappleable>();
+        breaking = false;
+        breakTimeRef = breakTime;
+    }
+
+    private void OnEnable()
+    {
+        // Determines if the StartBreak() coroutine had been cancelled before it finished. 
+        if (!breakingNotStarted && !checkEnableConditionsOnce)
+        {
+            checkEnableConditionsOnce = true;
+
+            // If StartBreak() was cancelled before finishing, restart the coroutine at the remaining break time.
+            breakTime = remainingBreakTime;
+            Break();
+        }
+    }
+
+    private void OnDisable()
+    {
+        checkEnableConditionsOnce = false;
+    }
 
     /// <summary>
-    /// Start is called before the first frame update
+    /// Enables the breaking grapple point.  
     /// </summary>
-    void Start()
+    public void EnablePoint()
     {
         breaking = false;
-    }
-
-    /// <summary>
-    /// After the countdown ends, stop it and disable the grapple point
-    /// </summary>
-    public void UpdateSubject()
-    {
-        StopCoroutine("Countdown");
-        this.gameObject.GetComponent<Collider>().enabled = false;
-        this.gameObject.GetComponent<Renderer>().enabled = false;
-    }
-
-    public void TurnOnPoint()
-    {
         this.gameObject.GetComponent<Collider>().enabled = true;
         this.gameObject.GetComponent<Renderer>().enabled = true;
 
-        breaking = false;
+        notGrappleableReference.UncorruptSingleObject(gameObject);
     }
 
     /// <summary>
-    /// Timer
+    /// Breaks the breakable grapple point. 
     /// </summary>
-    private IEnumerator Countdown()
+    public void Break()
     {
-        //Test if countdown started
-        Debug.Log("Start Countdown");
+        StartCoroutine(StartBreak());
+    }
 
-        //Set Max time
-        float timeLeft = breakTime;
+    /// <summary>
+    /// Coroutine breaks the breakable grapple point after a set period of time. 
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator StartBreak()
+    {
+        // Breaking has now been started. This bool determines whether the coroutine finishes before being cancelled. 
+        breakingNotStarted = false;
 
-        //Timer
-        float totalTime = 0;
-        while (totalTime <= timeLeft)
+        // Breaking is now true. This bool prevents StartBreak() from being called multiple times before finishing.
+        breaking = true;
+
+        // If the breaktime is not finished, update the remainingBreakTime and return null.
+        for (float timeLeft = breakTime; timeLeft > 0; timeLeft -= Time.deltaTime)
         {
-            totalTime += Time.deltaTime;
-            timeLeft -= Time.deltaTime;
+            remainingBreakTime = timeLeft;
             yield return null;
         }
 
-        //Set timeLeft to zero
-        breaking = true;
+        // If the player is grappling to this object when its disabled, break their grapple. 
+        if (gameObject == grapplingGun.GetCurrentGrappledObject())
+        {
+            grapplingGun.StopGrapple();
+        }
+
+        // Disable this object. 
+        this.gameObject.GetComponent<Collider>().enabled = false;
+        this.gameObject.GetComponent<Renderer>().enabled = false;
+
+        // Reset breakTime back to its default value in the scenario that breakTime was changed. 
+        breakTime = breakTimeRef;
+
+        // breakingNotStarted set to true, as the coroutine process is complete. 
+        breakingNotStarted = true;
+        yield return new WaitForEndOfFrame();
     }
 
+    /// <summary>
+    /// Returns true if the breakable grapple point is breaking.
+    /// </summary>
+    /// <returns></returns>
     public bool isBreaking()
     {
         return breaking;

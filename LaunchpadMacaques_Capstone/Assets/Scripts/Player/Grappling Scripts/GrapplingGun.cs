@@ -84,6 +84,7 @@ public class GrapplingGun : MonoBehaviour
     #region PrivateVariables
     // The current length of the rope
     private float ropeLength = 5f;
+    private float startingRopeLength = 0;
     private GameObject hitObjectClone;
 
     // The Line Renderer that creates the grapple robe
@@ -158,6 +159,7 @@ public class GrapplingGun : MonoBehaviour
         pushPull = this.gameObject.GetComponent<PushPullObjects>();
 
         swingLockToggle = false;
+        startingRopeLength = ropeLength;
     }
 
     private void SetText()
@@ -244,7 +246,7 @@ public class GrapplingGun : MonoBehaviour
 
                 float angle = Vector3.Angle(objectDirection, groundDirection);
 
-                if (angle < minSwingAngle || angle > maxSwingAngle)
+                if ((angle < minSwingAngle || angle > maxSwingAngle) && !playerMovementReference.GetKillForce())
                 {
                     canApplyForce = true;
                 }
@@ -544,9 +546,19 @@ public class GrapplingGun : MonoBehaviour
                 ropeLengthSlider.gameObject.SetActive(true);
                 ropeLengthSlider.maxValue = maxDistance;
                 ropeLengthSlider.minValue = minDistance;
-                currentGrappledObj = grappleRayHit.collider.gameObject;
             }
-          
+
+            currentGrappledObj = grappleRayHit.collider.gameObject;
+
+            if(currentGrappledObj.GetComponent<GrapplePoint>() != null)
+            {
+                GrapplePoint point = currentGrappledObj.GetComponent<GrapplePoint>();
+
+                if (!point.isBreaking())
+                {
+                    point.Break();
+                }
+            }
 
             hitObjectClone = Instantiate(hitObject);
             hitObjectClone.transform.position = grappleRayHit.point;
@@ -761,6 +773,17 @@ public class GrapplingGun : MonoBehaviour
     {
         return ropeLength;
     }
+
+    public float GetStartingRopeLength()
+    {
+        return startingRopeLength;
+    }
+
+    public float SetRopeLength(float value)
+    {
+        return ropeLength = value;
+    }
+
     #endregion
 
     /// <summary>
