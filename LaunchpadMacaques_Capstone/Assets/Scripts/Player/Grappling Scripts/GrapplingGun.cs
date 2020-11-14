@@ -546,9 +546,19 @@ public class GrapplingGun : MonoBehaviour
                 ropeLengthSlider.gameObject.SetActive(true);
                 ropeLengthSlider.maxValue = maxDistance;
                 ropeLengthSlider.minValue = minDistance;
-                currentGrappledObj = grappleRayHit.collider.gameObject;
             }
-          
+
+            currentGrappledObj = grappleRayHit.collider.gameObject;
+
+            if(currentGrappledObj.GetComponent<GrapplePoint>() != null)
+            {
+                GrapplePoint point = currentGrappledObj.GetComponent<GrapplePoint>();
+
+                if (!point.isBreaking())
+                {
+                    point.Break();
+                }
+            }
 
             hitObjectClone = Instantiate(hitObject);
             hitObjectClone.transform.position = grappleRayHit.point;

@@ -14,61 +14,64 @@ public class GrapplePoint : MonoBehaviour
     //Variables
     [SerializeField, Tooltip("The amount of time it takes for a grapple point to vanish after grappled to (In Seconds). ")] private float breakTime = 3f;
 
-    private int remainingPoints;
     private bool breaking;
-    private float timeLeft;
+    private GrapplingGun grapplingGun;
+    private MakeSpotNotGrappleable notGrappleableReference;
 
     /// <summary>
     /// Start is called before the first frame update
     /// </summary>
     void Start()
     {
+        grapplingGun = FindObjectOfType<GrapplingGun>();
+        notGrappleableReference = FindObjectOfType<MakeSpotNotGrappleable>();
         breaking = false;
     }
 
     /// <summary>
-    /// After the countdown ends, stop it and disable the grapple point
+    /// Enables the breaking grapple point. 
     /// </summary>
-    public void UpdateSubject()
+    public void EnablePoint()
     {
-        StopCoroutine("Countdown");
+        breaking = false;
+        this.gameObject.GetComponent<Collider>().enabled = true;
+        this.gameObject.GetComponent<Renderer>().enabled = true;
+
+        notGrappleableReference.UncorruptSingleObject(gameObject);
+    }
+
+    /// <summary>
+    /// Breaks the breakable grapple point. 
+    /// </summary>
+    public void Break()
+    {
+        StartCoroutine(StartBreak());
+    }
+
+    /// <summary>
+    /// Coroutine breaks the breakable grapple point after a set period of time. 
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator StartBreak()
+    {
+        breaking = true;
+        yield return new WaitForSeconds(breakTime);
+
+        if (gameObject == grapplingGun.GetCurrentGrappledObject())
+        {
+            //Force the Grapple to Stop
+            //For protection, add this check in GrappleGun.cs
+            grapplingGun.StopGrapple();
+        }
+
         this.gameObject.GetComponent<Collider>().enabled = false;
         this.gameObject.GetComponent<Renderer>().enabled = false;
     }
 
-    public void TurnOnPoint()
-    {
-        this.gameObject.GetComponent<Collider>().enabled = true;
-        this.gameObject.GetComponent<Renderer>().enabled = true;
-        StopCoroutine("Countdown");
-
-        breaking = false;
-    }
-
     /// <summary>
-    /// Timer
+    /// Returns true if the breakable grapple point is breaking.
     /// </summary>
-    private IEnumerator Countdown()
-    {
-        //Test if countdown started
-        Debug.Log("Start Countdown");
-
-        //Set Max time
-        float timeLeft = breakTime;
-
-        //Timer
-        float totalTime = 0;
-        while (totalTime <= timeLeft)
-        {
-            totalTime += Time.deltaTime;
-            timeLeft -= Time.deltaTime;
-            yield return null;
-        }
-
-        //Set timeLeft to zero
-        breaking = true;
-    }
-
+    /// <returns></returns>
     public bool isBreaking()
     {
         return breaking;

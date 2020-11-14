@@ -12,15 +12,18 @@ public class RespawnSystem : MonoBehaviour
     private GrapplingGun gg;
     private PushPullObjects pushPullObjectsRef;
 
-    private GrapplePointManager gpm;
+    //private GrapplePointManager gpm;
+
+    private GrapplePoint[] disappearingGrapplePoints;
     private DisappearingPlatform[] disappearingPlatforms;
 
     private void Start()
     {
         gg = FindObjectOfType<GrapplingGun>();
         pushPullObjectsRef = FindObjectOfType<PushPullObjects>();
+        disappearingGrapplePoints = FindObjectsOfType<GrapplePoint>();
+        //gpm = FindObjectOfType<GrapplePointManager>();
 
-        gpm = FindObjectOfType<GrapplePointManager>();
         disappearingPlatforms = FindObjectsOfType<DisappearingPlatform>();
         currentRespawnPosition = transform.position;
     }
@@ -60,9 +63,14 @@ public class RespawnSystem : MonoBehaviour
 
     public void RespawnPlayer()
     {
-        if (gpm)
+        //if (gpm)
+        //{
+        //    gpm.TurnOnPoints();
+        //}
+
+        foreach(GrapplePoint dGP in disappearingGrapplePoints)
         {
-            gpm.TurnOnPoints();
+            dGP.EnablePoint();
         }
 
         foreach(DisappearingPlatform platform in disappearingPlatforms)
