@@ -1,5 +1,5 @@
 ﻿/*
-* Jake Buri
+* Jake Buri, William Nomikos
 * GrapplePoint.cs
 * Removes a grapple point if used
 */
@@ -13,19 +13,47 @@ public class GrapplePoint : MonoBehaviour
 {
     //Variables
     [SerializeField, Tooltip("The amount of time it takes for a grapple point to vanish after grappled to (In Seconds). ")] private float breakTime = 3f;
+    private float remainingBreakTime = 0f;
+    private float breakTimeRef = 0f;
 
     private bool breaking;
+    private bool breakingNotStarted;
+    private bool checkEnableConditionsOnce;
     private GrapplingGun grapplingGun;
     private MakeSpotNotGrappleable notGrappleableReference;
+
+    private void Awake()
+    {
+        breakingNotStarted = true;
+        checkEnableConditionsOnce = false;
+        grapplingGun = FindObjectOfType<GrapplingGun>();
+        notGrappleableReference = FindObjectOfType<MakeSpotNotGrappleable>();
+        breaking = false;
+        breakTimeRef = breakTime;
+    }
 
     /// <summary>
     /// Start is called before the first frame update
     /// </summary>
     void Start()
     {
-        grapplingGun = FindObjectOfType<GrapplingGun>();
-        notGrappleableReference = FindObjectOfType<MakeSpotNotGrappleable>();
-        breaking = false;
+        
+    }
+
+    private void OnEnable()
+    {
+        if(!breakingNotStarted && !checkEnableConditionsOnce)
+        {
+            checkEnableConditionsOnce = true;
+
+            breakTime = remainingBreakTime;
+            Break();
+        }
+    }
+
+    private void OnDisable()
+    {
+        checkEnableConditionsOnce = false;
     }
 
     /// <summary>
@@ -54,8 +82,15 @@ public class GrapplePoint : MonoBehaviour
     /// <returns></returns>
     private IEnumerator StartBreak()
     {
+        breakingNotStarted = false;
         breaking = true;
-        yield return new WaitForSeconds(breakTime);
+        //yield return new WaitForSeconds(breakTime);
+
+        for (float timeLeft = breakTime; timeLeft > 0; timeLeft -= Time.deltaTime)
+        {
+            remainingBreakTime = timeLeft;
+            yield return null;
+        }
 
         if (gameObject == grapplingGun.GetCurrentGrappledObject())
         {
@@ -66,6 +101,10 @@ public class GrapplePoint : MonoBehaviour
 
         this.gameObject.GetComponent<Collider>().enabled = false;
         this.gameObject.GetComponent<Renderer>().enabled = false;
+        breakingNotStarted = true;
+
+        breakTime = breakTimeRef;
+        yield return new WaitForEndOfFrame();
     }
 
     /// <summary>
