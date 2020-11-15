@@ -790,4 +790,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         grounded = false;
     }
 
+    public bool GetGrounded()
+    {
+        return grounded;
+    }
+
 }
