@@ -59,50 +59,22 @@ public class ActivationDoor : MonoBehaviour
     /// <returns></returns>
     private IEnumerator BufferDoorActivity(bool enable)
     {
-        //if (!enable)
-        //{
-        //    for (int i = 0; i < doors.Length; i++)
-        //    {
-        //        MoveDoor(doors[i], false);
-        //    }
-        //}
-        //else if (enable)
-        //{
-        //    EnableDoor();
-        //}
-
-
-        //if (activationBuffer != 0)
-        //{
-        //    yield return new WaitForSeconds(activationBuffer);
-        //}
-        //else
-        //{
-        //    yield return new WaitForEndOfFrame();
-        //}
-
-        //if (!enable)
-        //{
-        //    DisableDoor();
-        //}
-        //else if(enable)
-        //{
-        //    EnableDoor();
-        //}
-
+        // Cycle through all doors to determine which door enabling / disabling system should be used for each. 
         for (int i = 0; i < doors.Length; i++)
         {
+            // If doors have a door movement script attached, move the door
             if (doors[i].GetComponentInChildren<DoorMovement>() != null)
             {
-                if(!enable)
+                if (!enable)
                 {
                     MoveDoor(doors[i], false);
                 }
-                else if(enable)
+                else if (enable)
                 {
                     MoveDoor(doors[i], true);
                 }
             }
+            // If doors do not have a door movement script attached, simply enable / disable the proper door. 
             else
             {
                 if (activationBuffer != 0)
@@ -178,7 +150,7 @@ public class ActivationDoor : MonoBehaviour
     }
 
     /// <summary>
-    /// Disables all doors connected to this activation door.
+    /// Disables all doors connected to this activation door without moving them.
     /// </summary>
     private void DisableAllDoors()
     {
@@ -190,7 +162,6 @@ public class ActivationDoor : MonoBehaviour
             {
                 doors[i].GetComponent<CubeRespawn>().RespawnCube();
             }
-
 
             // If the player is grappling to the object that was disabled, break the grapple. 
             if (grapplingGunReference.IsGrappling() && grapplingGunReference.GetCurrentGrappledObject() == doors[i])
@@ -207,6 +178,7 @@ public class ActivationDoor : MonoBehaviour
 
             doors[i].GetComponent<Renderer>().enabled = false;
 
+            // Play proper door audio. 
             if (doors[i].GetComponent<DoorAudio>() != null)
             {
                 doorAudio = doors[i].GetComponent<DoorAudio>();
@@ -216,7 +188,7 @@ public class ActivationDoor : MonoBehaviour
     }
 
     /// <summary>
-    /// Enables all doors connected to this activation door.
+    /// Enables all doors connected to this activation door without moving them.
     /// </summary>
     private void EnableAllDoors()
     {
@@ -233,6 +205,7 @@ public class ActivationDoor : MonoBehaviour
 
             doors[i].GetComponent<Renderer>().enabled = true;
 
+            // Play proper door audio. 
             if (doors[i].GetComponent<DoorAudio>() != null)
             {
                 doorAudio = doors[i].GetComponent<DoorAudio>();
@@ -241,6 +214,10 @@ public class ActivationDoor : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Disables a single door object.
+    /// </summary>
+    /// <param name="thisDoor"></param>
     public void DisableDoor(GameObject thisDoor)
     {
         // If the object is a cube, respawn the cube
@@ -265,6 +242,7 @@ public class ActivationDoor : MonoBehaviour
 
         thisDoor.GetComponent<Renderer>().enabled = false;
 
+        // Play proper door audio. 
         if (thisDoor.GetComponent<DoorAudio>() != null)
         {
             doorAudio = thisDoor.GetComponent<DoorAudio>();
@@ -272,6 +250,10 @@ public class ActivationDoor : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enables a single door object.
+    /// </summary>
+    /// <param name="thisDoor"></param>
     public void EnableDoor(GameObject thisDoor)
     {
         Collider[] colliders = thisDoor.GetComponents<Collider>();
@@ -283,6 +265,7 @@ public class ActivationDoor : MonoBehaviour
 
         thisDoor.GetComponent<Renderer>().enabled = true;
 
+        // Play proper door audio. 
         if (thisDoor.GetComponent<DoorAudio>() != null)
         {
             doorAudio = thisDoor.GetComponent<DoorAudio>();
@@ -291,21 +274,23 @@ public class ActivationDoor : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Moves the door upon activation and deactivation. 
+    /// </summary>
+    /// <param name="objectToMove"></param>
+    /// <param name="activate"></param>
     private void MoveDoor(GameObject objectToMove, bool activate)
     {
+        // Ignore the following if this method is called from the start setup.
         if (!startInProgress)
         {
-            if (objectToMove.GetComponentInChildren<DoorMovement>() != null)
+            if (!activate)
             {
-                if (!activate)
-                {
-                    objectToMove.GetComponentInChildren<DoorMovement>().MoveDoorOnDeactivation(activationBuffer);
-                }
-                else if (activate)
-                {
-                    objectToMove.GetComponentInChildren<DoorMovement>().MoveDoorOnActivation(activationBuffer);
-                }
+                objectToMove.GetComponentInChildren<DoorMovement>().MoveDoorOnDeactivation(activationBuffer);
+            }
+            else if (activate)
+            {
+                objectToMove.GetComponentInChildren<DoorMovement>().MoveDoorOnActivation(activationBuffer);
             }
         }
     }

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class DoorMovement : MonoBehaviour
 {
-    [SerializeField] private Vector3 doorMovementDirection = new Vector3(0, 0, 0);
-    private Vector3 originalDoorPos;
-    private Vector3 newDoorPos = new Vector3(0,0,0);
+    [SerializeField, Tooltip("The position relative to the door's current position to move it to on activation. ")] private Vector3 doorMovementDirection = new Vector3(0, 0, 0);
+    [Tooltip("The position the door starts at. ")] private Vector3 originalDoorPos;
+    [Tooltip("The new position of the door after it's moved. ")] private Vector3 newDoorPos = new Vector3(0,0,0);
 
     private bool lerpDoor;
     private bool activateDoor;
@@ -25,6 +25,7 @@ public class DoorMovement : MonoBehaviour
 
     private void Update()
     {
+        // If the door should be lerped, check to see if it should be activated or deactivated 
         if(lerpDoor)
         {
             if(!activateDoor)
@@ -73,6 +74,10 @@ public class DoorMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Tells DoorMovement to move the door to its set position over the course of moveTime before deactivating it. 
+    /// </summary>
+    /// <param name="moveTime"></param>
     public void MoveDoorOnDeactivation(float moveTime)
     {
         Debug.Log("Activated");
@@ -82,6 +87,10 @@ public class DoorMovement : MonoBehaviour
         activateDoor = false;
     }
 
+    /// <summary>
+    /// Tells DoorMovement to activate the door and then move it to its set position over the course of moveTime. 
+    /// </summary>
+    /// <param name="moveTime"></param>
     public void MoveDoorOnActivation(float moveTime)
     {
         Debug.Log("Deactivated");
