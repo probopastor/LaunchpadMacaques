@@ -237,10 +237,10 @@ public class ActivationDoor : MonoBehaviour
 
         foreach (Collider collider in colliders)
         {
-            collider.enabled = false;
+            //collider.enabled = false;
         }
 
-        thisDoor.GetComponent<Renderer>().enabled = false;
+        //thisDoor.GetComponent<Renderer>().enabled = false;
 
         // Play proper door audio. 
         if (thisDoor.GetComponent<DoorAudio>() != null)
@@ -260,10 +260,10 @@ public class ActivationDoor : MonoBehaviour
 
         foreach (Collider collider in colliders)
         {
-            collider.enabled = true;
+            //collider.enabled = true;
         }
 
-        thisDoor.GetComponent<Renderer>().enabled = true;
+        //thisDoor.GetComponent<Renderer>().enabled = true;
 
         // Play proper door audio. 
         if (thisDoor.GetComponent<DoorAudio>() != null)

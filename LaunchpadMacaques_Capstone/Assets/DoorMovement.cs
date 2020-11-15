@@ -7,6 +7,7 @@ public class DoorMovement : MonoBehaviour
     [SerializeField, Tooltip("The position relative to the door's current position to move it to on activation. ")] private Vector3 doorMovementDirection = new Vector3(0, 0, 0);
     [Tooltip("The position the door starts at. ")] private Vector3 originalDoorPos;
     [Tooltip("The new position of the door after it's moved. ")] private Vector3 newDoorPos = new Vector3(0,0,0);
+    [SerializeField] private float doorMoveSpeed = 0;
 
     private bool lerpDoor;
     private bool activateDoor;
@@ -18,7 +19,7 @@ public class DoorMovement : MonoBehaviour
     private void Start()
     {
         originalDoorPos = gameObject.transform.position;
-        newDoorPos = originalDoorPos;
+        newDoorPos = new Vector3(originalDoorPos.x + doorMovementDirection.x, originalDoorPos.y + doorMovementDirection.y, originalDoorPos.z + doorMovementDirection.z);
         lerpDoor = false;
         activateDoor = false;
     }
@@ -33,14 +34,13 @@ public class DoorMovement : MonoBehaviour
                 if (timeElapsed < doorMoveTime)
                 {
                     gameObject.transform.position = Vector3.Lerp(gameObject.transform.position,
-                        new Vector3(originalDoorPos.x + doorMovementDirection.x, originalDoorPos.y + doorMovementDirection.y, originalDoorPos.z + doorMovementDirection.z), timeElapsed / doorMoveTime);
+                        new Vector3(originalDoorPos.x + doorMovementDirection.x, originalDoorPos.y + doorMovementDirection.y, originalDoorPos.z + doorMovementDirection.z), timeElapsed * doorMoveSpeed);
 
                     timeElapsed += Time.deltaTime;
                 }
                 else
                 {
                     Debug.Log("Door should now be disabled");
-                    newDoorPos = gameObject.transform.position;
                     lerpDoor = false;
 
                     ActivationDoor thisDoor = GetComponentInParent<ActivationDoor>();
@@ -59,7 +59,7 @@ public class DoorMovement : MonoBehaviour
                 if (timeElapsed < doorMoveTime)
                 {
                     gameObject.transform.position = Vector3.Lerp(gameObject.transform.position,
-                        new Vector3(newDoorPos.x - doorMovementDirection.x, newDoorPos.y - doorMovementDirection.y, newDoorPos.z - doorMovementDirection.z), timeElapsed / doorMoveTime);
+                        new Vector3(newDoorPos.x - doorMovementDirection.x, newDoorPos.y - doorMovementDirection.y, newDoorPos.z - doorMovementDirection.z), timeElapsed * doorMoveSpeed);
 
                     timeElapsed += Time.deltaTime;
                 }
