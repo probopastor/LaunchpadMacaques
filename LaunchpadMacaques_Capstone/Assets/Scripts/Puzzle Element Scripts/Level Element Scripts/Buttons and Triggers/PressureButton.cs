@@ -33,11 +33,15 @@ public class PressureButton : MonoBehaviour
     private Renderer buttonRend;
     private StudioEventEmitter soundEmitter;
 
+    private bool gameSetupInProgress;
+
     // Start is called before the first frame update
     void Start()
     {
+        gameSetupInProgress = true;
         SetValues();
         soundEmitter = GetComponent<StudioEventEmitter>();
+        gameSetupInProgress = false;
     }
 
     /// <summary>
@@ -130,8 +134,11 @@ public class PressureButton : MonoBehaviour
         {
             buttonRend.material = inactiveButtonMaterial;
 
-            gameObject.transform.position = new Vector3(gameObject.transform.position.x - buttonMovementDirection.x,
+            if(!gameSetupInProgress)
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x - buttonMovementDirection.x,
                 gameObject.transform.position.y - buttonMovementDirection.y, gameObject.transform.position.z - buttonMovementDirection.z);
+            }
 
             // Activates all objects in the objectsLinkedToButton array. 
             for (int i = 0; i < objectsLinkedToButton.Length; i++)
