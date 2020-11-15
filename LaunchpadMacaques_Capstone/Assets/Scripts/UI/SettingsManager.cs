@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using FMOD;
+using FMODUnity;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -25,14 +27,14 @@ public class SettingsManager : MonoBehaviour
     [Header("Settings Holder")]
     [SerializeField] GameObject settingsHolder;
 
-    [SerializeField] float maxVolume = 100;
+    [SerializeField] float maxVolume = 1;
     [SerializeField] float minVolume = 0;
 
     private int deafultGraphicsQuality = 1;
 
-    private float deafultDialouge = 50;
-    private float deafultMusic = 50;
-    private float deafultSoundEffects = 50;
+    private float deafultDialouge = .5f;
+    private float deafultMusic = .5f;
+    private float deafultSoundEffects = .5f;
 
     private float deafultMouseSensitivity = 50;
     private float deafultFOV = 60;
@@ -292,6 +294,7 @@ public class SettingsManager : MonoBehaviour
         /// Add in code to set Dialouge Volume
 
         PlayerPrefs.SetFloat("DialougeVolume", volume);
+        ChangeFMODSound(dialougeVolume.gameObject, volume);
     }
 
     public void SetMusicVolume(float volume)
@@ -299,13 +302,21 @@ public class SettingsManager : MonoBehaviour
         // Add in code to Set Music Volume
 
         PlayerPrefs.SetFloat("MusicVolume", volume);
+        ChangeFMODSound(musicVolume.gameObject, volume);
     }
 
     public void SetSFXVolume(float volume)
     {
-        // Add in code to set SFX volume
-
         PlayerPrefs.SetFloat("SFXVolume", volume);
+
+        ChangeFMODSound(soundEffectsVolume.gameObject, volume);
+    }
+
+    private void ChangeFMODSound(GameObject obj, float volume)
+    {
+        StudioGlobalParameterTrigger trigger = obj.GetComponent<StudioGlobalParameterTrigger>();
+        trigger.value = volume;
+        trigger.TriggerParameters();
     }
 
     #endregion
