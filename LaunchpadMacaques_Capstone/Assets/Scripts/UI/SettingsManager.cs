@@ -20,6 +20,7 @@ public class SettingsManager : MonoBehaviour
     [Header("Gameplay Settings")]
     [SerializeField] Toggle invertY;
     [SerializeField] Slider mouseSensitivity;
+    [SerializeField] Slider fovSlider;
 
     [Header("Settings Holder")]
     [SerializeField] GameObject settingsHolder;
@@ -34,9 +35,11 @@ public class SettingsManager : MonoBehaviour
     private float deafultSoundEffects = 50;
 
     private float deafultMouseSensitivity = 50;
+    private float deafultFOV = 60;
     // Start is called before the first frame update
     void Start()
     {
+        settingsHolder.SetActive(true);
         InitialFullScreen();
         InitialQuality();
         InitialDialouge();
@@ -45,7 +48,7 @@ public class SettingsManager : MonoBehaviour
         InitialInvertY();
         InitialMouseSensitivity();
         SetResolutionsDropDown();
-
+        InitialFOV();
         settingsHolder.SetActive(false);
     }
 
@@ -215,6 +218,20 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    private void InitialFOV()
+    {
+        if (PlayerPrefs.HasKey("FOV"))
+        {
+            fovSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("FOV"));
+        }
+
+        else
+        {
+            fovSlider.SetValueWithoutNotify(deafultFOV);
+            SetFOV(deafultFOV);
+        }
+    }
+
     #endregion
 
     #region ApplyValues
@@ -244,6 +261,11 @@ public class SettingsManager : MonoBehaviour
     public void SetMouseSensitivty(float sensitivy)
     {
         PlayerPrefs.SetFloat("MouseSensitivity", sensitivy);
+    }
+
+    public void SetFOV(float newFov)
+    {
+        PlayerPrefs.SetFloat("FOV", newFov);
     }
 
     public void SetInvertY(bool invert)
