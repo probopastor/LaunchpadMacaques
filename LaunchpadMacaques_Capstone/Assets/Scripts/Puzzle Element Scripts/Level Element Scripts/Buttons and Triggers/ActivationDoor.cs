@@ -260,10 +260,10 @@ public class ActivationDoor : MonoBehaviour
 
         foreach (Collider collider in colliders)
         {
-            //collider.enabled = true;
+            collider.enabled = true;
         }
 
-        //thisDoor.GetComponent<Renderer>().enabled = true;
+        thisDoor.GetComponent<Renderer>().enabled = true;
 
         // Play proper door audio. 
         if (thisDoor.GetComponent<DoorAudio>() != null)
@@ -312,6 +312,11 @@ public class ActivationDoor : MonoBehaviour
 
         // Recheck the door's activation status after the buttons pressed number changed. 
         CheckButtonActivation();
+    }
+
+    public bool GetEnableOnActivationStatus()
+    {
+        return enableOnActivation;
     }
 
 }

@@ -16,16 +16,29 @@ public class DoorMovement : MonoBehaviour
     private bool doorEnabled;
     float timeElapsed;
 
+    bool doOnce;
+
     private void Start()
     {
         originalDoorPos = gameObject.transform.position;
         newDoorPos = new Vector3(originalDoorPos.x + doorMovementDirection.x, originalDoorPos.y + doorMovementDirection.y, originalDoorPos.z + doorMovementDirection.z);
         lerpDoor = false;
         activateDoor = false;
+        doOnce = false;
     }
 
     private void Update()
     {
+        if(!doOnce)
+        {
+            doOnce = true;
+            if (GetComponentInParent<ActivationDoor>().GetEnableOnActivationStatus())
+            {
+                gameObject.transform.position = newDoorPos;
+                GetComponentInParent<ActivationDoor>().EnableDoor(gameObject);
+            }
+        }
+
         // If the door should be lerped, check to see if it should be activated or deactivated 
         if(lerpDoor)
         {
