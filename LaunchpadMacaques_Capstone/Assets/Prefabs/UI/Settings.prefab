@@ -2408,9 +2408,9 @@ MonoBehaviour:
   soundEffectsVolume: {fileID: 176611068803441861}
   invertY: {fileID: 176611068200608126}
   mouseSensitivity: {fileID: 176611067453592259}
-  fovSlider: {fileID: 0}
+  fovSlider: {fileID: 8622994021198087080}
   settingsHolder: {fileID: 176611068443128331}
-  maxVolume: 100
+  maxVolume: 1
   minVolume: 0
 --- !u!1 &176611068200608120
 GameObject:
@@ -4138,6 +4138,7 @@ GameObject:
   m_Component:
   - component: {fileID: 176611068752080608}
   - component: {fileID: 176611068752080611}
+  - component: {fileID: 687141937}
   m_Layer: 5
   m_Name: Dialouge Volume
   m_TagString: Untagged
@@ -4229,6 +4230,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &687141937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176611068752080610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  parameter: Volume_VO
+  TriggerEvent: 0
+  value: 0.5
 --- !u!1 &176611068773317377
 GameObject:
   m_ObjectHideFlags: 0
@@ -4314,6 +4331,7 @@ GameObject:
   m_Component:
   - component: {fileID: 176611068786715032}
   - component: {fileID: 176611068786715035}
+  - component: {fileID: 951230815}
   m_Layer: 5
   m_Name: Music Volume
   m_TagString: Untagged
@@ -4405,6 +4423,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &951230815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176611068786715034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  parameter: Volume_BGM
+  TriggerEvent: 0
+  value: 0.5
 --- !u!1 &176611068800197934
 GameObject:
   m_ObjectHideFlags: 0
@@ -4625,6 +4659,7 @@ GameObject:
   m_Component:
   - component: {fileID: 176611068803441866}
   - component: {fileID: 176611068803441861}
+  - component: {fileID: 2091119391}
   m_Layer: 5
   m_Name: SFX Volume
   m_TagString: Untagged
@@ -4716,6 +4751,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2091119391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176611068803441860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  parameter: Volume_SFX
+  TriggerEvent: 0
+  value: 0.5
 --- !u!1 &176611068806615286
 GameObject:
   m_ObjectHideFlags: 0
@@ -7418,16 +7469,16 @@ MonoBehaviour:
   m_FillRect: {fileID: 7718530998148061343}
   m_HandleRect: {fileID: 8412683170259150638}
   m_Direction: 0
-  m_MinValue: 45
-  m_MaxValue: 100
+  m_MinValue: 55
+  m_MaxValue: 65
   m_WholeNumbers: 1
-  m_Value: 45
+  m_Value: 60
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 176611068174485573}
         m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
-        m_MethodName: SetMouseSensitivty
+        m_MethodName: SetFOV
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
