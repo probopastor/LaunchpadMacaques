@@ -314,6 +314,10 @@ public class ActivationDoor : MonoBehaviour
         CheckButtonActivation();
     }
 
+    /// <summary>
+    /// Returns true if the door should start as disabled and be enabled on activation. 
+    /// </summary>
+    /// <returns></returns>
     public bool GetEnableOnActivationStatus()
     {
         return enableOnActivation;

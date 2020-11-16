@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿/* 
+* Launchpad Macaques - Neon Oblivion
+* William Nomikos, Jamey Colleen, Jake Buri
+* DoorMovement.cs
+* Script handles moving doors on activation and deactivation.
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
