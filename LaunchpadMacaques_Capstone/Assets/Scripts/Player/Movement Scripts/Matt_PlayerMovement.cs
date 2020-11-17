@@ -144,7 +144,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Player Input")]
 
     private float x, y;
-    private bool jumping, sprinting, crouching, canDash, dashing;
+    private bool jumping, sprinting, crouching, canDash;
 
     private PauseManager pauseManager;
 
@@ -166,6 +166,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     }
 
     [SerializeField, Tooltip("Particle system that is used while dashing. ")] private ParticleSystem _CachedSystem;
+    [SerializeField, Tooltip("Particle system that is used while dashing. ")] private int emitParticles = 20;
     //End new code
 
     void Awake()
@@ -269,7 +270,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
             if (useAddForceDash)
             {
-                _CachedSystem.Emit(15);
+                _CachedSystem.Emit(emitParticles);
                 AddForceDash();
             }
             else if (useCourtineDash)
@@ -289,7 +290,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     private void ChangeDirectionDash()
     {
         //dashing = true;
-        _CachedSystem.Emit(15);
+        _CachedSystem.Emit(emitParticles);
         float currentMag = rb.velocity.magnitude;
         rb.velocity += playerCam.forward * currentMag;
         rb.velocity = grappleGunReference.CustomClampMagnitude(rb.velocity, currentMag, currentMag);
@@ -302,7 +303,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     private void AddForceDash()
     {
         //dashing = true;
-        _CachedSystem.Emit(15);
+        _CachedSystem.Emit(emitParticles);
         GetComponent<Rigidbody>().AddForce((playerCam.forward) * impulseDashAmmount, ForceMode.Impulse);
         //dashing = false;
     }
@@ -315,7 +316,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         float currentTime = 0;
         //dashing = true;
-        _CachedSystem.Emit(15);
+        _CachedSystem.Emit(emitParticles);
 
         yield return new WaitForEndOfFrame();
 
