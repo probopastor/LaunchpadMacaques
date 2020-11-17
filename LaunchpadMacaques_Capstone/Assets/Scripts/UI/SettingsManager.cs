@@ -1,44 +1,53 @@
-﻿using System.Collections;
+﻿/* 
+* Launchpad Macaques - Neon Oblivion
+* Levi Schoof
+* SettingsManager.CS
+* Script that handles the Options/Settings Screen
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using FMOD;
 using FMODUnity;
 
 public class SettingsManager : MonoBehaviour
 {
-    Resolution[] reslolutions;
+
     [Header("Graphic UI Elements")]
-    [SerializeField] TMP_Dropdown resolutionDropdown;
-    [SerializeField] Toggle fullScreenToggle;
-    [SerializeField] TMP_Dropdown graphicsQualityDropdown;
+    [SerializeField, Tooltip("The Resolution Dropdown Box")] TMP_Dropdown resolutionDropdown;
+    [SerializeField, Tooltip("The Full Screen Toggle")] Toggle fullScreenToggle;
+    [SerializeField, Tooltip("The Graphics Quality Dropdown Box")] TMP_Dropdown graphicsQualityDropdown;
 
     [Header("Volume Sliders")]
-    [SerializeField] Slider dialougeVolume;
-    [SerializeField] Slider musicVolume;
-    [SerializeField] Slider soundEffectsVolume;
+    [SerializeField, Tooltip("The Dialouge Volume Slider")] Slider dialougeVolume;
+    [SerializeField, Tooltip("The Music Volume Slider")] Slider musicVolume;
+    [SerializeField, Tooltip("The Sound Effects Volume Slider")] Slider soundEffectsVolume;
 
     [Header("Gameplay Settings")]
-    [SerializeField] Toggle invertY;
-    [SerializeField] Slider mouseSensitivity;
-    [SerializeField] Slider fovSlider;
+    [SerializeField, Tooltip("The Invert Y Toggle Box")] Toggle invertY;
+    [SerializeField, Tooltip("The Mouse Sensitivity Slider")] Slider mouseSensitivity;
+    [SerializeField, Tooltip("The Field of View Slider")] Slider fovSlider;
 
     [Header("Settings Holder")]
-    [SerializeField] GameObject settingsHolder;
+    [SerializeField, Tooltip("Will hold all the settings Menu")] GameObject settingsHolder;
 
-    [SerializeField] float maxVolume = 1;
-    [SerializeField] float minVolume = 0;
+    [SerializeField, Tooltip("The max volume for the Volume Sliders")] float maxVolume = 1;
+    [SerializeField, Tooltip("The min volume for the Volume Sliders")] float minVolume = 0;
 
+    Resolution[] reslolutions;
+
+    // The Deafult variables the sliders will be set to, upon an ititial launch (Player has never played game before)
+    #region Deafult Variables
     private int deafultGraphicsQuality = 1;
-
     private float deafultDialouge = .5f;
     private float deafultMusic = .5f;
     private float deafultSoundEffects = .5f;
 
     private float deafultMouseSensitivity = 50;
     private float deafultFOV = 60;
-    // Start is called before the first frame update
+    #endregion
     void Start()
     {
         settingsHolder.SetActive(true);
@@ -54,7 +63,14 @@ public class SettingsManager : MonoBehaviour
         settingsHolder.SetActive(false);
     }
 
+    // Will set the sliders to have a starting value equal to either a deafult variable, or the relevant player prefs
     #region SetInitialValues
+    /// <summary>
+    /// Caalled on start 
+    /// Will fill the resoultion DropDown box with the Resolutions Unity can find that work on the current Machine
+    /// Will set Resolutin Dropdown box index to use the Deafult Value, or the "ResolutionIndex" PlayerPref
+    /// Then will set the current Resolution to either the PlayerPref Resolution or the Deafult Value
+    /// </summary>
     private void SetResolutionsDropDown()
     {
         reslolutions = Screen.resolutions;
@@ -93,6 +109,11 @@ public class SettingsManager : MonoBehaviour
         resolutionDropdown.RefreshShownValue();
     }
 
+    /// <summary>
+    /// Called on Start
+    /// Will Set the Full Screen toggle to be either the deafult value or the "FullScreen" PlayerPrefs
+    /// Will then apply that value
+    /// </summary>
     private void InitialFullScreen()
     {
         if (PlayerPrefs.HasKey("FullScreen"))
@@ -117,6 +138,11 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called On Start
+    /// Will set the InvertY Toggle to be either the deafult value or the "InvertY" PlayerPrefs
+    /// Will then apply that value
+    /// </summary>
     private void InitialInvertY()
     {
         if (PlayerPrefs.HasKey("InvertY"))
@@ -139,6 +165,11 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called on Start
+    /// Will Set the Mouse Sensivity Slider to either the deafult value or the "MouseSensitivity" PlayerPrefs
+    /// Will then apply that value
+    /// </summary>
     private void InitialMouseSensitivity()
     {
         if (PlayerPrefs.HasKey("MouseSensitivity"))
@@ -154,6 +185,11 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called on Start
+    /// Will set the Index of the Quality Dropdown box to either the deafult value or the "QualityLevel" PlayerPrefs
+    /// Will then apply that value
+    /// </summary>
     private void InitialQuality()
     {
         if (PlayerPrefs.HasKey("QualityLevel"))
@@ -169,6 +205,11 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called on Start
+    /// Will Set the Value of the Dialouge Volume slider to either the deafult value or the "DialougeVolume" PlayerPrefs
+    /// Will then apply that value 
+    /// </summary>
     private void InitialDialouge()
     {
         dialougeVolume.maxValue = maxVolume;
@@ -186,6 +227,11 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called on Start
+    /// Will Set the Value of the Dialouge Volume slider to either the deafult value or the "DialougeVolume" PlayerPrefs
+    /// Will then apply that value 
+    /// </summary>
     private void InitialMusic()
     {
         musicVolume.maxValue = maxVolume;
@@ -203,6 +249,11 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called on Start
+    /// Will Set the value of the SFX slider to either the deafult value or the "SFXVolume" PlayerPrefs
+    /// Will then apply that value
+    /// </summary>
     private void InitialSFX()
     {
         soundEffectsVolume.maxValue = maxVolume;
@@ -220,6 +271,11 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called on Start
+    /// Will Set the Value of the FOV slider to either the deafult value or the "FOV PlayerPrefs
+    /// Will then apply that value 
+    /// </summary>
     private void InitialFOV()
     {
         if (PlayerPrefs.HasKey("FOV"))
@@ -236,7 +292,16 @@ public class SettingsManager : MonoBehaviour
 
     #endregion
 
+    // Is called when the player changes a setting on the options menu
+    // Will apply the changed values to the relevant player prefs
     #region ApplyValues
+
+    /// <summary>
+    /// Will be called when the player selects a new resolution
+    /// Will apply that new resoultion 
+    /// Will set that resolutions index to the "ResolutionIndex" PlayerPref
+    /// </summary>
+    /// <param name="index"></param>
     public void SetResolution(int index)
     {
         Resolution newResolution = reslolutions[index];
@@ -245,6 +310,12 @@ public class SettingsManager : MonoBehaviour
         PlayerPrefs.SetInt("ResolutionIndex", index);
     }
 
+    /// <summary>
+    /// Will be called when the player changes the Full Screen Toggle
+    /// Will apply that new choice
+    /// Will set that choice to the "FullScreen" Playerpref
+    /// </summary>
+    /// <param name="isFullScreen"></param>
     public void SetFullScreen(bool isFullScreen)
     {
         Screen.fullScreen = isFullScreen;
@@ -260,16 +331,34 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Will be called when the player changes the sesitivity slider
+    /// Will set the new float to the "MouseSensitivity" PlayerPref
+    /// "MouseSensitivity" is used in the script Mat_Player_Movment.CS
+    /// </summary>
+    /// <param name="sensitivy"></param>
     public void SetMouseSensitivty(float sensitivy)
     {
         PlayerPrefs.SetFloat("MouseSensitivity", sensitivy);
     }
 
+    /// <summary>
+    /// Will be called when the player changes the FOV Slider
+    /// Will set the new float to the "FOV" PlayerPref
+    /// "FOV" is used in the script MoveCamera.CS
+    /// </summary>
+    /// <param name="newFov"></param>
     public void SetFOV(float newFov)
     {
         PlayerPrefs.SetFloat("FOV", newFov);
     }
 
+    /// <summary>
+    /// Will be called when the player changes the InvertY toggle
+    /// Will Set the new choice to the "InvertY" PlayerPref
+    /// "InvertY" is used in the script "Mat_Player_Movement".CS 
+    /// </summary>
+    /// <param name="invert"></param>
     public void SetInvertY(bool invert)
     {
         if (invert)
@@ -282,6 +371,13 @@ public class SettingsManager : MonoBehaviour
             PlayerPrefs.SetInt("InvertY", 0);
         }
     }
+
+    /// <summary>
+    /// Will be called when the player choices a new Graphics Quality
+    /// Will apply the relevant choice in the built in Unity Quality Settings
+    /// Will apply the index of that choice to the "QualityLevel" PlayerPref
+    /// </summary>
+    /// <param name="qualityLevel"></param>
     public void SetQuality(int qualityLevel)
     {
         QualitySettings.SetQualityLevel(qualityLevel);
@@ -289,22 +385,36 @@ public class SettingsManager : MonoBehaviour
         PlayerPrefs.SetInt("QualityLevel", qualityLevel);
     }
 
+    /// <summary>
+    /// Will be called when the player changes the Dialouge Volume Slider
+    /// Will Set the new float to the "DialougeVolume" PlayerPref
+    /// Will then change the FMOD Volume_VO 
+    /// </summary>
+    /// <param name="volume"></param>
     public void SetDialougeVolume(float volume)
     {
-        /// Add in code to set Dialouge Volume
-
         PlayerPrefs.SetFloat("DialougeVolume", volume);
         ChangeFMODSound(dialougeVolume.gameObject, volume);
     }
 
+    /// <summary>
+    /// Will be called when the player changes the Music Volume Slider
+    /// Will set the new float to the "MusicVolume" PlayerPref
+    /// Will change the FMOD Volume_BGM
+    /// </summary>
+    /// <param name="volume"></param>
     public void SetMusicVolume(float volume)
     {
-        // Add in code to Set Music Volume
-
         PlayerPrefs.SetFloat("MusicVolume", volume);
         ChangeFMODSound(musicVolume.gameObject, volume);
     }
 
+    /// <summary>
+    /// Will be called when the player chanes the SFX Volume Slider
+    /// Will set the float to the "SFXVolume" Playerpref
+    /// Will change the FMOD Volume_SFX
+    /// </summary>
+    /// <param name="volume"></param>
     public void SetSFXVolume(float volume)
     {
         PlayerPrefs.SetFloat("SFXVolume", volume);
@@ -312,6 +422,11 @@ public class SettingsManager : MonoBehaviour
         ChangeFMODSound(soundEffectsVolume.gameObject, volume);
     }
 
+    /// <summary>
+    /// The method the Volume methods call to actually set the FMOD volume
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <param name="volume"></param>
     private void ChangeFMODSound(GameObject obj, float volume)
     {
         StudioGlobalParameterTrigger trigger = obj.GetComponent<StudioGlobalParameterTrigger>();
