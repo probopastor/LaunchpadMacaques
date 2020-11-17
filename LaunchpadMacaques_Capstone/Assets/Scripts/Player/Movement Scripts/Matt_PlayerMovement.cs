@@ -33,7 +33,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     #region Player Sensitivity 
     [Header("Player Rotation and Look")]
     private float xRotation;
-    [SerializeField, Tooltip("The player's look sensitivity. Higher value lets the player look around quicker. ")] private float sensitivity = 50f;
+    [Tooltip("The player's look sensitivity. Higher value lets the player look around quicker. ")] private float sensitivity = 50f;
     #endregion
 
     #region Player Movement Variables
@@ -168,6 +168,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         //Cannot dash while on the ground. 
         canDash = false;
+
+        if (PlayerPrefs.HasKey("MouseSensitivity"))
+        {
+            sensitivity = PlayerPrefs.GetFloat("MouseSensitivity");
+        }
     }
 
     void Start()
@@ -537,7 +542,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         if (grounded && crouching) multiplierV = 0f;
 
         // If the player is grounded, they cannot dash.
-        if(grounded)
+        if (grounded)
         {
             canDash = false;
         }
@@ -596,7 +601,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     #endregion
 
     #region Sprinting Stuff
-    
+
     /// <summary>
     /// Handles the player sprinting.
     /// </summary>
@@ -672,7 +677,24 @@ public class Matt_PlayerMovement : MonoBehaviour
         desiredX = rot.y + mouseX;
 
         //Rotate, and also make sure we dont over- or under-rotate.
-        xRotation -= mouseY;
+        if (PlayerPrefs.HasKey("InvertY"))
+        {
+            if(PlayerPrefs.GetInt("InvertY") == 1)
+            {
+                xRotation -= mouseY;
+            }
+
+            else
+            {
+                xRotation += mouseY;
+            }
+        }
+
+        else
+        {
+            xRotation -= mouseY;
+        }
+
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         //Perform the rotations
@@ -788,6 +810,11 @@ public class Matt_PlayerMovement : MonoBehaviour
     private void StopGrounded()
     {
         grounded = false;
+    }
+
+    public bool GetGrounded()
+    {
+        return grounded;
     }
 
 }

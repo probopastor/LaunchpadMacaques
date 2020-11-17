@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿/* 
+* Launchpad Macaques - Neon Oblivion
+* William Nomikos, Connor Wolf
+* DoorAudio.cs
+* Handles door sounds. 
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;

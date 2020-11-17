@@ -441,6 +441,10 @@ public class GrapplingGun : MonoBehaviour
     /// <returns></returns>
     public bool CanFindGrappleLocation()
     {
+        if(Time.timeScale == 0)
+        {
+            return false;
+        }
         RaycastHit hit = new RaycastHit();
 
         // Cheks if the Normal Raycast returns a RayCastHit with a collider

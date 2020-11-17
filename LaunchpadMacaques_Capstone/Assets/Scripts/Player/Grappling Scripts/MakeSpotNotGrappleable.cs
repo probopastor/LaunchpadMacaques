@@ -254,4 +254,13 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     }
     #endregion
 
+    public void AddCorruptedDecals(GameObject obj)
+    {
+        corruptedDecals.Add(obj);
+    }
+
+    public void RemoveCorruptedDecal(GameObject obj)
+    {
+        corruptedDecals.Remove(obj);
+    }
 }
