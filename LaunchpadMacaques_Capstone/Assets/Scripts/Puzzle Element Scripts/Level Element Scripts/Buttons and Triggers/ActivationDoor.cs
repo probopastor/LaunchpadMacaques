@@ -266,11 +266,11 @@ public class ActivationDoor : MonoBehaviour
         thisDoor.GetComponent<Renderer>().enabled = true;
 
         // Play proper door audio. 
-        if (thisDoor.GetComponent<DoorAudio>() != null)
-        {
-            doorAudio = thisDoor.GetComponent<DoorAudio>();
-            doorAudio.PlayDoorSound(false);
-        }
+        //if (thisDoor.GetComponent<DoorAudio>() != null)
+        //{
+        //    doorAudio = thisDoor.GetComponent<DoorAudio>();
+        //    doorAudio.PlayDoorSound(false);
+        //}
     }
 
 
