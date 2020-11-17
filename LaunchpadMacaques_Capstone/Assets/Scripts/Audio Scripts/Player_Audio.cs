@@ -7,6 +7,8 @@ public class Player_Audio : MonoBehaviour
     public LayerMask collisions;
     public LayerMask corruption;
     public float corruptionAmbientMaxRange;
+    public float earSpacing;
+    public GameObject orientation;
 
     public ScriptableEmitter[] emitters;
 
@@ -89,6 +91,14 @@ public class Player_Audio : MonoBehaviour
         if (nearestCorruptable != null)
         {
             m_corruption.SetParameter("Proximity", (corruptionAmbientMaxRange - Vector3.Distance(nearestCorruptable.position, transform.position)) / corruptionAmbientMaxRange);
+
+            Vector3 rightEar = transform.position + (orientation.transform.right * earSpacing);
+            Vector3 leftEar = transform.position + (orientation.transform.right * -earSpacing);
+            Debug.DrawLine(rightEar, nearestCorruptable.position, Color.red);
+            Debug.DrawLine(leftEar, nearestCorruptable.position, Color.blue);
+
+            float earWeight = (Vector3.Distance(leftEar, nearestCorruptable.position) - Vector3.Distance(rightEar, nearestCorruptable.position));
+            m_corruption.SetParameter("Direction", earWeight * 50);
 
         }
     }
