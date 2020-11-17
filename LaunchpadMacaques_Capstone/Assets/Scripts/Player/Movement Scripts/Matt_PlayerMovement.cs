@@ -160,13 +160,13 @@ public class Matt_PlayerMovement : MonoBehaviour
         get
         {
             if (_CachedSystem == null)
-                _CachedSystem = GetComponent<ParticleSystem>();
+                _CachedSystem = FindObjectOfType<ParticleSystem>();
             return _CachedSystem;
         }
     }
 
-    [SerializeField, Tooltip("Particle system that is used while dashing. ")] private ParticleSystem _CachedSystem;
-    [SerializeField, Tooltip("Particle system that is used while dashing. ")] private int emitParticles = 20;
+    [SerializeField, Tooltip("Particle system that is used while dashing.")] private ParticleSystem _CachedSystem;
+    [SerializeField, Tooltip("Amount of speedlines emitted after each dash. ")] private int emitParticles = 20;
     //End new code
 
     void Awake()
