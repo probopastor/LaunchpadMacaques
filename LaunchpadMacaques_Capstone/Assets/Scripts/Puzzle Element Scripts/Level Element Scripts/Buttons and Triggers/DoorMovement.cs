@@ -11,10 +11,21 @@ using UnityEngine;
 
 public class DoorMovement : MonoBehaviour
 {
+    #region Door Movement Variables
+    [Header("Door Movement ")]
     [SerializeField, Tooltip("The position relative to the door's current position to move it to on activation. ")] private Vector3 doorMovementDirection = new Vector3(0, 0, 0);
     [Tooltip("The position the door starts at. ")] private Vector3 originalDoorPos;
-    [Tooltip("The new position of the door after it's moved. ")] private Vector3 newDoorPos = new Vector3(0,0,0);
+    [Tooltip("The new position of the door after it's moved. ")] private Vector3 newDoorPos = new Vector3(0, 0, 0);
     [SerializeField] private float doorMoveSpeed = 0;
+    #endregion
+
+    #region Door Rotation Variables
+    [Header("Door Rotation ")]
+    [SerializeField, Tooltip("If true, the door will rotate instead of move on activation. ")] private bool rotateOnActivation;
+    [SerializeField] private Vector3[] doorRotationAngles;
+    private Vector3 originalDoorRotation;
+    private int angleIndex = 0;
+    #endregion
 
     private bool lerpDoor;
     private bool activateDoor;
@@ -29,6 +40,7 @@ public class DoorMovement : MonoBehaviour
     {
         originalDoorPos = gameObject.transform.position;
         newDoorPos = new Vector3(originalDoorPos.x + doorMovementDirection.x, originalDoorPos.y + doorMovementDirection.y, originalDoorPos.z + doorMovementDirection.z);
+        originalDoorRotation = transform.rotation.eulerAngles;
         lerpDoor = false;
         activateDoor = false;
         doOnce = false;
@@ -36,7 +48,7 @@ public class DoorMovement : MonoBehaviour
 
     private void Update()
     {
-        if(!doOnce)
+        if (!doOnce)
         {
             doOnce = true;
             if (GetComponentInParent<ActivationDoor>().GetEnableOnActivationStatus())
@@ -47,14 +59,30 @@ public class DoorMovement : MonoBehaviour
         }
 
         // If the door should be lerped, check to see if it should be activated or deactivated 
-        if(lerpDoor)
+        if (lerpDoor)
         {
-            if(!activateDoor)
+
+            if (!activateDoor)
             {
+
                 if (timeElapsed < doorMoveTime)
                 {
-                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position,
+                    if(!rotateOnActivation)
+                    {
+                        gameObject.transform.position = Vector3.Lerp(gameObject.transform.position,
                         new Vector3(originalDoorPos.x + doorMovementDirection.x, originalDoorPos.y + doorMovementDirection.y, originalDoorPos.z + doorMovementDirection.z), timeElapsed * doorMoveSpeed);
+                    }
+                    else
+                    {
+                        if(!transform.parent.GetComponent<ActivationDoor>().GetEnableOnActivationStatus())
+                        {
+                            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(doorRotationAngles[angleIndex]), timeElapsed * doorMoveSpeed);
+                        }
+                        else
+                        {
+                            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(originalDoorRotation), timeElapsed * doorMoveSpeed);
+                        }
+                    }
 
                     timeElapsed += Time.deltaTime;
                 }
@@ -66,10 +94,11 @@ public class DoorMovement : MonoBehaviour
                     ActivationDoor thisDoor = GetComponentInParent<ActivationDoor>();
                     thisDoor.DisableDoor(gameObject);
                 }
+
             }
-            else if(activateDoor)
+            else if (activateDoor)
             {
-                if(!doorEnabled)
+                if (!doorEnabled)
                 {
                     doorEnabled = true;
                     ActivationDoor thisDoor = GetComponentInParent<ActivationDoor>();
@@ -78,8 +107,22 @@ public class DoorMovement : MonoBehaviour
 
                 if (timeElapsed < doorMoveTime)
                 {
-                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position,
+                    if(!rotateOnActivation)
+                    {
+                        gameObject.transform.position = Vector3.Lerp(gameObject.transform.position,
                         new Vector3(newDoorPos.x - doorMovementDirection.x, newDoorPos.y - doorMovementDirection.y, newDoorPos.z - doorMovementDirection.z), timeElapsed * doorMoveSpeed);
+                    }
+                    else
+                    {
+                        if(!transform.parent.GetComponent<ActivationDoor>().GetEnableOnActivationStatus())
+                        {
+                            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(originalDoorRotation), timeElapsed * doorMoveSpeed);
+                        }
+                        else
+                        {
+                            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(-doorRotationAngles[angleIndex]), timeElapsed * doorMoveSpeed);
+                        }
+                    }
 
                     timeElapsed += Time.deltaTime;
                 }
@@ -87,10 +130,10 @@ public class DoorMovement : MonoBehaviour
                 {
                     Debug.Log("Door should now be enabled");
                     lerpDoor = false;
-
                     doorEnabled = false;
                 }
             }
+
         }
     }
 
