@@ -118,7 +118,8 @@ public class DoorMovement : MonoBehaviour
                     // If the door is being activated, move the door towards its end rotation.
                     else if (activateDoor)
                     {
-                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(-doorRotationAngles[angleIndex]), 1 * doorMoveSpeed);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(-doorRotationAngles[angleIndex].x, -doorRotationAngles[angleIndex].y, -doorRotationAngles[angleIndex].z)), 
+                            1 * doorMoveSpeed);
                     }
                 }
             }
