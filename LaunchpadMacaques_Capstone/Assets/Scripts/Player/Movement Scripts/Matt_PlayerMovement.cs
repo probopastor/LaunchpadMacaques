@@ -22,6 +22,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Player Transform Assignables")]
     [SerializeField, Tooltip("The transform of the player's camera. ")] private Transform playerCam;
     [SerializeField, Tooltip("The transform of the player's orientation ")] private Transform orientation;
+    float m_fieldOfView = 60.0f;
     //public float initialFieldofView = 90f;
     //public float desiredFieldofView = 60f;
     //public float fieldofViewTime = .5f;
@@ -172,6 +173,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        
         playerScale = transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -198,6 +200,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         Movement();
         LimitVelocity();
         SetGravityModifier();
+        
+
     }
 
     private void Update()
@@ -230,6 +234,8 @@ public class Matt_PlayerMovement : MonoBehaviour
                 StartCoroutine(KillForces());
             }
         }
+
+        changeFOV();
     }
 
 
@@ -794,5 +800,27 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         return grounded;
     }
+
+    void changeFOV()
+    {
+        Camera.main.fieldOfView = m_fieldOfView;
+        m_fieldOfView = Mathf.Clamp(m_fieldOfView, 60.75f, 120.75f);
+
+        if (rb.velocity.x >= 40 || 
+            rb.velocity.z >= 40 ||
+            rb.velocity.x <= -40 || 
+            rb.velocity.z <= -40)
+        {
+            
+           m_fieldOfView += .75f;
+        }    
+        else
+            m_fieldOfView -= .75f;
+
+
+        Debug.Log(m_fieldOfView);
+        
+    }
+
 
 }
