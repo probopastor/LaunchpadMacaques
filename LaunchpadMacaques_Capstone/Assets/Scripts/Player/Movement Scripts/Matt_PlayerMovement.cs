@@ -167,6 +167,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private float currentMaxFOV;
 
+    private float lastVelocity = 0;
+
     void Awake()
     {
         defaultGravity = gravity;
@@ -815,9 +817,12 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void changeFOV()
     {
-
         Camera.main.fieldOfView = m_fieldOfView;
-        currentMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+        if (rb.velocity.magnitude > lastVelocity)
+        {
+            currentMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+        }
+
         m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, currentMaxFOV);
 
         if (rb.velocity.x >= xFOVActivationVel ||
@@ -833,6 +838,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
 
         Debug.Log(m_fieldOfView);
+
+        lastVelocity = rb.velocity.magnitude;
 
     }
 
