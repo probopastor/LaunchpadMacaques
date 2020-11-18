@@ -62,8 +62,9 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #region Movement FOV Variables
     [Header("Movement FOV Variables")]
-    [SerializeField] private float xFOVActivationVel = 40f;
-    [SerializeField] private float zFOVActivationVel = 40f;
+//    [SerializeField] private float xFOVActivationVel = 40f;
+  //  [SerializeField] private float zFOVActivationVel = 40f;
+    [SerializeField] private float activationMagnitude = 15f;
     [SerializeField] private float fovChangeRate = 0.75f;
     [SerializeField] private float minFOV = 60.75f;
     [SerializeField] private float maxFOV = 120.75f;
@@ -820,16 +821,26 @@ public class Matt_PlayerMovement : MonoBehaviour
         currentMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
         m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, currentMaxFOV);
 
-        if (rb.velocity.x >= xFOVActivationVel || 
-            rb.velocity.z >= zFOVActivationVel ||
-            rb.velocity.x <= -xFOVActivationVel || 
-            rb.velocity.z <= -zFOVActivationVel)
-        {
+        //if (rb.velocity.x >= xFOVActivationVel || 
+        //    rb.velocity.z >= zFOVActivationVel ||
+        //    rb.velocity.x <= -xFOVActivationVel || 
+        //    rb.velocity.z <= -zFOVActivationVel)
+        //{
             
-           m_fieldOfView += fovChangeRate;
-        }    
+        //   m_fieldOfView += fovChangeRate;
+        //}    
+        //else
+        //    m_fieldOfView -= fovChangeRate;
+
+        if(rb.velocity.magnitude >= activationMagnitude)
+        {
+            m_fieldOfView += fovChangeRate;
+        }
+
         else
+        {
             m_fieldOfView -= fovChangeRate;
+        }
 
 
         Debug.Log(m_fieldOfView);
