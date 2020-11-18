@@ -27,7 +27,6 @@ public class CorruptEvent : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        gameObject.SetActive(true);
 
         listener = new UnityAction(CorruptObjects);
 
@@ -38,6 +37,9 @@ public class CorruptEvent : MonoBehaviour
     }
     private void OnEnable()
     {
+
+        timeElapsed = 0f;
+
         GameEventManager.StartListening(eventName, listener);
     }
 
@@ -83,14 +85,16 @@ public class CorruptEvent : MonoBehaviour
         foreach(CorruptableObject corruptibleObject in corruptibleObjects)
         {
 
-            if(corruptibleObject.corruptionState == CorruptableObject.CorruptionState.Uncorrupted)
+            if(corruptibleObject.corruptionState == CorruptableObject.CorruptionState.Uncorrupted && corruptibleObject != null)
             {
                 //corruptibleObject.corruptionState = CorruptableObject.CorruptionState.Corrupting;
 
                 corruptibleObject.StartCorrupting(corruptibleObject.transform.position);
 
-                //gameObject.SetActive(false);
-
+            }
+            else
+            {
+                Debug.Log("The object(s) have been destroyed or do not exist"); 
             }
 
         }

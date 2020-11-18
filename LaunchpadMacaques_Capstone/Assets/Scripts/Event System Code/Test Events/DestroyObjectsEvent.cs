@@ -17,7 +17,7 @@ public class DestroyObjectsEvent : MonoBehaviour
 
     private float elapsedTime;
 
-    private float destroyTime = 10;
+    private float destroyTime;
 
     public Text displayText;
 
@@ -38,7 +38,6 @@ public class DestroyObjectsEvent : MonoBehaviour
         {
             displayText.text = "The objects have been destroyed!!";
 
-            gameObject.SetActive(false);
         }
 
         if (destroyTime <= 0)
@@ -50,17 +49,25 @@ public class DestroyObjectsEvent : MonoBehaviour
 
     private void OnEnable()
     {
+
+        destroyTime = 10;
+
+        displayText.gameObject.SetActive(true);
+
         GameEventManager.StartListening(eventName, eventListener);
     }
 
     private void OnDisable()
     {
         GameEventManager.StopListening(eventName, eventListener);
+
+        displayText.gameObject.SetActive(false);
+
     }
 
     private void DestroyObjects()
     {
-        foreach(GameObject destroyableObject in destroyableObjects.ToList())
+        foreach (GameObject destroyableObject in destroyableObjects.ToList())
         {
             Destroy(destroyableObject);
             destroyableObjects.Remove(destroyableObject);
