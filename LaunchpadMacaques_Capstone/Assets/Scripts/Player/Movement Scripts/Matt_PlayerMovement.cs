@@ -67,6 +67,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField] private float fovChangeRate = 0.75f;
     [SerializeField] private float minFOV = 60.75f;
     [SerializeField] private float maxFOV = 120.75f;
+    [SerializeField] private float maxFOVSpeedScale = .05f;
     #endregion 
 
     #region Grappling Velocity Reset Variables 
@@ -163,6 +164,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     private Vector3 latestOrientation;
 
     private float deafultVelocity;
+
+    private float currentMaxFOV;
 
     void Awake()
     {
@@ -812,8 +815,10 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void changeFOV()
     {
+
         Camera.main.fieldOfView = m_fieldOfView;
-        m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, maxFOV);
+        currentMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+        m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, currentMaxFOV);
 
         if (rb.velocity.x >= xFOVActivationVel || 
             rb.velocity.z >= zFOVActivationVel ||
