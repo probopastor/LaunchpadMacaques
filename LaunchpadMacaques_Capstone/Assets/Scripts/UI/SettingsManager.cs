@@ -28,7 +28,7 @@ public class SettingsManager : MonoBehaviour
     [Header("Gameplay Settings")]
     [SerializeField, Tooltip("The Invert Y Toggle Box")] Toggle invertY;
     [SerializeField, Tooltip("The Mouse Sensitivity Slider")] Slider mouseSensitivity;
-    [SerializeField, Tooltip("The Field of View Slider")] Slider fovSlider;
+    [SerializeField, Tooltip("The Field of View Slider")] Toggle fovToggle;
 
     [Header("Settings Holder")]
     [SerializeField, Tooltip("Will hold all the settings Menu")] GameObject settingsHolder;
@@ -280,13 +280,20 @@ public class SettingsManager : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("FOV"))
         {
-            fovSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("FOV"));
+            if(PlayerPrefs.GetInt("FOV") == 1)
+            {
+                fovToggle.SetIsOnWithoutNotify(true);
+            }
+
+            else
+            {
+                fovToggle.SetIsOnWithoutNotify(false);
+            }
         }
 
         else
         {
-            fovSlider.SetValueWithoutNotify(deafultFOV);
-            SetFOV(deafultFOV);
+            fovToggle.SetIsOnWithoutNotify(true);
         }
     }
 
@@ -348,9 +355,17 @@ public class SettingsManager : MonoBehaviour
     /// "FOV" is used in the script MoveCamera.CS
     /// </summary>
     /// <param name="newFov"></param>
-    public void SetFOV(float newFov)
+    public void SetFOV(bool fov)
     {
-        PlayerPrefs.SetFloat("FOV", newFov);
+        if (fov)
+        {
+            PlayerPrefs.SetInt("FOV", 1);
+        }
+
+        else
+        {
+            PlayerPrefs.SetInt("FOV", 0);
+        }
     }
 
     /// <summary>
