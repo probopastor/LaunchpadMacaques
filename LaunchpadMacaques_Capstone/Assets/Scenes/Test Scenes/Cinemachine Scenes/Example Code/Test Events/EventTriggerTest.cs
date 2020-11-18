@@ -1,7 +1,7 @@
 ﻿/* 
 * (Launchpad Macaques - [Game Name Here]) 
 * (Contributors/Author(s)) 
-* (File Name) 
+* (EventTriggerTest.cs) 
 * (Describe, in general, the code contained.) 
 */
 
@@ -22,6 +22,11 @@ public class EventTriggerTest : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.P))
         {
             GameEventManager.TriggerEvent("CameraPanToObject");
+        }
+
+        if(Input.GetKeyDown(KeyCode.U))
+        {
+            GameEventManager.TriggerEvent("Stuff");
         }
     }
 }

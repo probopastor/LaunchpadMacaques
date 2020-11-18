@@ -1,7 +1,7 @@
 ﻿/* 
-* (Launchpad Macaques - [Game Name Here]) 
-* (Contributors/Author(s)) 
-* (File Name) 
+* (Launchpad Macaques - [Neon Oblivion]) 
+* (CJ Green) 
+* (Event_PanToObject.cs) 
 * (Describe, in general, the code contained.) 
 */
 
@@ -18,11 +18,13 @@ public class Event_PanToObject : MonoBehaviour
     private UnityAction cameraListener;
     private string eventName = "CameraPanToObject";
 
-    [SerializeField]
+    [SerializeField] [Tooltip("The camera that will be the camera that the Main Camera will pan to.")]
     private CinemachineVirtualCamera panningCamera;
-    [SerializeField]
+
+    [SerializeField] [Tooltip("The time it takes before the camera switches back to the regular view.")]
     private float panTime;
 
+    // The Cinemachine camera priority value. This determines what camera Cinemachine is using/looking through.
     private int initPriority;
 
     private void Awake()

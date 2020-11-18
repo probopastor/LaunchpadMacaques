@@ -31,6 +31,14 @@ public class TestEvent_01 : MonoBehaviour
         GameEventManager.StopListening(evenName, someListener);
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.M))
+        {
+            GameEventManager.TriggerEvent(evenName);
+        }
+    }
+
     private void SomeFunction()
     {
         Debug.Log("Some Function was called!");
