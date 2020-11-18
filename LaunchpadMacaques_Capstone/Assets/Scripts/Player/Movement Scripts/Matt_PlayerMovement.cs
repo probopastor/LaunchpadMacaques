@@ -60,6 +60,15 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The angle that the player starts to be unable to walk up ")] private float maxSlopeAngle = 35f;
     #endregion
 
+    #region Movement FOV Variables
+    [Header("Movement FOV Variables")]
+    [SerializeField] private float xFOVActivationVel = 40f;
+    [SerializeField] private float zFOVActivationVel = 40f;
+    [SerializeField] private float fovChangeRate = 0.75f;
+    [SerializeField] private float minFOV = 60.75f;
+    [SerializeField] private float maxFOV = 120.75f;
+    #endregion 
+
     #region Grappling Velocity Reset Variables 
     [Header("Velocity Reset Variables")]
     [SerializeField, Tooltip("The X velocity range (between -x and x) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float xVelocityResetRange = 1;
@@ -804,18 +813,18 @@ public class Matt_PlayerMovement : MonoBehaviour
     void changeFOV()
     {
         Camera.main.fieldOfView = m_fieldOfView;
-        m_fieldOfView = Mathf.Clamp(m_fieldOfView, 60.75f, 120.75f);
+        m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, maxFOV);
 
-        if (rb.velocity.x >= 40 || 
-            rb.velocity.z >= 40 ||
-            rb.velocity.x <= -40 || 
-            rb.velocity.z <= -40)
+        if (rb.velocity.x >= xFOVActivationVel || 
+            rb.velocity.z >= zFOVActivationVel ||
+            rb.velocity.x <= -xFOVActivationVel || 
+            rb.velocity.z <= -zFOVActivationVel)
         {
             
-           m_fieldOfView += .75f;
+           m_fieldOfView += fovChangeRate;
         }    
         else
-            m_fieldOfView -= .75f;
+            m_fieldOfView -= fovChangeRate;
 
 
         Debug.Log(m_fieldOfView);
