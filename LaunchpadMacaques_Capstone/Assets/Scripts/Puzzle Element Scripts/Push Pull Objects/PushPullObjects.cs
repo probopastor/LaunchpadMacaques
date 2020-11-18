@@ -37,6 +37,8 @@ public class PushPullObjects : MonoBehaviour
     [SerializeField]
     Animator anim;
 
+
+
     #region Private Variables
     private Rigidbody objectRB;
     private GameObject cam;
@@ -47,8 +49,7 @@ public class PushPullObjects : MonoBehaviour
 
 
     GameObject objectHolder;
-
-
+    GameObject currentHoveredObj;
 
     private bool inTempFix = false;
     #endregion
@@ -84,7 +85,7 @@ public class PushPullObjects : MonoBehaviour
 
     void Update()
     {
-
+        CanPickUp();
         if (Input.GetMouseButtonDown(0) /*&& !grapplingGun.IsGrappling()*/)
         {
             if (!grabbing)
@@ -104,6 +105,7 @@ public class PushPullObjects : MonoBehaviour
                 DropObject();
             }
         }
+
 
     }
 
@@ -150,7 +152,6 @@ public class PushPullObjects : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, maxGrabDistance, canBePickedUp) && !grapplingGun.IsGrappling())
         {
-
             anim.ResetTrigger("Throw");
             anim.ResetTrigger("Drop");
             anim.SetTrigger("PickUp");
@@ -168,6 +169,42 @@ public class PushPullObjects : MonoBehaviour
 
 
         }
+    }
+
+
+    private void CanPickUp()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, maxGrabDistance, canBePickedUp) && !grapplingGun.IsGrappling())
+        {
+            if(currentHoveredObj != hit.collider.gameObject)
+            {
+                hit.collider.gameObject.GetComponent<PushableObj>().TurnOnOffParticles(true);
+                currentHoveredObj = hit.collider.gameObject;
+            }
+        }
+
+        else
+        {
+
+            if (currentHoveredObj)
+            {
+                currentHoveredObj.GetComponent<PushableObj>().TurnOnOffParticles(false);
+                currentHoveredObj = null;
+            }
+
+        }
+
+    }
+
+   public bool CanSeeBox()
+    {
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, maxGrabDistance, canBePickedUp) && !grapplingGun.IsGrappling())
+        {
+            return true;
+        }
+
+        else return false;
     }
 
     /// <summary>
@@ -246,6 +283,11 @@ public class PushPullObjects : MonoBehaviour
     public GameObject GetHeldCube()
     {
         return objectRB.gameObject;
+    }
+
+    public GameObject GetHoverdObject()
+    {
+        return currentHoveredObj;
     }
 
 }

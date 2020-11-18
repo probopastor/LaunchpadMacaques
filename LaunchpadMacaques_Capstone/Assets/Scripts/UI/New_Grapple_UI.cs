@@ -12,12 +12,14 @@ public class New_Grapple_UI : MonoBehaviour
 
 
     GrapplingGun gg;
+    PushPullObjects pushPull;
 
     
     // Start is called before the first frame update
     void Start()
     {
         gg = FindObjectOfType<GrapplingGun>();
+        pushPull = FindObjectOfType<PushPullObjects>();
         retiicle.sprite = deafultReticle;
     }
 
@@ -33,7 +35,7 @@ public class New_Grapple_UI : MonoBehaviour
 
    void DisplayUI()
     {
-        if (gg.CanFindGrappleLocation())
+        if (gg.CanFindGrappleLocation() || pushPull.CanSeeBox())
         {
             retiicle.sprite = activeReticle;
         }
