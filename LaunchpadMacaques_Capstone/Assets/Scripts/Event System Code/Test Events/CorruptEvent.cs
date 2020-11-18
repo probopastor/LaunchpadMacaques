@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class CorruptEvent : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class CorruptEvent : MonoBehaviour
     [SerializeField]
     private CorruptableObject[] corruptibleObjects;
 
+    private float timeElapsed;
+
+    public Text textDisplay;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -28,8 +33,9 @@ public class CorruptEvent : MonoBehaviour
 
         corruptibleObjects = FindObjectsOfType<CorruptableObject>();
 
-    }
+        textDisplay.gameObject.SetActive(false);
 
+    }
     private void OnEnable()
     {
         GameEventManager.StartListening(eventName, listener);
@@ -44,8 +50,32 @@ public class CorruptEvent : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Player"))
         {
+
+            textDisplay.gameObject.SetActive(true);
+
             GameEventManager.TriggerEvent("CorruptEvent");
         }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.gameObject.CompareTag("Player"))
+        {
+            timeElapsed += 1 * Time.deltaTime;
+
+            textDisplay.text = "You have been standing in the trigger for " + Mathf.Round(timeElapsed) + " seconds.";
+
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        timeElapsed = 0;
+
+        textDisplay.text = "";
+
+        textDisplay.gameObject.SetActive(false);
+
     }
 
     private void CorruptObjects()
@@ -59,7 +89,7 @@ public class CorruptEvent : MonoBehaviour
 
                 corruptibleObject.StartCorrupting(corruptibleObject.transform.position);
 
-                gameObject.SetActive(false);
+                //gameObject.SetActive(false);
 
             }
 
