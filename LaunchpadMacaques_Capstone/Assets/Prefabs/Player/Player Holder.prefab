@@ -1106,6 +1106,12 @@ MonoBehaviour:
   counterMovement: 0.175
   threshold: 0.01
   maxSlopeAngle: 35
+  xFOVActivationVel: 15
+  zFOVActivationVel: 15
+  fovChangeRate: 0.15
+  minFOV: 60.75
+  maxFOV: 70
+  maxFOVSpeedScale: 0.003
   xVelocityResetRange: 1
   yVelocityResetRange: 1
   zVelocityResetRange: 1
@@ -1244,9 +1250,9 @@ MonoBehaviour:
   footDecal: {fileID: 7227755499754186309, guid: 6e669c6e13ff6594f999fc31b23ac9be,
     type: 3}
   decalSize: 0.7
+  maxFootSteps: 50
   timeBetweenSteps: 3
   scaleAmount: 0.9
-  maxFootSteps: 50
   leftFootPos: {fileID: 4887189289661250856}
   rightFootPos: {fileID: 8778899206465010495}
 --- !u!1 &7880684069204234816

@@ -820,20 +820,20 @@ public class Matt_PlayerMovement : MonoBehaviour
         currentMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
         m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, currentMaxFOV);
 
-        if (rb.velocity.x >= xFOVActivationVel || 
+        if (rb.velocity.x >= xFOVActivationVel ||
             rb.velocity.z >= zFOVActivationVel ||
-            rb.velocity.x <= -xFOVActivationVel || 
+            rb.velocity.x <= -xFOVActivationVel ||
             rb.velocity.z <= -zFOVActivationVel)
         {
-            
-           m_fieldOfView += fovChangeRate;
-        }    
+
+            m_fieldOfView += fovChangeRate;
+        }
         else
             m_fieldOfView -= fovChangeRate;
 
 
         Debug.Log(m_fieldOfView);
-        
+
     }
 
 
