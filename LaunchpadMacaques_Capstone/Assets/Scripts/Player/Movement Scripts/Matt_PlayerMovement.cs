@@ -64,6 +64,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Movement FOV Variables")]
     [SerializeField] private float xFOVActivationVel = 40f;
     [SerializeField] private float zFOVActivationVel = 40f;
+    [SerializeField] private float yFOVActicationVel = 15f;
     [SerializeField] private float fovChangeRate = 0.75f;
     [SerializeField] private float minFOV = 60.75f;
     [SerializeField] private float maxFOV = 120.75f;
@@ -853,6 +854,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
             if (rb.velocity.x >= xFOVActivationVel ||
                 rb.velocity.z >= zFOVActivationVel ||
+                rb.velocity.y >= yFOVActicationVel ||
+                rb.velocity.y <= -yFOVActicationVel ||
                 rb.velocity.x <= -xFOVActivationVel ||
                 rb.velocity.z <= -zFOVActivationVel)
             {
