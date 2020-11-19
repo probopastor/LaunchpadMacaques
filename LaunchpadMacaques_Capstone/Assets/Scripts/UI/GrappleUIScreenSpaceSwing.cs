@@ -31,6 +31,7 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
     private bool objectSet = false;
     private Canvas thisCanvas;
     private Vector3 uiPos;
+    private PushPullObjects pushPull;
     #endregion
 
 
@@ -45,6 +46,7 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
         cam = FindObjectOfType<Camera>();
         player = FindObjectOfType<Matt_PlayerMovement>().gameObject;
         objectHitPoint = Vector3.zero;
+        pushPull = FindObjectOfType<PushPullObjects>();
     }
 
     // Update is called once per frame
@@ -93,6 +95,13 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
             objectHitPoint = springJoint.GetGrappleRayhit().point;
             TurnOnUI(springJoint.GetGrappleRayhit());
         }
+
+        else if (pushPull.CanSeeBox())
+        {
+            Debug.Log("Can See Box");
+            objectHitPoint = pushPull.GetHoverdObject().transform.position;
+            TurnOnUI(pushPull.GetHoverdObject());
+        }
         else
         {
             TurnOffUI();
@@ -112,6 +121,16 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
         uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
         objectSet = true;
 
+    }
+
+    private void TurnOnUI(GameObject hitObject)
+    {
+        float distance = Vector3.Distance(player.transform.position, hitObject.transform.position);
+
+
+        uiImageHolder.enabled = true;
+        uiImageHolder.rectTransform.localScale = new Vector3(distance * distanceVariable, distance * distanceVariable, distance * distanceVariable);
+        objectSet = true;
     }
 
     /// <summary>
