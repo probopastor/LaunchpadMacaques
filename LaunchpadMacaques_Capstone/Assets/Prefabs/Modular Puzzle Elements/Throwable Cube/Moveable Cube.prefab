@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 7511431540884143899}
   - component: {fileID: 1419916330316983612}
   - component: {fileID: 3152400784751004010}
+  - component: {fileID: 2648598245565371936}
   m_Layer: 10
   m_Name: Moveable Cube
   m_TagString: PlayerCube
@@ -310,6 +311,20 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+--- !u!114 &2648598245565371936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058264478890330556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fced739425b55e49bc0f4adc607bce4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshSources:
+  - {fileID: 2490803395874197183}
 --- !u!1 &3275933140523015870
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,7 +384,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 18beca945f240914cb3e3917937d08b6, type: 2}
+  - {fileID: 2100000, guid: a48c81fb38d542b419fefb9ed303ca54, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
