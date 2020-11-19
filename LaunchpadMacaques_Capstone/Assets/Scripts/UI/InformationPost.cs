@@ -88,7 +88,7 @@ public class InformationPost : MonoBehaviour
             if (informationText)
             {
                 informationText.gameObject.transform.parent.gameObject.SetActive(true);
-                informationText.text = "Press E To Read";
+                informationText.text = "press E to read";
                 playerInRange = true;
             }
   
