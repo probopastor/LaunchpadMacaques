@@ -13,6 +13,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
+using TMPro;
 
 public class NarrativeTriggerHandler : MonoBehaviour
 {
@@ -20,14 +22,18 @@ public class NarrativeTriggerHandler : MonoBehaviour
     [SerializeField, Tooltip("Contains all triggers in the scene. Each array element is a separate trigger with it's own type, " +
         "as well as its own text and audio outputs")]
     public Trigger[] triggers;
-
-    public bool[] triggerSubFoldout;
-    public string[] triggerNames;
+    
+    [SerializeField]
+    private bool[] triggerSubFoldout;
+    [SerializeField]
+    private string[] triggerNames;
 
     [SerializeField, Tooltip("The lower end of the interval that a random trigger can be called")]
     private float randomIntervalMin;
     [SerializeField, Tooltip("The upper end of the interval that a random trigger can be called")]
     private float randomIntervalMax;
+    [SerializeField]
+    private TMP_Text dialogue;
 
 
     [System.Serializable]
@@ -37,39 +43,32 @@ public class NarrativeTriggerHandler : MonoBehaviour
         public TriggerType type;
         [Tooltip("The text to display on Trigger activation")]
         public string textToDisplay;
+        [Tooltip("The time text should be displayed")]
+        public float textDisplayTime;
         [Tooltip("The audio to play on Trigger activation")]
         public AudioClip audioToPlay;
         [Tooltip("The audio source the audio will play from")]
         public AudioSource audioSource;
         [Tooltip("Whether this Trigger can be activated multiple times (true) or only once (false)")]
         public bool repeatable;
+        public bool hasRan = false;
 
         //Only appear on TriggerType.Area
-        [Tooltip("The GameObject that will activate the Trigger when it enters the trigger area")]
-        public GameObject triggeringObject;
+        [Tooltip("The tag of objects that will activate the Trigger when it enters the trigger area")]
+        public string triggeringTag;
+        public GameObject areaTrigger;
         [Tooltip("The center of the trigger zone")]
         public Vector3 areaCenter;
         [Tooltip("The size of the trigger zone relative to the center")]
         public Vector3 boxSize;
-
-        //Only appear on TriggerType.OnEvent
-        [Tooltip("The event (from another script) that will activate this trigger")]
-        public TriggerEvent triggerEvent = new TriggerEvent();
+      
         
-        /// <summary>
-        /// Activate the trigger, played sound if applicable and plays 
-        /// </summary>
-        public void Activate()
-        {
-            audioSource.clip = audioToPlay;
-            audioSource.Play();
-
-            //Text appearing functionality
-        }
     }
-    
-    public class TriggerEvent : UnityEvent {}
 
+    private void Awake()
+    {
+        dialogue = GetComponentInChildren<TMP_Text>();
+    }
 
     private void Start()
     {
@@ -91,7 +90,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
             {
                 if (triggers[i].type == TriggerType.Area && AreaCheck(triggers[i]))
                 {
-                    triggers[i].Activate();
+                    ActivateTrigger(i);
                 }
             }
 
@@ -110,14 +109,53 @@ public class NarrativeTriggerHandler : MonoBehaviour
                     }
                 }
 
-                Trigger triggerToActivate = randomTriggers[Random.Range(0, (int)randomTriggers.Count)];
+                int triggerToActivate = Random.Range(0, (int)randomTriggers.Count);
 
-                triggerToActivate.Activate();
+                ActivateTrigger(triggerToActivate);
             }
+
 
             yield return null;
         }
+    }
 
+    /// <summary>
+    /// Activate the trigger, played sound if applicable and plays 
+    /// </summary>
+    public void ActivateTrigger(int index)
+    {
+        Trigger trigger = triggers[index];
+        if (trigger.repeatable == false && trigger.hasRan == true)
+        {
+            return;
+        }
+
+        trigger.hasRan = true;
+
+        if (trigger.audioSource != null)
+        {
+            trigger.audioSource.clip = trigger.audioToPlay;
+            trigger.audioSource.Play();
+        }
+
+        if (trigger.textToDisplay != "")
+        {
+            StartCoroutine(RunDialogue(index));
+        }
+
+        //Text appearing functionality
+    }
+
+    IEnumerator RunDialogue(int triggerIndex)
+    {
+        dialogue.text = triggers[triggerIndex].textToDisplay;
+        yield return new WaitForSeconds(triggers[triggerIndex].textDisplayTime);
+
+        dialogue.CrossFadeAlpha(0, 2f, false);
+
+        dialogue.text = "";
+
+        dialogue.CrossFadeAlpha(1, 0f, false);
     }
 
     private bool AreaCheck(Trigger triggerToCheck)
@@ -126,7 +164,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         foreach(Collider x in hit)
         {
-            if (x.gameObject == triggerToCheck.triggeringObject)
+            if (x.tag == triggerToCheck.triggeringTag)
                 return true;
         }
 
@@ -147,5 +185,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
+    #region Getters/Setters
+    public string GetTriggerName(int index)
+    {
+        return triggerNames[index];
+    }
+    #endregion
 
 }
