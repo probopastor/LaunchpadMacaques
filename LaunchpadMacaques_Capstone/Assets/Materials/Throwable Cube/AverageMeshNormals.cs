@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ * Script From: https://github.com/markv12/OutlineDemo/blob/master/Assets/AverageMeshNormals.cs
+ * Averages normals on passed in meshes 
+ */
+
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
