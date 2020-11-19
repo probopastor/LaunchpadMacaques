@@ -28,6 +28,11 @@ public class PushableObj : MonoBehaviour
 
     [SerializeField, Tooltip("The Layer that is ground")] LayerMask ground;
 
+    [Header("Particle Settings")]
+    [SerializeField] bool scaleWithDistance;
+    [SerializeField] float sizeScaleAmount;
+    [SerializeField] float speedScaleAmount;
+
     #endregion
 
     #region Private Vars
@@ -39,8 +44,6 @@ public class PushableObj : MonoBehaviour
     private bool pickedUp = false;
     int predStepsPerFrame = 6;
     private LineRenderer lr;
-    private Color startColor;
-    private Color endColor;
     private Vector3 respawnPos;
 
     private Gravity grav;
@@ -48,15 +51,34 @@ public class PushableObj : MonoBehaviour
     private CollectibleController cc;
 
     private StudioEventEmitter soundEmitter;
+
+    private ParticleSystem particles;
+    
+    private ParticleSystem.MainModule main;
+
+    private ParticleSystem.MinMaxCurve particleStartingSpeed;
+    private ParticleSystem.MinMaxCurve particleStartingSize;
+    private PushPullObjects pushPull;
     #endregion
 
     private void Awake()
     {
+        pushPull = FindObjectOfType<PushPullObjects>();
         CreateDecalAndLine();
 
         grav = this.GetComponent<Gravity>();
         cc = FindObjectOfType<CollectibleController>();
         soundEmitter = GetComponent<StudioEventEmitter>();
+        particles = this.GetComponent<ParticleSystem>();
+
+        main = particles.main;
+
+        particles.Stop();
+
+        particleStartingSpeed = main.startSpeed;
+        particleStartingSize = main.startSize;
+
+
     }
 
     /// <summary>
@@ -70,9 +92,6 @@ public class PushableObj : MonoBehaviour
         beingPushed = false;
         lr = this.GetComponent<LineRenderer>();
         lr.positionCount = 0;
-
-        startColor = lr.startColor;
-        endColor = lr.endColor;
     }
 
     /// <summary>
@@ -104,6 +123,12 @@ public class PushableObj : MonoBehaviour
 
         ResetObjectPos();
 
+        if (particles.isPlaying && scaleWithDistance)
+        {
+            var dis = Vector3.Distance(this.gameObject.transform.position, pushPull.transform.position);
+            main.startSpeed = particleStartingSpeed.constant * (1 + (dis * speedScaleAmount));
+            main.startSize = particleStartingSize.constant * (1 + (dis * sizeScaleAmount));
+        }
 
     }
 
@@ -393,4 +418,16 @@ public class PushableObj : MonoBehaviour
 
     #endregion
 
+    public void TurnOnOffParticles(bool onOff)
+    {
+        if (onOff)
+        {
+            particles.Play();
+        }
+
+        else
+        {
+            particles.Stop();
+        }
+    }
 }
