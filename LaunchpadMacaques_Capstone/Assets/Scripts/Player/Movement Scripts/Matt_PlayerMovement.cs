@@ -212,6 +212,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             zVelocityResetRange *= -1;
         }
+
+        currentMaxFOV = maxFOV;
     }
 
     private void FixedUpdate()
@@ -839,29 +841,33 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void changeFOV()
     {
-        Camera.main.fieldOfView = m_fieldOfView;
-        if (rb.velocity.magnitude > lastVelocity)
+        if(PlayerPrefs.GetInt("FOV") == 1)
         {
-            currentMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+            Camera.main.fieldOfView = m_fieldOfView;
+            if (rb.velocity.magnitude > lastVelocity)
+            {
+                currentMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+            }
+
+            m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, currentMaxFOV);
+
+            if (rb.velocity.x >= xFOVActivationVel ||
+                rb.velocity.z >= zFOVActivationVel ||
+                rb.velocity.x <= -xFOVActivationVel ||
+                rb.velocity.z <= -zFOVActivationVel)
+            {
+
+                m_fieldOfView += fovChangeRate;
+            }
+            else
+                m_fieldOfView -= fovChangeRate;
+
+
+            Debug.Log(m_fieldOfView);
+
+            lastVelocity = rb.velocity.magnitude;
         }
 
-        m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, currentMaxFOV);
-
-        if (rb.velocity.x >= xFOVActivationVel ||
-            rb.velocity.z >= zFOVActivationVel ||
-            rb.velocity.x <= -xFOVActivationVel ||
-            rb.velocity.z <= -zFOVActivationVel)
-        {
-
-            m_fieldOfView += fovChangeRate;
-        }
-        else
-            m_fieldOfView -= fovChangeRate;
-
-
-        Debug.Log(m_fieldOfView);
-
-        lastVelocity = rb.velocity.magnitude;
 
     }
 

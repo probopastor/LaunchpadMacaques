@@ -10,10 +10,10 @@ public class MoveCamera : MonoBehaviour
     private void Start()
     {
         cam = this.GetComponentInChildren<Camera>();
-        if (PlayerPrefs.HasKey("FOV"))
-        {
-            cam.fieldOfView = PlayerPrefs.GetFloat("FOV");
-        }
+        //if (PlayerPrefs.HasKey("FOV"))
+        //{
+        //    cam.fieldOfView = PlayerPrefs.GetFloat("FOV");
+        //}
     }
     private void FixedUpdate()
     {
