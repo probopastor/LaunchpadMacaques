@@ -179,6 +179,7 @@ public class PushPullObjects : MonoBehaviour
         {
             if(currentHoveredObj != hit.collider.gameObject)
             {
+                hit.collider.gameObject.GetComponent<PushableObj>().EnableDisableOutline(true);
                 hit.collider.gameObject.GetComponent<PushableObj>().TurnOnOffParticles(true);
                 currentHoveredObj = hit.collider.gameObject;
             }
@@ -189,6 +190,7 @@ public class PushPullObjects : MonoBehaviour
 
             if (currentHoveredObj)
             {
+                currentHoveredObj.GetComponent<PushableObj>().EnableDisableOutline(false);
                 currentHoveredObj.GetComponent<PushableObj>().TurnOnOffParticles(false);
                 currentHoveredObj = null;
             }

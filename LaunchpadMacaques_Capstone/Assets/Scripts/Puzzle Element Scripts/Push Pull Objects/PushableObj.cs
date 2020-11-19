@@ -59,6 +59,8 @@ public class PushableObj : MonoBehaviour
     private ParticleSystem.MinMaxCurve particleStartingSpeed;
     private ParticleSystem.MinMaxCurve particleStartingSize;
     private PushPullObjects pushPull;
+
+    private GameObject outlineObj;
     #endregion
 
     private void Awake()
@@ -70,6 +72,9 @@ public class PushableObj : MonoBehaviour
         cc = FindObjectOfType<CollectibleController>();
         soundEmitter = GetComponent<StudioEventEmitter>();
         particles = this.GetComponent<ParticleSystem>();
+
+        outlineObj = gameObject.transform.Find("OutlineObj").gameObject;
+        outlineObj.GetComponent<Renderer>().enabled = false;
 
         main = particles.main;
 
@@ -428,6 +433,18 @@ public class PushableObj : MonoBehaviour
         else
         {
             particles.Stop();
+        }
+    }
+
+    public void EnableDisableOutline(bool enable)
+    {
+        if(enable)
+        {
+            outlineObj.GetComponent<Renderer>().enabled = true;
+        }
+        else if(!enable)
+        {
+            outlineObj.GetComponent<Renderer>().enabled = false;
         }
     }
 }
