@@ -9,7 +9,7 @@ public class New_Grapple_UI : MonoBehaviour
     [SerializeField] Sprite deafultReticle;
     [SerializeField] Sprite activeReticle;
     [SerializeField] Image retiicle;
-
+    [SerializeField] Animator anim;
 
     GrapplingGun gg;
 
@@ -35,12 +35,14 @@ public class New_Grapple_UI : MonoBehaviour
     {
         if (gg.CanFindGrappleLocation())
         {
-            retiicle.sprite = activeReticle;
+            //retiicle.sprite = activeReticle;
+            anim.SetBool("isHighlighted", true);
         }
 
         else
         {
-            retiicle.sprite = deafultReticle;
+            anim.SetBool("isHighlighted", false);
+            //retiicle.sprite = deafultReticle;
         }
     }
 }
