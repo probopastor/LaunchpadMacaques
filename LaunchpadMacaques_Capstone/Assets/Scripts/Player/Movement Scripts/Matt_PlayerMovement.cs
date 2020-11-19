@@ -22,6 +22,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Player Transform Assignables")]
     [SerializeField, Tooltip("The transform of the player's camera. ")] private Transform playerCam;
     [SerializeField, Tooltip("The transform of the player's orientation ")] private Transform orientation;
+    float m_fieldOfView = 60.0f;
     //public float initialFieldofView = 90f;
     //public float desiredFieldofView = 60f;
     //public float fieldofViewTime = .5f;
@@ -58,6 +59,16 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField] private float threshold = 0.01f;
     [SerializeField, Tooltip("The angle that the player starts to be unable to walk up ")] private float maxSlopeAngle = 35f;
     #endregion
+
+    #region Movement FOV Variables
+    [Header("Movement FOV Variables")]
+    [SerializeField] private float xFOVActivationVel = 40f;
+    [SerializeField] private float zFOVActivationVel = 40f;
+    [SerializeField] private float fovChangeRate = 0.75f;
+    [SerializeField] private float minFOV = 60.75f;
+    [SerializeField] private float maxFOV = 120.75f;
+    [SerializeField] private float maxFOVSpeedScale = .05f;
+    #endregion 
 
     #region Grappling Velocity Reset Variables 
     [Header("Velocity Reset Variables")]
@@ -154,6 +165,10 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private float deafultVelocity;
 
+    private float currentMaxFOV;
+
+    private float lastVelocity = 0;
+
     void Awake()
     {
         defaultGravity = gravity;
@@ -177,6 +192,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        
         playerScale = transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -203,6 +219,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         Movement();
         LimitVelocity();
         SetGravityModifier();
+        
+
     }
 
     private void Update()
@@ -235,6 +253,8 @@ public class Matt_PlayerMovement : MonoBehaviour
                 StartCoroutine(KillForces());
             }
         }
+
+        changeFOV();
     }
 
 
@@ -816,5 +836,34 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         return grounded;
     }
+
+    void changeFOV()
+    {
+        Camera.main.fieldOfView = m_fieldOfView;
+        if (rb.velocity.magnitude > lastVelocity)
+        {
+            currentMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+        }
+
+        m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, currentMaxFOV);
+
+        if (rb.velocity.x >= xFOVActivationVel ||
+            rb.velocity.z >= zFOVActivationVel ||
+            rb.velocity.x <= -xFOVActivationVel ||
+            rb.velocity.z <= -zFOVActivationVel)
+        {
+
+            m_fieldOfView += fovChangeRate;
+        }
+        else
+            m_fieldOfView -= fovChangeRate;
+
+
+        Debug.Log(m_fieldOfView);
+
+        lastVelocity = rb.velocity.magnitude;
+
+    }
+
 
 }
