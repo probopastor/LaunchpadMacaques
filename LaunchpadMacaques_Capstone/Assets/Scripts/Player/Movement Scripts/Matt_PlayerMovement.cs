@@ -245,6 +245,31 @@ public class Matt_PlayerMovement : MonoBehaviour
                 StartCoroutine(KillForces());
             }
         }
+
+        //Particles with speed
+        float speed = rb.velocity.magnitude;
+        var ps = _CachedSystem.main;
+        var rot = _CachedSystem.emission.rateOverTime;
+        ps.startSpeed = speed * 2; 
+        rot = speed;
+
+        //Set Particles to change direction with the rigidbody
+        var localVel = transform.InverseTransformDirection(rb.velocity);
+        var psRotation = _CachedSystem.shape.rotation;
+        psRotation = localVel;
+        /*
+        if (speed >= 20f)
+        {
+            if (_CachedSystem.isStopped)
+            {
+                _CachedSystem.Play();
+            }
+        }
+        else if (_CachedSystem.isPlaying && speed <= 20f)
+        {
+            _CachedSystem.Stop();
+        }
+        */
     }
 
 
