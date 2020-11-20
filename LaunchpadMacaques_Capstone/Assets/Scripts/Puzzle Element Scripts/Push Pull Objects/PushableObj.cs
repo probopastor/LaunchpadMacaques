@@ -26,6 +26,13 @@ public class PushableObj : MonoBehaviour
     [SerializeField] [Tooltip("The Min Fly Distance for the Object")]float minDistance = 5;
     [SerializeField] [Tooltip("The Max Fly Distance for the Object")]float maxDistance = 40;
 
+    [SerializeField, Tooltip("The Layer that is ground")] LayerMask ground;
+
+    [Header("Particle Settings")]
+    [SerializeField] bool scaleWithDistance;
+    [SerializeField] float sizeScaleAmount;
+    [SerializeField] float speedScaleAmount;
+
     #endregion
 
     #region Private Vars
@@ -37,8 +44,6 @@ public class PushableObj : MonoBehaviour
     private bool pickedUp = false;
     int predStepsPerFrame = 6;
     private LineRenderer lr;
-    private Color startColor;
-    private Color endColor;
     private Vector3 respawnPos;
 
     private Gravity grav;
@@ -46,15 +51,39 @@ public class PushableObj : MonoBehaviour
     private CollectibleController cc;
 
     private StudioEventEmitter soundEmitter;
+
+    private ParticleSystem particles;
+    
+    private ParticleSystem.MainModule main;
+
+    private ParticleSystem.MinMaxCurve particleStartingSpeed;
+    private ParticleSystem.MinMaxCurve particleStartingSize;
+    private PushPullObjects pushPull;
+
+    private GameObject outlineObj;
     #endregion
 
     private void Awake()
     {
+        pushPull = FindObjectOfType<PushPullObjects>();
         CreateDecalAndLine();
 
         grav = this.GetComponent<Gravity>();
         cc = FindObjectOfType<CollectibleController>();
         soundEmitter = GetComponent<StudioEventEmitter>();
+        particles = this.GetComponent<ParticleSystem>();
+
+        outlineObj = gameObject.transform.Find("OutlineObj").gameObject;
+        outlineObj.GetComponent<Renderer>().enabled = false;
+
+        main = particles.main;
+
+        particles.Stop();
+
+        particleStartingSpeed = main.startSpeed;
+        particleStartingSize = main.startSize;
+
+
     }
 
     /// <summary>
@@ -68,9 +97,6 @@ public class PushableObj : MonoBehaviour
         beingPushed = false;
         lr = this.GetComponent<LineRenderer>();
         lr.positionCount = 0;
-
-        startColor = lr.startColor;
-        endColor = lr.endColor;
     }
 
     /// <summary>
@@ -101,6 +127,14 @@ public class PushableObj : MonoBehaviour
         }
 
         ResetObjectPos();
+
+        if (particles.isPlaying && scaleWithDistance)
+        {
+            var dis = Vector3.Distance(this.gameObject.transform.position, pushPull.transform.position);
+            main.startSpeed = particleStartingSpeed.constant * (1 + (dis * speedScaleAmount));
+            main.startSize = particleStartingSize.constant * (1 + (dis * sizeScaleAmount));
+        }
+
     }
 
 
@@ -200,7 +234,7 @@ public class PushableObj : MonoBehaviour
         Vector3 point1 = this.transform.position;
         Vector3 predObjectVelocity = objectVelocity;
         predObjectVelocity = tempSpeed * tempCam.transform.forward;
-        float stepSize = .1f;
+        float stepSize = .01f;
         lr.positionCount = 2;
         lr.SetPosition(0, this.transform.position);
         int count = 1;
@@ -234,7 +268,7 @@ public class PushableObj : MonoBehaviour
 
             }
 
-            if (lr.positionCount > 200)
+            if (lr.positionCount > 1000)
             {
                 break;
             }
@@ -258,12 +292,48 @@ public class PushableObj : MonoBehaviour
             lr.endColor = Color.green;
         }
 
-        else
+        else if (CheckForLanding())
         {
-            lr.startColor = startColor;
-            lr.endColor = endColor;
+            lr.startColor = Color.white;
+            lr.endColor = Color.white;
         }
 
+        else
+        {
+            lr.startColor = Color.red;
+            lr.endColor = Color.red;
+        }
+
+    }
+
+    private bool CheckForLanding()
+    {
+        int pos = lr.positionCount;
+
+        Vector3 posLocation;
+        if(pos > 5)
+        {
+            posLocation = lr.GetPosition(pos - 5);
+        }
+
+        else
+        {
+            posLocation = lr.GetPosition(pos - 1);
+        }
+    
+        RaycastHit hit;
+
+        if (Physics.Raycast(posLocation,Vector3.down,out hit, 20, ground))
+        {
+            Debug.Log(hit.collider.name);
+            return true;
+
+        }
+
+        else
+        {
+            return false;
+        }
     }
 
     #endregion
@@ -353,4 +423,28 @@ public class PushableObj : MonoBehaviour
 
     #endregion
 
+    public void TurnOnOffParticles(bool onOff)
+    {
+        if (onOff)
+        {
+            particles.Play();
+        }
+
+        else
+        {
+            particles.Stop();
+        }
+    }
+
+    public void EnableDisableOutline(bool enable)
+    {
+        if(enable)
+        {
+            outlineObj.GetComponent<Renderer>().enabled = true;
+        }
+        else if(!enable)
+        {
+            outlineObj.GetComponent<Renderer>().enabled = false;
+        }
+    }
 }

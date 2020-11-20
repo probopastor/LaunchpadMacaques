@@ -17,6 +17,8 @@ public class PressureButton : MonoBehaviour
     [SerializeField, Tooltip("The triggers that the button should read. Other triggers are ignored. ")] private string[] triggerTags;
     [SerializeField, Tooltip("The amount of objects on a pressure button required for it to be activated. ")] private int triggerEnableGoal = 2;
 
+    [SerializeField, Tooltip("The distance the button will move from its origin when activated. ")] private Vector3 buttonMovementDirection = new Vector3(0,0,0); 
+
     [SerializeField, Tooltip("If active, objects linked to the button will be deactivated after a period of time from when activated. ")] private bool useTimer;
     [SerializeField, Tooltip("Used only if useTimer is true. The amount of seconds waited before deactive objects are reactivated. ")] private float timeUntilReactivation = 1f;
 
@@ -31,11 +33,15 @@ public class PressureButton : MonoBehaviour
     private Renderer buttonRend;
     private StudioEventEmitter soundEmitter;
 
+    private bool gameSetupInProgress;
+
     // Start is called before the first frame update
     void Start()
     {
+        gameSetupInProgress = true;
         SetValues();
         soundEmitter = GetComponent<StudioEventEmitter>();
+        gameSetupInProgress = false;
     }
 
     /// <summary>
@@ -101,6 +107,9 @@ public class PressureButton : MonoBehaviour
         {
             buttonRend.material = activeButtonMaterial;
 
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x + buttonMovementDirection.x,
+                gameObject.transform.position.y + buttonMovementDirection.y, gameObject.transform.position.z + buttonMovementDirection.z);
+
             // Deactivates all the objectes in the objectsLinkedToButton array.
             for (int i = 0; i < objectsLinkedToButton.Length; i++)
             {
@@ -124,6 +133,12 @@ public class PressureButton : MonoBehaviour
         else if (!isActive)
         {
             buttonRend.material = inactiveButtonMaterial;
+
+            if(!gameSetupInProgress)
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x - buttonMovementDirection.x,
+                gameObject.transform.position.y - buttonMovementDirection.y, gameObject.transform.position.z - buttonMovementDirection.z);
+            }
 
             // Activates all objects in the objectsLinkedToButton array. 
             for (int i = 0; i < objectsLinkedToButton.Length; i++)

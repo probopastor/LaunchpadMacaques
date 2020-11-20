@@ -7,6 +7,7 @@
 
 using System.Collections;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class PushPullObjects : MonoBehaviour
 {
@@ -29,10 +30,14 @@ public class PushPullObjects : MonoBehaviour
     enum ObjectFollowPostion { topLeft, bottomLeft, topRight, bottomRight, topMiddle, bottomMiddle };
 
     [SerializeField, Tooltip("Which position the moveable cube will move towards")] ObjectFollowPostion objectFollowPos;
+
+    [SerializeField, Tooltip("The Speed at which the cube will follow the player")] float objectFollowSpeed = 20;
     #endregion
 
     [SerializeField]
     Animator anim;
+
+
 
     #region Private Variables
     private Rigidbody objectRB;
@@ -44,8 +49,7 @@ public class PushPullObjects : MonoBehaviour
 
 
     GameObject objectHolder;
-
-    float objectFollowSpeed = 7;
+    GameObject currentHoveredObj;
 
     private bool inTempFix = false;
     #endregion
@@ -81,7 +85,7 @@ public class PushPullObjects : MonoBehaviour
 
     void Update()
     {
-
+        CanPickUp();
         if (Input.GetMouseButtonDown(0) /*&& !grapplingGun.IsGrappling()*/)
         {
             if (!grabbing)
@@ -102,18 +106,20 @@ public class PushPullObjects : MonoBehaviour
             }
         }
 
+
     }
 
+    
     private void FixedUpdate()
     {
         if (grabbing && !inTempFix)
         {
             Debug.DrawRay(objectRB.position, objectHolder.transform.position - objectRB.transform.position);
-
+            float distance = Vector3.Distance(objectHolder.transform.position, objectRB.gameObject.transform.position);
             RaycastHit hit;
-            if (!Physics.Raycast(objectRB.gameObject.transform.position, objectHolder.transform.position - objectRB.transform.position, out hit, .6f))
+            if (!Physics.Raycast(objectRB.gameObject.transform.position, objectHolder.transform.position - objectRB.transform.position, out hit, distance))
             {
-                objectRB.MovePosition(Vector3.Lerp(objectRB.position, objectHolder.transform.position, Time.fixedDeltaTime * objectFollowSpeed));
+               objectRB.MovePosition(Vector3.Lerp(objectRB.position, objectHolder.transform.position, Time.fixedDeltaTime * objectFollowSpeed));
 
             }
 
@@ -146,7 +152,6 @@ public class PushPullObjects : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, maxGrabDistance, canBePickedUp) && !grapplingGun.IsGrappling())
         {
-
             anim.ResetTrigger("Throw");
             anim.ResetTrigger("Drop");
             anim.SetTrigger("PickUp");
@@ -164,6 +169,44 @@ public class PushPullObjects : MonoBehaviour
 
 
         }
+    }
+
+
+    private void CanPickUp()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, maxGrabDistance, canBePickedUp) && !grapplingGun.IsGrappling())
+        {
+            if(currentHoveredObj != hit.collider.gameObject)
+            {
+                hit.collider.gameObject.GetComponent<PushableObj>().EnableDisableOutline(true);
+                hit.collider.gameObject.GetComponent<PushableObj>().TurnOnOffParticles(true);
+                currentHoveredObj = hit.collider.gameObject;
+            }
+        }
+
+        else
+        {
+
+            if (currentHoveredObj)
+            {
+                currentHoveredObj.GetComponent<PushableObj>().EnableDisableOutline(false);
+                currentHoveredObj.GetComponent<PushableObj>().TurnOnOffParticles(false);
+                currentHoveredObj = null;
+            }
+
+        }
+
+    }
+
+   public bool CanSeeBox()
+    {
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, maxGrabDistance, canBePickedUp) && !grapplingGun.IsGrappling())
+        {
+            return true;
+        }
+
+        else return false;
     }
 
     /// <summary>
@@ -242,6 +285,11 @@ public class PushPullObjects : MonoBehaviour
     public GameObject GetHeldCube()
     {
         return objectRB.gameObject;
+    }
+
+    public GameObject GetHoverdObject()
+    {
+        return currentHoveredObj;
     }
 
 }

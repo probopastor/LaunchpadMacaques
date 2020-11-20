@@ -139,6 +139,27 @@ public class MakeSpotNotGrappleable : MonoBehaviour
 
 
     #region UnCorrupt Objects
+
+    /// <summary>
+    /// Uncorrupts the passed in object if it is corruptable. 
+    /// </summary>
+    /// <param name="uncorruptObject"></param>
+    public void UncorruptSingleObject(GameObject uncorruptObject)
+    {
+        CorruptableObject objectToCorrupt = uncorruptObject.GetComponent<CorruptableObject>();
+
+        if (objectToCorrupt != null)
+        {
+            if (corruptedObjects.Contains(uncorruptObject))
+            {
+                objectToCorrupt.UncorruptInstantly();
+                corruptedObjects.Remove(uncorruptObject);
+            }
+        }
+        uncorruptObject.layer = LayerMask.NameToLayer("CanGrapple");
+    }
+
+
     /// <summary>
     /// Will loop through the Corrupted Objects in a certain radius, removing the corruption
     /// </summary>
@@ -233,4 +254,13 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     }
     #endregion
 
+    public void AddCorruptedDecals(GameObject obj)
+    {
+        corruptedDecals.Add(obj);
+    }
+
+    public void RemoveCorruptedDecal(GameObject obj)
+    {
+        corruptedDecals.Remove(obj);
+    }
 }

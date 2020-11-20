@@ -22,6 +22,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Player Transform Assignables")]
     [SerializeField, Tooltip("The transform of the player's camera. ")] private Transform playerCam;
     [SerializeField, Tooltip("The transform of the player's orientation ")] private Transform orientation;
+    float m_fieldOfView = 60.0f;
     //public float initialFieldofView = 90f;
     //public float desiredFieldofView = 60f;
     //public float fieldofViewTime = .5f;
@@ -33,7 +34,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     #region Player Sensitivity 
     [Header("Player Rotation and Look")]
     private float xRotation;
-    [SerializeField, Tooltip("The player's look sensitivity. Higher value lets the player look around quicker. ")] private float sensitivity = 50f;
+    [Tooltip("The player's look sensitivity. Higher value lets the player look around quicker. ")] private float sensitivity = 50f;
     #endregion
 
     #region Player Movement Variables
@@ -41,6 +42,9 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The player's movement speed. ")] private float moveSpeed = 4500;
     [Range(0f, 1f), SerializeField, Tooltip("The movement speed multiplier while the player is airborn. ")] private float airMoveSpeedMultiplier = .75f;
     [SerializeField, Tooltip("The player's max speed. when walking, doesnt affect swing speed ")] private float maxSpeed = 20;
+
+    private bool killForce = false;
+
     #endregion 
 
     [HideInInspector] public bool grounded;
@@ -54,6 +58,25 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Tooltip("This is the variable that affects the speed of counter movement applied to the player, which slows the player down to a stop")] public float counterMovement = 0.175f;
     [SerializeField] private float threshold = 0.01f;
     [SerializeField, Tooltip("The angle that the player starts to be unable to walk up ")] private float maxSlopeAngle = 35f;
+    #endregion
+
+    #region Movement FOV Variables
+    [Header("Movement FOV Variables")]
+    [SerializeField] private float xFOVActivationVel = 40f;
+    [SerializeField] private float zFOVActivationVel = 40f;
+    [SerializeField] private float yFOVActicationVel = 15f;
+    [SerializeField] private float fovChangeRate = 0.75f;
+    [SerializeField] private float minFOV = 60.75f;
+    [SerializeField] private float maxFOV = 120.75f;
+    [SerializeField] private float maxFOVSpeedScale = .05f;
+    #endregion 
+
+    #region Grappling Velocity Reset Variables 
+    [Header("Velocity Reset Variables")]
+    [SerializeField, Tooltip("The X velocity range (between -x and x) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float xVelocityResetRange = 1;
+    [SerializeField, Tooltip("The Y velocity range (between -y and y) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float yVelocityResetRange = 1;
+    [SerializeField, Tooltip("The Z velocity range (between -z and z) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float zVelocityResetRange = 1;
+    [SerializeField, Tooltip("The time the player must have low velocity for in order to have Velocity and Rope Length reset. ")] private float lowVelocityDuration = 0.01f;
     #endregion
 
     #region Crouch and Slide Variables
@@ -81,6 +104,11 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are on the ground")] float gravity = -9.81f;
     [SerializeField, Tooltip("The Gravtiy that will be applied to the player when they are in the air")] float inAirGravity = -12f;
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are swinging")] float grapplingGravity = -6;
+    [SerializeField, Tooltip("The Gravity that will be applied when resetting rope velocity and rope length. The greater this value, " +
+        "the faster velocity and rope length are reset. ")] float grapplingResetGravity = -78.48f;
+
+    // grapplingGravityReference stores the grapplingGravity at Start, so that grapplingGravity may be reverted to its default easily. 
+    private float grapplingGravityReference = 0;
     private float defaultGravity;
     private Vector3 gravityVector;
     #endregion
@@ -116,6 +144,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         return maxVelocity;
     }
+
+    public bool GetKillForce()
+    {
+        return killForce;
+    }
+
     #endregion
 
 
@@ -132,6 +166,10 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private float deafultVelocity;
 
+    private float currentMaxFOV;
+
+    private float lastVelocity = 0;
+
     void Awake()
     {
         defaultGravity = gravity;
@@ -146,14 +184,37 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         //Cannot dash while on the ground. 
         canDash = false;
+
+        if (PlayerPrefs.HasKey("MouseSensitivity"))
+        {
+            sensitivity = PlayerPrefs.GetFloat("MouseSensitivity");
+        }
     }
 
     void Start()
     {
+        
         playerScale = transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         speedStorage = maxSpeed;
+        grapplingGravityReference = grapplingGravity;
+
+        // Makes xVelocityResetRange, yVelocityResetRange, and zVelocityResetRange positive if they are negative. 
+        if(xVelocityResetRange < 0)
+        {
+            xVelocityResetRange *= -1;
+        }
+        if(yVelocityResetRange < 0)
+        {
+            yVelocityResetRange *= -1;
+        }
+        if(zVelocityResetRange < 0)
+        {
+            zVelocityResetRange *= -1;
+        }
+
+        currentMaxFOV = maxFOV;
     }
 
     private void FixedUpdate()
@@ -161,6 +222,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         Movement();
         LimitVelocity();
         SetGravityModifier();
+        
+
     }
 
     private void Update()
@@ -171,6 +234,30 @@ public class Matt_PlayerMovement : MonoBehaviour
             Look();
             grappleGunReference.UpdateHandRotation(rb.velocity);
         }
+
+        //Debug.Log("canApplyForce is: " + grappleGunReference.GetCanApplyForce());
+        //Debug.Log("kill force is: " + killForce);
+
+        // Press K, when grappling, to start the "Kill Force" Coroutine.
+        //if (Input.GetKeyDown(KeyCode.Minus) && !killForce)
+        //{
+        //    if(grappleGunReference.IsGrappling())
+        //    {
+        //        StartCoroutine(KillForces());
+        //    }
+        //}
+
+        if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) && 
+            (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) && 
+            (rb.velocity.z < zVelocityResetRange && rb.velocity.z > -zVelocityResetRange) && !killForce)
+        {
+            if (grappleGunReference.IsGrappling())
+            {
+                StartCoroutine(KillForces());
+            }
+        }
+
+        changeFOV();
     }
 
 
@@ -267,8 +354,45 @@ public class Matt_PlayerMovement : MonoBehaviour
             yield return null;
         }
     }
-
     #endregion
+
+    #region Velocity and Momentum Reset 
+    /// <summary>
+    /// Coroutine that stops forces from being applied to the player and resets the rope length. (Needs better description, i think)
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator KillForces()
+    {
+        killForce = true;
+
+        if(lowVelocityDuration != 0)
+        {
+            yield return new WaitForSeconds(lowVelocityDuration);
+        }
+        else
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) &&
+           (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) &&
+           (rb.velocity.z < zVelocityResetRange && rb.velocity.z > -zVelocityResetRange))
+        {
+            grapplingGravity = grapplingResetGravity;
+            grappleGunReference.SetRopeLength(grappleGunReference.GetStartingRopeLength());
+
+            rb.velocity = -rb.velocity / 2;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+
+            yield return new WaitForSecondsRealtime(1.5f);
+            grapplingGravity = grapplingGravityReference;
+        }
+
+        killForce = false;
+    }
+
+    #endregion 
 
     #region Input
 
@@ -441,7 +565,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         if (grounded && crouching) multiplierV = 0f;
 
         // If the player is grounded, they cannot dash.
-        if(grounded)
+        if (grounded)
         {
             canDash = false;
         }
@@ -495,13 +619,12 @@ public class Matt_PlayerMovement : MonoBehaviour
                 }
             }
         }
-
     }
 
     #endregion
 
     #region Sprinting Stuff
-    
+
     /// <summary>
     /// Handles the player sprinting.
     /// </summary>
@@ -577,7 +700,24 @@ public class Matt_PlayerMovement : MonoBehaviour
         desiredX = rot.y + mouseX;
 
         //Rotate, and also make sure we dont over- or under-rotate.
-        xRotation -= mouseY;
+        if (PlayerPrefs.HasKey("InvertY"))
+        {
+            if(PlayerPrefs.GetInt("InvertY") == 1)
+            {
+                xRotation -= mouseY;
+            }
+
+            else
+            {
+                xRotation += mouseY;
+            }
+        }
+
+        else
+        {
+            xRotation -= mouseY;
+        }
+
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         //Perform the rotations
@@ -694,5 +834,45 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         grounded = false;
     }
+
+    public bool GetGrounded()
+    {
+        return grounded;
+    }
+
+    void changeFOV()
+    {
+        if(PlayerPrefs.GetInt("FOV") == 1)
+        {
+            Camera.main.fieldOfView = m_fieldOfView;
+            if (rb.velocity.magnitude > lastVelocity)
+            {
+                currentMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+            }
+
+            m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, currentMaxFOV);
+
+            if (rb.velocity.x >= xFOVActivationVel ||
+                rb.velocity.z >= zFOVActivationVel ||
+                rb.velocity.y >= yFOVActicationVel ||
+                rb.velocity.y <= -yFOVActicationVel ||
+                rb.velocity.x <= -xFOVActivationVel ||
+                rb.velocity.z <= -zFOVActivationVel)
+            {
+
+                m_fieldOfView += fovChangeRate;
+            }
+            else
+                m_fieldOfView -= fovChangeRate;
+
+
+            Debug.Log(m_fieldOfView);
+
+            lastVelocity = rb.velocity.magnitude;
+        }
+
+
+    }
+
 
 }
