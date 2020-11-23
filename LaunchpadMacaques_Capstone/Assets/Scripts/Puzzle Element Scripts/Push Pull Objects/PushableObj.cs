@@ -29,9 +29,9 @@ public class PushableObj : MonoBehaviour
     [SerializeField, Tooltip("The Layer that is ground")] LayerMask ground;
 
     [Header("Particle Settings")]
-    [SerializeField] bool scaleWithDistance;
-    [SerializeField] float sizeScaleAmount;
-    [SerializeField] float speedScaleAmount;
+    [SerializeField, Tooltip("If True particles effects will scale depending on how far away the player is")] bool scaleWithDistance;
+    [SerializeField, Tooltip("The amount the size of the particles will scale with player distance")] float sizeScaleAmount;
+    [SerializeField, Tooltip("The amount the speed of the particles will scale with player distance")] float speedScaleAmount;
 
     #endregion
 
@@ -61,6 +61,8 @@ public class PushableObj : MonoBehaviour
     private PushPullObjects pushPull;
 
     private GameObject outlineObj;
+
+    private float cubeRadius;
     #endregion
 
     private void Awake()
@@ -82,6 +84,8 @@ public class PushableObj : MonoBehaviour
 
         particleStartingSpeed = main.startSpeed;
         particleStartingSize = main.startSize;
+
+        cubeRadius = this.gameObject.GetComponent<MeshRenderer>().bounds.size.x / 2;
 
 
     }
@@ -248,7 +252,7 @@ public class PushableObj : MonoBehaviour
 
             /// If the thing predicts that it will run into a non trigger object it will stop the line there, and place a decal there.
             /// It if is an object the cube can affect the  line will turn green
-            if (Physics.Raycast(ray, out hit, (point2 - point1).magnitude))
+            if (Physics.SphereCast(ray, cubeRadius ,out hit, (point2 - point1).magnitude))
             {
                 if (hit.collider.gameObject.CompareTag("Collectible") || hit.collider.gameObject.CompareTag("PassBy"))
                 {
@@ -306,6 +310,10 @@ public class PushableObj : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Will check to see if this cube will land on solid ground
+    /// </summary>
+    /// <returns></returns>
     private bool CheckForLanding()
     {
         int pos = lr.positionCount;
@@ -325,9 +333,7 @@ public class PushableObj : MonoBehaviour
 
         if (Physics.Raycast(posLocation,Vector3.down,out hit, 20, ground))
         {
-            Debug.Log(hit.collider.name);
             return true;
-
         }
 
         else
@@ -423,6 +429,11 @@ public class PushableObj : MonoBehaviour
 
     #endregion
 
+    #region Feedback Settings
+    /// <summary>
+    /// Will Turn On or Off the Feedback particles
+    /// </summary>
+    /// <param name="onOff"></param>
     public void TurnOnOffParticles(bool onOff)
     {
         if (onOff)
@@ -436,6 +447,10 @@ public class PushableObj : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Will Turn On or Off the Feedback outline
+    /// </summary>
+    /// <param name="enable"></param>
     public void EnableDisableOutline(bool enable)
     {
         if(enable)
@@ -447,4 +462,6 @@ public class PushableObj : MonoBehaviour
             outlineObj.GetComponent<Renderer>().enabled = false;
         }
     }
+
+    #endregion
 }
