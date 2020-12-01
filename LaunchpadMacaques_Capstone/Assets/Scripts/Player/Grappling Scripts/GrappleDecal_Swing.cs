@@ -30,6 +30,7 @@ public class GrappleDecal_Swing : MonoBehaviour
     {
         grapplingGun = FindObjectOfType<GrapplingGun>();
         grappleDecalObj = Instantiate(grappleAimingDecal);
+        DontDestroyOnLoad(grappleDecalObj);
         player = FindObjectOfType<Matt_PlayerMovement>().gameObject;
     }
 
