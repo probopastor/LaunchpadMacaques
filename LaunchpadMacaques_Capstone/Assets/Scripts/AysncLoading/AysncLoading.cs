@@ -1,11 +1,18 @@
-﻿using System.Collections;
+﻿/* 
+* (Launchpad Macaques - [Trial and Error]) 
+* (Levi Schoof) 
+* (AsyncLoading.CS) 
+* (The script that is placed in each scene to handle Aysnc Loading) 
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class AysncLoading : MonoBehaviour
 {
-    [SerializeField] string nextSceneName;
+    [SerializeField, Tooltip("The Name of the Next Scene ")] string nextSceneName;
 
     private bool allowLoading;
     private void Start()
@@ -15,6 +22,11 @@ public class AysncLoading : MonoBehaviour
         StartCoroutine(AsyncLoad());
     }
 
+
+    /// <summary>
+    /// Handles the Loading of the next level
+    /// </summary>
+    /// <returns></returns>
     IEnumerator AsyncLoad()
     {
         yield return new WaitForSeconds(2);
@@ -40,6 +52,9 @@ public class AysncLoading : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Public method that will be called to activate loading
+    /// </summary>
     public void AllowLoading()
     {
         allowLoading = true;
