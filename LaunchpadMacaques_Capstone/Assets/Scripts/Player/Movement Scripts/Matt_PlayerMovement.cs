@@ -893,9 +893,16 @@ public class Matt_PlayerMovement : MonoBehaviour
         if(PlayerPrefs.GetInt("FOV") == 1)
         {
             Camera.main.fieldOfView = m_fieldOfView;
-            if (rb.velocity.magnitude > lastVelocity)
+           var targetMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+
+            if (currentMaxFOV < targetMaxFOV)
             {
-                currentMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+                currentMaxFOV += fovChangeRate * Time.deltaTime;
+            }
+
+            else if(currentMaxFOV > targetMaxFOV)
+            {
+                currentMaxFOV -= fovChangeRate * Time.deltaTime;
             }
 
             m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, currentMaxFOV);
@@ -908,13 +915,11 @@ public class Matt_PlayerMovement : MonoBehaviour
                 rb.velocity.z <= -zFOVActivationVel)
             {
 
-                m_fieldOfView += fovChangeRate;
+                m_fieldOfView += fovChangeRate * Time.deltaTime;
             }
             else
-                m_fieldOfView -= fovChangeRate;
+                m_fieldOfView -= fovChangeRate * Time.deltaTime;
 
-
-            Debug.Log(m_fieldOfView);
 
             lastVelocity = rb.velocity.magnitude;
         }

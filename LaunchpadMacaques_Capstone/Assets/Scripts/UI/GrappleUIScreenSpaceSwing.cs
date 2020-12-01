@@ -96,7 +96,7 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
             TurnOnUI(springJoint.GetGrappleRayhit());
         }
 
-        else if (pushPull.CanSeeBox())
+        else if (pushPull.CanSeeBox().collider != null)
         {
             Debug.Log("Can See Box");
             objectHitPoint = pushPull.GetHoverdObject().transform.position;

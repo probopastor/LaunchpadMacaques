@@ -35,7 +35,7 @@ public class New_Grapple_UI : MonoBehaviour
 
    void DisplayUI()
     {
-        if (gg.CanFindGrappleLocation() || pushPull.CanSeeBox())
+        if (gg.CanFindGrappleLocation() || pushPull.CanSeeBox().collider != null)
         {
             //retiicle.sprite = activeReticle;
             anim.SetBool("isHighlighted", true);

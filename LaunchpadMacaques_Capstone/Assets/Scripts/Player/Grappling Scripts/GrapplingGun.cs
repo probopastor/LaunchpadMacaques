@@ -38,7 +38,7 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] [Tooltip("The Speed At Which the Grapple will move the player")] float grappleSpeed = 10f;
 
     [Header("Rope Settings")]
-
+    [SerializeField, Tooltip("The Speed at which the rope attaches to the Grapple Point")] float attachSpeed = 20;
     [SerializeField] [Tooltip("The Min Rope Distance")] private float minDistance = 5f;
     [SerializeField] [Tooltip("The Max Rope Distance")] private float maxDistance = 50f;
     [SerializeField, Tooltip("The grapple length on regrapple. ")] private float newSwingGrappleLength = 10;
@@ -122,6 +122,7 @@ public class GrapplingGun : MonoBehaviour
     //A bool that when true will allow the player to hold down the mouse button to grapple
     private bool canHoldDownToGrapple;
 
+    private bool drawlingLine = false;
     
 
     private float dist;
@@ -145,6 +146,7 @@ public class GrapplingGun : MonoBehaviour
         {
             ropeLengthSlider.gameObject.SetActive(false);
         }
+
     }
 
     private void SetObject()
@@ -400,7 +402,7 @@ public class GrapplingGun : MonoBehaviour
             //If not grappling, don't draw rope
             if (!joint) return;
 
-            if (lr.positionCount == 0) return;
+            if (lr.positionCount == 0 || drawlingLine) return;
 
             currentGrapplePosition = grapplePoint;
 
@@ -534,101 +536,145 @@ public class GrapplingGun : MonoBehaviour
         if (CanFindGrappleLocation())
         {
             canHoldDownToGrapple = false;
-
-            anim.ResetTrigger("Dash");
-            anim.ResetTrigger("GrappleEnd");
-            anim.SetTrigger("GrappleStart");
-            
-
             if (IsGrappling())
             {
                 StopGrapple();
             }
 
-            if (ropeLengthSlider)
+            StopAllCoroutines();
+          
+            anim.ResetTrigger("Dash");
+            anim.ResetTrigger("GrappleEnd");
+            anim.SetTrigger("GrappleStart");
+            
+            StartCoroutine(DrawLine());
+            CreateGrapplePoint();
+        }
+    }
+
+    /// <summary>
+    /// The Corutine that draws the Grappling Rope
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DrawLine()
+    {
+        drawlingLine = true;
+        lr.positionCount = 2;
+        Vector3 grappled = grappleRayHit.point;
+        dist = Vector3.Distance(ejectPoint.position, grappled);
+
+        float counter = 0;
+
+
+
+        lr.SetPosition(0, ejectPoint.position);
+       
+        while (counter < dist)
+        {
+
+            Vector3 point1 = ejectPoint.position;
+            Vector3 point2 = grappled;
+
+            lr.SetPosition(0, ejectPoint.position);
+            counter += attachSpeed * Time.deltaTime;
+  
+            Vector3 pointAlongLine = (counter) *  Vector3.Normalize(point2 - point1) + point1;
+
+            lr.SetPosition(1, pointAlongLine);
+            yield return new WaitForSeconds(0);
+        }
+
+        drawlingLine = false;
+
+    }
+
+
+    /// <summary>
+    /// The method that will actually create the joint
+    /// </summary>
+    private void CreateGrapplePoint()
+    {
+        if (ropeLengthSlider)
+        {
+            ropeLengthSlider.gameObject.SetActive(true);
+            ropeLengthSlider.maxValue = maxDistance;
+            ropeLengthSlider.minValue = minDistance;
+        }
+
+        currentGrappledObj = grappleRayHit.collider.gameObject;
+
+        if (currentGrappledObj.GetComponent<GrapplePoint>() != null)
+        {
+            GrapplePoint point = currentGrappledObj.GetComponent<GrapplePoint>();
+
+            if (!point.isBreaking())
             {
-                ropeLengthSlider.gameObject.SetActive(true);
-                ropeLengthSlider.maxValue = maxDistance;
-                ropeLengthSlider.minValue = minDistance;
+                point.Break();
             }
+        }
 
-            currentGrappledObj = grappleRayHit.collider.gameObject;
+        hitObjectClone = Instantiate(hitObject);
+        hitObjectClone.transform.position = grappleRayHit.point;
+        hitObjectClone.transform.parent = grappleRayHit.transform;
+        grapplePoint = hitObjectClone.transform.position;
 
-            if(currentGrappledObj.GetComponent<GrapplePoint>() != null)
-            {
-                GrapplePoint point = currentGrappledObj.GetComponent<GrapplePoint>();
+        if (grappleRayHit.collider != null)
+        {
+            grappledObj = grappleRayHit.transform.gameObject;
+        }
+        else
+        {
+            return;
+        }
 
-                if (!point.isBreaking())
-                {
-                    point.Break();
-                }
-            }
+        corruptObject.MakeSpotNotGrappable(grappleRayHit, grappledObj);
 
-            hitObjectClone = Instantiate(hitObject);
-            hitObjectClone.transform.position = grappleRayHit.point;
-            hitObjectClone.transform.parent = grappleRayHit.transform;
-            grapplePoint = hitObjectClone.transform.position;
+        joint = player.gameObject.AddComponent<SpringJoint>();
+        joint.autoConfigureConnectedAnchor = false;
+        joint.connectedAnchor = grapplePoint;
 
-            if (grappleRayHit.collider != null)
-            {
-                grappledObj = grappleRayHit.transform.gameObject;
-            }
-            else
-            {
-                return;
-            }
+        float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
+        joint.maxDistance = distanceFromPoint;
+        joint.minDistance = dist;
 
-            corruptObject.MakeSpotNotGrappable(grappleRayHit, grappledObj);
+        //ropeLength = distanceFromPoint / 2; /*dist - grappleLengthModifier;*/
 
-            joint = player.gameObject.AddComponent<SpringJoint>();
-            joint.autoConfigureConnectedAnchor = false;
-            joint.connectedAnchor = grapplePoint;
+        ropeLength = newSwingGrappleLength;
 
-            float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
-            joint.maxDistance = distanceFromPoint;
-            joint.minDistance = dist;
+        if (ropeLength > maxDistance)
+        {
+            ropeLength = maxDistance;
+        }
 
-            //ropeLength = distanceFromPoint / 2; /*dist - grappleLengthModifier;*/
+        if (ropeLength < minDistance)
+        {
+            ropeLength = minDistance;
+        }
 
-            ropeLength = newSwingGrappleLength;
+        joint.enableCollision = false;
 
-            if (ropeLength > maxDistance)
-            {
-                ropeLength = maxDistance;
-            }
+        joint.spring = springValue;
+        joint.damper = springDamp;
+        joint.massScale = springMass;
 
-            if (ropeLength < minDistance)
-            {
-                ropeLength = minDistance;
-            }
+        currentGrapplePosition = hitObjectClone.transform.position;
+        GetComponent<FMODUnity.StudioEventEmitter>().Play();
 
-            joint.enableCollision = false;
+        //Temporary lock UI disabled after completing a grapple
+        if (grappleToggleEnabledText != null)
+        {
+            grappleToggleEnabledText.SetActive(false);
+        }
+        if (grappleToggleDisabledText != null)
+        {
+            grappleToggleDisabledText.SetActive(true);
+        }
 
-            joint.spring = springValue;
-            joint.damper = springDamp;
-            joint.massScale = springMass;
-
-
-            lr.positionCount = 2;
-            currentGrapplePosition = hitObjectClone.transform.position;
-            GetComponent<FMODUnity.StudioEventEmitter>().Play();
-
-            //Pinwheel
-            Pinwheel pinwheel = null;
-            if (pinwheel = grappleRayHit.collider.GetComponentInParent<Pinwheel>())
-            {
-                pinwheel.TriggerRotation(grappleRayHit.collider.transform, cam.forward);
-            }
-
-            //Temporary lock UI disabled after completing a grapple
-            if (grappleToggleEnabledText != null)
-            {
-                grappleToggleEnabledText.SetActive(false);
-            }
-            if (grappleToggleDisabledText != null)
-            {
-                grappleToggleDisabledText.SetActive(true);
-            }
+        //Pinwheel
+        Pinwheel pinwheel = null;
+        if (pinwheel = grappleRayHit.collider.GetComponentInParent<Pinwheel>())
+        {
+            pinwheel.TriggerRotation(grappleRayHit.collider.transform, cam.forward);
         }
     }
 
@@ -666,6 +712,8 @@ public class GrapplingGun : MonoBehaviour
 
         lr.positionCount = 0;
         Destroy(joint);
+
+        StopAllCoroutines();
     }
 
     #endregion
