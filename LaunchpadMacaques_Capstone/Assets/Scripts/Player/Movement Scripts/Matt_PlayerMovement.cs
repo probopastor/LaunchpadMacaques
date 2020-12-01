@@ -1,8 +1,8 @@
-﻿/* 
+﻿/*
 * Launchpad Macaques - Neon Oblivion
 * Matt Kirchoff, Levi Schoof, William Nomikos, Jamey Colleen
 * Matt_PlayerMovement.cs
-* Script handles player movement, player gravity, and dashing. 
+* Script handles player movement, player gravity, and dashing.
 */
 
 using System.Collections;
@@ -31,7 +31,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     //Other
     private Rigidbody rb;
 
-    #region Player Sensitivity 
+    #region Player Sensitivity
     [Header("Player Rotation and Look")]
     private float xRotation;
     [Tooltip("The player's look sensitivity. Higher value lets the player look around quicker. ")] private float sensitivity = 50f;
@@ -45,7 +45,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private bool killForce = false;
 
-    #endregion 
+    #endregion
 
     [HideInInspector] public bool grounded;
     [SerializeField, Tooltip("The layer for the ground. Anything on this layer will be considered ground. ")] private LayerMask whatIsGround;
@@ -69,9 +69,9 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField] private float minFOV = 60.75f;
     [SerializeField] private float maxFOV = 120.75f;
     [SerializeField] private float maxFOVSpeedScale = .05f;
-    #endregion 
+    #endregion
 
-    #region Grappling Velocity Reset Variables 
+    #region Grappling Velocity Reset Variables
     [Header("Velocity Reset Variables")]
     [SerializeField, Tooltip("The X velocity range (between -x and x) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float xVelocityResetRange = 1;
     [SerializeField, Tooltip("The Y velocity range (between -y and y) that is checked to determine if Velocity and Rope Length need to be reset. ")] private float yVelocityResetRange = 1;
@@ -84,12 +84,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     private Vector3 playerScale;
     private float slideForce = 400;
     private float slideCounterMovement = 0.2f;
-    #endregion 
+    #endregion
 
     #region Sliding Variables
     private Vector3 normalVector = Vector3.up;
     private Vector3 wallNormalVector;
-    #endregion 
+    #endregion
 
     #region Jumping Variables
     [Header("Jumping")]
@@ -107,7 +107,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The Gravity that will be applied when resetting rope velocity and rope length. The greater this value, " +
         "the faster velocity and rope length are reset. ")] float grapplingResetGravity = -78.48f;
 
-    // grapplingGravityReference stores the grapplingGravity at Start, so that grapplingGravity may be reverted to its default easily. 
+    // grapplingGravityReference stores the grapplingGravity at Start, so that grapplingGravity may be reverted to its default easily.
     private float grapplingGravityReference = 0;
     private float defaultGravity;
     private Vector3 gravityVector;
@@ -170,6 +170,19 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private float lastVelocity = 0;
 
+    ParticleSystem system
+    {
+        get
+        {
+            if (_CachedSystem == null)
+                _CachedSystem = FindObjectOfType<ParticleSystem>();
+            return _CachedSystem;
+        }
+    }
+
+    [SerializeField, Tooltip("Particle system that is used while dashing.")] private ParticleSystem _CachedSystem;
+    [SerializeField, Tooltip("Amount of speedlines emitted after each dash. ")] private int emitParticles = 20;
+
     void Awake()
     {
         defaultGravity = gravity;
@@ -182,7 +195,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         config = FindObjectOfType<ConfigJoint>();
 
-        //Cannot dash while on the ground. 
+        //Cannot dash while on the ground.
         canDash = false;
 
         if (PlayerPrefs.HasKey("MouseSensitivity"))
@@ -193,14 +206,14 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        
+
         playerScale = transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         speedStorage = maxSpeed;
         grapplingGravityReference = grapplingGravity;
 
-        // Makes xVelocityResetRange, yVelocityResetRange, and zVelocityResetRange positive if they are negative. 
+        // Makes xVelocityResetRange, yVelocityResetRange, and zVelocityResetRange positive if they are negative.
         if(xVelocityResetRange < 0)
         {
             xVelocityResetRange *= -1;
@@ -222,7 +235,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         Movement();
         LimitVelocity();
         SetGravityModifier();
-        
+
 
     }
 
@@ -247,8 +260,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         //    }
         //}
 
-        if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) && 
-            (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) && 
+        if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) &&
+            (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) &&
             (rb.velocity.z < zVelocityResetRange && rb.velocity.z > -zVelocityResetRange) && !killForce)
         {
             if (grappleGunReference.IsGrappling())
@@ -258,6 +271,31 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
 
         changeFOV();
+
+        //Particles with speed
+        float speed = rb.velocity.magnitude;
+        var ps = _CachedSystem.main;
+        var rot = _CachedSystem.emission.rateOverTime;
+        ps.startSpeed = speed * 2;
+        rot = speed;
+
+        //Set Particles to change direction with the rigidbody
+        var localVel = transform.InverseTransformDirection(rb.velocity);
+        var psRotation = _CachedSystem.shape.rotation;
+        psRotation = localVel;
+        /*
+        if (speed >= 20f)
+        {
+            if (_CachedSystem.isStopped)
+            {
+                _CachedSystem.Play();
+            }
+        }
+        else if (_CachedSystem.isPlaying && speed <= 20f)
+        {
+            _CachedSystem.Stop();
+        }
+        */
     }
 
 
@@ -283,6 +321,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
             if (useAddForceDash)
             {
+                _CachedSystem.Emit(emitParticles);
                 AddForceDash();
             }
             else if (useCourtineDash)
@@ -301,9 +340,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// </summary>
     private void ChangeDirectionDash()
     {
+        //dashing = true;
+        _CachedSystem.Emit(emitParticles);
         float currentMag = rb.velocity.magnitude;
         rb.velocity += playerCam.forward * currentMag;
         rb.velocity = grappleGunReference.CustomClampMagnitude(rb.velocity, currentMag, currentMag);
+        //dashing = false;
     }
 
     /// <summary>
@@ -311,7 +353,10 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// </summary>
     private void AddForceDash()
     {
+        //dashing = true;
+        _CachedSystem.Emit(emitParticles);
         GetComponent<Rigidbody>().AddForce((playerCam.forward) * impulseDashAmmount, ForceMode.Impulse);
+        //dashing = false;
     }
 
     /// <summary>
@@ -321,6 +366,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     IEnumerator DashCourtine()
     {
         float currentTime = 0;
+        //dashing = true;
+        _CachedSystem.Emit(emitParticles);
 
         yield return new WaitForEndOfFrame();
 
@@ -332,6 +379,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
             GetComponent<Rigidbody>().AddForce((playerCam.forward) * courtineDashAmmount * Time.deltaTime, ForceMode.Impulse);
             currentTime += Time.deltaTime;
+            //dashing = false;
             yield return new WaitForSeconds(0);
         }
     }
@@ -356,7 +404,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     }
     #endregion
 
-    #region Velocity and Momentum Reset 
+    #region Velocity and Momentum Reset
     /// <summary>
     /// Coroutine that stops forces from being applied to the player and resets the rope length. (Needs better description, i think)
     /// </summary>
@@ -392,7 +440,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         killForce = false;
     }
 
-    #endregion 
+    #endregion
 
     #region Input
 
@@ -481,7 +529,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     #region Movement
 
     /// <summary>
-    /// Handles the player gravity when the player is moving normally and grappling. 
+    /// Handles the player gravity when the player is moving normally and grappling.
     /// </summary>
     private void SetGravityModifier()
     {
@@ -518,7 +566,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Handles player movement. 
+    /// Handles player movement.
     /// </summary>
     private void Movement()
     {
@@ -569,7 +617,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             canDash = false;
         }
-        // Dash cooldown is reset if the player grapples again. 
+        // Dash cooldown is reset if the player grapples again.
         else if (grappleGunReference.IsGrappling() && !canDash)
         {
             canDash = true;
@@ -601,7 +649,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         // If Swing Lock is not active, and the player is grappling, add a force in the player's orientation
         else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
         {
-            // If the force can be applied, add a force in the direction of the player's orientation. 
+            // If the force can be applied, add a force in the direction of the player's orientation.
             if (grappleGunReference.GetCanApplyForce())
             {
                 rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
@@ -639,7 +687,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Stops the player from sprinting. 
+    /// Stops the player from sprinting.
     /// </summary>
     private void StopSprint()
     {
@@ -688,7 +736,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float desiredX;
 
     /// <summary>
-    /// Rotates the player in the direction they are looking in. 
+    /// Rotates the player in the direction they are looking in.
     /// </summary>
     private void Look()
     {
@@ -726,7 +774,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Handles movement counter measures to maintain smooth movement. 
+    /// Handles movement counter measures to maintain smooth movement.
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -828,7 +876,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Sets ground state to false. 
+    /// Sets ground state to false.
     /// </summary>
     private void StopGrounded()
     {
