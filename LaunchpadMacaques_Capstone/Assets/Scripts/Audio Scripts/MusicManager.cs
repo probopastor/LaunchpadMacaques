@@ -21,6 +21,7 @@ public class MusicManager : MonoBehaviour
     {
         if (instance == null)
         {
+            DontDestroyOnLoad(gameObject);
             instance = this;
             volumeFrom = 1;
             volumeTo = 0;
@@ -29,8 +30,10 @@ public class MusicManager : MonoBehaviour
             {
                 SwitchTrack("Castles");
             }
+        } else
+        {
+            Destroy(gameObject);
         }
-        
     }
 
     public void SwitchTrack(string trackName)
