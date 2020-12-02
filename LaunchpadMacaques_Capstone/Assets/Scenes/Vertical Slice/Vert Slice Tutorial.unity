@@ -1844,17 +1844,32 @@ PrefabInstance:
     - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
         type: 3}
       propertyPath: useWorldCoordinates
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
         type: 3}
       propertyPath: corruptionState
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
         type: 3}
       propertyPath: corruptionDistance
-      value: 0
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionStartPoint.z
+      value: 0.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionStartPoint.y
+      value: -0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionStartPoint.x
+      value: 0.36
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb154f02c74c7794a89fcea4d90a9723, type: 3}
@@ -2198,17 +2213,27 @@ PrefabInstance:
     - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
         type: 3}
       propertyPath: useWorldCoordinates
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
         type: 3}
       propertyPath: corruptionState
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
         type: 3}
       propertyPath: corruptionDistance
-      value: 0
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
+        type: 3}
+      propertyPath: corruptionStartPoint.x
+      value: 0.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
+        type: 3}
+      propertyPath: corruptionStartPoint.y
+      value: -0.63
       objectReference: {fileID: 0}
     - target: {fileID: 8880192335222221249, guid: 956b0a5448193d445bf5e6c23ea59cdc,
         type: 3}
@@ -2552,6 +2577,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SquareWall (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionDistance
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionStartPoint.z
+      value: 0.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionStartPoint.x
+      value: 0.37
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb154f02c74c7794a89fcea4d90a9723, type: 3}
@@ -3704,6 +3749,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SquareWall (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionState
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb154f02c74c7794a89fcea4d90a9723, type: 3}
 --- !u!4 &666003539 stripped
@@ -4620,6 +4670,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SquareWall (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionState
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb154f02c74c7794a89fcea4d90a9723, type: 3}
 --- !u!1001 &783008200
@@ -4633,6 +4688,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Roof (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
+        type: 3}
+      propertyPath: corruptionState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
+        type: 3}
+      propertyPath: corruptionDistance
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
+        type: 3}
+      propertyPath: corruptionStartPoint.x
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 8880192335222221249, guid: 956b0a5448193d445bf5e6c23ea59cdc,
         type: 3}
@@ -9456,7 +9526,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh41674
+  m_Name: pb_Mesh26622
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -10231,6 +10301,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Roof (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
+        type: 3}
+      propertyPath: corruptionState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
+        type: 3}
+      propertyPath: corruptionDistance
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
+        type: 3}
+      propertyPath: corruptionStartPoint.x
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
+        type: 3}
+      propertyPath: corruptionStartPoint.z
+      value: 0.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844967657930351939, guid: 956b0a5448193d445bf5e6c23ea59cdc,
+        type: 3}
+      propertyPath: corruptionStartPoint.y
+      value: -0.57
       objectReference: {fileID: 0}
     - target: {fileID: 8880192335222221249, guid: 956b0a5448193d445bf5e6c23ea59cdc,
         type: 3}
@@ -11678,6 +11773,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SquareWall (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionDistance
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionStartPoint.z
+      value: 0.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionStartPoint.x
+      value: 0.37
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb154f02c74c7794a89fcea4d90a9723, type: 3}
