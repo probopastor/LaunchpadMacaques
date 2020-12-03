@@ -41,13 +41,20 @@ public class MainMenuManager : MonoBehaviour
 
     private void Update()
     {
+        EscapeKey();
+    }
 
+    /// <summary>
+    /// Handles the functionality for making the escape key back out of menus.
+    /// </summary>
+    public void EscapeKey()
+    {
         int index = 0;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
 
-            for(index = 0; index <= menuPanels.Count - 1; index++)
+            for (index = 0; index <= menuPanels.Count - 1; index++)
 
             {
 
