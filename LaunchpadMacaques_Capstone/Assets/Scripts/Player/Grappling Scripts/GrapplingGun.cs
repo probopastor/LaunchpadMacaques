@@ -340,21 +340,21 @@ public class GrapplingGun : MonoBehaviour
                 StopGrapple();
             }
 
-            if (Input.GetKeyDown(KeyCode.LeftControl) && IsGrappling())
-            {
-                if (!swingLockToggle)
-                {
-                    swingLockToggle = true;
-                    grappleToggleEnabledText.SetActive(true);
-                    grappleToggleDisabledText.SetActive(false);
-                }
-                else
-                {
-                    swingLockToggle = false;
-                    grappleToggleEnabledText.SetActive(false);
-                    grappleToggleDisabledText.SetActive(true);
-                }
-            }
+            //if (Input.GetKeyDown(KeyCode.LeftControl) && IsGrappling())
+            //{
+            //    if (!swingLockToggle)
+            //    {
+            //        swingLockToggle = true;
+            //        grappleToggleEnabledText.SetActive(true);
+            //        grappleToggleDisabledText.SetActive(false);
+            //    }
+            //    else
+            //    {
+            //        swingLockToggle = false;
+            //        grappleToggleEnabledText.SetActive(false);
+            //        grappleToggleDisabledText.SetActive(true);
+            //    }
+            //}
 
         }
     }
