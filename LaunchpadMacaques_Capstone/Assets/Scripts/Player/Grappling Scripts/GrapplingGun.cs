@@ -38,11 +38,15 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] [Tooltip("The Speed At Which the Grapple will move the player")] float grappleSpeed = 10f;
 
     [Header("Rope Settings")]
-    [SerializeField, Tooltip("The Speed at which the rope attaches to the Grapple Point")] float attachSpeed = 20;
     [SerializeField] [Tooltip("The Min Rope Distance")] private float minDistance = 5f;
     [SerializeField] [Tooltip("The Max Rope Distance")] private float maxDistance = 50f;
     [SerializeField, Tooltip("The grapple length on regrapple. ")] private float newSwingGrappleLength = 10;
     [SerializeField] private float wheelSensitivity = 2;
+
+
+    [Header("Rope Attach Settings")]
+    [SerializeField, Tooltip("The Speed at which the rope attaches to the Grapple Point")] float startingAttachSpeed = 20;
+    [SerializeField, Tooltip("The ammount the line attach speed will increase over time")] float attachSpeedIncrease = 10;
 
     [Header("Swing Settings")]
     [SerializeField] [Tooltip("The Force The Joint will apply to the player")] float springValue = 5f;
@@ -568,7 +572,8 @@ public class GrapplingGun : MonoBehaviour
 
 
         lr.SetPosition(0, ejectPoint.position);
-       
+
+        float tempAttachSpeed = startingAttachSpeed;
         while (counter < dist)
         {
 
@@ -576,11 +581,13 @@ public class GrapplingGun : MonoBehaviour
             Vector3 point2 = grappled;
 
             lr.SetPosition(0, ejectPoint.position);
-            counter += attachSpeed * Time.deltaTime;
+            counter += tempAttachSpeed * Time.deltaTime;
   
             Vector3 pointAlongLine = (counter) *  Vector3.Normalize(point2 - point1) + point1;
 
             lr.SetPosition(1, pointAlongLine);
+
+            tempAttachSpeed += attachSpeedIncrease * Time.deltaTime;
             yield return new WaitForSeconds(0);
         }
 

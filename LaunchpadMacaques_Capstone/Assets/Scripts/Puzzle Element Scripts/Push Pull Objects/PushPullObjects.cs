@@ -31,7 +31,8 @@ public class PushPullObjects : MonoBehaviour
     [SerializeField, Tooltip("The Speed at which the cube will follow the player")] float objectFollowSpeed = 20;
 
     [Header("Pick Up Settings")]
-    [SerializeField, Tooltip("The speed at which the Line Will connect to object")] float attachSpeed = 20;
+    [SerializeField, Tooltip("The speed at which the Line Will connect to object")] float startAttachSpeed = 20;
+    [SerializeField, Tooltip("The speed at which the Line will speed up over time")] float attachSpeedIncrese = 1;
     [SerializeField, Tooltip("The Inital Speed the cube will move before reaching its follow position")] float pickupSpeed = 8;
     #endregion
 
@@ -336,6 +337,8 @@ public class PushPullObjects : MonoBehaviour
 
         lr.SetPosition(0, grappled);
 
+
+        float tempAttachSpeed = startAttachSpeed;
         while (counter < dist)
         {
 
@@ -343,11 +346,13 @@ public class PushPullObjects : MonoBehaviour
             Vector3 point2 = objectRB.transform.position;
 
             lr.SetPosition(0, this.transform.position);
-            counter += attachSpeed * Time.deltaTime;
+            counter += tempAttachSpeed * Time.deltaTime;
 
             Vector3 pointAlongLine = (counter) * Vector3.Normalize(point2 - point1) + point1;
 
             lr.SetPosition(1, pointAlongLine);
+
+            tempAttachSpeed += attachSpeedIncrese * Time.deltaTime;
             yield return new WaitForSeconds(0);
         }
 
