@@ -13,6 +13,7 @@ using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class MovingPlatform : MonoBehaviour
 {
     //PRIVATE:
@@ -38,11 +39,14 @@ public class MovingPlatform : MonoBehaviour
     //Non-Inspector:
     private int currentPointIndex = 0;
     private Collider col;
+    [SerializeField, HideInInspector, Tooltip("The Line Renderer that visually represents the path the moving platform will take between the different points")]
+    private LineRenderer lineRenderer;
     [Tooltip("A set that actively contains the Transforms of the objects currently on this platform")]
     private HashSet<Transform> objectsOnPlatform;
 
     private void Start()
     {
+        InitializeLineRenderer();
         col = GetComponent<Collider>();
         objectsOnPlatform = new HashSet<Transform>();
 
@@ -78,6 +82,7 @@ public class MovingPlatform : MonoBehaviour
                         System.Array.Reverse(points);
                         currentPointIndex = 1;
                         targetPoint = points[currentPointIndex];
+                        InitializeLineRenderer();
                         break;
                     //Keep order, go straight back to the starting point after end point
                     case (int)LoopPattern.Cycle:
@@ -166,6 +171,24 @@ public class MovingPlatform : MonoBehaviour
         }
     }
 
+    private void InitializeLineRenderer()
+    {
+
+        lineRenderer = GetComponent<LineRenderer>();
+
+        if (points.Length < 2)
+            return;
+
+        //Line Renderer (Fill backwards for texture
+        lineRenderer.positionCount = points.Length;
+        for (int i = points.Length -1; i >= 0; i--)
+        {
+            lineRenderer.SetPosition(points.Length - 1 - i, points[i]);
+        }
+
+        lineRenderer.loop = loopPattern == LoopPattern.Cycle;
+    }
+
 
     #region Getters & Setters
     public void SetPoint(int index, Vector3 value)
@@ -176,6 +199,11 @@ public class MovingPlatform : MonoBehaviour
     public Vector3 GetPoint(int index)
     {
         return points[index];
+    }
+
+    public LineRenderer GetLineRenderer()
+    {
+        return GetComponent<LineRenderer>();
     }
     #endregion
 }

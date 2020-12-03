@@ -19,6 +19,7 @@ using TMPro;
 public class NarrativeTriggerHandler : MonoBehaviour
 {
     public enum TriggerType { Area, Random, OnEvent };
+    //public enum EventTypes { }
     [SerializeField, Tooltip("Contains all triggers in the scene. Each array element is a separate trigger with it's own type, " +
         "as well as its own text and audio outputs")]
     public Trigger[] triggers;
@@ -90,12 +91,13 @@ public class NarrativeTriggerHandler : MonoBehaviour
             {
                 if (triggers[i].type == TriggerType.Area && AreaCheck(triggers[i]))
                 {
-                    ActivateTrigger(i);
+                    ActivateTrigger(triggers[i]);
                 }
             }
 
             if(RandomCheck(ref randomCount, randomTarget))
             {
+
                 randomCount = 0;
                 randomTarget = Random.Range(randomIntervalMin, randomIntervalMax);
 
@@ -109,9 +111,15 @@ public class NarrativeTriggerHandler : MonoBehaviour
                     }
                 }
 
+                //No random triggers found
+                if(randomTriggers.Count == 0)
+                {
+                    continue;
+                }
+
                 int triggerToActivate = Random.Range(0, (int)randomTriggers.Count);
 
-                ActivateTrigger(triggerToActivate);
+                ActivateTrigger(randomTriggers[triggerToActivate]);
             }
 
 
@@ -120,11 +128,12 @@ public class NarrativeTriggerHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// Activate the trigger, played sound if applicable and plays 
+    /// Activates trigger at given index
     /// </summary>
-    public void ActivateTrigger(int index)
+    /// <param name="trigger">The index of the trigger to activate</param>
+    public void ActivateTrigger(Trigger trigger)
     {
-        Trigger trigger = triggers[index];
+
         if (trigger.repeatable == false && trigger.hasRan == true)
         {
             return;
@@ -140,16 +149,16 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         if (trigger.textToDisplay != "")
         {
-            StartCoroutine(RunDialogue(index));
+            StartCoroutine(RunDialogue(trigger));
         }
 
         //Text appearing functionality
     }
 
-    IEnumerator RunDialogue(int triggerIndex)
+    IEnumerator RunDialogue(Trigger trigger)
     {
-        dialogue.text = triggers[triggerIndex].textToDisplay;
-        yield return new WaitForSeconds(triggers[triggerIndex].textDisplayTime);
+        dialogue.text = trigger.textToDisplay;
+        yield return new WaitForSeconds(trigger.textDisplayTime);
 
         dialogue.CrossFadeAlpha(0, 2f, false);
 

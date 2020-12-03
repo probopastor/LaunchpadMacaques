@@ -17,10 +17,12 @@ using FMODUnity;
 public class MovingPlatformEditor : Editor
 {
     MovingPlatform platformScript;
+    LineRenderer lineRenderer;
 
     private void OnEnable()
     {
         platformScript = (MovingPlatform)target;
+        lineRenderer = platformScript.GetComponent<LineRenderer>();
     }
 
     public override void OnInspectorGUI()
@@ -69,11 +71,24 @@ public class MovingPlatformEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("easeInAndOut"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("easeDistance"));
 
-
         if (GUI.changed)
         {
             serializedObject.ApplyModifiedProperties();
         }
-        
+
+        //Line Renderer
+        if (pointsArray.arraySize >= 2)
+        {
+            lineRenderer.positionCount = pointsArray.arraySize;
+            for (int i = pointsArray.arraySize - 1; i >= 0; i--)
+            {
+                lineRenderer.SetPosition(pointsArray.arraySize - 1 - i, pointsArray.GetArrayElementAtIndex(i).vector3Value);
+            }
+
+            lineRenderer.loop = serializedObject.FindProperty("loopPattern").enumValueIndex == 1;
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
     }
 }

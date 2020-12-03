@@ -135,6 +135,11 @@ public class NarrativeTriggerEditor : Editor
                         EditorGUILayout.PropertyField(element.FindPropertyRelative("areaCenter"));
                         EditorGUILayout.PropertyField(element.FindPropertyRelative("boxSize"));
                     }
+                    //else if(type == (int)NarrativeTriggerHandler.TriggerType.OnEvent)
+                    //{
+
+                    //}
+
                     EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
                 }
             }
