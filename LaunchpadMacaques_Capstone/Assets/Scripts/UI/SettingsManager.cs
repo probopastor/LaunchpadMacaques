@@ -32,6 +32,11 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Settings Holder")]
     [SerializeField, Tooltip("Will hold all the settings Menu")] GameObject settingsHolder;
+    [SerializeField] GameObject audioSettings;
+    [SerializeField] GameObject videoSettings;
+    [SerializeField] GameObject gameplaySettings;
+    [SerializeField] GameObject optionsMenu;
+    [SerializeField] GameObject mainMenu;
 
     [SerializeField, Tooltip("The max volume for the Volume Sliders")] float maxVolume = 1;
     [SerializeField, Tooltip("The min volume for the Volume Sliders")] float minVolume = 0;
@@ -60,6 +65,22 @@ public class SettingsManager : MonoBehaviour
         InitialMouseSensitivity();
         SetResolutionsDropDown();
         InitialFOV();
+
+        DisableStuff();
+
+    }
+
+    private void Update()
+    {
+        HandleEscapeKey();
+    }
+
+
+    private void DisableStuff()
+    {
+        audioSettings.SetActive(false);
+        videoSettings.SetActive(false);
+        gameplaySettings.SetActive(false);
         settingsHolder.SetActive(false);
     }
 
@@ -450,4 +471,35 @@ public class SettingsManager : MonoBehaviour
     }
 
     #endregion
+
+
+    private void HandleEscapeKey()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && settingsHolder.activeSelf)
+        {
+            if (optionsMenu.activeSelf)
+            {
+                mainMenu.SetActive(true);
+                settingsHolder.SetActive(false);
+            }
+
+            else if (videoSettings.activeSelf)
+            {
+                optionsMenu.SetActive(true);
+                videoSettings.SetActive(false);
+            }
+
+            else if (audioSettings.activeSelf)
+            {
+                optionsMenu.SetActive(true);
+                audioSettings.SetActive(false);
+            }
+
+            else if (gameplaySettings.activeSelf)
+            {
+                optionsMenu.SetActive(true);
+                gameplaySettings.SetActive(false);
+            }
+        }
+    }
 }
