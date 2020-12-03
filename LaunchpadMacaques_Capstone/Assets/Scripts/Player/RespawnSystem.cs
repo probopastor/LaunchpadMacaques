@@ -29,10 +29,10 @@ public class RespawnSystem : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            RespawnPlayer();
-        }
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    RespawnPlayer();
+        //}
     }
 
     private void OnTriggerEnter(Collider other)
