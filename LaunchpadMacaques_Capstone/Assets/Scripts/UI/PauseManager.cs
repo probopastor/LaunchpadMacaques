@@ -18,6 +18,7 @@ public class PauseManager : MonoBehaviour
     private bool gameLost;
     private bool gameWon;
     public GameObject HTPMenu;
+    public GameObject pausePanel;
 
     [SerializeField, Tooltip("The scene this pause manager is located in. ")] private string thisScene;
     [SerializeField, Tooltip("The main menu scene name. ")] private string mainMenuScene;
@@ -53,6 +54,9 @@ public class PauseManager : MonoBehaviour
         {
             RopeLengthText.SetActive(true);
         }
+
+        pausePanel = PauseCanvas.GetComponentInChildren<GameObject>();
+
     }
 
     // Update is called once per frame
@@ -63,6 +67,12 @@ public class PauseManager : MonoBehaviour
             if (!gameLost && !gameWon && !HTPMenu.activeSelf)
             {
                 PauseGame();
+            }
+
+            if(HTPMenu.activeSelf)
+            {
+                HTPMenu.SetActive(false);
+                pausePanel.SetActive(true);
             }
         }
     }
