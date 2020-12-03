@@ -30,6 +30,7 @@ public class LevelSelectPictures : MonoBehaviour
     public Sprite sprite3;
     public Sprite sprite4;
     public Sprite sprite5;
+    public Sprite sprite6;
 
     private EventSystem eventSystem;
 
@@ -68,7 +69,7 @@ public class LevelSelectPictures : MonoBehaviour
         }
         else if (eventSystem.currentSelectedGameObject == (backButton))
         {
-            pictureHolder.sprite = null;
+            pictureHolder.GetComponent<Image>().sprite = sprite6;
         }
 
     }
