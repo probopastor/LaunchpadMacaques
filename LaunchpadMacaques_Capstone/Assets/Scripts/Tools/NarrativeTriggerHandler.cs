@@ -85,6 +85,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private void OnEnable()
     {
+        onPlayerHitGround += PlayerHitGroundActivation;
         GameEventManager.StartListening("onPlayerHitGround", onPlayerHitGround);
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += TimeInLevelCountStart;
     }
@@ -92,12 +93,13 @@ public class NarrativeTriggerHandler : MonoBehaviour
     private void OnDisable()
     {
         GameEventManager.StopListening("onPlayerHitGround", onPlayerHitGround);
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= TimeInLevelCountStart;
+        onPlayerHitGround -= PlayerHitGroundActivation;
     }
 
     private void Awake()
     {
         dialogue = GetComponentInChildren<TMP_Text>();
-        onPlayerHitGround += PlayerHitGroundActivation;
     }
 
     private void Start()
@@ -143,6 +145,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 //No random triggers found
                 if(randomTriggers.Count == 0)
                 {
+                    yield return null;
                     continue;
                 }
 
@@ -273,10 +276,13 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     #region TimeInLevelEvent
     float timeInLevel = 0;
+    Coroutine currentCount;
     private void TimeInLevelCountStart(UnityEngine.SceneManagement.Scene current, UnityEngine.SceneManagement.Scene next)
     {
         timeInLevel = 0;
-        StartCoroutine(TimeInLevelCount());
+        if(currentCount != null)
+            StopCoroutine(currentCount);
+        currentCount = StartCoroutine(TimeInLevelCount());
     }
 
     private IEnumerator TimeInLevelCount()
@@ -287,7 +293,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
             {
                 if (CheckTimeSinceLevelRequirement(triggers[i]))
                 {
-
                     ActivateTrigger(triggers[i]);
                 }
             }
