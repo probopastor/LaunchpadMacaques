@@ -27,6 +27,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField]
     private List<GameObject> menuPanels = new List<GameObject>();
 
+    public Animator anim;
     private void Start()
     {
 
@@ -36,7 +37,7 @@ public class MainMenuManager : MonoBehaviour
         Time.timeScale = 1;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-
+        anim.Play("MainMenuBG");
     }
 
     private void Update()
