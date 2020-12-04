@@ -42,8 +42,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
     private float randomIntervalMax;
     [SerializeField, Tooltip("The time (in seconds) that the player must be falling in order for the \"Player Hitting Ground\" event to trigger")]
     private float fallTime;
+
     [SerializeField]
     private TMP_Text dialogue;
+    [SerializeField]
+    private GameObject canvas;
 
 
     [System.Serializable]
@@ -100,6 +103,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
     private void Awake()
     {
         dialogue = GetComponentInChildren<TMP_Text>();
+        canvas = dialogue.GetComponentInParent<Canvas>().gameObject;
+        canvas.SetActive(false);
     }
 
     private void Start()
@@ -213,13 +218,15 @@ public class NarrativeTriggerHandler : MonoBehaviour
     {
         trigger.isRunning = true;
         dialogue.text = trigger.textToDisplay;
-        yield return new WaitForSeconds(trigger.textDisplayTime);
 
-        dialogue.CrossFadeAlpha(0, 2f, false);
+        canvas.SetActive(true);
+
+        yield return new WaitForSeconds(trigger.textDisplayTime);
 
         dialogue.text = "";
 
-        dialogue.CrossFadeAlpha(1, 0f, false);
+        canvas.gameObject.SetActive(false);
+
         trigger.isRunning = false;
     }
 
