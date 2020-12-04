@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 2578027241271486143}
   - component: {fileID: 62342500251194575}
   - component: {fileID: 3603787437902169331}
+  - component: {fileID: 5047177948035294652}
   m_Layer: 10
   m_Name: Moveable Cube
   m_TagString: PlayerCube
@@ -5110,6 +5111,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshSources:
   - {fileID: 4980608791686463170}
+--- !u!114 &5047177948035294652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058264478890330556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08edc7c1c9fe8a54bac69f2d6448de6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LandingEffect: {fileID: 6872186549133463412, guid: 31d493e0bdf97cc46a7413fb137d8f58,
+    type: 3}
+  particleLocation: {x: 0, y: 0, z: 0}
+  landingParticlesDuration: 1
+  particleMask:
+    serializedVersion: 2
+    m_Bits: 0
+  speedMultiplier: 1
+  velocityThreshold: 10
 --- !u!1 &8362856333686213014
 GameObject:
   m_ObjectHideFlags: 0
