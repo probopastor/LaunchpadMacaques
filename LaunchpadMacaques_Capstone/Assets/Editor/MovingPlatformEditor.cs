@@ -18,6 +18,7 @@ public class MovingPlatformEditor : Editor
 {
     MovingPlatform platformScript;
     LineRenderer lineRenderer;
+    bool endpointEditingFoldout = false;
 
     private void OnEnable()
     {
@@ -70,6 +71,16 @@ public class MovingPlatformEditor : Editor
         EditorGUILayout.LabelField("Ease In And Out", EditorStyles.miniBoldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("easeInAndOut"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("easeDistance"));
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField("Misc.", EditorStyles.boldLabel);
+        endpointEditingFoldout = EditorGUILayout.Foldout(endpointEditingFoldout, "Endpoint Prefab");
+        if(endpointEditingFoldout)
+        { 
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("endpointPrefab"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("endpointScale"));
+        }
 
         if (GUI.changed)
         {
