@@ -55,7 +55,7 @@ public class PauseManager : MonoBehaviour
             RopeLengthText.SetActive(true);
         }
 
-        pausePanel = PauseCanvas.GetComponentInChildren<GameObject>();
+        pausePanel = PauseCanvas.gameObject;
 
     }
 
