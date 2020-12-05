@@ -186,7 +186,24 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         if (trigger.textToDisplay != "")
         {
-            StartCoroutine(RunDialogue(trigger));
+            if (FindObjectOfType<InformationPost>())
+            {
+                if (!FindObjectOfType<InformationPost>().GetTutorialCanvas())
+                {
+                    StartCoroutine(RunDialogue(trigger));
+                }
+
+                else
+                {
+                    Debug.Log("IN TUT");
+                }
+            }
+
+            else
+            {
+                StartCoroutine(RunDialogue(trigger));
+            }
+  
         }
 
         //Text appearing functionality
@@ -214,8 +231,15 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
+
+    public void TurnOffDialouge()
+    {
+        dialogue.text = "";
+        canvas.SetActive(false);
+    }
     IEnumerator RunDialogue(Trigger trigger)
     {
+    
         trigger.isRunning = true;
         dialogue.text = trigger.textToDisplay;
 
@@ -223,7 +247,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         yield return new WaitForSeconds(trigger.textDisplayTime);
 
-        dialogue.text = "";
+        if (canvas.gameObject.activeSelf)
+        {
+            dialogue.text = "";
+        }
+
 
         canvas.gameObject.SetActive(false);
 

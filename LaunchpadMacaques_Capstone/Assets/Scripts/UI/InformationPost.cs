@@ -24,6 +24,8 @@ public class InformationPost : MonoBehaviour
 
     private bool playerInRange;
 
+    private NarrativeTriggerHandler narrative;
+
     #endregion
 
     // Start is called before the first frame update
@@ -32,6 +34,8 @@ public class InformationPost : MonoBehaviour
         isActive = false;
         toggleFunctionality = true;
         SetInformation();
+
+        narrative = FindObjectOfType<NarrativeTriggerHandler>();
     }
 
     // Update is called once per frame
@@ -71,6 +75,7 @@ public class InformationPost : MonoBehaviour
         {
             if (isActive)
             {
+                narrative.TurnOffDialouge();
                 informationText.text = information;
             }
             else if (!isActive)
@@ -89,7 +94,9 @@ public class InformationPost : MonoBehaviour
             {
                 informationText.gameObject.transform.parent.gameObject.SetActive(true);
                 informationText.text = "press E to read";
+         
                 playerInRange = true;
+                narrative.TurnOffDialouge();
             }
   
         }
@@ -102,5 +109,10 @@ public class InformationPost : MonoBehaviour
             informationText.gameObject.transform.parent.gameObject.SetActive(false);
             playerInRange = false;
         }
+    }
+
+    public bool GetTutorialCanvas()
+    {
+        return informationText.gameObject.transform.parent.gameObject.activeSelf;
     }
 }
