@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1094613224}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: -0.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4698832026194030293}
@@ -4820,6 +4820,7 @@ GameObject:
   - component: {fileID: 1461603865385637328}
   - component: {fileID: 5816218296434965}
   - component: {fileID: 9176928489829775996}
+  - component: {fileID: 3873143498383703301}
   m_Layer: 0
   m_Name: PortalBase
   m_TagString: Untagged
@@ -4836,7 +4837,7 @@ Transform:
   m_GameObject: {fileID: 2460165462846377348}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 4698832026194030293}
   m_RootOrder: 0
@@ -4890,6 +4891,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &3873143498383703301
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460165462846377348}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6001086138239698104, guid: 0fc0dd1d79f054d4f9a5c4ded1fdb843, type: 3}
 --- !u!1 &4646034235125602803
 GameObject:
   m_ObjectHideFlags: 0
@@ -4901,6 +4916,7 @@ GameObject:
   - component: {fileID: 1470713840286412930}
   - component: {fileID: 4287970490374932845}
   - component: {fileID: 8285091359713005047}
+  - component: {fileID: 4833819048392107813}
   m_Layer: 0
   m_Name: PortalFrame
   m_TagString: Untagged
@@ -4916,7 +4932,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4646034235125602803}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: -0.24, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4698832026194030293}
@@ -4971,6 +4987,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &4833819048392107813
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4646034235125602803}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6202762565926963917, guid: 0fc0dd1d79f054d4f9a5c4ded1fdb843, type: 3}
 --- !u!1 &5367809691809641583
 GameObject:
   m_ObjectHideFlags: 0
@@ -5018,6 +5048,8 @@ GameObject:
   - component: {fileID: 4781531497972187469}
   - component: {fileID: 4155483563356719985}
   - component: {fileID: 6685333293160801427}
+  - component: {fileID: 9080268806367317567}
+  - component: {fileID: 3636638299491968539}
   m_Layer: 0
   m_Name: PortalPlane
   m_TagString: Untagged
@@ -5033,7 +5065,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8559343135123267553}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4698832026194030293}
@@ -9868,3 +9900,29 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &9080268806367317567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8559343135123267553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dc6eea473f152640a62b8df72d84f0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextLevelName: 
+--- !u!65 &3636638299491968539
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8559343135123267553}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 27.845905, y: 22.920446, z: 0.000009073348}
+  m_Center: {x: 0, y: 12.218814, z: 0}
