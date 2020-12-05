@@ -810,7 +810,12 @@ public class Matt_PlayerMovement : MonoBehaviour
         orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
 
         //Narrative/Dialogue Trigger LookAtObject Event
-        narrativeTriggerReference.ObjectInSightCheck(GetGameObjectInLineOfSight());
+
+        if (GetGameObjectInLineOfSight() != null)
+        {
+            narrativeTriggerReference.ObjectInSightCheck(GetGameObjectInLineOfSight());
+        }
+
     }
 
     /// <summary>
@@ -821,7 +826,16 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         RaycastHit hit;
         Physics.Raycast(playerCam.position, playerCam.transform.forward, out hit, Mathf.Infinity, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore);
-        return hit.collider.gameObject;
+        if(hit.collider != null)
+        {
+            return hit.collider.gameObject;
+        }
+
+        else
+        {
+            return null;
+        }
+
     }
     
 
