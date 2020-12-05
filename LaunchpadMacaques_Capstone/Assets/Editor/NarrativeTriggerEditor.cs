@@ -20,12 +20,6 @@ public class NarrativeTriggerEditor : Editor
     private void OnEnable()
     {
         narrativeTriggerHandler = (NarrativeTriggerHandler)target;
-
-        //for(int i = 0; i < narrativeTriggerHandler.triggers.Length; i++)
-        //{
-        //    triggerSubFoldout[i] = new bool();
-        //    triggerNames[i] = "Trigger " + (i + 1);
-        //}
     }
 
     public override void OnInspectorGUI()
@@ -33,15 +27,18 @@ public class NarrativeTriggerEditor : Editor
         serializedObject.Update();
 
         //Random Trigger Settings (Universal)
-        EditorGUILayout.LabelField("Global Random Trigger Settings", EditorStyles.boldLabel);
-
+        EditorGUILayout.LabelField("Global Trigger Settings", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Random Trigger Settings", EditorStyles.miniBoldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("randomIntervalMin"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("randomIntervalMax"));
-        if (serializedObject.FindProperty("randomIntervalMin").floatValue >= serializedObject.FindProperty("randomIntervalMax").floatValue)
+        EditorGUILayout.LabelField("Player Hitting Ground Settings",EditorStyles.miniBoldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("fallTime"));
+        if (serializedObject.FindProperty("randomIntervalMin").floatValue > serializedObject.FindProperty("randomIntervalMax").floatValue)
         {
-            EditorGUILayout.HelpBox("randomIntervalMax must be bigger than randomIntervalMin", MessageType.Warning);
+            EditorGUILayout.HelpBox("randomIntervalMax must be bigger than or equal to randomIntervalMin", MessageType.Warning);
         }
 
+        EditorGUILayout.Space();
         EditorGUILayout.Space();
 
         SerializedProperty array = serializedObject.FindProperty("triggers");
@@ -81,6 +78,9 @@ public class NarrativeTriggerEditor : Editor
                     SerializedProperty element = array.GetArrayElementAtIndex(i);
                     EditorGUILayout.LabelField("General", EditorStyles.boldLabel);
                     EditorGUILayout.PropertyField(element.FindPropertyRelative("type"));
+                    //Time in level ones should NEVER be repeatable
+                    if(!((element.FindPropertyRelative("type").enumValueIndex == (int)NarrativeTriggerHandler.TriggerType.OnEvent) &&
+                       (element.FindPropertyRelative("eventType").enumValueIndex == (int)NarrativeTriggerHandler.EventType.TimeInLevel)))
                     EditorGUILayout.PropertyField(element.FindPropertyRelative("repeatable"));
 
                     EditorGUILayout.Space();
@@ -111,7 +111,7 @@ public class NarrativeTriggerEditor : Editor
                         element.FindPropertyRelative("triggeringTag").stringValue = EditorGUILayout.TagField(element.FindPropertyRelative("triggeringTag").stringValue);
                         EditorGUILayout.EndHorizontal();
                         EditorGUILayout.BeginHorizontal();
-                        if(GUILayout.Button("Spawn Trigger Zone"))
+                        if (GUILayout.Button("Spawn Trigger Zone"))
                         {
                             GameObject newAreaTrigger = new GameObject("Area Trigger");
                             newAreaTrigger.transform.localScale = new Vector3(5, 5, 5);
@@ -123,7 +123,7 @@ public class NarrativeTriggerEditor : Editor
                         }
                         if (narrativeTriggerHandler.triggers[i].areaTrigger != null)
                         {
-                            if(GUILayout.Button("Go to Trigger"))
+                            if (GUILayout.Button("Go to Trigger"))
                             {
                                 Selection.activeGameObject = narrativeTriggerHandler.triggers[i].areaTrigger;
                                 SceneView.FrameLastActiveSceneView();
@@ -135,6 +135,24 @@ public class NarrativeTriggerEditor : Editor
                         EditorGUILayout.PropertyField(element.FindPropertyRelative("areaCenter"));
                         EditorGUILayout.PropertyField(element.FindPropertyRelative("boxSize"));
                     }
+                    else if (type == (int)NarrativeTriggerHandler.TriggerType.OnEvent)
+                    {
+                        EditorGUILayout.Space();
+                        EditorGUILayout.LabelField("Event Trigger Options", EditorStyles.boldLabel);
+                        SerializedProperty eventType = element.FindPropertyRelative("eventType");
+                        EditorGUILayout.PropertyField(eventType);
+                        //Time in Level
+                        if (eventType.enumValueIndex == 1)
+                        {
+                            EditorGUILayout.PropertyField(element.FindPropertyRelative("timeInLevelBeforeTrigger"));
+                        }
+                        //LookAtObject
+                        else if(eventType.enumValueIndex == 2)
+                        {
+                            EditorGUILayout.PropertyField(element.FindPropertyRelative("triggeringObjects"));
+                        }
+                    }
+
                     EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
                 }
             }
@@ -155,6 +173,7 @@ public class NarrativeTriggerEditor : Editor
         }
 
         serializedObject.ApplyModifiedProperties();
+        EditorUtility.SetDirty(narrativeTriggerHandler);
     }
 
     private void OnSceneGUI()

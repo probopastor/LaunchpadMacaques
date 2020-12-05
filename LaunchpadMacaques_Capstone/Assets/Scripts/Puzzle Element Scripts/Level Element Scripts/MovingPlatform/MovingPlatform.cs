@@ -13,8 +13,10 @@ using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class MovingPlatform : MonoBehaviour
 {
+
     //PRIVATE:
     //Inspector:
     [SerializeField, Tooltip("The array Vector3 points that the platform will go to (in order)")]
@@ -35,14 +37,24 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField, Tooltip("The distance from the start and end positions where the easing will start")]
     private float easeDistance = 2;
 
+    [SerializeField, Tooltip("The prefab for the object that will appear at the endpoints of the moving platform path")]
+    private GameObject endpointPrefab;
+    [SerializeField, Tooltip("The scale of the endpoint model")]
+    private float endpointScale;
+
     //Non-Inspector:
     private int currentPointIndex = 0;
     private Collider col;
+    [SerializeField, HideInInspector, Tooltip("The Line Renderer that visually represents the path the moving platform will take between the different points")]
+    private LineRenderer lineRenderer;
+    
     [Tooltip("A set that actively contains the Transforms of the objects currently on this platform")]
     private HashSet<Transform> objectsOnPlatform;
 
     private void Start()
     {
+        InitializeLineRenderer();
+        InitializeEndPoints();
         col = GetComponent<Collider>();
         objectsOnPlatform = new HashSet<Transform>();
 
@@ -78,6 +90,7 @@ public class MovingPlatform : MonoBehaviour
                         System.Array.Reverse(points);
                         currentPointIndex = 1;
                         targetPoint = points[currentPointIndex];
+                        InitializeLineRenderer();
                         break;
                     //Keep order, go straight back to the starting point after end point
                     case (int)LoopPattern.Cycle:
@@ -166,6 +179,36 @@ public class MovingPlatform : MonoBehaviour
         }
     }
 
+    private void InitializeLineRenderer()
+    {
+
+        lineRenderer = GetComponent<LineRenderer>();
+
+        if (points.Length < 2)
+            return;
+
+        //Line Renderer (Fill backwards for texture)
+        lineRenderer.positionCount = points.Length;
+        for (int i = points.Length -1; i >= 0; i--)
+        {
+            lineRenderer.SetPosition(points.Length - 1 - i, points[i]);
+        }
+
+        lineRenderer.loop = loopPattern == LoopPattern.Cycle;
+    }
+
+    private void InitializeEndPoints()
+    {
+        GameObject endpoint;
+        for (int i = 0; i < points.Length; i++)
+        {
+            endpoint = Instantiate<GameObject>(endpointPrefab, points[i], Quaternion.identity);
+            endpoint.GetComponent<Collider>().isTrigger = true;
+            endpoint.transform.localScale = new Vector3(endpointScale, endpointScale, endpointScale);
+
+        }
+
+    }
 
     #region Getters & Setters
     public void SetPoint(int index, Vector3 value)
@@ -176,6 +219,11 @@ public class MovingPlatform : MonoBehaviour
     public Vector3 GetPoint(int index)
     {
         return points[index];
+    }
+
+    public LineRenderer GetLineRenderer()
+    {
+        return GetComponent<LineRenderer>();
     }
     #endregion
 }

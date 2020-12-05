@@ -5758,6 +5758,7 @@ GameObject:
   - component: {fileID: 7880684068815890876}
   - component: {fileID: 9209580305524660373}
   - component: {fileID: 7709234657013800401}
+  - component: {fileID: 7582105618991414077}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -5940,6 +5941,8 @@ MonoBehaviour:
     emitter: {fileID: 7880684068815890849}
   - name: Footsteps
     emitter: {fileID: 7880684068815890876}
+  - name: Corruption
+    emitter: {fileID: 7880684068815890876}
 --- !u!114 &7880684068815890848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6045,6 +6048,29 @@ MonoBehaviour:
   scaleAmount: 0.9
   leftFootPos: {fileID: 4887189289661250856}
   rightFootPos: {fileID: 8778899206465010495}
+--- !u!114 &7582105618991414077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7880684068815890873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &7880684069204234816
 GameObject:
   m_ObjectHideFlags: 0
@@ -6339,6 +6365,8 @@ MonoBehaviour:
   maxDistance: 70
   newSwingGrappleLength: 10
   wheelSensitivity: 2
+  startingAttachSpeed: 20
+  attachSpeedIncrease: 10
   springValue: 5
   springDamp: 10
   springMass: 5
@@ -6403,6 +6431,9 @@ MonoBehaviour:
     m_Bits: 1024
   objectFollowPos: 2
   objectFollowSpeed: 20
+  startAttachSpeed: 20
+  attachSpeedIncrese: 1
+  pickupSpeed: 8
   anim: {fileID: 2125406432066585191}
 --- !u!1 &8198138909260528374
 GameObject:

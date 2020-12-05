@@ -16,6 +16,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The text element that displays the current gravity. ")] TextMeshProUGUI currentGravityText;
     private GrapplingGun grappleGunReference;
     private CollectibleController collectibleController;
+    private NarrativeTriggerHandler narrativeTriggerReference;
     #endregion
 
     #region Player Camera Variables
@@ -192,6 +193,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         pauseManager = FindObjectOfType<PauseManager>();
         collectibleController = FindObjectOfType<CollectibleController>();
         grappleGunReference = FindObjectOfType<GrapplingGun>();
+        narrativeTriggerReference = FindObjectOfType<NarrativeTriggerHandler>();
 
         config = FindObjectOfType<ConfigJoint>();
 
@@ -607,6 +609,10 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             multiplier = airMoveSpeedMultiplier;
             multiplierV = airMoveSpeedMultiplier;
+
+            //PlayerHitGround Event for Dialogue/Narrative Trigger System
+            if(fallCheckRunning == false)
+                StartCoroutine(FallCheck());
         }
 
         // Movement while sliding
@@ -731,6 +737,37 @@ public class Matt_PlayerMovement : MonoBehaviour
         readyToJump = true;
     }
 
+    #region Narrative/Dialogue Trigger - OnPlayerHitGroundEvent
+    bool fallCheckRunning = false;
+    /// <summary>
+    /// Keeps track of how long the player falls for the Dialogue/Narrative System's onPlayerHitGroundCheck
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FallCheck()
+    {
+        if(narrativeTriggerReference == null)
+            yield break;
+
+        fallCheckRunning = true;
+
+        float airTime = 0;
+        while(!grounded)
+        {
+            if (grappleGunReference.IsGrappling())
+                airTime = 0;
+            airTime += Time.deltaTime;
+
+            yield return null;
+        }
+
+        if(airTime > narrativeTriggerReference.GetFallTime())
+        {
+            GameEventManager.TriggerEvent("onPlayerHitGround");
+        }
+
+        fallCheckRunning = false;
+    }
+    #endregion
     #endregion
 
     private float desiredX;
@@ -750,7 +787,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         //Rotate, and also make sure we dont over- or under-rotate.
         if (PlayerPrefs.HasKey("InvertY"))
         {
-            if(PlayerPrefs.GetInt("InvertY") == 1)
+            if (PlayerPrefs.GetInt("InvertY") == 1)
             {
                 xRotation -= mouseY;
             }
@@ -771,7 +808,36 @@ public class Matt_PlayerMovement : MonoBehaviour
         //Perform the rotations
         playerCam.transform.localRotation = Quaternion.Euler(xRotation, desiredX, 0);
         orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
+
+        //Narrative/Dialogue Trigger LookAtObject Event
+
+        if (GetGameObjectInLineOfSight() != null)
+        {
+            narrativeTriggerReference.ObjectInSightCheck(GetGameObjectInLineOfSight());
+        }
+
     }
+
+    /// <summary>
+    /// Helper function for use in the Narrative/Dialogue Trigger LookAtObject Event
+    /// </summary>
+    /// <returns>The first Gameobject found in the player's line of sight</returns>
+    GameObject GetGameObjectInLineOfSight()
+    {
+        RaycastHit hit;
+        Physics.Raycast(playerCam.position, playerCam.transform.forward, out hit, Mathf.Infinity, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore);
+        if(hit.collider != null)
+        {
+            return hit.collider.gameObject;
+        }
+
+        else
+        {
+            return null;
+        }
+
+    }
+    
 
     /// <summary>
     /// Handles movement counter measures to maintain smooth movement.
