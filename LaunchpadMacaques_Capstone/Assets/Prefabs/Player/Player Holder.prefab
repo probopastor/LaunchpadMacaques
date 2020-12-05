@@ -1094,7 +1094,6 @@ MonoBehaviour:
   currentGravityText: {fileID: 0}
   playerCam: {fileID: 7880684068529821271}
   orientation: {fileID: 7880684069204234823}
-  sensitivity: 50
   moveSpeed: 4500
   airMoveSpeedMultiplier: 0.75
   maxSpeed: 10
@@ -1137,6 +1136,12 @@ MonoBehaviour:
   collisions:
     serializedVersion: 2
     m_Bits: 256
+  corruption:
+    serializedVersion: 2
+    m_Bits: 0
+  corruptionAmbientMaxRange: 0
+  earSpacing: 0
+  orientation: {fileID: 0}
   emitters:
   - name: Swing
     emitter: {fileID: 7880684068815890848}
@@ -1159,7 +1164,7 @@ MonoBehaviour:
   CollisionTag: 
   Event: event:/Swinging
   PlayEvent: 1
-  StopEvent: 0
+  StopEvent: 2
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
@@ -1182,7 +1187,7 @@ MonoBehaviour:
   CollisionTag: 
   Event: event:/Landing
   PlayEvent: 0
-  StopEvent: 0
+  StopEvent: 2
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
@@ -1205,7 +1210,7 @@ MonoBehaviour:
   CollisionTag: 
   Event: event:/Walking
   PlayEvent: 0
-  StopEvent: 0
+  StopEvent: 2
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
@@ -1244,9 +1249,9 @@ MonoBehaviour:
   footDecal: {fileID: 7227755499754186309, guid: 6e669c6e13ff6594f999fc31b23ac9be,
     type: 3}
   decalSize: 0.7
+  maxFootSteps: 50
   timeBetweenSteps: 3
   scaleAmount: 0.9
-  maxFootSteps: 50
   leftFootPos: {fileID: 4887189289661250856}
   rightFootPos: {fileID: 8778899206465010495}
 --- !u!1 &7880684069204234816
