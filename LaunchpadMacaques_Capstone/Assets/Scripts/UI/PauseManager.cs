@@ -30,7 +30,7 @@ public class PauseManager : MonoBehaviour
     [SerializeField, Tooltip("The UI panel. ")] private GameObject UICanvas;
     [SerializeField, Tooltip("The Information Post Text. ")] private GameObject InformationPostText;
     [SerializeField, Tooltip("The rope length text. ")] private GameObject RopeLengthText;
-
+    private NarrativeTriggerHandler narrative;
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +56,7 @@ public class PauseManager : MonoBehaviour
         }
 
         pausePanel = PauseCanvas.gameObject;
+        narrative = FindObjectOfType<NarrativeTriggerHandler>();
 
     }
 
@@ -88,6 +89,8 @@ public class PauseManager : MonoBehaviour
             Time.timeScale = 0;
             PauseCanvas.SetActive(true);
             CursorCanvas.SetActive(false);
+
+            narrative.TurnOffDialouge();
 
             if (InformationPostText != null)
             {
