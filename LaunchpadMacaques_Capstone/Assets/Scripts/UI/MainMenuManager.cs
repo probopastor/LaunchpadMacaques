@@ -7,10 +7,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Management.Instrumentation;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
