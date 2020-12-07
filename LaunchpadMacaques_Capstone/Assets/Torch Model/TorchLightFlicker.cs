@@ -40,7 +40,7 @@ public class TorchLightFlicker : MonoBehaviour
         int temp = Random.Range(0, 10);
         //slight randomization for not all flashing and changing at the same time.
         startTime = Time.time + temp; // time since game started
-        smoothing = Random.Range(Mathf.Min(3,smoothing - 5), smoothing + 5);
+        smoothing = Random.Range(smoothing - 5, smoothing + 5);
 
         //initialize values
         intitalIntentisty = light.intensity;
