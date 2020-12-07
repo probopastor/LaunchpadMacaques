@@ -1597,6 +1597,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 174558830}
   m_CullTransparentMesh: 0
+--- !u!1 &181730383 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3602824266386916614, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+    type: 3}
+  m_PrefabInstance: {fileID: 3602824266255970892}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &181730385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181730383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08edc7c1c9fe8a54bac69f2d6448de6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LandingEffect: {fileID: 6872186549133463412, guid: 31d493e0bdf97cc46a7413fb137d8f58,
+    type: 3}
+  particleLocation: {x: 0, y: 0, z: 0}
+  landingParticlesDuration: 1
+  speedMultiplier: 1
+  velocityThreshold: 5
 --- !u!1001 &200750870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1709,7 +1733,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-2972
+  m_Name: pb_Mesh-129676
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3836,6 +3860,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HTPMenu: {fileID: 0}
+  pausePanel: {fileID: 0}
   thisScene: Combined_Features
   mainMenuScene: MainMenu
   PauseCanvas: {fileID: 646010777}
@@ -4164,7 +4189,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-3362
+  m_Name: pb_Mesh-130264
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -9043,7 +9068,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh22288
+  m_Name: pb_Mesh41166
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -10218,7 +10243,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-3116
+  m_Name: pb_Mesh-129882
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -11037,7 +11062,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-3492
+  m_Name: pb_Mesh-130454
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -12268,7 +12293,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh22276
+  m_Name: pb_Mesh41154
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -17108,7 +17133,7 @@ GameObject:
   - component: {fileID: 2059283989}
   - component: {fileID: 2059283988}
   - component: {fileID: 2059283987}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17454,7 +17479,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-2910
+  m_Name: pb_Mesh-129568
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -18509,6 +18534,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 194.20761
       objectReference: {fileID: 0}
+    - target: {fileID: 1906624826385338988, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 1996699603775744736, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
       propertyPath: retiicle
@@ -18643,6 +18673,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0.00012207031
+      objectReference: {fileID: 0}
+    - target: {fileID: 4559250549154169375, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -2.5890503
       objectReference: {fileID: 0}
     - target: {fileID: 5038272372251572710, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
@@ -18809,6 +18844,11 @@ PrefabInstance:
       propertyPath: vanishingGroups.Array.data[2].gameObjects.Array.data[2]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6919585669480410492, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7034409383806917263, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -18832,7 +18872,7 @@ PrefabInstance:
     - target: {fileID: 7290757194662943175, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -20.5
+      value: -20.500061
       objectReference: {fileID: 0}
     - target: {fileID: 8153967080819210788, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
