@@ -1,6 +1,6 @@
 ﻿/* 
 * (Launchpad Macaques - [Trial and Error]) 
-* (Levi Schoof) 
+* (Levi Schoof, William Nomikos) 
 * (PushPullObjects.CS) 
 * (The Script that is placed on the player to handle picking and throwing objects) 
 */

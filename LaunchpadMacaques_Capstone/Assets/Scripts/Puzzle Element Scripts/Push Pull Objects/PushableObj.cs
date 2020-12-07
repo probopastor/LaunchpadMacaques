@@ -1,6 +1,6 @@
 ﻿/* 
 * (Launchpad Macaques - [Trial and Error]) 
-* (Levi Schoof) 
+* (Levi Schoof, William Nomikos) 
 * (PushableObj.CS) 
 * (The Script placed on object the player can pick up and throw) 
 */
@@ -77,7 +77,8 @@ public class PushableObj : MonoBehaviour
         grav = this.GetComponent<Gravity>();
         cc = FindObjectOfType<CollectibleController>();
         soundEmitter = GetComponent<StudioEventEmitter>();
-        particles = this.GetComponent<ParticleSystem>();
+        particles = this.GetComponentInChildren<ParticleSystem>();
+        //particles = this.GetComponent<ParticleSystem>();
 
         outlineObj = gameObject.transform.Find("OutlineObj").gameObject;
         outlineObj.GetComponent<Renderer>().enabled = false;
@@ -148,9 +149,6 @@ public class PushableObj : MonoBehaviour
             main.startSpeed = particleStartingSpeed.constant * (1 + (dis * speedScaleAmount));
             main.startSize = particleStartingSize.constant * (1 + (dis * sizeScaleAmount));
         }
-
-        RotateParticles();
-
     }
 
 
@@ -463,6 +461,9 @@ public class PushableObj : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks whether or not the cube particles should be enabled or disabled. 
+    /// </summary>
     public void CheckParticleStatus()
     {
         if (GetPushStatus() || objectHovered || pickedUp)
@@ -475,14 +476,13 @@ public class PushableObj : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets whether or not the current object is being hovered over.
+    /// </summary>
+    /// <param name="isHovering"></param>
     public void ObjectHovered(bool isHovering)
     {
         objectHovered = isHovering;
-    }
-
-    private void RotateParticles()
-    {
-        //particles.transform.rotation = Quaternion.Euler(Vector3.up);
     }
 
     /// <summary>
