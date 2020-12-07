@@ -19,6 +19,7 @@ public class ParticleTrigger : MonoBehaviour
     private Vector3 currentVelocity;
     private GameObject landingParticlesObject;
     private bool onGround = false;
+    private float absoluteVelocity;
 
 
     // Start is called before the first frame update
@@ -34,6 +35,9 @@ public class ParticleTrigger : MonoBehaviour
         if (!onGround)
         {
             currentVelocity = GetComponent<Rigidbody>().velocity;
+
+            //Absolute Value of the current velocity
+            absoluteVelocity = Mathf.Abs((currentVelocity.x + currentVelocity.y + currentVelocity.z) / 3);
         }
     }
 
@@ -66,12 +70,13 @@ public class ParticleTrigger : MonoBehaviour
         if (currentVelocity.y > velocityThreshold)
         {
             var emission = landingParticlesObject.GetComponent<ParticleSystem>().emission;
-            emission.rateOverTime = 200;
-        }
+            emission.rateOverTime = (absoluteVelocity * 10f) + 200f;
 
-        //sets particle speed
-        var main = landingParticlesObject.GetComponent<ParticleSystem>().main;
-        main.startSpeed = ((currentVelocity.y) * speedMultiplier);
+            //sets particle speed
+            var main = landingParticlesObject.GetComponent<ParticleSystem>().main;
+            main.startSpeed = ((absoluteVelocity * speedMultiplier) + 2f);
+
+        }
 
         yield return new WaitForSeconds(landingParticlesDuration);
 
