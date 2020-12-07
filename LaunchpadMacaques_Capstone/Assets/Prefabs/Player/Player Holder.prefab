@@ -1105,6 +1105,13 @@ MonoBehaviour:
   counterMovement: 0.175
   threshold: 0.01
   maxSlopeAngle: 35
+  xFOVActivationVel: 40
+  zFOVActivationVel: 40
+  yFOVActicationVel: 15
+  fovChangeRate: 0.75
+  minFOV: 60.75
+  maxFOV: 120.75
+  maxFOVSpeedScale: 0.05
   xVelocityResetRange: 1
   yVelocityResetRange: 1
   zVelocityResetRange: 1
@@ -1120,6 +1127,8 @@ MonoBehaviour:
   dashLength: 0.1
   dashCooldown: 1.5
   anim: {fileID: 2125406432066585191}
+  _CachedSystem: {fileID: 0}
+  emitParticles: 20
 --- !u!114 &7880684068815890855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1135,13 +1144,13 @@ MonoBehaviour:
   PLAYER_TOP_SPEED: 70
   collisions:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 8448
   corruption:
     serializedVersion: 2
-    m_Bits: 0
-  corruptionAmbientMaxRange: 0
-  earSpacing: 0
-  orientation: {fileID: 0}
+    m_Bits: 32768
+  corruptionAmbientMaxRange: 40
+  earSpacing: 1
+  orientation: {fileID: 7880684069204234816}
   emitters:
   - name: Swing
     emitter: {fileID: 7880684068815890848}
@@ -1548,6 +1557,8 @@ MonoBehaviour:
   maxDistance: 70
   newSwingGrappleLength: 10
   wheelSensitivity: 2
+  startingAttachSpeed: 20
+  attachSpeedIncrease: 10
   springValue: 5
   springDamp: 10
   springMass: 5
@@ -1612,6 +1623,9 @@ MonoBehaviour:
     m_Bits: 1024
   objectFollowPos: 2
   objectFollowSpeed: 20
+  startAttachSpeed: 20
+  attachSpeedIncrese: 1
+  pickupSpeed: 8
   anim: {fileID: 2125406432066585191}
 --- !u!1 &8198138909260528374
 GameObject:
