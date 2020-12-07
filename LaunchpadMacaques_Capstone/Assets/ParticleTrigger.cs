@@ -16,6 +16,7 @@ public class ParticleTrigger : MonoBehaviour
     //[SerializeField] private LayerMask particleMask;
     [SerializeField, Tooltip("Modifies speed of particles. ")] private float speedMultiplier;
     [SerializeField, Tooltip("Velocity at which particles are increased to compensate for particle speed. ")] private float velocityThreshold;
+    [SerializeField, Tooltip("Min velocity needed for particles to appear. ")] private float minVelocityForParticles = 1f;
     private Vector3 currentVelocity;
     private GameObject landingParticlesObject;
     private bool onGround = false;
@@ -44,10 +45,13 @@ public class ParticleTrigger : MonoBehaviour
     void OnCollisionEnter(Collision coll)
     {
         //detects when player hits ground nd spawns particles
-        onGround = true;
         if (coll.gameObject.layer == 13)
         {
-            StartCoroutine(LandingParticles());
+            if(currentVelocity.y <= -minVelocityForParticles)
+            {
+                StartCoroutine(LandingParticles());
+            }
+
             //var main = LandingEffect.main;
             //main.startSpeed = (GetComponent<Rigidbody>().velocity.y * speedMultiplier);
             //LandingEffect.Simulate(0.0f, true, true);
@@ -59,6 +63,7 @@ public class ParticleTrigger : MonoBehaviour
 
     private IEnumerator LandingParticles()
     {
+        onGround = true;
         //sets particle spawn location and rotation
         Vector3 landingParticlesLocation = new Vector3(transform.position.x + particleLocation.x, 
                                                        transform.position.y + particleLocation.y,
