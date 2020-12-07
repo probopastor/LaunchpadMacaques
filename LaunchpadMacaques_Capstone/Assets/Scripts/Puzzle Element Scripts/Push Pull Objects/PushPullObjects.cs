@@ -16,7 +16,7 @@ public class PushPullObjects : MonoBehaviour
     [SerializeField, Tooltip("The Position the Cube will go to when Top Left is Chosen")] GameObject topLeft;
     [SerializeField, Tooltip("The Position the Cube will go to when Bottom Left is Chosen")] GameObject bottomLeft;
 
-    [SerializeField,Tooltip("The Position the Cube will go to when TopRight is Chosen")] GameObject topRight;
+    [SerializeField, Tooltip("The Position the Cube will go to when TopRight is Chosen")] GameObject topRight;
     [SerializeField, Tooltip("The Position the Cube will go to when Bottom Right is Chosen")] GameObject bottomRight;
 
     [SerializeField, Tooltip("The Position the Cube will go to when Top Middle is Chosen")] GameObject topMiddle;
@@ -44,7 +44,7 @@ public class PushPullObjects : MonoBehaviour
 
 
     #region Private Variables
-   public enum ObjectFollowPostion { topLeft, bottomLeft, topRight, bottomRight, topMiddle, bottomMiddle };
+    public enum ObjectFollowPostion { topLeft, bottomLeft, topRight, bottomRight, topMiddle, bottomMiddle };
     private Rigidbody objectRB;
     private GameObject cam;
     private bool grabbing = false;
@@ -109,7 +109,7 @@ public class PushPullObjects : MonoBehaviour
         UserInput();
         ResetObjectFollowSpeed();
     }
-    
+
     /// <summary>
     /// Will reset the object follow speed when cube reaches certain distance from player
     /// </summary>
@@ -170,7 +170,7 @@ public class PushPullObjects : MonoBehaviour
     private void MoveBox()
     {
         if (grabbing && !inTempFix)
-        { 
+        {
             float distance = Vector3.Distance(objectHolder.transform.position, objectRB.gameObject.transform.position);
             RaycastHit hit;
             if (!Physics.Raycast(objectRB.gameObject.transform.position, objectHolder.transform.position - objectRB.transform.position, out hit, distance))
@@ -234,10 +234,11 @@ public class PushPullObjects : MonoBehaviour
         RaycastHit hit = CanSeeBox();
         if (hit.collider != null)
         {
-            if(currentHoveredObj != hit.collider.gameObject)
+            if (currentHoveredObj != hit.collider.gameObject)
             {
                 hit.collider.gameObject.GetComponent<PushableObj>().EnableDisableOutline(true);
-                hit.collider.gameObject.GetComponent<PushableObj>().TurnOnOffParticles(true);
+                hit.collider.gameObject.GetComponent<PushableObj>().ObjectHovered(true);
+                hit.collider.gameObject.GetComponent<PushableObj>().CheckParticleStatus();
                 currentHoveredObj = hit.collider.gameObject;
             }
         }
@@ -248,7 +249,8 @@ public class PushPullObjects : MonoBehaviour
             if (currentHoveredObj)
             {
                 currentHoveredObj.GetComponent<PushableObj>().EnableDisableOutline(false);
-                currentHoveredObj.GetComponent<PushableObj>().TurnOnOffParticles(false);
+                currentHoveredObj.GetComponent<PushableObj>().ObjectHovered(false);
+                currentHoveredObj.GetComponent<PushableObj>().CheckParticleStatus();
                 currentHoveredObj = null;
             }
 
@@ -260,10 +262,10 @@ public class PushPullObjects : MonoBehaviour
     /// Will return if the player can currently see the a box
     /// </summary>
     /// <returns></returns>
-   public RaycastHit CanSeeBox()
+    public RaycastHit CanSeeBox()
     {
         RaycastHit hit;
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit ,maxGrabDistance, canBePickedUp) && !grapplingGun.IsGrappling())
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, maxGrabDistance, canBePickedUp) && !grapplingGun.IsGrappling())
         {
             return hit;
         }
@@ -278,7 +280,7 @@ public class PushPullObjects : MonoBehaviour
     {
         anim.ResetTrigger("PickUp");
         anim.SetTrigger("Drop");
-
+        //currentHoveredObj.GetComponent<PushableObj>().CheckParticleStatus();
         StartCoroutine(GrabbingFalse());
         objectRB.isKinematic = false;
         objectRB.useGravity = true;

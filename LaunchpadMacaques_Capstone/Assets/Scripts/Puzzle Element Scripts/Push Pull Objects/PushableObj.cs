@@ -64,6 +64,9 @@ public class PushableObj : MonoBehaviour
     private GameObject outlineObj;
 
     private float cubeRadius;
+
+    private bool objectHovered;
+
     #endregion
 
     private void Awake()
@@ -88,7 +91,12 @@ public class PushableObj : MonoBehaviour
 
         cubeRadius = this.gameObject.GetComponent<MeshRenderer>().bounds.size.x / 2;
 
+        objectHovered = false;
+    }
 
+    private void Start()
+    {
+        TurnOnOffParticles(true);
     }
 
 
@@ -140,6 +148,8 @@ public class PushableObj : MonoBehaviour
             main.startSpeed = particleStartingSpeed.constant * (1 + (dis * speedScaleAmount));
             main.startSize = particleStartingSize.constant * (1 + (dis * sizeScaleAmount));
         }
+
+        RotateParticles();
 
     }
 
@@ -366,8 +376,10 @@ public class PushableObj : MonoBehaviour
     /// <param name="cam"></param>
     public void PickedUpObject(GameObject cam)
     {
+        //TurnOnOffParticles(false);
         tempCam = cam;
         beingPushed = false;
+        CheckParticleStatus();
         pickedUp = true;
         grav.UseGravity(false);
         GetComponent<Transform>().rotation = Quaternion.Euler(0, 0, 0);
@@ -386,6 +398,7 @@ public class PushableObj : MonoBehaviour
     {
         pickedUp = false;
         beingPushed = false;
+        CheckParticleStatus();
         grav.UseGravity(true);
         GetComponent<Rigidbody>().useGravity = false;
         GetComponent<Rigidbody>().freezeRotation = false;
@@ -413,6 +426,7 @@ public class PushableObj : MonoBehaviour
     public void StopPushingObject()
     {
         beingPushed = false;
+        CheckParticleStatus();
         grav.UseGravity(true);
         pickedUp = false;
         lr.positionCount = 0;
@@ -447,6 +461,28 @@ public class PushableObj : MonoBehaviour
         {
             particles.Stop();
         }
+    }
+
+    public void CheckParticleStatus()
+    {
+        if (GetPushStatus() || objectHovered || pickedUp)
+        {
+            TurnOnOffParticles(false);
+        }
+        else if (!GetPushStatus() && !objectHovered && !pickedUp)
+        {
+            TurnOnOffParticles(true);
+        }
+    }
+
+    public void ObjectHovered(bool isHovering)
+    {
+        objectHovered = isHovering;
+    }
+
+    private void RotateParticles()
+    {
+        //particles.transform.rotation = Quaternion.Euler(Vector3.up);
     }
 
     /// <summary>
