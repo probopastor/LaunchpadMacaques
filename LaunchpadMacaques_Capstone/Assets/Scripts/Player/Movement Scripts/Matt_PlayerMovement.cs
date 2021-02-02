@@ -40,7 +40,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #region Player Movement Variables
     [Header("Player Movement Variables")]
-    [SerializeField, Tooltip("The player's movement speed. ")] private float moveSpeed = 4500;
+    private float moveSpeed = 4500;
     [Range(0f, 1f), SerializeField, Tooltip("The movement speed multiplier while the player is airborn. ")] private float airMoveSpeedMultiplier = .75f;
     [SerializeField, Tooltip("The player's max speed. when walking, doesnt affect swing speed ")] private float maxSpeed = 20;
 
@@ -106,7 +106,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The Gravtiy that will be applied to the player when they are in the air")] float inAirGravity = -12f;
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are swinging")] float grapplingGravity = -6;
     [SerializeField, Tooltip("The Gravity that will be applied when resetting rope velocity and rope length. The greater this value, " +
-        "the faster velocity and rope length are reset. ")] float grapplingResetGravity = -78.48f;
+        "the faster velocity and rope length are reset. ")]
+    float grapplingResetGravity = -78.48f;
 
     // grapplingGravityReference stores the grapplingGravity at Start, so that grapplingGravity may be reverted to its default easily.
     private float grapplingGravityReference = 0;
@@ -216,15 +217,15 @@ public class Matt_PlayerMovement : MonoBehaviour
         grapplingGravityReference = grapplingGravity;
 
         // Makes xVelocityResetRange, yVelocityResetRange, and zVelocityResetRange positive if they are negative.
-        if(xVelocityResetRange < 0)
+        if (xVelocityResetRange < 0)
         {
             xVelocityResetRange *= -1;
         }
-        if(yVelocityResetRange < 0)
+        if (yVelocityResetRange < 0)
         {
             yVelocityResetRange *= -1;
         }
-        if(zVelocityResetRange < 0)
+        if (zVelocityResetRange < 0)
         {
             zVelocityResetRange *= -1;
         }
@@ -373,6 +374,13 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
+        float startingSpeed = rb.velocity.magnitude;
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        rb.velocity = playerCam.forward * startingSpeed;
+
         while (currentTime < dashLength)
         {
             if (grounded || grappleGunReference.IsGrappling())
@@ -415,7 +423,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         killForce = true;
 
-        if(lowVelocityDuration != 0)
+        if (lowVelocityDuration != 0)
         {
             yield return new WaitForSeconds(lowVelocityDuration);
         }
@@ -429,7 +437,7 @@ public class Matt_PlayerMovement : MonoBehaviour
            (rb.velocity.z < zVelocityResetRange && rb.velocity.z > -zVelocityResetRange))
         {
             grapplingGravity = grapplingResetGravity;
-            grappleGunReference.SetRopeLength(grappleGunReference.GetStartingRopeLength());
+            //grappleGunReference.SetRopeLength(grappleGunReference.GetStartingRopeLength());
 
             rb.velocity = -rb.velocity / 2;
             rb.velocity = Vector3.zero;
@@ -611,7 +619,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             multiplierV = airMoveSpeedMultiplier;
 
             //PlayerHitGround Event for Dialogue/Narrative Trigger System
-            if(fallCheckRunning == false)
+            if (fallCheckRunning == false)
                 StartCoroutine(FallCheck());
         }
 
@@ -745,13 +753,13 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <returns></returns>
     IEnumerator FallCheck()
     {
-        if(narrativeTriggerReference == null)
+        if (narrativeTriggerReference == null)
             yield break;
 
         fallCheckRunning = true;
 
         float airTime = 0;
-        while(!grounded)
+        while (!grounded)
         {
             if (grappleGunReference.IsGrappling())
                 airTime = 0;
@@ -760,7 +768,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             yield return null;
         }
 
-        if(airTime > narrativeTriggerReference.GetFallTime())
+        if (airTime > narrativeTriggerReference.GetFallTime())
         {
             GameEventManager.TriggerEvent("onPlayerHitGround");
         }
@@ -826,7 +834,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         RaycastHit hit;
         Physics.Raycast(playerCam.position, playerCam.transform.forward, out hit, Mathf.Infinity, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore);
-        if(hit.collider != null)
+        if (hit.collider != null)
         {
             return hit.collider.gameObject;
         }
@@ -837,7 +845,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
 
     }
-    
+
 
     /// <summary>
     /// Handles movement counter measures to maintain smooth movement.
@@ -956,17 +964,17 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void changeFOV()
     {
-        if(PlayerPrefs.GetInt("FOV") == 1)
+        if (PlayerPrefs.GetInt("FOV") == 1)
         {
             Camera.main.fieldOfView = m_fieldOfView;
-           var targetMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+            var targetMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
 
             if (currentMaxFOV < targetMaxFOV)
             {
                 currentMaxFOV += fovChangeRate * Time.deltaTime;
             }
 
-            else if(currentMaxFOV > targetMaxFOV)
+            else if (currentMaxFOV > targetMaxFOV)
             {
                 currentMaxFOV -= fovChangeRate * Time.deltaTime;
             }

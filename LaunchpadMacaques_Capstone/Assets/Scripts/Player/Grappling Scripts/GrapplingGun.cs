@@ -17,16 +17,10 @@ public class GrapplingGun : MonoBehaviour
 {
     #region InspectorVariables
     [Header("Object References")]
-    [SerializeField] private GameObject grappleToggleEnabledText;
-    [SerializeField] private GameObject grappleToggleDisabledText;
-    [SerializeField] private TextMeshProUGUI ropeLengthText;
     [SerializeField] [Tooltip("The point where the grapple is created on the playe")] Transform ejectPoint;
     [SerializeField] [Tooltip("The Main Camera")] Transform cam;
     [SerializeField] Transform player;
     [SerializeField] private GameObject hitObject;
-    [SerializeField] private TextMeshProUGUI currentSwingSpeedText;
-    [SerializeField] TextMeshProUGUI actualVelocityText;
-    [SerializeField] Slider ropeLengthSlider;
     [SerializeField] GameObject postText;
 
     [Header("Layer Settings")]
@@ -38,10 +32,7 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] [Tooltip("The Speed At Which the Grapple will move the player")] float grappleSpeed = 10f;
 
     [Header("Rope Settings")]
-    [SerializeField] [Tooltip("The Min Rope Distance")] private float minDistance = 5f;
-    [SerializeField] [Tooltip("The Max Rope Distance")] private float maxDistance = 50f;
-    [SerializeField, Tooltip("The grapple length on regrapple. ")] private float newSwingGrappleLength = 10;
-    [SerializeField] private float wheelSensitivity = 2;
+    [SerializeField, Tooltip("The grapple length on regrapple. ")] private float ropeLength = 10;
 
 
     [Header("Rope Attach Settings")]
@@ -87,8 +78,6 @@ public class GrapplingGun : MonoBehaviour
 
     #region PrivateVariables
     // The current length of the rope
-    private float ropeLength = 5f;
-    private float startingRopeLength = 0;
     private GameObject hitObjectClone;
 
     // The Line Renderer that creates the grapple robe
@@ -142,14 +131,10 @@ public class GrapplingGun : MonoBehaviour
         }
      
         SetObject();
-        SetText();
+
 
         currentSwingSpeed = swingSpeed;
 
-        if (ropeLengthSlider)
-        {
-            ropeLengthSlider.gameObject.SetActive(false);
-        }
 
     }
 
@@ -165,46 +150,15 @@ public class GrapplingGun : MonoBehaviour
         pushPull = this.gameObject.GetComponent<PushPullObjects>();
 
         swingLockToggle = false;
-        startingRopeLength = ropeLength;
-    }
-
-    private void SetText()
-    {
-        if (grappleToggleEnabledText != null)
-        {
-            grappleToggleEnabledText.SetActive(false);
-        }
-
-        if (grappleToggleDisabledText != null)
-        {
-            grappleToggleDisabledText.SetActive(false);
-        }
-
-        if (ropeLengthText != null)
-        {
-            ropeLengthText.text = " ";
-        }
     }
     #endregion
 
     #region UpdateFunctions
     void Update()
     {
-        if (actualVelocityText)
-        {
-            actualVelocityText.text = "Velocity: (" + (int)player.GetComponent<Rigidbody>().velocity.x + ", " + 
-                (int)player.GetComponent<Rigidbody>().velocity.y + ", " + (int)player.GetComponent<Rigidbody>().velocity.z +")";
-        }
-
-
-        if (currentSwingSpeedText != null)
-        {
-            currentSwingSpeedText.text = "Magnitude: " + (int)player.GetComponent<Rigidbody>().velocity.magnitude;
-        }
         GrappleUpdateChanges();
         GrapplingInput();
         GrapplingLockInput();
-        ChangeDistance();
     }
 
     private void GrappleUpdateChanges()
@@ -228,10 +182,6 @@ public class GrapplingGun : MonoBehaviour
 
             Debug.Log("Damper: " + joint.damper + " | Spring: " + joint.spring + " | SwingSpeed: " + currentSwingSpeed);
 
-            if (ropeLengthText != null)
-            {
-                ropeLengthText.text = "Rope Length: " + (int)ropeLength;
-            }
 
             if (joint.maxDistance <= 0)
             {
@@ -273,18 +223,6 @@ public class GrapplingGun : MonoBehaviour
             }
 
 
-            if (ropeLengthSlider)
-            {
-                ropeLengthSlider.value = ropeLength;
-            }
-
-        }
-        else if (!IsGrappling())
-        {
-            if (ropeLengthText != null)
-            {
-                ropeLengthText.text = " ";
-            }
         }
     }
     #endregion
@@ -340,57 +278,9 @@ public class GrapplingGun : MonoBehaviour
                 StopGrapple();
             }
 
-            //if (Input.GetKeyDown(KeyCode.LeftControl) && IsGrappling())
-            //{
-            //    if (!swingLockToggle)
-            //    {
-            //        swingLockToggle = true;
-            //        grappleToggleEnabledText.SetActive(true);
-            //        grappleToggleDisabledText.SetActive(false);
-            //    }
-            //    else
-            //    {
-            //        swingLockToggle = false;
-            //        grappleToggleEnabledText.SetActive(false);
-            //        grappleToggleDisabledText.SetActive(true);
-            //    }
-            //}
-
         }
     }
 
-    /// <summary>
-    /// Will change the rope length while grappling, based on mouse wheel input from player
-    /// </summary>
-    private void ChangeDistance()
-    {
-        var wheelInput = Input.GetAxis("Mouse ScrollWheel");
-
-        if (wheelInput < 0)
-        {
-            ropeLength += wheelSensitivity;
-            if (ropeLength > maxDistance)
-            {
-                ropeLength = maxDistance;
-            }
-        }
-
-        else if (wheelInput > 0)
-        {
-            ropeLength -= wheelSensitivity;
-
-            if (ropeLength < minDistance)
-            {
-                ropeLength = minDistance;
-            }
-        }
-
-        if (joint)
-        {
-            joint.minDistance = ropeLength;
-
-        }
-    }
     #endregion
 
     #region LateUpdateFunctions
@@ -601,13 +491,6 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     private void CreateGrapplePoint()
     {
-        if (ropeLengthSlider)
-        {
-            ropeLengthSlider.gameObject.SetActive(true);
-            ropeLengthSlider.maxValue = maxDistance;
-            ropeLengthSlider.minValue = minDistance;
-        }
-
         currentGrappledObj = grappleRayHit.collider.gameObject;
 
         if (currentGrappledObj.GetComponent<GrapplePoint>() != null)
@@ -642,21 +525,8 @@ public class GrapplingGun : MonoBehaviour
 
         float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
         joint.maxDistance = distanceFromPoint;
-        joint.minDistance = dist;
+        joint.minDistance = ropeLength;
 
-        //ropeLength = distanceFromPoint / 2; /*dist - grappleLengthModifier;*/
-
-        ropeLength = newSwingGrappleLength;
-
-        if (ropeLength > maxDistance)
-        {
-            ropeLength = maxDistance;
-        }
-
-        if (ropeLength < minDistance)
-        {
-            ropeLength = minDistance;
-        }
 
         joint.enableCollision = false;
 
@@ -667,15 +537,6 @@ public class GrapplingGun : MonoBehaviour
         currentGrapplePosition = hitObjectClone.transform.position;
         GetComponent<FMODUnity.StudioEventEmitter>().Play();
 
-        //Temporary lock UI disabled after completing a grapple
-        if (grappleToggleEnabledText != null)
-        {
-            grappleToggleEnabledText.SetActive(false);
-        }
-        if (grappleToggleDisabledText != null)
-        {
-            grappleToggleDisabledText.SetActive(true);
-        }
 
         //Pinwheel
         Pinwheel pinwheel = null;
@@ -693,24 +554,11 @@ public class GrapplingGun : MonoBehaviour
         anim.ResetTrigger("GrappleStart");
         anim.SetTrigger("GrappleEnd");
 
-        if (ropeLengthSlider)
-        {
-            ropeLengthSlider.gameObject.SetActive(false);
-        }
         currentGrappledObj = null;
         //managing variables for dash
 
         swingLockToggle = false;
 
-        //Temporary lock UI disabled after completing a grapple
-        if (grappleToggleEnabledText != null)
-        {
-            grappleToggleEnabledText.SetActive(false);
-        }
-        if (grappleToggleDisabledText != null)
-        {
-            grappleToggleDisabledText.SetActive(false);
-        }
 
         if (hitObjectClone)
         {
@@ -833,10 +681,10 @@ public class GrapplingGun : MonoBehaviour
         return ropeLength;
     }
 
-    public float GetStartingRopeLength()
-    {
-        return startingRopeLength;
-    }
+    //public float GetStartingRopeLength()
+    //{
+    //    return startingRopeLength;
+    //}
 
     public float SetRopeLength(float value)
     {
