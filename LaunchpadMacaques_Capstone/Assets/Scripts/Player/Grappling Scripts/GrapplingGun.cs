@@ -116,9 +116,13 @@ public class GrapplingGun : MonoBehaviour
     private bool canHoldDownToGrapple;
 
     private bool drawlingLine = false;
-    
+
 
     private float dist;
+
+    private float maxStuckTime = 5;
+    private bool checkingStuckStatus;
+    private float stuckStatusTime;
 
     #endregion
 
@@ -129,7 +133,7 @@ public class GrapplingGun : MonoBehaviour
         {
             postText.SetActive(false);
         }
-     
+
         SetObject();
 
 
@@ -159,6 +163,7 @@ public class GrapplingGun : MonoBehaviour
         GrappleUpdateChanges();
         GrapplingInput();
         GrapplingLockInput();
+        CheckForGrapplingThroughWall();
     }
 
     private void GrappleUpdateChanges()
@@ -337,14 +342,14 @@ public class GrapplingGun : MonoBehaviour
     /// <returns></returns>
     public bool CanFindGrappleLocation()
     {
-        if(Time.timeScale == 0)
+        if (Time.timeScale == 0)
         {
             return false;
         }
         RaycastHit hit = new RaycastHit();
 
         // Cheks if the Normal Raycast returns a RayCastHit with a collider
-        if(CheckRayCast().collider != null)
+        if (CheckRayCast().collider != null)
         {
             hit = CheckRayCast();
         }
@@ -356,7 +361,7 @@ public class GrapplingGun : MonoBehaviour
         }
 
 
-        if(hit.collider != null)
+        if (hit.collider != null)
         {
             dist = Vector3.Distance(cam.position, hit.point);
 
@@ -396,10 +401,10 @@ public class GrapplingGun : MonoBehaviour
     private RaycastHit CheckSphereCast()
     {
         RaycastHit returnHit = new RaycastHit();
-        if(player.GetComponent<Rigidbody>().velocity.magnitude >= neededVelocityForAutoAim)
+        if (player.GetComponent<Rigidbody>().velocity.magnitude >= neededVelocityForAutoAim)
         {
             RaycastHit grappleObject;
-            if(Physics.SphereCast(cam.position, sphereRadius, cam.forward, out grappleObject, maxGrappleDistance, whatIsGrappleable))
+            if (Physics.SphereCast(cam.position, sphereRadius, cam.forward, out grappleObject, maxGrappleDistance, whatIsGrappleable))
             {
                 RaycastHit checkDownHit;
                 if (Physics.Raycast(cam.position, -cam.up, out checkDownHit, groundCheckDistance, whatIsGrappleable))
@@ -436,11 +441,11 @@ public class GrapplingGun : MonoBehaviour
             }
 
             StopAllCoroutines();
-          
+
             anim.ResetTrigger("Dash");
             anim.ResetTrigger("GrappleEnd");
             anim.SetTrigger("GrappleStart");
-            
+
             StartCoroutine(DrawLine());
             CreateGrapplePoint();
         }
@@ -472,8 +477,8 @@ public class GrapplingGun : MonoBehaviour
 
             lr.SetPosition(0, ejectPoint.position);
             counter += tempAttachSpeed * Time.deltaTime;
-  
-            Vector3 pointAlongLine = (counter) *  Vector3.Normalize(point2 - point1) + point1;
+
+            Vector3 pointAlongLine = (counter) * Vector3.Normalize(point2 - point1) + point1;
 
             lr.SetPosition(1, pointAlongLine);
 
@@ -601,7 +606,7 @@ public class GrapplingGun : MonoBehaviour
         Vector3 velocityY = currentVelocity;
         float angleY = Vector3.Angle(Vector3.down, velocityY); //Get the angle between the global down and the player's velocity
         float verticalCos = Mathf.Cos(angleY * Mathf.Deg2Rad); //Get the cos of the angle such that down and up directions are one and everything to the side is 0
-       //Prevent precision issues, if the cos is close to 1 or 0, round it to one or 0
+                                                               //Prevent precision issues, if the cos is close to 1 or 0, round it to one or 0
         if (Mathf.Abs(verticalCos) < roundingRange)
             verticalCos = 0;
         else if (Mathf.Abs(verticalCos) > 1 - roundingRange)
@@ -618,6 +623,37 @@ public class GrapplingGun : MonoBehaviour
     }
 
     #endregion
+
+    private void CheckForGrapplingThroughWall()
+    {
+        if (joint && player.GetComponent<Rigidbody>().velocity.magnitude < 5)
+        {
+            stuckStatusTime += Time.deltaTime;
+            Vector3 fromPosition = ejectPoint.transform.position;
+            Vector3 toPosition = grappleRayHit.transform.position;
+            Vector3 direction = toPosition - fromPosition;
+            RaycastHit hit;
+            float dist = Vector3.Distance(ejectPoint.transform.position, grappleRayHit.transform.position);
+
+            if (Physics.Raycast(ejectPoint.transform.position, direction, out hit, dist, whatIsNotGrappleable))
+            {
+                if (!hit.collider.isTrigger)
+                {
+       
+                    StopGrapple();
+                }
+            }
+
+            else if(stuckStatusTime > maxStuckTime)
+            {
+                StopGrapple();
+            }
+
+        }
+
+        stuckStatusTime = 0;
+
+    }
 
     #region Getters/Setters
     /// <summary>
