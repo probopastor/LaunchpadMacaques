@@ -124,7 +124,7 @@ public class FootStepCorruption : MonoBehaviour
     /// <param name="tempTrans"></param>
     private void CreateDecal(Transform tempTrans)
     {
-        if (Physics.Raycast(tempTrans.position, Vector3.down, out spotPos, 5, ground) && playerRB.velocity.magnitude > 5)
+        if (Physics.Raycast(tempTrans.position, Vector3.down, out spotPos, 1, ground) && playerRB.velocity.magnitude > 5)
         {
             Debug.Log("Made THing");
             float maxNormal = Mathf.Max(Mathf.Max(Mathf.Abs(spotPos.normal.x), Mathf.Abs(spotPos.normal.y)), Mathf.Abs(spotPos.normal.z));

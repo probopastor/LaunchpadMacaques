@@ -172,6 +172,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private float lastVelocity = 0;
 
+    private int lastMaxFOV;
+
     ParticleSystem system
     {
         get
@@ -964,17 +966,23 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void changeFOV()
     {
+
         if (PlayerPrefs.GetInt("FOV") == 1)
         {
             Camera.main.fieldOfView = m_fieldOfView;
-            var targetMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+            var targetMaxFOV = (int)(maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale)));
 
-            if (currentMaxFOV < targetMaxFOV)
+            if (lastMaxFOV != 0 && Mathf.Abs(targetMaxFOV - lastMaxFOV) <= 2)
+            {
+                targetMaxFOV = lastMaxFOV;
+            }
+
+            if (currentMaxFOV < (targetMaxFOV - 2))
             {
                 currentMaxFOV += fovChangeRate * Time.deltaTime;
             }
 
-            else if (currentMaxFOV > targetMaxFOV)
+            else if (currentMaxFOV > (targetMaxFOV + 2))
             {
                 currentMaxFOV -= fovChangeRate * Time.deltaTime;
             }
@@ -989,13 +997,20 @@ public class Matt_PlayerMovement : MonoBehaviour
                 rb.velocity.z <= -zFOVActivationVel)
             {
 
-                m_fieldOfView += fovChangeRate * Time.deltaTime;
+                m_fieldOfView += (fovChangeRate * Time.deltaTime);
+              //  m_fieldOfView = (int)m_fieldOfView;
             }
             else
-                m_fieldOfView -= fovChangeRate * Time.deltaTime;
+            {
+                m_fieldOfView -= (fovChangeRate * Time.deltaTime);
+             //   m_fieldOfView = (int)m_fieldOfView;
+            }
 
 
             lastVelocity = rb.velocity.magnitude;
+
+
+            lastMaxFOV = targetMaxFOV;
         }
 
 
