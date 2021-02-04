@@ -17,7 +17,7 @@ public class GrapplingGun : MonoBehaviour
 {
     #region InspectorVariables
     [Header("Object References")]
-    [SerializeField] [Tooltip("The point where the grapple is created on the playe")] Transform ejectPoint;
+    [SerializeField] [Tooltip("The point where the grapple is created on the player")] Transform ejectPoint;
     [SerializeField] [Tooltip("The Main Camera")] Transform cam;
     [SerializeField] Transform player;
     [SerializeField] private GameObject hitObject;
@@ -31,6 +31,17 @@ public class GrapplingGun : MonoBehaviour
     [Header("Grapple Settings")]
     [SerializeField] [Tooltip("The Max distance the player can grapple form")] private float maxGrappleDistance = 100f;
     [SerializeField] [Tooltip("The Speed At Which the Grapple will move the player")] float grappleSpeed = 10f;
+
+    [Header("Which Type Of Grapple")]
+    [SerializeField] GrappleTypes typeOfGrapple;
+    [SerializeField]
+    enum GrappleTypes
+    {
+        PlayerControlled_Constant_Velocity,
+        PlayerControlled_Non_Constant_Velocity, IncreasingVelocity_Constant_Velocity, IncreasingVelocity_Non_Constant_Velocity, JustConstantVelocit, Just_Non_Constant_Velocity
+    }
+
+  
 
     [Header("Rope Settings")]
     [SerializeField, Tooltip("The grapple length on regrapple. ")] private float ropeLength = 10;
@@ -49,13 +60,17 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField, Tooltip("The force added at the bottom of a swing to keep the loop going")]
     public float swingSpeed = 4500;
     [SerializeField] private float maxSwingVelocity = 18;
-    [SerializeField] private bool useConstantVelocity = false;
+    private bool useConstantVelocity = false;
     private float currentSwingSpeed;
 
     [Header("Increasing Velocity Settings")]
-    [SerializeField, Tooltip("If the Players velocity should increase while they swing")] bool useIncreasingVelocity = true;
+    [Tooltip("If the Players velocity should increase while they swing")] bool useIncreasingVelocity = true;
     [SerializeField, Tooltip("How fast the players velocity will increase while swinging")] float increaseAmmount = 10;
     [SerializeField, Tooltip("The Minimum velocity the player will have when they start swinging")] float minStartingVelocity = 5;
+
+    [Header("Player Control Velocity Settings")]
+    bool playerCanControlVelocity;
+    [SerializeField] float mouseWheelSensitivity = 1;
 
     [Header("Max Grapple Settings")]
     [SerializeField, Tooltip("The Max Amount of times the player can grapple before hitting ground")] int maxGrapples = 4;
@@ -83,6 +98,7 @@ public class GrapplingGun : MonoBehaviour
 
     [SerializeField]
     Animator anim;
+
 
     #endregion
 
@@ -145,6 +161,7 @@ public class GrapplingGun : MonoBehaviour
     #region StartFunctions
     void Awake()
     {
+        SetTypeOfGrapple();
         if (postText)
         {
             postText.SetActive(false);
@@ -157,6 +174,44 @@ public class GrapplingGun : MonoBehaviour
 
         currentGrapplesLeft = maxGrapples;
         SetGrapplesLeft();
+    }
+
+    private void SetTypeOfGrapple()
+    {
+        switch (typeOfGrapple)
+        {
+            case GrappleTypes.IncreasingVelocity_Constant_Velocity:
+                useConstantVelocity = true;
+                useIncreasingVelocity = true;
+                playerCanControlVelocity = false;
+                break;
+            case GrappleTypes.IncreasingVelocity_Non_Constant_Velocity:
+                useConstantVelocity = false;
+                useIncreasingVelocity = true;
+                playerCanControlVelocity = false;
+                break;
+            case GrappleTypes.JustConstantVelocit:
+                useConstantVelocity = true;
+                useIncreasingVelocity = false;
+                playerCanControlVelocity = false;
+                break;
+            case GrappleTypes.PlayerControlled_Constant_Velocity:
+                useConstantVelocity = true;
+                useIncreasingVelocity = false;
+                playerCanControlVelocity = true;
+                break;
+            case GrappleTypes.PlayerControlled_Non_Constant_Velocity:
+                useConstantVelocity = false;
+                useIncreasingVelocity = false;
+                playerCanControlVelocity = true;
+                break;
+            case GrappleTypes.Just_Non_Constant_Velocity:
+                useConstantVelocity = false;
+                useIncreasingVelocity = false;
+                playerCanControlVelocity = false;
+                break;
+
+        }
     }
 
     private void SetObject()
@@ -181,78 +236,104 @@ public class GrapplingGun : MonoBehaviour
         GrapplingInput();
         GrapplingLockInput();
         CheckForGrapplingThroughWall();
-
-        if (IsGrappling())
-        {
-            timeGrappling += Time.deltaTime;
-
-            if (useConstantVelocity && timeGrappling > 2)
-            {
-                actualMaxVelocity = true;
-            }
-
-            if (useIncreasingVelocity)
-            {
-                currentMaxVelocity += increaseAmmount * Time.deltaTime;
-
-                currentMaxVelocity = Mathf.Clamp(currentMaxVelocity, 0, maxSwingVelocity);
-            }
-        }
     }
 
     private void GrappleUpdateChanges()
     {
         if (IsGrappling())
         {
-            joint.damper = springDamp * Mathf.Clamp(ropeLength * 100, 1, Mathf.Infinity);
-            joint.spring = joint.damper * 0.5f;
+            timeGrappling += Time.deltaTime;
+            JointChanges();
+            grapplePoint = hitObjectClone.transform.position;
 
-            currentSwingSpeed = swingSpeed * (1 + ropeLength * 0.05f);
+            SwingDirectionChanging();
+            VelocityChanging();
+
+        }
+    }
+
+    private void JointChanges()
+    {
+        joint.damper = springDamp * Mathf.Clamp(ropeLength * 100, 1, Mathf.Infinity);
+        joint.spring = joint.damper * 0.5f;
+
+        currentSwingSpeed = swingSpeed * (1 + ropeLength * 0.05f);
 
 
-            Debug.Log("Damper: " + joint.damper + " | Spring: " + joint.spring + " | SwingSpeed: " + currentSwingSpeed);
 
+        if (joint.maxDistance <= 0)
+        {
+            joint.maxDistance = 0;
+        }
+        else
+        {
+            joint.maxDistance = Vector3.Distance(grapplePoint, player.transform.position);
+            joint.maxDistance = distanceFromPoint - grappleSpeed * Time.deltaTime;
+        }
+    }
+    private void SwingDirectionChanging()
+    {
 
-            if (joint.maxDistance <= 0)
+        if (grappledObj != null)
+        {
+            Vector3 objectDirection = (grappledObj.transform.position - player.transform.position).normalized;
+            Vector3 groundDirection = Vector3.down;
+
+            float angle = Vector3.Angle(objectDirection, groundDirection);
+
+            if ((angle < minSwingAngle || angle > maxSwingAngle) && !playerMovementReference.GetKillForce())
             {
-                joint.maxDistance = 0;
+                canApplyForce = true;
             }
             else
             {
-                joint.maxDistance = Vector3.Distance(grapplePoint, player.transform.position);
-                joint.maxDistance = distanceFromPoint - grappleSpeed * Time.deltaTime;
+                canApplyForce = false;
+            }
+        }
+    }
+    private void VelocityChanging()
+    {
+        if (useConstantVelocity && timeGrappling > 2)
+        {
+            actualMaxVelocity = true;
+        }
+
+        if (useIncreasingVelocity)
+        {
+            currentMaxVelocity += increaseAmmount * Time.deltaTime;
+
+            currentMaxVelocity = Mathf.Clamp(currentMaxVelocity, 0, maxSwingVelocity);
+        }
+
+        if (playerCanControlVelocity)
+        {
+            float wheelInput = Input.GetAxis("Mouse ScrollWheel");
+
+            if (wheelInput > 0)
+            {
+                currentMaxVelocity += mouseWheelSensitivity;
             }
 
-            grapplePoint = hitObjectClone.transform.position;
-
-            if (grappledObj != null)
+            if (wheelInput < 0)
             {
-                Vector3 objectDirection = (grappledObj.transform.position - player.transform.position).normalized;
-                Vector3 groundDirection = Vector3.down;
+                currentMaxVelocity -= mouseWheelSensitivity;
 
-                float angle = Vector3.Angle(objectDirection, groundDirection);
-
-                if ((angle < minSwingAngle || angle > maxSwingAngle) && !playerMovementReference.GetKillForce())
+                if (currentMaxVelocity < minStartingVelocity)
                 {
-                    canApplyForce = true;
-                }
-                else
-                {
-                    canApplyForce = false;
+                    currentMaxVelocity = minStartingVelocity;
                 }
             }
-
-            if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !actualMaxVelocity)
-            {
-                player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity);
-            }
-
-            if (actualMaxVelocity)
-            {
-                player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity, currentMaxVelocity);
-            }
+        }
 
 
+        if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !actualMaxVelocity)
+        {
+            player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity);
+        }
+
+        if (actualMaxVelocity)
+        {
+            player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity, currentMaxVelocity);
         }
     }
     #endregion
@@ -483,7 +564,7 @@ public class GrapplingGun : MonoBehaviour
             StartCoroutine(DrawLine());
             CreateGrapplePoint();
 
-          
+
 
         }
     }
@@ -627,7 +708,7 @@ public class GrapplingGun : MonoBehaviour
             pinwheel.TriggerRotation(grappleRayHit.collider.transform, cam.forward);
         }
 
-       
+
     }
 
     /// <summary>
