@@ -936,6 +936,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             if (IsFloor(normal))
             {
                 grounded = true;
+                grappleGunReference.ResetGrapples();
                 cancellingGrounded = false;
                 normalVector = normal;
                 CancelInvoke(nameof(StopGrounded));

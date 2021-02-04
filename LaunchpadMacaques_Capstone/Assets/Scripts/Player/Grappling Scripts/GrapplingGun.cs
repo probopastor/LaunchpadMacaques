@@ -51,6 +51,15 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] private bool useConstantVelocity = false;
     private float currentSwingSpeed;
 
+    [Header("Increasing Velocity Settings")]
+    [SerializeField] bool useIncreasingVelocity = true;
+    [SerializeField] float increaseAmmount = 10;
+    [SerializeField] float minStartingVelocity = 5;
+
+    [Header("Max Grapple Settings")]
+    [SerializeField] int maxGrapples = 4;
+    [SerializeField] bool useMaxGrapples = true;
+
     [Header("Auto Aim Settiings")]
     [SerializeField] [Tooltip("The Radius of the Sphere that will be created to handle Auto Aim")] float sphereRadius = 2;
     [SerializeField] private float neededVelocityForAutoAim = 20;
@@ -126,6 +135,9 @@ public class GrapplingGun : MonoBehaviour
 
     private float timeGrappling;
     private bool actualMaxVelocity;
+    private float currentMaxVelocity = 0;
+
+    private int currentGrapplesLeft;
 
     #endregion
 
@@ -142,6 +154,7 @@ public class GrapplingGun : MonoBehaviour
 
         currentSwingSpeed = swingSpeed;
 
+        currentGrapplesLeft = maxGrapples;
 
     }
 
@@ -176,7 +189,16 @@ public class GrapplingGun : MonoBehaviour
             {
                 actualMaxVelocity = true;
             }
+
+            if (useIncreasingVelocity)
+            {
+                currentMaxVelocity += increaseAmmount * Time.deltaTime;
+
+                currentMaxVelocity = Mathf.Clamp(currentMaxVelocity, 0, maxSwingVelocity);
+            }
         }
+
+        Debug.Log("Grapples Left: " + currentGrapplesLeft);
     }
 
     private void GrappleUpdateChanges()
@@ -232,12 +254,12 @@ public class GrapplingGun : MonoBehaviour
 
             if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !actualMaxVelocity)
             {
-                player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxSwingVelocity);
+                player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity);
             }
 
             if (actualMaxVelocity)
             {
-                player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxSwingVelocity, maxSwingVelocity);
+                player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity, currentMaxVelocity);
             }
 
 
@@ -359,6 +381,11 @@ public class GrapplingGun : MonoBehaviour
         {
             return false;
         }
+
+        if (currentGrapplesLeft <= 0 && useMaxGrapples)
+        {
+            return false;
+        }
         RaycastHit hit = new RaycastHit();
 
         // Cheks if the Normal Raycast returns a RayCastHit with a collider
@@ -447,13 +474,31 @@ public class GrapplingGun : MonoBehaviour
     {
         if (CanFindGrappleLocation())
         {
-            actualMaxVelocity = false;
-            timeGrappling = 0;
-            canHoldDownToGrapple = false;
             if (IsGrappling())
             {
                 StopGrapple();
             }
+            currentGrapplesLeft--;
+            timeGrappling = 0;
+
+            if (useIncreasingVelocity)
+            {
+                actualMaxVelocity = true;
+
+                currentMaxVelocity = Mathf.Clamp(player.GetComponent<Rigidbody>().velocity.magnitude, minStartingVelocity, maxSwingVelocity);
+            }
+
+            else 
+            {
+                currentMaxVelocity = maxSwingVelocity;
+            }
+            
+            if (useConstantVelocity && !useConstantVelocity)
+            {
+                actualMaxVelocity = false;
+            }
+            canHoldDownToGrapple = false;
+
 
             StopAllCoroutines();
 
@@ -463,6 +508,8 @@ public class GrapplingGun : MonoBehaviour
 
             StartCoroutine(DrawLine());
             CreateGrapplePoint();
+
+
         }
     }
 
@@ -654,12 +701,12 @@ public class GrapplingGun : MonoBehaviour
             {
                 if (!hit.collider.isTrigger)
                 {
-       
+
                     StopGrapple();
                 }
             }
 
-            else if(stuckStatusTime > maxStuckTime)
+            else if (stuckStatusTime > maxStuckTime)
             {
                 StopGrapple();
             }
@@ -730,6 +777,15 @@ public class GrapplingGun : MonoBehaviour
     public float GetRopeLength()
     {
         return ropeLength;
+    }
+
+    public void ResetGrapples()
+    {
+        if (!IsGrappling())
+        {
+            currentGrapplesLeft = maxGrapples;
+        }
+
     }
 
     //public float GetStartingRopeLength()
