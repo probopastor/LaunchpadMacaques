@@ -936,7 +936,6 @@ public class Matt_PlayerMovement : MonoBehaviour
             if (IsFloor(normal))
             {
                 grounded = true;
-                grappleGunReference.ResetGrapples();
                 cancellingGrounded = false;
                 normalVector = normal;
                 CancelInvoke(nameof(StopGrounded));
@@ -949,6 +948,22 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             cancellingGrounded = true;
             Invoke(nameof(StopGrounded), Time.deltaTime * delay);
+        }
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        int layer = other.gameObject.layer;
+        if (whatIsGround != (whatIsGround | (1 << layer))) return;
+
+        for (int i = 0; i < other.contactCount; i++)
+        {
+            Vector3 normal = other.contacts[i].normal;
+            //FLOOR
+            if (IsFloor(normal))
+            {
+                grappleGunReference.ResetGrapples();
+            }
         }
     }
 
@@ -999,12 +1014,12 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
 
                 m_fieldOfView += (fovChangeRate * Time.deltaTime);
-              //  m_fieldOfView = (int)m_fieldOfView;
+                //  m_fieldOfView = (int)m_fieldOfView;
             }
             else
             {
                 m_fieldOfView -= (fovChangeRate * Time.deltaTime);
-             //   m_fieldOfView = (int)m_fieldOfView;
+                //   m_fieldOfView = (int)m_fieldOfView;
             }
 
 

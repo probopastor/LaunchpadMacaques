@@ -22,6 +22,7 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] private GameObject hitObject;
     [SerializeField] GameObject postText;
+    [SerializeField] TextMeshProUGUI grapplesLeftTextBox;
 
     [Header("Layer Settings")]
     [SerializeField] LayerMask whatIsGrappleable;
@@ -155,6 +156,8 @@ public class GrapplingGun : MonoBehaviour
         currentSwingSpeed = swingSpeed;
 
         currentGrapplesLeft = maxGrapples;
+        SetGrapplesLeft();
+
 
     }
 
@@ -197,8 +200,6 @@ public class GrapplingGun : MonoBehaviour
                 currentMaxVelocity = Mathf.Clamp(currentMaxVelocity, 0, maxSwingVelocity);
             }
         }
-
-        Debug.Log("Grapples Left: " + currentGrapplesLeft);
     }
 
     private void GrappleUpdateChanges()
@@ -209,16 +210,7 @@ public class GrapplingGun : MonoBehaviour
             joint.spring = joint.damper * 0.5f;
 
             currentSwingSpeed = swingSpeed * (1 + ropeLength * 0.05f);
-            //joint.spring = normalSpring * (1 + ropeLength * 1);
-            //joint.damper = springDamp * (1 + ropeLength * 0.5f);
 
-            //if (ropeLength > 30)
-            //{
-            //    Debug.Log("THING");
-            //    //joint.spring = higherSpringValue;
-            //    joint.damper = 1000;
-            //   // currentSwingSpeed = higherSwing;
-            //}
 
             Debug.Log("Damper: " + joint.damper + " | Spring: " + joint.spring + " | SwingSpeed: " + currentSwingSpeed);
 
@@ -478,7 +470,10 @@ public class GrapplingGun : MonoBehaviour
             {
                 StopGrapple();
             }
+
             currentGrapplesLeft--;
+            SetGrapplesLeft();
+         
             timeGrappling = 0;
 
             if (useIncreasingVelocity)
@@ -509,10 +504,26 @@ public class GrapplingGun : MonoBehaviour
             StartCoroutine(DrawLine());
             CreateGrapplePoint();
 
+          
 
         }
     }
 
+    private void SetGrapplesLeft()
+    {
+        if (grapplesLeftTextBox && useMaxGrapples)
+        {
+            if (useMaxGrapples)
+            {
+                grapplesLeftTextBox.text = "Grapples: " + currentGrapplesLeft;
+            }
+
+            else
+            {
+                grapplesLeftTextBox.text = "";
+            }
+        }
+    }
     /// <summary>
     /// The Corutine that draws the Grappling Rope
     /// </summary>
@@ -611,6 +622,8 @@ public class GrapplingGun : MonoBehaviour
         {
             pinwheel.TriggerRotation(grappleRayHit.collider.transform, cam.forward);
         }
+
+       
     }
 
     /// <summary>
@@ -784,6 +797,7 @@ public class GrapplingGun : MonoBehaviour
         if (!IsGrappling())
         {
             currentGrapplesLeft = maxGrapples;
+            SetGrapplesLeft();
         }
 
     }
