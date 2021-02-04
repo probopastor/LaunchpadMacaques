@@ -38,7 +38,7 @@ public class GrapplingGun : MonoBehaviour
 
     [Header("Rope Attach Settings")]
     [SerializeField, Tooltip("The Speed at which the rope attaches to the Grapple Point")] float startingAttachSpeed = 20;
-    [SerializeField, Tooltip("The ammount the line attach speed will increase over time")] float attachSpeedIncrease = 10;
+    [SerializeField, Tooltip("The amount the line attach speed will increase over time")] float attachSpeedIncrease = 10;
 
     [Header("Swing Settings")]
     [SerializeField] [Tooltip("The Force The Joint will apply to the player")] float springValue = 5f;
@@ -53,19 +53,19 @@ public class GrapplingGun : MonoBehaviour
     private float currentSwingSpeed;
 
     [Header("Increasing Velocity Settings")]
-    [SerializeField] bool useIncreasingVelocity = true;
-    [SerializeField] float increaseAmmount = 10;
-    [SerializeField] float minStartingVelocity = 5;
+    [SerializeField, Tooltip("If the Players velocity should increase while they swing")] bool useIncreasingVelocity = true;
+    [SerializeField, Tooltip("How fast the players velocity will increase while swinging")] float increaseAmmount = 10;
+    [SerializeField, Tooltip("The Minimum velocity the player will have when they start swinging")] float minStartingVelocity = 5;
 
     [Header("Max Grapple Settings")]
-    [SerializeField] int maxGrapples = 4;
-    [SerializeField] bool useMaxGrapples = true;
+    [SerializeField, Tooltip("The Max Amount of times the player can grapple before hitting ground")] int maxGrapples = 4;
+    [SerializeField, Tooltip("If the amount of graples should be limited")] bool useMaxGrapples = true;
 
-    [Header("Auto Aim Settiings")]
+    [Header("Auto Aim Settings")]
     [SerializeField] [Tooltip("The Radius of the Sphere that will be created to handle Auto Aim")] float sphereRadius = 2;
     [SerializeField] private float neededVelocityForAutoAim = 20;
     [SerializeField]
-    [Tooltip("The Distance the A Ray will be shot down to, to fix thse issue of auto aiming onto the platforming your standint on")] private float groundCheckDistance = 5f;
+    [Tooltip("The Distance the A Ray will be shot down to, to fix these issue of auto aiming onto the platforming your standing on")] private float groundCheckDistance = 5f;
 
     [Header("Hand Movement Settings")]
     [SerializeField, Tooltip("The max amount the hand will tilt up and down based on movement")]
@@ -74,10 +74,10 @@ public class GrapplingGun : MonoBehaviour
     private float verticalRotationMax = 15.0f;
     [SerializeField, Tooltip("When True, the hand will tilt left and right while grappling")]
     private bool useHorizontalMovementWhileGrappling = true;
-    [SerializeField, Tooltip("When True, the hand will tilt up and down while grpapling")]
+    [SerializeField, Tooltip("When True, the hand will tilt up and down while grappling")]
     private bool useVerticalMovementWhileGrappling = true;
     [SerializeField, Range(0, 1), Tooltip("When the Cosine calculations are preformed and the result is within this value of 0 or 1, it" +
-    "will be rounded either down or up respecitvely. Increasing this value can decrease twitching-like movements of the hand, but will decrease" +
+    "will be rounded either down or up respectively. Increasing this value can decrease twitching-like movements of the hand, but will decrease" +
     "the fluidity of the movement")]
     private float roundingRange = 0.2f;
 
@@ -157,8 +157,6 @@ public class GrapplingGun : MonoBehaviour
 
         currentGrapplesLeft = maxGrapples;
         SetGrapplesLeft();
-
-
     }
 
     private void SetObject()
@@ -471,27 +469,8 @@ public class GrapplingGun : MonoBehaviour
                 StopGrapple();
             }
 
-            currentGrapplesLeft--;
-            SetGrapplesLeft();
-         
-            timeGrappling = 0;
+            SetDifferentGrappleTypeSettings();
 
-            if (useIncreasingVelocity)
-            {
-                actualMaxVelocity = true;
-
-                currentMaxVelocity = Mathf.Clamp(player.GetComponent<Rigidbody>().velocity.magnitude, minStartingVelocity, maxSwingVelocity);
-            }
-
-            else 
-            {
-                currentMaxVelocity = maxSwingVelocity;
-            }
-            
-            if (useConstantVelocity && !useConstantVelocity)
-            {
-                actualMaxVelocity = false;
-            }
             canHoldDownToGrapple = false;
 
 
@@ -506,6 +485,31 @@ public class GrapplingGun : MonoBehaviour
 
           
 
+        }
+    }
+
+    private void SetDifferentGrappleTypeSettings()
+    {
+        currentGrapplesLeft--;
+        SetGrapplesLeft();
+
+        timeGrappling = 0;
+
+        if (useIncreasingVelocity)
+        {
+            actualMaxVelocity = true;
+
+            currentMaxVelocity = Mathf.Clamp(player.GetComponent<Rigidbody>().velocity.magnitude, minStartingVelocity, maxSwingVelocity);
+        }
+
+        else
+        {
+            currentMaxVelocity = maxSwingVelocity;
+        }
+
+        if (useConstantVelocity && !useConstantVelocity)
+        {
+            actualMaxVelocity = false;
         }
     }
 
@@ -699,6 +703,9 @@ public class GrapplingGun : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// Will make sure player does not get stuck behind wall
+    /// </summary>
     private void CheckForGrapplingThroughWall()
     {
         if (joint && player.GetComponent<Rigidbody>().velocity.magnitude < 5)
@@ -801,11 +808,6 @@ public class GrapplingGun : MonoBehaviour
         }
 
     }
-
-    //public float GetStartingRopeLength()
-    //{
-    //    return startingRopeLength;
-    //}
 
     public float SetRopeLength(float value)
     {
