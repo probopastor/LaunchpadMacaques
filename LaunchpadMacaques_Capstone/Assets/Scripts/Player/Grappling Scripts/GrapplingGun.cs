@@ -121,8 +121,11 @@ public class GrapplingGun : MonoBehaviour
     private float dist;
 
     private float maxStuckTime = 5;
-    private bool checkingStuckStatus;
     private float stuckStatusTime;
+
+
+    private float timeGrappling;
+    private bool actualMaxVelocity;
 
     #endregion
 
@@ -164,6 +167,16 @@ public class GrapplingGun : MonoBehaviour
         GrapplingInput();
         GrapplingLockInput();
         CheckForGrapplingThroughWall();
+
+        if (IsGrappling())
+        {
+            timeGrappling += Time.deltaTime;
+
+            if (useConstantVelocity && timeGrappling > 2)
+            {
+                actualMaxVelocity = true;
+            }
+        }
     }
 
     private void GrappleUpdateChanges()
@@ -217,12 +230,12 @@ public class GrapplingGun : MonoBehaviour
                 }
             }
 
-            if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !useConstantVelocity)
+            if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !actualMaxVelocity)
             {
                 player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxSwingVelocity);
             }
 
-            if (useConstantVelocity)
+            if (actualMaxVelocity)
             {
                 player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxSwingVelocity, maxSwingVelocity);
             }
@@ -434,6 +447,8 @@ public class GrapplingGun : MonoBehaviour
     {
         if (CanFindGrappleLocation())
         {
+            actualMaxVelocity = false;
+            timeGrappling = 0;
             canHoldDownToGrapple = false;
             if (IsGrappling())
             {
