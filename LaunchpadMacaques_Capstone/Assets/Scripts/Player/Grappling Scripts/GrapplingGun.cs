@@ -41,7 +41,7 @@ public class GrapplingGun : MonoBehaviour
         PlayerControlled_Non_Constant_Velocity, IncreasingVelocity_Constant_Velocity, IncreasingVelocity_Non_Constant_Velocity, JustConstantVelocit, Just_Non_Constant_Velocity
     }
 
-  
+
 
     [Header("Rope Settings")]
     [SerializeField, Tooltip("The grapple length on regrapple. ")] private float ropeLength = 10;
@@ -156,6 +156,9 @@ public class GrapplingGun : MonoBehaviour
 
     private int currentGrapplesLeft;
 
+    private bool holdingDownGrapple;
+    private bool holdingDownStopGrapple;
+
     #endregion
 
     #region StartFunctions
@@ -236,6 +239,22 @@ public class GrapplingGun : MonoBehaviour
         GrapplingInput();
         GrapplingLockInput();
         CheckForGrapplingThroughWall();
+
+        CheckToSeeIfTriggersHeldDown();
+    }
+
+    private void CheckToSeeIfTriggersHeldDown()
+    {
+
+        if (Input.GetAxis("Start Grapple") < 1 && holdingDownGrapple)
+        {
+            holdingDownGrapple = false;
+        }
+
+        if (Input.GetAxis("Start Grapple") > -1 && holdingDownStopGrapple)
+        {
+            holdingDownStopGrapple = false;
+        }
     }
 
     private void GrappleUpdateChanges()
@@ -344,28 +363,99 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     private void GrapplingInput()
     {
-        if (Input.GetButtonUp("Start Grapple") && IsGrappling())
+        if ((Input.GetButtonUp("Start Grapple") || !holdingDownGrapple) && IsGrappling())
         {
             canHoldDownToGrapple = true;
         }
-        if (Input.GetButton("Start Grapple") && IsGrappling() && canHoldDownToGrapple == true)
-        {
-            // StopGrapple();
-            StartGrapple();
-        }
-
-        else if (Input.GetButton("Start Grapple") && !IsGrappling() && !pushPull.IsGrabbing())
+        if ((Input.GetButton("Start Grapple") || GetGrappleTrigger()) && IsGrappling() && canHoldDownToGrapple == true /*&& !holdingDownGrapple*/)
         {
             StartGrapple();
         }
 
-        else if (Input.GetButtonDown("Stop Grapple") && IsGrappling())
+        else if ((Input.GetButton("Start Grapple") || GetGrappleTrigger()) && !IsGrappling() && !pushPull.IsGrabbing())
+        {
+            StartGrapple();
+        }
+
+        else if ((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTriggerDown()) && IsGrappling())
         {
             StopGrapple();
         }
 
     }
 
+    #region Handle Trigger Input
+    private bool GetGrappleTriggerDown()
+    {
+        if (Input.GetAxis("Start Grapple") > 0)
+        {
+            if (holdingDownGrapple)
+            {
+                return false;
+            }
+
+            else
+            {
+                if (!IsGrappling())
+                {
+                    holdingDownGrapple = true;
+                }
+             
+                return true;
+            }
+        }
+
+        else return false;
+    }
+
+    private bool GetGrappleTrigger()
+    {
+        if (Input.GetAxis("Start Grapple") > 0)
+        {
+          
+            return true;
+
+        }
+
+        else return false;
+    }
+
+    private bool GetStopGrappleTrigger()
+    {
+        if (Input.GetAxis("Start Grapple") < 0)
+        {
+            return true;
+        }
+
+        else
+        {
+            return false;
+        }
+    }
+
+    private bool GetStopGrappleTriggerDown()
+    {
+        if (Input.GetAxis("Start Grapple") < 0)
+        {
+            if (!holdingDownStopGrapple)
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+         
+        }
+
+        else
+        {
+            return false;
+        }
+    }
+
+    #endregion
     /// <summary>
     /// Will Get input from the player for enabling/disabling Grapple Lock
     /// </summary>
@@ -551,6 +641,7 @@ public class GrapplingGun : MonoBehaviour
             SetDifferentGrappleTypeSettings();
 
             canHoldDownToGrapple = false;
+            holdingDownGrapple = true;
 
 
             StopAllCoroutines();

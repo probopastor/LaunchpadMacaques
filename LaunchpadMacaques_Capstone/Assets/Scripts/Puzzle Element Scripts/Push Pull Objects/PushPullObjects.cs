@@ -61,6 +61,9 @@ public class PushPullObjects : MonoBehaviour
     private bool drawingLine = false;
 
     private float orgFollowSpeed;
+
+    private bool holdingDownStartGrapple;
+    private bool holdingDownStopGrapple;
     #endregion
 
     private void Awake()
@@ -108,6 +111,16 @@ public class PushPullObjects : MonoBehaviour
         PickUpFeedback();
         UserInput();
         ResetObjectFollowSpeed();
+
+        if(Input.GetAxis("Start Grapple") < 1 && holdingDownStartGrapple)
+        {
+            holdingDownStartGrapple = false;
+        }
+
+        if(Input.GetAxis("Start Grapple") > -1 && holdingDownStopGrapple)
+        {
+            holdingDownStopGrapple = false;
+        }
     }
 
     /// <summary>
@@ -134,7 +147,7 @@ public class PushPullObjects : MonoBehaviour
     /// </summary>
     private void UserInput()
     {
-        if (Input.GetButtonDown("Start Grapple") /*&& !grapplingGun.IsGrappling()*/)
+        if (Input.GetButtonDown("Start Grapple") || GetStartGrappleDown())
         {
             if (!grabbing)
             {
@@ -146,7 +159,7 @@ public class PushPullObjects : MonoBehaviour
             }
 
         }
-        else if (Input.GetButtonDown("Stop Grapple"))
+        else if (Input.GetButtonDown("Stop Grapple") || GetStopGrappleDown())
         {
             if (grabbing)
             {
@@ -156,6 +169,41 @@ public class PushPullObjects : MonoBehaviour
 
     }
 
+    private bool GetStartGrappleDown()
+    {
+        if (Input.GetAxis("Start Grapple") > 0)
+        {
+            if (holdingDownStartGrapple)
+            {
+                return false;
+            }
+
+            else
+            {
+                return true;
+            }
+        }
+
+        else return false;
+    }
+
+    private bool GetStopGrappleDown()
+    {
+        if (Input.GetAxis("Start Grapple") < 0)
+        {
+            if (holdingDownStopGrapple)
+            {
+                return false;
+            }
+
+            else
+            {
+                return true;
+            }
+        }
+
+        else return false;
+    }
 
     private void FixedUpdate()
     {
@@ -207,6 +255,7 @@ public class PushPullObjects : MonoBehaviour
         RaycastHit hit = CanSeeBox();
         if (hit.collider != null)
         {
+            holdingDownStartGrapple = true;
             anim.ResetTrigger("Throw");
             anim.ResetTrigger("Drop");
             anim.SetTrigger("PickUp");
@@ -278,6 +327,7 @@ public class PushPullObjects : MonoBehaviour
     /// </summary>
     public void DropObject()
     {
+        holdingDownStopGrapple = true;
         anim.ResetTrigger("PickUp");
         anim.SetTrigger("Drop");
         //currentHoveredObj.GetComponent<PushableObj>().CheckParticleStatus();
