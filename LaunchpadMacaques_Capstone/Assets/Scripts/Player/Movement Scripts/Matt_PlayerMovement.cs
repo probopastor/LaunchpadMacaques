@@ -465,7 +465,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         y = Input.GetAxisRaw("Vertical");
         jumping = Input.GetButton("Jump");
         crouching = Input.GetKey(KeyCode.LeftControl);
-        sprinting = Input.GetKey(KeyCode.LeftShift);
+        sprinting = Input.GetButton("Dash");
 
         //Crouching
         if (Input.GetKeyDown(KeyCode.LeftControl) && !grappleGunReference.IsGrappling())
@@ -474,13 +474,13 @@ public class Matt_PlayerMovement : MonoBehaviour
             StopCrouch();
 
         //sprinting
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetButtonDown("Dash"))
             Sprint();
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        if (Input.GetButtonUp("Dash"))
             StopSprint();
 
         //dash, when grappling
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !grounded)
+        if (Input.GetButtonDown("Dash") && !grounded)
         {
             Dash();
         }

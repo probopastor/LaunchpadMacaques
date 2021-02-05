@@ -344,27 +344,25 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     private void GrapplingInput()
     {
-        if (Input.GetMouseButtonUp(0) && IsGrappling())
+        if (Input.GetButtonUp("Start Grapple") && IsGrappling())
         {
             canHoldDownToGrapple = true;
         }
-        if (Input.GetMouseButton(0) && IsGrappling() && canHoldDownToGrapple == true)
+        if (Input.GetButton("Start Grapple") && IsGrappling() && canHoldDownToGrapple == true)
         {
             // StopGrapple();
             StartGrapple();
         }
 
-        else if (Input.GetMouseButton(0) && !IsGrappling() && !pushPull.IsGrabbing())
+        else if (Input.GetButton("Start Grapple") && !IsGrappling() && !pushPull.IsGrabbing())
         {
             StartGrapple();
         }
 
-        else if (Input.GetMouseButtonDown(1) && IsGrappling())
+        else if (Input.GetButtonDown("Stop Grapple") && IsGrappling())
         {
             StopGrapple();
         }
-
-
 
     }
 
