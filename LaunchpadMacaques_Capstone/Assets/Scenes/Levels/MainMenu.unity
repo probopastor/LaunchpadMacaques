@@ -537,6 +537,7 @@ GameObject:
   - component: {fileID: 68752574}
   - component: {fileID: 68752576}
   - component: {fileID: 68752575}
+  - component: {fileID: 68752577}
   m_Layer: 5
   m_Name: HowToPlay Panel
   m_TagString: Untagged
@@ -604,6 +605,40 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68752573}
   m_CullTransparentMesh: 0
+--- !u!114 &68752577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68752573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4508ddf0b3f71504496b4d0cf7bf2933, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  howToPlaySprites:
+  - image: {fileID: 273989996}
+    controllerSprite: {fileID: 21300000, guid: e7e65fe4aed43884ba5c280f9dfa1c23, type: 3}
+    keyboardSprite: {fileID: 21300000, guid: 0a93ef7221c6d91489628fc1db2ae202, type: 3}
+  - image: {fileID: 1500663896}
+    controllerSprite: {fileID: 21300000, guid: a33815fe99ea5bb44af0de42fc84f02b, type: 3}
+    keyboardSprite: {fileID: 21300000, guid: 2d5e0842442601a468ee444bf3376905, type: 3}
+  - image: {fileID: 500543334}
+    controllerSprite: {fileID: 21300000, guid: c9f2b42f743008849b28b0c71a5ba4c6, type: 3}
+    keyboardSprite: {fileID: 21300000, guid: 603ee79980cf9af41bd493f3dd43bb76, type: 3}
+  - image: {fileID: 965905033}
+    controllerSprite: {fileID: 21300000, guid: 36a3349d3fed9ec4ebc5fe8b485ddfed, type: 3}
+    keyboardSprite: {fileID: 21300000, guid: be3d5ffb62ff3cb469e3494b72ef9339, type: 3}
+  - image: {fileID: 1900588608}
+    controllerSprite: {fileID: 21300000, guid: c9f2b42f743008849b28b0c71a5ba4c6, type: 3}
+    keyboardSprite: {fileID: 21300000, guid: a67441e40fa2b9146924dac7d8792c39, type: 3}
+  - image: {fileID: 2068600658}
+    controllerSprite: {fileID: 21300000, guid: 26f523437052e8043977697549f6f698, type: 3}
+    keyboardSprite: {fileID: 21300000, guid: eda8342b391c8a04f94d391fc3f948fd, type: 3}
+  - image: {fileID: 343390067}
+    controllerSprite: {fileID: 21300000, guid: d3fa03c4aa6169c49abc9d9899d32af7, type: 3}
+    keyboardSprite: {fileID: 21300000, guid: d65b113cf73f1874ab7b83a3fbee0b99, type: 3}
 --- !u!1 &104176847
 GameObject:
   m_ObjectHideFlags: 0
@@ -1850,7 +1885,7 @@ RectTransform:
   m_GameObject: {fileID: 273989994}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1077.5393}
-  m_LocalScale: {x: 1, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1374495985}
   m_Father: {fileID: 1632485772}
@@ -2524,7 +2559,7 @@ RectTransform:
   m_GameObject: {fileID: 343390065}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1077.5393}
-  m_LocalScale: {x: 1, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1101814619}
   m_Father: {fileID: 1632485772}
@@ -3694,7 +3729,7 @@ RectTransform:
   m_GameObject: {fileID: 500543332}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1077.5393}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1118925833}
   m_Father: {fileID: 1632485772}
@@ -7264,7 +7299,7 @@ RectTransform:
   m_GameObject: {fileID: 965905031}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1077.5393}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1509506989}
   m_Father: {fileID: 1632485772}
@@ -11269,7 +11304,7 @@ RectTransform:
   m_GameObject: {fileID: 1500663894}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1077.5393}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 805195989}
   m_Father: {fileID: 1632485772}
@@ -11869,6 +11904,7 @@ GameObject:
   - component: {fileID: 1545432904}
   - component: {fileID: 1545432903}
   - component: {fileID: 1545432907}
+  - component: {fileID: 1545432908}
   m_Layer: 5
   m_Name: Main Menu Canvas
   m_TagString: Untagged
@@ -11984,6 +12020,18 @@ MonoBehaviour:
   - {fileID: 68752573}
   - {fileID: 2071664162}
   anim: {fileID: 610715572}
+--- !u!114 &1545432908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545432902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f7e65d9b6baea4694335f33b47b38b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1555600415
 GameObject:
   m_ObjectHideFlags: 0
@@ -16440,7 +16488,7 @@ RectTransform:
   m_GameObject: {fileID: 1900588606}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1077.5393}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2011374061}
   m_Father: {fileID: 1632485772}
@@ -17654,7 +17702,7 @@ RectTransform:
   m_GameObject: {fileID: 2068600656}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1077.5393}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 998102774}
   m_Father: {fileID: 1632485772}

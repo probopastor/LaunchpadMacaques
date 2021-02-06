@@ -4,8 +4,6 @@
 * InformationPosts.cs
 * Displays information when the player triggers an information post. 
 */
-
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,6 +38,9 @@ public class InformationPost : A_InputType
         narrative = FindObjectOfType<NarrativeTriggerHandler>();
     }
 
+    /// <summary>
+    /// When the controller is connected/disconnected will update the Press XXX To Read Text
+    /// </summary>
     public override void ChangeUI()
     {
 
@@ -129,6 +130,7 @@ public class InformationPost : A_InputType
         }
     }
 
+    #region Getters/Setters
     public bool GetTutorialCanvas()
     {
         return informationText.gameObject.transform.parent.gameObject.activeSelf;
@@ -150,5 +152,10 @@ public class InformationPost : A_InputType
         return playerInRange;
     }
 
+    public TextMeshProUGUI GetTextBox()
+    {
+        return informationText;
+    }
+    #endregion
 
 }

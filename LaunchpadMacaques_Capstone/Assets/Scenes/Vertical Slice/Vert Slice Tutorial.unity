@@ -190,8 +190,8 @@ PrefabInstance:
     - target: {fileID: 311249196486175634, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
       propertyPath: information
-      value: 'use left click <sprite=5> to grapple to certain objects. right click
-        <sprite=6> to release grapple. '
+      value: 'use <sprite=7> to grapple to certain objects. <sprite=5> to release
+        grapple. '
       objectReference: {fileID: 0}
     - target: {fileID: 311249196486175634, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
@@ -263,6 +263,26 @@ PrefabInstance:
       propertyPath: textBox
       value: 
       objectReference: {fileID: 912429667}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: sprites.Array.data[0].keyBoardSpriteIndex
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: sprites.Array.data[1].keyBoardSpriteIndex
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: sprites.Array.data[0].controllerSpriteIndex
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: sprites.Array.data[1].controllerSpriteIndex
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b5995540b03f274aa6b28983b31abe6, type: 3}
 --- !u!1001 &49726546
@@ -1452,7 +1472,7 @@ PrefabInstance:
     - target: {fileID: 311249196486175634, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
       propertyPath: information
-      value: <sprite=3>to move. use <sprite=7> to look around
+      value: <sprite=3>to move. use <sprite=6> to look around
       objectReference: {fileID: 0}
     - target: {fileID: 311249196723287888, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
@@ -1519,6 +1539,11 @@ PrefabInstance:
       propertyPath: textBox
       value: 
       objectReference: {fileID: 912429667}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: sprites.Array.data[1].keyBoardSpriteIndex
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7149546249054549967, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
       propertyPath: m_RootOrder
@@ -6329,7 +6354,7 @@ PrefabInstance:
     - target: {fileID: 311249196486175634, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
       propertyPath: information
-      value: to sprint on the ground, or to reach certain distances, press <sprite=1>
+      value: to sprint on the ground, or to reach certain distances, press <sprite=2>
         after grappling in mid-air to dash forward
       objectReference: {fileID: 0}
     - target: {fileID: 311249196486175634, guid: 9b5995540b03f274aa6b28983b31abe6,
@@ -6399,9 +6424,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
+      propertyPath: sprites.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
       propertyPath: textBox
       value: 
       objectReference: {fileID: 912429667}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: sprites.Array.data[0].keyBoardSpriteIndex
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: sprites.Array.data[0].controllerSpriteIndex
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b5995540b03f274aa6b28983b31abe6, type: 3}
 --- !u!4 &894871398 stripped
@@ -9814,7 +9854,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh39196
+  m_Name: pb_Mesh20898
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -10783,6 +10823,41 @@ PrefabInstance:
       propertyPath: textBox
       value: 
       objectReference: {fileID: 912429667}
+    - target: {fileID: 1424983195128514231, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1424983195128514231, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1424983195128514231, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2289285556304831776, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2375403044835616066, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2375403044835616066, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2375403044835616066, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2470314941667017285, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -10797,6 +10872,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604719167774454520, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2887900401094729219, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
@@ -10963,6 +11043,21 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5322958974279339559, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322958974279339559, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322958974279339559, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5691436280426947905, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -10982,6 +11077,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5727793327453122549, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5871630521583264000, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
@@ -11007,6 +11107,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6845123961929019690, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6845123961929019690, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6845123961929019690, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6919585669480410492, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
@@ -11072,6 +11187,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091185273650486424, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091185273650486424, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091185273650486424, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7339309284791958988, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8153967080819210788, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
@@ -12467,7 +12602,7 @@ PrefabInstance:
     - target: {fileID: 311249196486175634, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
       propertyPath: information
-      value: 'press<sprite=2>to jump '
+      value: 'press<sprite=0>to jump '
       objectReference: {fileID: 0}
     - target: {fileID: 311249196723287888, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
@@ -12531,9 +12666,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
+      propertyPath: sprites.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
       propertyPath: textBox
       value: 
       objectReference: {fileID: 912429667}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: sprites.Array.data[0].keyBoardSpriteIndex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: sprites.Array.data[0].controllerSpriteIndex
+      value: 16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b5995540b03f274aa6b28983b31abe6, type: 3}
 --- !u!1001 &1873280414
