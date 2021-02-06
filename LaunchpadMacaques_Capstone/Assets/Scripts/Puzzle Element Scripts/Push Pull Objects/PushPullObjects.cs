@@ -349,12 +349,16 @@ public class PushPullObjects : MonoBehaviour
         anim.ResetTrigger("PickUp");
         anim.SetTrigger("Throw");
 
-        objectRB.isKinematic = false;
-        objectRB.GetComponent<PushableObj>().StartPush(cam);
-        objectRB.useGravity = false;
-        StartCoroutine(GrabbingFalse());
-        lr.positionCount = 0;
-        objectRB = null;
+        if (objectRB)
+        {
+            objectRB.isKinematic = false;
+            objectRB.GetComponent<PushableObj>().StartPush(cam);
+            objectRB.useGravity = false;
+            StartCoroutine(GrabbingFalse());
+            lr.positionCount = 0;
+            objectRB = null;
+        }
+
 
     }
 
