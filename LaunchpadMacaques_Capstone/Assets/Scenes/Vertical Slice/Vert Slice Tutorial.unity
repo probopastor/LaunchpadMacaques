@@ -190,9 +190,8 @@ PrefabInstance:
     - target: {fileID: 311249196486175634, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
       propertyPath: information
-      value: "use left click <sprite=4> to grapple to certain objects. right click
-        <sprite=6> to release grapple. \n\nuse scroll wheel <sprite=5> to adjust
-        tether length. "
+      value: 'use left click <sprite=5> to grapple to certain objects. right click
+        <sprite=6> to release grapple. '
       objectReference: {fileID: 0}
     - target: {fileID: 311249196486175634, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
@@ -259,6 +258,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grapple Post
       objectReference: {fileID: 0}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: textBox
+      value: 
+      objectReference: {fileID: 912429667}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b5995540b03f274aa6b28983b31abe6, type: 3}
 --- !u!1001 &49726546
@@ -1448,7 +1452,7 @@ PrefabInstance:
     - target: {fileID: 311249196486175634, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
       propertyPath: information
-      value: <sprite=0>to move. use <sprite=3> to look around
+      value: <sprite=3>to move. use <sprite=7> to look around
       objectReference: {fileID: 0}
     - target: {fileID: 311249196723287888, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
@@ -1510,6 +1514,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: WASD Post
       objectReference: {fileID: 0}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: textBox
+      value: 
+      objectReference: {fileID: 912429667}
     - target: {fileID: 7149546249054549967, guid: 9b5995540b03f274aa6b28983b31abe6,
         type: 3}
       propertyPath: m_RootOrder
@@ -6388,6 +6397,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: DASH Post
       objectReference: {fileID: 0}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: textBox
+      value: 
+      objectReference: {fileID: 912429667}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b5995540b03f274aa6b28983b31abe6, type: 3}
 --- !u!4 &894871398 stripped
@@ -9800,7 +9814,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh107554
+  m_Name: pb_Mesh39196
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -10764,6 +10778,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11619434231740814, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: textBox
+      value: 
+      objectReference: {fileID: 912429667}
     - target: {fileID: 2470314941667017285, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -10869,6 +10888,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3733478342657164433, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4120583953489998304, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -10888,6 +10912,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4160877844992736024, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4559250549154169375, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
@@ -10910,6 +10939,26 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5038272372251572710, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182988206621417925, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182988206621417925, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182988206621417925, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182988206621417925, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
@@ -10953,6 +11002,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385287203300197947, guid: 16dda4d6fd8b00f4c8955d68c821c107,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6919585669480410492, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
@@ -11060,7 +11114,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_spriteAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 09e7635bdeb38ac418198ff6e6f91e27,
+      objectReference: {fileID: 11400000, guid: cdfb3b1d361b29440a8079cba6ffa9e5,
         type: 2}
     - target: {fileID: 8153967080819210789, guid: 16dda4d6fd8b00f4c8955d68c821c107,
         type: 3}
@@ -12475,6 +12529,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: JUMP Post
       objectReference: {fileID: 0}
+    - target: {fileID: 1998944828334140402, guid: 9b5995540b03f274aa6b28983b31abe6,
+        type: 3}
+      propertyPath: textBox
+      value: 
+      objectReference: {fileID: 912429667}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b5995540b03f274aa6b28983b31abe6, type: 3}
 --- !u!1001 &1873280414

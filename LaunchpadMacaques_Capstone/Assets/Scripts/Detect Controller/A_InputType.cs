@@ -13,7 +13,7 @@ using UnityEngine;
 public abstract class A_InputType : MonoBehaviour
 {
     protected bool controllerDetected;
-    private DetectController controllerDetection;
+    protected DetectController controllerDetection;
 
     public void Start()
     {
