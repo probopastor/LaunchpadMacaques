@@ -25,6 +25,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The Dialouge Volume Slider")] Slider dialougeVolume;
     [SerializeField, Tooltip("The Music Volume Slider")] Slider musicVolume;
     [SerializeField, Tooltip("The Sound Effects Volume Slider")] Slider soundEffectsVolume;
+    [SerializeField, Tooltip("Master Volume Slider")] Slider masterSoundSlider;
 
     [Header("Gameplay Settings")]
     [SerializeField, Tooltip("The Invert Y Toggle Box")] Toggle invertY;
@@ -56,14 +57,21 @@ public class SettingsManager : MonoBehaviour
 
     private float deafultMouseSensitivity = 50;
     private int deafultFOV = 60;
+    private float deafultMaster = 1;
+
+
     #endregion
     void Start()
     {
+
+
+
         settingsHolder.SetActive(true);
         InitialFullScreen();
         InitialQuality();
         InitialDialouge();
         InitialMusic();
+        InitialMaster();
         InitialSFX();
         InitialInvertY();
         InitialMouseSensitivity();
@@ -261,6 +269,24 @@ public class SettingsManager : MonoBehaviour
         {
             dialougeVolume.SetValueWithoutNotify(deafultDialouge);
             SetDialougeVolume(deafultDialouge);
+        }
+    }
+
+    private void InitialMaster()
+    {
+        masterSoundSlider.maxValue = maxVolume;
+        masterSoundSlider.minValue = minVolume;
+
+        if (PlayerPrefs.HasKey("MasterVolume"))
+        {
+            masterSoundSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("MasterVolume"));
+            SetMasterVolume(PlayerPrefs.GetFloat("MasterVolume"));
+        }
+
+        else
+        {
+            masterSoundSlider.SetValueWithoutNotify(deafultMaster);
+            SetMasterVolume(deafultMaster);
         }
     }
 
@@ -489,6 +515,11 @@ public class SettingsManager : MonoBehaviour
         PlayerPrefs.SetFloat("SFXVolume", volume);
 
         ChangeFMODSound(soundEffectsVolume.gameObject, volume);
+    }
+
+    public void SetMasterVolume(float volume)
+    {
+        PlayerPrefs.SetFloat("MasterVolume", volume);
     }
 
     /// <summary>

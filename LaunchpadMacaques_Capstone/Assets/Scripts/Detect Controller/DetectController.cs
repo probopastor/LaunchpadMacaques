@@ -131,7 +131,6 @@ public class DetectController : MonoBehaviour
     /// </summary>
     private void ControllerDisconnected()
     {
-        Debug.Log("Controller disconeted");
         inputSensitive = FindObjectsOfType<A_InputType>();
         controller = false;
         foreach (A_InputType sens in inputSensitive)

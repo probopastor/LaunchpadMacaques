@@ -43,7 +43,6 @@ public class SelectedButtonFix : MonoBehaviour, IPointerEnterHandler
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("Setting");
 
         if (DetectController.instance)
         {
