@@ -22,8 +22,6 @@ public class DetectController : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log(this.gameObject.name);
-        DontDestroyOnLoad(this.gameObject);
 
         if (instance == null)
         {
