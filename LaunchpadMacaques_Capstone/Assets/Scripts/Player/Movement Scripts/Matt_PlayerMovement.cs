@@ -24,9 +24,6 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The transform of the player's camera. ")] private Transform playerCam;
     [SerializeField, Tooltip("The transform of the player's orientation ")] private Transform orientation;
     float m_fieldOfView = 60.0f;
-    //public float initialFieldofView = 90f;
-    //public float desiredFieldofView = 60f;
-    //public float fieldofViewTime = .5f;
     #endregion
 
     //Other
@@ -67,7 +64,6 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField] private float zFOVActivationVel = 40f;
     [SerializeField] private float yFOVActicationVel = 15f;
     [SerializeField] private float fovChangeRate = 0.75f;
-    [SerializeField] private float minFOV = 60.75f;
     [SerializeField] private float maxFOV = 120.75f;
     [SerializeField] private float maxFOVSpeedScale = .05f;
     #endregion
@@ -141,6 +137,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField]
     Animator anim;
 
+    private float minFOV = 60;
+
     #region Getters/Setters
     public float GetMaxVelocity()
     {
@@ -211,7 +209,14 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        if (PlayerPrefs.HasKey("FovValue"))
+        {
+            maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
+            m_fieldOfView = PlayerPrefs.GetInt("FovValue");
+            minFOV = PlayerPrefs.GetInt("FovValue");
+        }
 
+        
         playerScale = transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

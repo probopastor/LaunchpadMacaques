@@ -8,6 +8,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 
 public class DetectController : MonoBehaviour
@@ -18,7 +20,10 @@ public class DetectController : MonoBehaviour
     A_InputType[] inputSensitive;
     public static DetectController instance = null;
     private bool foundController = false;
-   
+
+    public GameObject selectedGameObject;
+
+
 
     private void Start()
     {
@@ -37,6 +42,19 @@ public class DetectController : MonoBehaviour
         StartCoroutine(DetectJoySticks());
     }
 
+    private void Update()
+    {
+
+        if (FindObjectOfType<Button>() & controller)
+        {
+            EventSystem even = FindObjectOfType<EventSystem>();
+            if (even.currentSelectedGameObject == null)
+            {
+                ControllerConnected();
+            }
+        }
+    }
+
 
     /// <summary>
     /// Loops through Joysticks to check if it can find Xbox Controller
@@ -52,7 +70,7 @@ public class DetectController : MonoBehaviour
             //Get Joystick Names
             joySticks = Input.GetJoystickNames();
 
-            
+
             // Loops through all the joysticks
             if (joySticks.Length > 0)
             {
@@ -68,12 +86,12 @@ public class DetectController : MonoBehaviour
                             if (!controller)
                             {
                                 ControllerConnected();
-                                
+
                             }
                         }
 
                     }
-  
+
                 }
             }
 
@@ -90,12 +108,21 @@ public class DetectController : MonoBehaviour
     /// </summary>
     public void ControllerConnected()
     {
-        Debug.Log("Controller");
         inputSensitive = FindObjectsOfType<A_InputType>();
         controller = true;
         foreach (A_InputType sens in inputSensitive)
         {
             sens.UpdateUI();
+        }
+
+        if (FindObjectOfType<EventSystem>())
+        {
+            EventSystem even = FindObjectOfType<EventSystem>();
+            if (selectedGameObject)
+            {
+                even.SetSelectedGameObject(selectedGameObject);
+            }
+
         }
     }
 
