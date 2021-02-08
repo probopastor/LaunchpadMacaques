@@ -269,6 +269,14 @@ public class GrapplingGun : MonoBehaviour
             VelocityChanging();
 
         }
+
+        else
+        {
+            if (grappledObj)
+            {
+                grappledObj = null;
+            }
+        }
     }
 
     private void JointChanges()
@@ -566,9 +574,12 @@ public class GrapplingGun : MonoBehaviour
 
             if (!(Physics.Raycast(cam.position, cam.forward, dist, whatIsNotGrappleable)) && !pushPull.IsGrabbing())
             {
+                if(grappledObj != hit.collider.gameObject)
+                {
+                    grappleRayHit = hit;
+                    return true;
+                }
 
-                grappleRayHit = hit;
-                return true;
             }
         }
 
