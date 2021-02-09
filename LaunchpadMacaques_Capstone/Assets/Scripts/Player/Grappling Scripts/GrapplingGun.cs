@@ -96,6 +96,8 @@ public class GrapplingGun : MonoBehaviour
     "the fluidity of the movement")]
     private float roundingRange = 0.2f;
 
+    private bool pulling = false;
+
     [SerializeField]
     Animator anim;
 
@@ -159,6 +161,8 @@ public class GrapplingGun : MonoBehaviour
     private bool holdingDownGrapple;
     private bool holdingDownStopGrapple;
 
+    Rigidbody playerRB;
+
     #endregion
 
     #region StartFunctions
@@ -177,6 +181,8 @@ public class GrapplingGun : MonoBehaviour
 
         currentGrapplesLeft = maxGrapples;
         SetGrapplesLeft();
+
+        playerRB = player.GetComponent<Rigidbody>();
     }
 
     private void SetTypeOfGrapple()
@@ -237,7 +243,6 @@ public class GrapplingGun : MonoBehaviour
     {
         GrappleUpdateChanges();
         GrapplingInput();
-        GrapplingLockInput();
         CheckForGrapplingThroughWall();
 
         CheckToSeeIfTriggersHeldDown();
@@ -266,7 +271,7 @@ public class GrapplingGun : MonoBehaviour
             grapplePoint = hitObjectClone.transform.position;
 
             SwingDirectionChanging();
-         
+
 
         }
 
@@ -377,18 +382,25 @@ public class GrapplingGun : MonoBehaviour
         }
         if ((Input.GetButton("Start Grapple") || GetGrappleTrigger()) && IsGrappling() && canHoldDownToGrapple == true /*&& !holdingDownGrapple*/)
         {
-            StartGrapple();
+            StartGrapple("Normal");
         }
 
         else if ((Input.GetButton("Start Grapple") || GetGrappleTrigger()) && !IsGrappling() && !pushPull.IsGrabbing())
         {
-            StartGrapple();
+            StartGrapple("Normal");
         }
 
         else if ((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTriggerDown()) && IsGrappling())
         {
             StopGrapple();
         }
+
+        else if((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTriggerDown()) && !IsGrappling())
+        {
+            StartGrapple("Batman");
+        }
+
+
 
     }
 
@@ -408,7 +420,7 @@ public class GrapplingGun : MonoBehaviour
                 {
                     holdingDownGrapple = true;
                 }
-             
+
                 return true;
             }
         }
@@ -420,7 +432,7 @@ public class GrapplingGun : MonoBehaviour
     {
         if (Input.GetAxis("Start Grapple") > 0)
         {
-          
+
             return true;
 
         }
@@ -454,7 +466,7 @@ public class GrapplingGun : MonoBehaviour
             {
                 return false;
             }
-         
+
         }
 
         else
@@ -464,29 +476,6 @@ public class GrapplingGun : MonoBehaviour
     }
 
     #endregion
-    /// <summary>
-    /// Will Get input from the player for enabling/disabling Grapple Lock
-    /// </summary>
-    private void GrapplingLockInput()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftControl) && IsGrappling())
-        {
-            if (Input.GetMouseButtonDown(0) && !IsGrappling() && !pushPull.IsGrabbing())
-            {
-                StartGrapple();
-            }
-            else if (Input.GetMouseButtonDown(0) && IsGrappling())
-            {
-                StopGrapple();
-                StartGrapple();
-            }
-            else if (Input.GetMouseButtonDown(1) && IsGrappling())
-            {
-                StopGrapple();
-            }
-
-        }
-    }
 
     #endregion
 
@@ -578,7 +567,7 @@ public class GrapplingGun : MonoBehaviour
 
             if (!(Physics.Raycast(cam.position, cam.forward, dist, whatIsNotGrappleable)) && !pushPull.IsGrabbing())
             {
-                if(grappledObj != hit.collider.gameObject)
+                if (grappledObj != hit.collider.gameObject)
                 {
                     grappleRayHit = hit;
                     return true;
@@ -644,13 +633,14 @@ public class GrapplingGun : MonoBehaviour
     /// <summary>
     /// Call whenever we want to start a grapple
     /// </summary>
-    void StartGrapple()
+    void StartGrapple(string type)
     {
         if (CanFindGrappleLocation())
         {
             if (IsGrappling())
             {
                 StopGrapple();
+                
             }
 
             SetDifferentGrappleTypeSettings();
@@ -666,7 +656,16 @@ public class GrapplingGun : MonoBehaviour
             anim.SetTrigger("GrappleStart");
 
             StartCoroutine(DrawLine());
-            CreateGrapplePoint();
+            if(type == "Normal")
+            {
+                CreateGrapplePoint();
+            }
+
+            else
+            {
+                BatmanGrapple();
+            }
+
 
 
 
@@ -713,6 +712,46 @@ public class GrapplingGun : MonoBehaviour
             }
         }
     }
+    IEnumerator PullCourtine(RaycastHit hit)
+    {
+        currentGrappledObj = hit.collider.gameObject;
+        hit.collider.isTrigger = true;
+        yield return new WaitForEndOfFrame();
+
+        float startingSpeed = playerRB.velocity.magnitude;
+
+        playerRB.velocity = Vector3.zero;
+        playerRB.angularVelocity = Vector3.zero;
+        Vector3 target = hit.point;
+
+        //if(hit.point.y > transform.position.y)
+        //{
+        //    target += (Vector3.up * 20);
+        //}
+
+        //else
+        //{
+        //    target += Vector3.up * 10;
+        //}
+
+   
+
+
+        Vector3 dir = (target - this.transform.position).normalized;
+        playerRB.velocity = dir * startingSpeed;
+
+        while (Vector3.Distance(currentGrappledObj.transform.position, player.position) > 10)
+        {
+            playerRB.AddForce(dir * 400 * Time.deltaTime, ForceMode.Impulse);
+            dir = (target - this.transform.position).normalized;
+            yield return new WaitForSeconds(0);
+        }
+
+        yield return new WaitForSeconds(.5f);
+
+        StopGrapple();
+    }
+
     /// <summary>
     /// The Corutine that draws the Grappling Rope
     /// </summary>
@@ -805,6 +844,7 @@ public class GrapplingGun : MonoBehaviour
         GetComponent<FMODUnity.StudioEventEmitter>().Play();
 
 
+
         //Pinwheel
         Pinwheel pinwheel = null;
         if (pinwheel = grappleRayHit.collider.GetComponentInParent<Pinwheel>())
@@ -815,6 +855,12 @@ public class GrapplingGun : MonoBehaviour
 
     }
 
+    private void BatmanGrapple()
+    {
+        StopCoroutine(PullCourtine(grappleRayHit));
+        StartCoroutine(PullCourtine(grappleRayHit));
+    }
+
     /// <summary>
     /// Call whenever we want to stop a grapple
     /// </summary>
@@ -822,9 +868,11 @@ public class GrapplingGun : MonoBehaviour
     {
         anim.ResetTrigger("GrappleStart");
         anim.SetTrigger("GrappleEnd");
+        grappleRayHit.collider.isTrigger = false;
 
+        pulling = false;
+        StopCoroutine(PullCourtine(grappleRayHit));
         currentGrappledObj = null;
-        //managing variables for dash
 
         swingLockToggle = false;
 
@@ -835,7 +883,12 @@ public class GrapplingGun : MonoBehaviour
         }
 
         lr.positionCount = 0;
-        Destroy(joint);
+
+        if (joint)
+        {
+            Destroy(joint);
+        }
+
 
         StopAllCoroutines();
     }
@@ -929,7 +982,15 @@ public class GrapplingGun : MonoBehaviour
     /// <returns></returns>
     public bool IsGrappling()
     {
-        return joint != null;
+        if(joint != null || pulling == true)
+        {
+            return true;
+        }
+
+        else
+        {
+            return false;
+        }
     }
 
     /// <summary>
