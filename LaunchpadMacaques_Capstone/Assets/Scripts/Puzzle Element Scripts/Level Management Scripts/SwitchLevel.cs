@@ -10,9 +10,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+
 public class SwitchLevel : MonoBehaviour
 {
     [SerializeField, Tooltip("The name of the scene this object should load when triggered. ")] private string nextLevelName;
+
+    public bool levelComplete = false;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -35,6 +39,9 @@ public class SwitchLevel : MonoBehaviour
     /// </summary>
     private void SwitchScenes()
     {
+        levelComplete = true;
+        levelComplete = false;
         SceneManager.LoadScene(nextLevelName);
+        
     }
 }
