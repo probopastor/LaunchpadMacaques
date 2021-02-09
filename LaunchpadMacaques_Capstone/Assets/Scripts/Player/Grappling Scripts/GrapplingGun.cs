@@ -266,7 +266,7 @@ public class GrapplingGun : MonoBehaviour
             grapplePoint = hitObjectClone.transform.position;
 
             SwingDirectionChanging();
-            VelocityChanging();
+         
 
         }
 
@@ -493,6 +493,10 @@ public class GrapplingGun : MonoBehaviour
     #region LateUpdateFunctions
     void LateUpdate()
     {
+        if (IsGrappling())
+        {
+            VelocityChanging();
+        }
         DrawRope();
 
         /// <summary>

@@ -677,7 +677,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             // If the force can be applied, add a force in the direction of the player's orientation.
             if (grappleGunReference.GetCanApplyForce())
             {
-                rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
+                rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed()* 2 * Time.deltaTime);
                 latestOrientation = orientation.transform.forward;
             }
         }
