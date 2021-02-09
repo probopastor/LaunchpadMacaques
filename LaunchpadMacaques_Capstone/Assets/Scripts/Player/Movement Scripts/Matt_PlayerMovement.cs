@@ -33,6 +33,10 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Player Rotation and Look")]
     private float xRotation;
     [Tooltip("The player's look sensitivity. Higher value lets the player look around quicker. ")] private float sensitivity = 50f;
+    [SerializeField] float mouseAccerlationAmmount = .5f;
+    [SerializeField] float normalSpeedAmmount = 1;
+    private float lastFrameMouseInput;
+    private bool inMouseAccerlation = false;
     #endregion
 
     #region Player Movement Variables
@@ -216,7 +220,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             minFOV = PlayerPrefs.GetInt("FovValue");
         }
 
-        
+
         playerScale = transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -795,7 +799,15 @@ public class Matt_PlayerMovement : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime;
 
-        //Find current look rotation
+        float mouseInput = Mathf.Abs(mouseX) + Mathf.Abs(mouseY);
+        if (mouseInput > normalSpeedAmmount)
+        {
+            mouseX *= 1 + (mouseAccerlationAmmount * (mouseInput - normalSpeedAmmount));
+
+            mouseY *= 1 + (mouseAccerlationAmmount * (mouseInput - normalSpeedAmmount));
+
+        }
+
         Vector3 rot = playerCam.transform.localRotation.eulerAngles;
         desiredX = rot.y + mouseX;
 
