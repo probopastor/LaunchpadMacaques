@@ -237,6 +237,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         Movement();
         LimitVelocity();
         SetGravityModifier();
+        SavePlayer();
+        LoadPlayer();
 
 
     }
@@ -991,6 +993,33 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
 
 
+    }
+
+    public void SavePlayer()
+    {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            Save_System.SavePlayer(this);
+            Debug.Log("player has saved.");
+        }
+       
+    }
+
+    public void LoadPlayer()
+    {
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            PlayerData data = Save_System.LoadPlayer();
+
+            Vector3 position;
+            position.x = data.position[0];
+            position.y = data.position[1];
+            position.z = data.position[2];
+            transform.position = position;
+
+            Debug.Log("player has loaded.");
+        }
+        
     }
 
 
