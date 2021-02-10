@@ -655,7 +655,7 @@ public class GrapplingGun : MonoBehaviour
 
             if (Physics.Raycast(ejectPoint.transform.position, direction, out hit, dist, whatIsNotGrappleable))
             {
-                if (!hit.collider.isTrigger)
+                if (!hit.collider.isTrigger && stuckStatusTime > maxStuckTime)
                 {
 
                     StopGrapple();
@@ -667,6 +667,11 @@ public class GrapplingGun : MonoBehaviour
                 StopGrapple();
             }
 
+        }
+
+        else
+        {
+            stuckStatusTime = 0;
         }
 
         stuckStatusTime = 0;
@@ -844,6 +849,7 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     private void CreateGrapplePoint()
     {
+        
         currentGrappledObj = grappleRayHit.collider.gameObject;
 
         if (currentGrappledObj.GetComponent<GrapplePoint>() != null)
