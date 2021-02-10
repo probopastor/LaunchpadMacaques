@@ -79,8 +79,9 @@ public class DetectController : MonoBehaviour
                     // Will check to see if the Joystick is empty
                     if (!string.IsNullOrEmpty(joySticks[i]))
                     {
+                        //joySticks[i] == "Controller (Xbox One For Windows)"
                         // Will check to see if the joystick is an xbox controller
-                        if (joySticks[i] == "Controller (Xbox One For Windows)")
+                        if (true)
                         {
                             foundController = true;
                             if (!controller)
