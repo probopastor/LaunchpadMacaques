@@ -63,10 +63,18 @@ public class GrapplingGun : MonoBehaviour
     private bool useConstantVelocity = false;
     private float currentSwingSpeed;
 
+
+    [Header("Pull Settings")]
+    [SerializeField, Tooltip("How Fast the player will be pulled toward grapple point")] float pullSpeed = 50;
+    [SerializeField, Tooltip("The Max Speed the player can be moving while being pulled")] float maxPullVelocity = 100;
+    [SerializeField, Tooltip("The max length the pull can last")] float pullLength = .5f;
+    [SerializeField, Tooltip("The Min Distance the player can be from the object and still get pulled towards it")] float minDistanceFromObject = 5;
+
     [Header("Increasing Velocity Settings")]
-    [Tooltip("If the Players velocity should increase while they swing")] bool useIncreasingVelocity = true;
     [SerializeField, Tooltip("How fast the players velocity will increase while swinging")] float increaseAmmount = 10;
     [SerializeField, Tooltip("The Minimum velocity the player will have when they start swinging")] float minStartingVelocity = 5;
+    [Tooltip("If the Players velocity should increase while they swing")] bool useIncreasingVelocity = true;
+
 
     [Header("Player Control Velocity Settings")]
     bool playerCanControlVelocity;
@@ -264,7 +272,7 @@ public class GrapplingGun : MonoBehaviour
 
     private void GrappleUpdateChanges()
     {
-        if (IsGrappling())
+        if (IsGrappling() && joint)
         {
             timeGrappling += Time.deltaTime;
             JointChanges();
@@ -357,13 +365,17 @@ public class GrapplingGun : MonoBehaviour
             }
         }
 
+        if (pulling)
+        {
+            player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxPullVelocity);
+        }
 
-        if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !actualMaxVelocity)
+       else if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !actualMaxVelocity)
         {
             player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity);
         }
 
-        if (actualMaxVelocity)
+       else if (actualMaxVelocity)
         {
             player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity, currentMaxVelocity);
         }
@@ -627,6 +639,40 @@ public class GrapplingGun : MonoBehaviour
         }
         return returnHit;
     }
+    /// <summary>
+    /// Will make sure player does not get stuck behind wall
+    /// </summary>
+    private void CheckForGrapplingThroughWall()
+    {
+        if (joint && player.GetComponent<Rigidbody>().velocity.magnitude < 5)
+        {
+            stuckStatusTime += Time.deltaTime;
+            Vector3 fromPosition = ejectPoint.transform.position;
+            Vector3 toPosition = grappleRayHit.transform.position;
+            Vector3 direction = toPosition - fromPosition;
+            RaycastHit hit;
+            float dist = Vector3.Distance(ejectPoint.transform.position, grappleRayHit.transform.position);
+
+            if (Physics.Raycast(ejectPoint.transform.position, direction, out hit, dist, whatIsNotGrappleable))
+            {
+                if (!hit.collider.isTrigger)
+                {
+
+                    StopGrapple();
+                }
+            }
+
+            else if (stuckStatusTime > maxStuckTime)
+            {
+                StopGrapple();
+            }
+
+        }
+
+        stuckStatusTime = 0;
+
+    }
+
     #endregion
 
     #region Start/Stop Grapple
@@ -671,7 +717,9 @@ public class GrapplingGun : MonoBehaviour
 
         }
     }
-
+    /// <summary>
+    /// Set settings based on what grapple type is chosen
+    /// </summary>
     private void SetDifferentGrappleTypeSettings()
     {
         currentGrapplesLeft--;
@@ -697,6 +745,9 @@ public class GrapplingGun : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets how many grapples the player has left
+    /// </summary>
     private void SetGrapplesLeft()
     {
         if (grapplesLeftTextBox && useMaxGrapples)
@@ -712,11 +763,19 @@ public class GrapplingGun : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Will Pull player to point until they are within a certin distant from the point
+    /// </summary>
+    /// <param name="hit"></param>
+    /// <returns></returns>
     IEnumerator PullCourtine(RaycastHit hit)
     {
+        pulling = true;
         currentGrappledObj = hit.collider.gameObject;
         hit.collider.isTrigger = true;
         yield return new WaitForEndOfFrame();
+        float currentTime = 0;
 
         float startingSpeed = playerRB.velocity.magnitude;
 
@@ -724,26 +783,14 @@ public class GrapplingGun : MonoBehaviour
         playerRB.angularVelocity = Vector3.zero;
         Vector3 target = hit.point;
 
-        //if(hit.point.y > transform.position.y)
-        //{
-        //    target += (Vector3.up * 20);
-        //}
-
-        //else
-        //{
-        //    target += Vector3.up * 10;
-        //}
-
-   
-
-
         Vector3 dir = (target - this.transform.position).normalized;
         playerRB.velocity = dir * startingSpeed;
 
-        while (Vector3.Distance(currentGrappledObj.transform.position, player.position) > 10)
+        while (Vector3.Distance(currentGrappledObj.transform.position, player.position) > 10 && currentTime < pullLength)
         {
-            playerRB.AddForce(dir * 400 * Time.deltaTime, ForceMode.Impulse);
+            playerRB.AddForce(dir * pullSpeed * Time.deltaTime, ForceMode.Impulse);
             dir = (target - this.transform.position).normalized;
+            currentTime += Time.deltaTime;
             yield return new WaitForSeconds(0);
         }
 
@@ -941,40 +988,6 @@ public class GrapplingGun : MonoBehaviour
 
     #endregion
 
-    /// <summary>
-    /// Will make sure player does not get stuck behind wall
-    /// </summary>
-    private void CheckForGrapplingThroughWall()
-    {
-        if (joint && player.GetComponent<Rigidbody>().velocity.magnitude < 5)
-        {
-            stuckStatusTime += Time.deltaTime;
-            Vector3 fromPosition = ejectPoint.transform.position;
-            Vector3 toPosition = grappleRayHit.transform.position;
-            Vector3 direction = toPosition - fromPosition;
-            RaycastHit hit;
-            float dist = Vector3.Distance(ejectPoint.transform.position, grappleRayHit.transform.position);
-
-            if (Physics.Raycast(ejectPoint.transform.position, direction, out hit, dist, whatIsNotGrappleable))
-            {
-                if (!hit.collider.isTrigger)
-                {
-
-                    StopGrapple();
-                }
-            }
-
-            else if (stuckStatusTime > maxStuckTime)
-            {
-                StopGrapple();
-            }
-
-        }
-
-        stuckStatusTime = 0;
-
-    }
-
     #region Getters/Setters
     /// <summary>
     /// Booleon function that determines if the player is grappleing or not.
@@ -1062,6 +1075,7 @@ public class GrapplingGun : MonoBehaviour
 
     #endregion
 
+    #region Helper Functions
     /// <summary>
     /// Will clamp the Velocity between a min and a max
     /// </summary>
@@ -1076,4 +1090,5 @@ public class GrapplingGun : MonoBehaviour
         else if (sm < min * min) return v.normalized * min;
         return v;
     }
+    #endregion
 }
