@@ -24,9 +24,6 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The transform of the player's camera. ")] private Transform playerCam;
     [SerializeField, Tooltip("The transform of the player's orientation ")] private Transform orientation;
     float m_fieldOfView = 60.0f;
-    //public float initialFieldofView = 90f;
-    //public float desiredFieldofView = 60f;
-    //public float fieldofViewTime = .5f;
     #endregion
 
     //Other
@@ -36,11 +33,15 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Player Rotation and Look")]
     private float xRotation;
     [Tooltip("The player's look sensitivity. Higher value lets the player look around quicker. ")] private float sensitivity = 50f;
+    [SerializeField] float mouseAccerlationAmmount = .5f;
+    [SerializeField] float normalSpeedAmmount = 1;
+    private float lastFrameMouseInput;
+    private bool inMouseAccerlation = false;
     #endregion
 
     #region Player Movement Variables
     [Header("Player Movement Variables")]
-    [SerializeField, Tooltip("The player's movement speed. ")] private float moveSpeed = 4500;
+    private float moveSpeed = 4500;
     [Range(0f, 1f), SerializeField, Tooltip("The movement speed multiplier while the player is airborn. ")] private float airMoveSpeedMultiplier = .75f;
     [SerializeField, Tooltip("The player's max speed. when walking, doesnt affect swing speed ")] private float maxSpeed = 20;
 
@@ -67,7 +68,6 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField] private float zFOVActivationVel = 40f;
     [SerializeField] private float yFOVActicationVel = 15f;
     [SerializeField] private float fovChangeRate = 0.75f;
-    [SerializeField] private float minFOV = 60.75f;
     [SerializeField] private float maxFOV = 120.75f;
     [SerializeField] private float maxFOVSpeedScale = .05f;
     #endregion
@@ -106,7 +106,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The Gravtiy that will be applied to the player when they are in the air")] float inAirGravity = -12f;
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are swinging")] float grapplingGravity = -6;
     [SerializeField, Tooltip("The Gravity that will be applied when resetting rope velocity and rope length. The greater this value, " +
-        "the faster velocity and rope length are reset. ")] float grapplingResetGravity = -78.48f;
+        "the faster velocity and rope length are reset. ")]
+    float grapplingResetGravity = -78.48f;
 
     // grapplingGravityReference stores the grapplingGravity at Start, so that grapplingGravity may be reverted to its default easily.
     private float grapplingGravityReference = 0;
@@ -140,6 +141,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField]
     Animator anim;
 
+    private float minFOV = 60;
+
     #region Getters/Setters
     public float GetMaxVelocity()
     {
@@ -170,6 +173,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float currentMaxFOV;
 
     private float lastVelocity = 0;
+
+    private int lastMaxFOV;
 
     ParticleSystem system
     {
@@ -208,6 +213,13 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        if (PlayerPrefs.HasKey("FovValue"))
+        {
+            maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
+            m_fieldOfView = PlayerPrefs.GetInt("FovValue");
+            minFOV = PlayerPrefs.GetInt("FovValue");
+        }
+
 
         playerScale = transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
@@ -216,15 +228,15 @@ public class Matt_PlayerMovement : MonoBehaviour
         grapplingGravityReference = grapplingGravity;
 
         // Makes xVelocityResetRange, yVelocityResetRange, and zVelocityResetRange positive if they are negative.
-        if(xVelocityResetRange < 0)
+        if (xVelocityResetRange < 0)
         {
             xVelocityResetRange *= -1;
         }
-        if(yVelocityResetRange < 0)
+        if (yVelocityResetRange < 0)
         {
             yVelocityResetRange *= -1;
         }
-        if(zVelocityResetRange < 0)
+        if (zVelocityResetRange < 0)
         {
             zVelocityResetRange *= -1;
         }
@@ -373,6 +385,13 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
+        float startingSpeed = rb.velocity.magnitude;
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        rb.velocity = playerCam.forward * startingSpeed;
+
         while (currentTime < dashLength)
         {
             if (grounded || grappleGunReference.IsGrappling())
@@ -415,7 +434,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         killForce = true;
 
-        if(lowVelocityDuration != 0)
+        if (lowVelocityDuration != 0)
         {
             yield return new WaitForSeconds(lowVelocityDuration);
         }
@@ -429,7 +448,7 @@ public class Matt_PlayerMovement : MonoBehaviour
            (rb.velocity.z < zVelocityResetRange && rb.velocity.z > -zVelocityResetRange))
         {
             grapplingGravity = grapplingResetGravity;
-            grappleGunReference.SetRopeLength(grappleGunReference.GetStartingRopeLength());
+            //grappleGunReference.SetRopeLength(grappleGunReference.GetStartingRopeLength());
 
             rb.velocity = -rb.velocity / 2;
             rb.velocity = Vector3.zero;
@@ -455,7 +474,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         y = Input.GetAxisRaw("Vertical");
         jumping = Input.GetButton("Jump");
         crouching = Input.GetKey(KeyCode.LeftControl);
-        sprinting = Input.GetKey(KeyCode.LeftShift);
+        sprinting = Input.GetButton("Dash");
 
         //Crouching
         if (Input.GetKeyDown(KeyCode.LeftControl) && !grappleGunReference.IsGrappling())
@@ -464,13 +483,13 @@ public class Matt_PlayerMovement : MonoBehaviour
             StopCrouch();
 
         //sprinting
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetButtonDown("Dash"))
             Sprint();
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        if (Input.GetButtonUp("Dash"))
             StopSprint();
 
         //dash, when grappling
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !grounded)
+        if (Input.GetButtonDown("Dash") && !grounded)
         {
             Dash();
         }
@@ -611,7 +630,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             multiplierV = airMoveSpeedMultiplier;
 
             //PlayerHitGround Event for Dialogue/Narrative Trigger System
-            if(fallCheckRunning == false)
+            if (fallCheckRunning == false)
                 StartCoroutine(FallCheck());
         }
 
@@ -658,7 +677,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             // If the force can be applied, add a force in the direction of the player's orientation.
             if (grappleGunReference.GetCanApplyForce())
             {
-                rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
+                rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed()* 2 * Time.deltaTime);
                 latestOrientation = orientation.transform.forward;
             }
         }
@@ -745,13 +764,13 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <returns></returns>
     IEnumerator FallCheck()
     {
-        if(narrativeTriggerReference == null)
+        if (narrativeTriggerReference == null)
             yield break;
 
         fallCheckRunning = true;
 
         float airTime = 0;
-        while(!grounded)
+        while (!grounded)
         {
             if (grappleGunReference.IsGrappling())
                 airTime = 0;
@@ -760,7 +779,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             yield return null;
         }
 
-        if(airTime > narrativeTriggerReference.GetFallTime())
+        if (airTime > narrativeTriggerReference.GetFallTime())
         {
             GameEventManager.TriggerEvent("onPlayerHitGround");
         }
@@ -780,7 +799,15 @@ public class Matt_PlayerMovement : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime;
 
-        //Find current look rotation
+        float mouseInput = Mathf.Abs(mouseX) + Mathf.Abs(mouseY);
+        if (mouseInput > normalSpeedAmmount)
+        {
+            mouseX *= 1 + (mouseAccerlationAmmount * (mouseInput - normalSpeedAmmount));
+
+            mouseY *= 1 + (mouseAccerlationAmmount * (mouseInput - normalSpeedAmmount));
+
+        }
+
         Vector3 rot = playerCam.transform.localRotation.eulerAngles;
         desiredX = rot.y + mouseX;
 
@@ -826,7 +853,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         RaycastHit hit;
         Physics.Raycast(playerCam.position, playerCam.transform.forward, out hit, Mathf.Infinity, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore);
-        if(hit.collider != null)
+        if (hit.collider != null)
         {
             return hit.collider.gameObject;
         }
@@ -837,7 +864,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
 
     }
-    
+
 
     /// <summary>
     /// Handles movement counter measures to maintain smooth movement.
@@ -941,6 +968,22 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        int layer = other.gameObject.layer;
+        if (whatIsGround != (whatIsGround | (1 << layer))) return;
+
+        for (int i = 0; i < other.contactCount; i++)
+        {
+            Vector3 normal = other.contacts[i].normal;
+            //FLOOR
+            if (IsFloor(normal))
+            {
+                grappleGunReference.ResetGrapples();
+            }
+        }
+    }
+
     /// <summary>
     /// Sets ground state to false.
     /// </summary>
@@ -956,17 +999,23 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void changeFOV()
     {
-        if(PlayerPrefs.GetInt("FOV") == 1)
+
+        if (PlayerPrefs.GetInt("FOV") == 1)
         {
             Camera.main.fieldOfView = m_fieldOfView;
-           var targetMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+            var targetMaxFOV = (int)(maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale)));
 
-            if (currentMaxFOV < targetMaxFOV)
+            if (lastMaxFOV != 0 && Mathf.Abs(targetMaxFOV - lastMaxFOV) <= 2)
+            {
+                targetMaxFOV = lastMaxFOV;
+            }
+
+            if (currentMaxFOV < (targetMaxFOV - 2))
             {
                 currentMaxFOV += fovChangeRate * Time.deltaTime;
             }
 
-            else if(currentMaxFOV > targetMaxFOV)
+            else if (currentMaxFOV > (targetMaxFOV + 2))
             {
                 currentMaxFOV -= fovChangeRate * Time.deltaTime;
             }
@@ -981,13 +1030,20 @@ public class Matt_PlayerMovement : MonoBehaviour
                 rb.velocity.z <= -zFOVActivationVel)
             {
 
-                m_fieldOfView += fovChangeRate * Time.deltaTime;
+                m_fieldOfView += (fovChangeRate * Time.deltaTime);
+                //  m_fieldOfView = (int)m_fieldOfView;
             }
             else
-                m_fieldOfView -= fovChangeRate * Time.deltaTime;
+            {
+                m_fieldOfView -= (fovChangeRate * Time.deltaTime);
+                //   m_fieldOfView = (int)m_fieldOfView;
+            }
 
 
             lastVelocity = rb.velocity.magnitude;
+
+
+            lastMaxFOV = targetMaxFOV;
         }
 
 

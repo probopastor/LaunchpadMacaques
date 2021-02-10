@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 311249196486175632}
   - component: {fileID: 311249196486175647}
   - component: {fileID: 311249196486175634}
+  - component: {fileID: 1998944828334140402}
   m_Layer: 0
   m_Name: Radius
   m_TagString: Untagged
@@ -113,6 +114,23 @@ MonoBehaviour:
     this sandbox level, I will appear in front of each type of puzzle element and
     thing. Walking by me makes my useful information appear. \n\nPress O to toggle
     me on and off (only boring people do this). "
+--- !u!114 &1998944828334140402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 311249196486175645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05cb1c4110846d94081196182252df8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - keyBoardSpriteIndex: 3
+    controllerSpriteIndex: 11
+  - keyBoardSpriteIndex: 7
+    controllerSpriteIndex: 13
 --- !u!1 &311249196723287900
 GameObject:
   m_ObjectHideFlags: 0

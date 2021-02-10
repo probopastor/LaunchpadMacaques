@@ -4,14 +4,12 @@
 * InformationPosts.cs
 * Displays information when the player triggers an information post. 
 */
-
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class InformationPost : MonoBehaviour
+public class InformationPost : A_InputType
 {
     #region Variables
 
@@ -20,28 +18,47 @@ public class InformationPost : MonoBehaviour
 
 
     private bool isActive;
-    private bool toggleFunctionality;
 
     private bool playerInRange;
 
     private NarrativeTriggerHandler narrative;
+
+    private string interactText = "Press E";
+
 
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
+        base.Start();
         isActive = false;
-        toggleFunctionality = true;
         SetInformation();
 
         narrative = FindObjectOfType<NarrativeTriggerHandler>();
     }
 
+    /// <summary>
+    /// When the controller is connected/disconnected will update the Press XXX To Read Text
+    /// </summary>
+    public override void ChangeUI()
+    {
+
+        if (controllerDetected)
+        {
+            interactText = "Press<sprite=18>To Read";
+        }
+
+        else
+        {
+            interactText = "Press E To Read";
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if(playerInRange && Input.GetKeyDown(KeyCode.E))
+        if (playerInRange && Input.GetButtonDown("Interact"))
         {
             if (informationText.text.Equals(information))
             {
@@ -52,7 +69,7 @@ public class InformationPost : MonoBehaviour
             {
                 informationText.text = information;
             }
-    
+
         }
     }
 
@@ -71,7 +88,7 @@ public class InformationPost : MonoBehaviour
     /// </summary>
     private void SetInformation()
     {
-        if(informationText != null)
+        if (informationText != null)
         {
             if (isActive)
             {
@@ -89,16 +106,18 @@ public class InformationPost : MonoBehaviour
     {
         if (other.tag == "Player" && !playerInRange)
         {
-            
+
             if (informationText)
             {
+                Debug.Log(controllerDetection.gameObject.name);
+                ChangeUI();
                 informationText.gameObject.transform.parent.gameObject.SetActive(true);
-                informationText.text = "press E to read";
-         
+                informationText.text = interactText;
+
                 playerInRange = true;
                 narrative.TurnOffDialouge();
             }
-  
+
         }
     }
 
@@ -111,8 +130,32 @@ public class InformationPost : MonoBehaviour
         }
     }
 
+    #region Getters/Setters
     public bool GetTutorialCanvas()
     {
         return informationText.gameObject.transform.parent.gameObject.activeSelf;
     }
+
+    public void SetInformationPost(string newString)
+    {
+        information = newString;
+    }
+
+
+    public string GetInformationPostTest()
+    {
+        return information;
+    }
+
+    public bool GetPlayerInRange()
+    {
+        return playerInRange;
+    }
+
+    public TextMeshProUGUI GetTextBox()
+    {
+        return informationText;
+    }
+    #endregion
+
 }

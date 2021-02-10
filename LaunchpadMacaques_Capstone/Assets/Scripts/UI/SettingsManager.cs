@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using FMODUnity;
+using UnityEngine.EventSystems;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -24,11 +25,13 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The Dialouge Volume Slider")] Slider dialougeVolume;
     [SerializeField, Tooltip("The Music Volume Slider")] Slider musicVolume;
     [SerializeField, Tooltip("The Sound Effects Volume Slider")] Slider soundEffectsVolume;
+    [SerializeField, Tooltip("Master Volume Slider")] Slider masterSoundSlider;
 
     [Header("Gameplay Settings")]
     [SerializeField, Tooltip("The Invert Y Toggle Box")] Toggle invertY;
     [SerializeField, Tooltip("The Mouse Sensitivity Slider")] Slider mouseSensitivity;
     [SerializeField, Tooltip("The Field of View Slider")] Toggle fovToggle;
+    [SerializeField, Tooltip("The Slider to set Starting FOV Value")] Slider fovSlider;
 
     [Header("Settings Holder")]
     [SerializeField, Tooltip("Will hold all the settings Menu")] GameObject settingsHolder;
@@ -41,6 +44,8 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The max volume for the Volume Sliders")] float maxVolume = 1;
     [SerializeField, Tooltip("The min volume for the Volume Sliders")] float minVolume = 0;
 
+    [SerializeField] Button playButton;
+
     Resolution[] reslolutions;
 
     // The Deafult variables the sliders will be set to, upon an ititial launch (Player has never played game before)
@@ -51,15 +56,22 @@ public class SettingsManager : MonoBehaviour
     private float deafultSoundEffects = .5f;
 
     private float deafultMouseSensitivity = 50;
-    private float deafultFOV = 60;
+    private int deafultFOV = 60;
+    private float deafultMaster = 1;
+
+
     #endregion
     void Start()
     {
+
+
+
         settingsHolder.SetActive(true);
         InitialFullScreen();
         InitialQuality();
         InitialDialouge();
         InitialMusic();
+        InitialMaster();
         InitialSFX();
         InitialInvertY();
         InitialMouseSensitivity();
@@ -78,10 +90,22 @@ public class SettingsManager : MonoBehaviour
 
     private void DisableStuff()
     {
+       
         audioSettings.SetActive(false);
         videoSettings.SetActive(false);
         gameplaySettings.SetActive(false);
         settingsHolder.SetActive(false);
+
+        if (DetectController.instance)
+        {
+            DetectController.instance.selectedGameObject = playButton.gameObject;
+        }
+
+        else
+        {
+            FindObjectOfType<DetectController>().selectedGameObject = playButton.gameObject;
+        }
+        FindObjectOfType<EventSystem>().SetSelectedGameObject(playButton.gameObject);
     }
 
     // Will set the sliders to have a starting value equal to either a deafult variable, or the relevant player prefs
@@ -168,7 +192,7 @@ public class SettingsManager : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("InvertY"))
         {
-            if(PlayerPrefs.GetInt("InvertY") == 1)
+            if (PlayerPrefs.GetInt("InvertY") == 1)
             {
                 invertY.SetIsOnWithoutNotify(true);
             }
@@ -248,6 +272,24 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    private void InitialMaster()
+    {
+        masterSoundSlider.maxValue = maxVolume;
+        masterSoundSlider.minValue = minVolume;
+
+        if (PlayerPrefs.HasKey("MasterVolume"))
+        {
+            masterSoundSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("MasterVolume"));
+            SetMasterVolume(PlayerPrefs.GetFloat("MasterVolume"));
+        }
+
+        else
+        {
+            masterSoundSlider.SetValueWithoutNotify(deafultMaster);
+            SetMasterVolume(deafultMaster);
+        }
+    }
+
     /// <summary>
     /// Called on Start
     /// Will Set the Value of the Dialouge Volume slider to either the deafult value or the "DialougeVolume" PlayerPrefs
@@ -301,7 +343,7 @@ public class SettingsManager : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("FOV"))
         {
-            if(PlayerPrefs.GetInt("FOV") == 1)
+            if (PlayerPrefs.GetInt("FOV") == 1)
             {
                 fovToggle.SetIsOnWithoutNotify(true);
             }
@@ -315,6 +357,18 @@ public class SettingsManager : MonoBehaviour
         else
         {
             fovToggle.SetIsOnWithoutNotify(true);
+        }
+
+        if (PlayerPrefs.HasKey("FovValue"))
+        {
+            fovSlider.SetValueWithoutNotify(PlayerPrefs.GetInt("FovValue"));
+            SetFOVValue(PlayerPrefs.GetInt("FovValue"));
+        }
+
+        else
+        {
+            fovSlider.SetValueWithoutNotify(deafultFOV);
+            SetFOVValue(deafultFOV);
         }
     }
 
@@ -389,6 +443,11 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    public void SetFOVValue(float value)
+    {
+        PlayerPrefs.SetInt("FovValue", (int)value);
+    }
+
     /// <summary>
     /// Will be called when the player changes the InvertY toggle
     /// Will Set the new choice to the "InvertY" PlayerPref
@@ -458,6 +517,11 @@ public class SettingsManager : MonoBehaviour
         ChangeFMODSound(soundEffectsVolume.gameObject, volume);
     }
 
+    public void SetMasterVolume(float volume)
+    {
+        PlayerPrefs.SetFloat("MasterVolume", volume);
+    }
+
     /// <summary>
     /// The method the Volume methods call to actually set the FMOD volume
     /// </summary>
@@ -475,8 +539,9 @@ public class SettingsManager : MonoBehaviour
 
     private void HandleEscapeKey()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && settingsHolder.activeSelf)
+        if (Input.GetButtonDown("Back") && settingsHolder.activeSelf)
         {
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
             if (optionsMenu.activeSelf)
             {
                 mainMenu.SetActive(true);
@@ -500,6 +565,8 @@ public class SettingsManager : MonoBehaviour
                 optionsMenu.SetActive(true);
                 gameplaySettings.SetActive(false);
             }
+
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
         }
     }
 }

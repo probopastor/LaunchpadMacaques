@@ -5878,32 +5878,32 @@ MonoBehaviour:
   currentGravityText: {fileID: 0}
   playerCam: {fileID: 7880684068529821271}
   orientation: {fileID: 7880684069204234823}
-  moveSpeed: 4500
+  mouseAccerlationAmmount: 0.09
+  normalSpeedAmmount: 3.2
   airMoveSpeedMultiplier: 0.75
-  maxSpeed: 10
+  maxSpeed: 15
   grounded: 0
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8448
-  maxVelocity: 50
+  maxVelocity: 70
   counterMovement: 0.175
   threshold: 0.01
   maxSlopeAngle: 50
   xFOVActivationVel: 15
   zFOVActivationVel: 15
-  yFOVActicationVel: 20
+  yFOVActicationVel: 15
   fovChangeRate: 15
-  minFOV: 60.75
   maxFOV: 70
-  maxFOVSpeedScale: 0.003
+  maxFOVSpeedScale: 0.00003
   xVelocityResetRange: 1
   yVelocityResetRange: 1
   zVelocityResetRange: 1
   lowVelocityDuration: 0.01
   jumpCooldown: 0.25
-  jumpForce: 400
+  jumpForce: 700
   gravity: -9.81
-  inAirGravity: -20
+  inAirGravity: -50
   grapplingGravity: -5
   grapplingResetGravity: -78.48
   sprintMultiplier: 1.75
@@ -6090,6 +6090,7 @@ MonoBehaviour:
   landingParticlesDuration: 1
   speedMultiplier: 1
   velocityThreshold: 7
+  minVelocityForParticles: 1
 --- !u!1 &7880684069204234816
 GameObject:
   m_ObjectHideFlags: 0
@@ -6360,30 +6361,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2db3bcdbec063fc439e4e9bea7338987, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grappleToggleEnabledText: {fileID: 0}
-  grappleToggleDisabledText: {fileID: 0}
-  ropeLengthText: {fileID: 0}
   ejectPoint: {fileID: 7880684068596782850}
   cam: {fileID: 7880684068563497863}
   player: {fileID: 7880684068815890877}
   hitObject: {fileID: 1736345935115610924, guid: 0294f38c6695ef344b4efa4c29f1c223,
     type: 3}
-  currentSwingSpeedText: {fileID: 0}
-  actualVelocityText: {fileID: 0}
-  ropeLengthSlider: {fileID: 0}
   postText: {fileID: 0}
+  grapplesLeftTextBox: {fileID: 0}
   whatIsGrappleable:
     serializedVersion: 2
     m_Bits: 4352
   whatIsNotGrappleable:
     serializedVersion: 2
     m_Bits: 3639
-  maxGrappleDistance: 100
+  maxGrappleDistance: 70
   grappleSpeed: 10
-  minDistance: 0
-  maxDistance: 70
-  newSwingGrappleLength: 10
-  wheelSensitivity: 2
+  typeOfGrapple: 3
+  ropeLength: 15
   startingAttachSpeed: 20
   attachSpeedIncrease: 10
   springValue: 5
@@ -6391,9 +6385,17 @@ MonoBehaviour:
   springMass: 5
   minSwingAngle: -90
   maxSwingAngle: 90
-  swingSpeed: 4500
-  maxSwingVelocity: 18
-  useConstantVelocity: 0
+  swingSpeed: 4000
+  maxSwingVelocity: 60
+  pullSpeed: 500
+  maxPullVelocity: 100
+  pullLength: 0.5
+  minDistanceFromObject: 5
+  increaseAmmount: 5
+  minStartingVelocity: 25
+  mouseWheelSensitivity: 1
+  maxGrapples: 10
+  useMaxGrapples: 1
   sphereRadius: 4
   neededVelocityForAutoAim: 0
   groundCheckDistance: 5
