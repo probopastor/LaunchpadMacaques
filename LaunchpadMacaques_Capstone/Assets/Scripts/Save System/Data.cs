@@ -29,6 +29,17 @@ public static class Data
     }
 
     [System.Serializable]
+    public class CompletionData
+    {
+        public CompletionData()
+        {
+            bool[] Completion = new bool[6];
+            Completion = GameObject.Find("Player").GetComponent<Matt_PlayerMovement>().Completion;
+
+        }
+    }
+
+    [System.Serializable]
     public class CheckpointData
     {
         
