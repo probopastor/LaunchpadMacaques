@@ -921,7 +921,12 @@ public class GrapplingGun : MonoBehaviour
     {
         anim.ResetTrigger("GrappleStart");
         anim.SetTrigger("GrappleEnd");
-        grappleRayHit.collider.isTrigger = false;
+
+        if (grappleRayHit.collider != null)
+        {
+            grappleRayHit.collider.isTrigger = false;
+        }
+ 
 
         pulling = false;
         StopCoroutine(PullCourtine(grappleRayHit));

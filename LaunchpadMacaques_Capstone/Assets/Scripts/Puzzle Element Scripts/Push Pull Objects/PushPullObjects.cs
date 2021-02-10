@@ -147,7 +147,7 @@ public class PushPullObjects : MonoBehaviour
     /// </summary>
     private void UserInput()
     {
-        if (Input.GetButtonDown("Start Grapple") || GetStartGrappleDown())
+        if ((Input.GetButtonDown("Start Grapple") || GetStartGrappleDown()) && Time.timeScale != 0)
         {
             if (!grabbing)
             {
@@ -159,7 +159,7 @@ public class PushPullObjects : MonoBehaviour
             }
 
         }
-        else if (Input.GetButtonDown("Stop Grapple") || GetStopGrappleDown())
+        else if ((Input.GetButtonDown("Stop Grapple") || GetStopGrappleDown()) && Time.timeScale != 0)
         {
             if (grabbing)
             {
