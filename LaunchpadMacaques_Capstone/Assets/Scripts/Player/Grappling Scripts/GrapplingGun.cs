@@ -392,6 +392,7 @@ public class GrapplingGun : MonoBehaviour
         {
             canHoldDownToGrapple = true;
         }
+
         if ((Input.GetButton("Start Grapple") || GetGrappleTrigger()) && IsGrappling() && canHoldDownToGrapple == true /*&& !holdingDownGrapple*/)
         {
             StartGrapple("Normal");
@@ -407,7 +408,7 @@ public class GrapplingGun : MonoBehaviour
             StopGrapple();
         }
 
-        else if((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTriggerDown()) && !IsGrappling())
+        else if((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTrigger()) && !IsGrappling())
         {
             StartGrapple("Batman");
         }
@@ -471,6 +472,7 @@ public class GrapplingGun : MonoBehaviour
         {
             if (!holdingDownStopGrapple)
             {
+                holdingDownStopGrapple = true;
                 return true;
             }
 
@@ -483,6 +485,7 @@ public class GrapplingGun : MonoBehaviour
 
         else
         {
+            holdingDownStopGrapple = false;
             return false;
         }
     }
