@@ -370,12 +370,12 @@ public class GrapplingGun : MonoBehaviour
             player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxPullVelocity);
         }
 
-       else if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !actualMaxVelocity)
+        else if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !actualMaxVelocity)
         {
             player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity);
         }
 
-       else if (actualMaxVelocity)
+        else if (actualMaxVelocity)
         {
             player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity, currentMaxVelocity);
         }
@@ -407,7 +407,7 @@ public class GrapplingGun : MonoBehaviour
             StopGrapple();
         }
 
-        else if((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTriggerDown()) && !IsGrappling())
+        else if ((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTriggerDown()) && !IsGrappling())
         {
             StartGrapple("Batman");
         }
@@ -680,6 +680,15 @@ public class GrapplingGun : MonoBehaviour
 
     #endregion
 
+    #region Effects
+    [SerializeField, Tooltip(" An array of particle systems to be played while grappling. All will be played at once.")] private ParticleSystem[] grappleParticles;
+    [SerializeField, Tooltip(" The positions of each grappling particle system from the player. A value of 0 is at the player hand.")] private Vector3[] particlePositions;
+    [SerializeField, Tooltip(" The rotation  of each grappling particle system. 0 is default particle rotation.")] private Quaternion[] particleRotations;
+
+    private List<GameObject> particleObjs = new List<GameObject>();
+    private GameObject grappleParticlesObj;
+    #endregion
+
     #region Start/Stop Grapple
     /// <summary>
     /// Call whenever we want to start a grapple
@@ -691,7 +700,6 @@ public class GrapplingGun : MonoBehaviour
             if (IsGrappling())
             {
                 StopGrapple();
-                
             }
 
             SetDifferentGrappleTypeSettings();
@@ -706,20 +714,31 @@ public class GrapplingGun : MonoBehaviour
             anim.ResetTrigger("GrappleEnd");
             anim.SetTrigger("GrappleStart");
 
+            // Instantiate grappling particles and play them
+            for(int i = 0; i < grappleParticles.Length; i++)
+            {
+                Vector3 particlePos = new Vector3(transform.position.x + particlePositions[i].x, transform.position.y + particlePositions[i].y, transform.position.z + particlePositions[i].z);
+                GameObject grappleParticlesObj = Instantiate(grappleParticles[i].gameObject, particlePos, particleRotations[i]);
+                particleObjs.Add(grappleParticlesObj);
+                grappleParticlesObj.transform.parent = gameObject.transform;
+
+                grappleParticles[i].Play();
+            }
+
+
+            //grappleParticlesObj = Instantiate(grappleParticles.gameObject, transform.position, transform.rotation);
+            //grappleParticlesObj.transform.parent = gameObject.transform;
+            //grappleParticles.Play();
+
             StartCoroutine(DrawLine());
             if(type == "Normal")
             {
                 CreateGrapplePoint();
             }
-
             else
             {
                 BatmanGrapple();
             }
-
-
-
-
         }
     }
     /// <summary>
@@ -817,8 +836,6 @@ public class GrapplingGun : MonoBehaviour
 
         float counter = 0;
 
-
-
         lr.SetPosition(0, ejectPoint.position);
 
         float tempAttachSpeed = startingAttachSpeed;
@@ -840,7 +857,6 @@ public class GrapplingGun : MonoBehaviour
         }
 
         drawlingLine = false;
-
     }
 
 
@@ -904,8 +920,6 @@ public class GrapplingGun : MonoBehaviour
         {
             pinwheel.TriggerRotation(grappleRayHit.collider.transform, cam.forward);
         }
-
-
     }
 
     private void BatmanGrapple()
@@ -927,13 +941,20 @@ public class GrapplingGun : MonoBehaviour
             grappleRayHit.collider.isTrigger = false;
         }
  
-
         pulling = false;
         StopCoroutine(PullCourtine(grappleRayHit));
         currentGrappledObj = null;
 
         swingLockToggle = false;
 
+        // Stop all grapple particles playing
+        for (int i = 0; i < grappleParticles.Length; i++)
+        {
+            grappleParticles[i].Stop();
+            Destroy(particleObjs[i]);
+        }
+        // Clear the particle object list so it can be reused. 
+        particleObjs.Clear();
 
         if (hitObjectClone)
         {

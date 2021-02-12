@@ -249,8 +249,6 @@ public class Matt_PlayerMovement : MonoBehaviour
         Movement();
         LimitVelocity();
         SetGravityModifier();
-
-
     }
 
     private void Update()
@@ -1045,9 +1043,5 @@ public class Matt_PlayerMovement : MonoBehaviour
 
             lastMaxFOV = targetMaxFOV;
         }
-
-
     }
-
-
 }
