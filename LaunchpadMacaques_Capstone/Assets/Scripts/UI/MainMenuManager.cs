@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -49,13 +50,13 @@ public class MainMenuManager : MonoBehaviour
     {
         int index = 0;
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetButtonDown("Back"))
         {
 
             for (index = 0; index <= menuPanels.Count - 1; index++)
 
             {
-
+                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
                 switch (menuPanels[index].activeSelf)
                 {
 

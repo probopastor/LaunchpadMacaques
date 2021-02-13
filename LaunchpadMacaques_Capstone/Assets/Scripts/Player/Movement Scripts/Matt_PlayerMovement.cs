@@ -822,12 +822,12 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             if (PlayerPrefs.GetInt("InvertY") == 1)
             {
-                xRotation -= mouseY;
+                xRotation += mouseY;
             }
 
             else
             {
-                xRotation += mouseY;
+                xRotation -= mouseY;
             }
         }
 

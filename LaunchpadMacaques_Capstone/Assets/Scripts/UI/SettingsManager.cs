@@ -12,6 +12,7 @@ using UnityEngine.UI;
 using TMPro;
 using FMODUnity;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -63,23 +64,50 @@ public class SettingsManager : MonoBehaviour
     #endregion
     void Start()
     {
+        if(SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            settingsHolder.SetActive(true);
 
 
+            InitialFullScreen();
+            InitialQuality();
+            InitialDialouge();
+            InitialMusic();
+            InitialMaster();
+            InitialSFX();
+            InitialInvertY();
+            InitialMouseSensitivity();
+            SetResolutionsDropDown();
+            InitialFOV();
 
-        settingsHolder.SetActive(true);
+            DisableStuff();
+
+
+        }
+
+    }
+
+    public void UpdateGameplay()
+    {
+        InitialFOV();
+        InitialInvertY();
+        InitialMouseSensitivity();
         InitialFullScreen();
-        InitialQuality();
+    }
+
+    public void UpdateSound()
+    {
         InitialDialouge();
         InitialMusic();
         InitialMaster();
         InitialSFX();
-        InitialInvertY();
-        InitialMouseSensitivity();
+    }
+
+    public void UpdateVisuals()
+    {
         SetResolutionsDropDown();
-        InitialFOV();
-
-        DisableStuff();
-
+        InitialFullScreen();
+        InitialQuality();
     }
 
     private void Update()
@@ -87,25 +115,28 @@ public class SettingsManager : MonoBehaviour
         HandleEscapeKey();
     }
 
-
     private void DisableStuff()
     {
-       
+
         audioSettings.SetActive(false);
         videoSettings.SetActive(false);
         gameplaySettings.SetActive(false);
         settingsHolder.SetActive(false);
 
-        if (DetectController.instance)
+        if (SceneManager.GetActiveScene().name == "MainMenu")
         {
-            DetectController.instance.selectedGameObject = playButton.gameObject;
+            if (DetectController.instance)
+            {
+                DetectController.instance.selectedGameObject = playButton.gameObject;
+            }
+
+            else
+            {
+                FindObjectOfType<DetectController>().selectedGameObject = playButton.gameObject;
+            }
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(playButton.gameObject);
         }
 
-        else
-        {
-            FindObjectOfType<DetectController>().selectedGameObject = playButton.gameObject;
-        }
-        FindObjectOfType<EventSystem>().SetSelectedGameObject(playButton.gameObject);
     }
 
     // Will set the sliders to have a starting value equal to either a deafult variable, or the relevant player prefs
@@ -539,34 +570,52 @@ public class SettingsManager : MonoBehaviour
 
     private void HandleEscapeKey()
     {
-        if (Input.GetButtonDown("Back") && settingsHolder.activeSelf)
+        if (/*SceneManager.GetActiveScene().name == "MainMenu"*/ true)
         {
-            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-            if (optionsMenu.activeSelf)
+            if (Input.GetButtonDown("Back") && settingsHolder.activeSelf)
             {
-                mainMenu.SetActive(true);
-                settingsHolder.SetActive(false);
-            }
+                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+                if (optionsMenu.activeSelf)
+                {
+                    mainMenu.SetActive(true);
+                    settingsHolder.SetActive(false);
+                }
 
-            else if (videoSettings.activeSelf)
-            {
-                optionsMenu.SetActive(true);
-                videoSettings.SetActive(false);
-            }
+                else if (videoSettings.activeSelf)
+                {
+                    optionsMenu.SetActive(true);
+                    videoSettings.SetActive(false);
+                }
 
-            else if (audioSettings.activeSelf)
-            {
-                optionsMenu.SetActive(true);
-                audioSettings.SetActive(false);
-            }
+                else if (audioSettings.activeSelf)
+                {
+                    optionsMenu.SetActive(true);
+                    audioSettings.SetActive(false);
+                }
 
-            else if (gameplaySettings.activeSelf)
-            {
-                optionsMenu.SetActive(true);
-                gameplaySettings.SetActive(false);
-            }
+                else if (gameplaySettings.activeSelf)
+                {
+                    optionsMenu.SetActive(true);
+                    gameplaySettings.SetActive(false);
+                }
 
-            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+            }
+        }
+
+    }
+
+
+    public bool InSubSettings()
+    {
+        if (gameplaySettings.activeSelf || videoSettings.activeSelf || audioSettings.activeSelf)
+        {
+            return true;
+        }
+
+        else
+        {
+            return false;
         }
     }
 }
