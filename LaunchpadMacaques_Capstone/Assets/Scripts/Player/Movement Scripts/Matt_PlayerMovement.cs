@@ -267,6 +267,11 @@ public class Matt_PlayerMovement : MonoBehaviour
             Look();
             grappleGunReference.UpdateHandRotation(rb.velocity);
         }
+        if (PlayerPrefs.HasKey("MouseSensitivity"))
+        {
+            sensitivity = PlayerPrefs.GetFloat("MouseSensitivity");
+        }
+
 
         //Debug.Log("canApplyForce is: " + grappleGunReference.GetCanApplyForce());
         //Debug.Log("kill force is: " + killForce);
