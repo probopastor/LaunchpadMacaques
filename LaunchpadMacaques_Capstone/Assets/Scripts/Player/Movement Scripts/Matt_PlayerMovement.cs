@@ -55,6 +55,9 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     [HideInInspector] public bool grounded;
     [SerializeField, Tooltip("The layer for the ground. Anything on this layer will be considered ground. ")] private LayerMask whatIsGround;
+    [SerializeField, Tooltip("The physics material that platforms should obtain if they are collided with from the side")] private PhysicMaterial frictionlessMat;
+    private PhysicMaterial originalMaterial;
+    private bool applyPhysicsMaterial;
 
     [SerializeField, Tooltip("This is the max speed that the player can achieve when swinging. ")]
     private float maxVelocity = 50f;
@@ -208,6 +211,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         //Cannot dash while on the ground.
         canDash = false;
+
+        applyPhysicsMaterial = false;
 
         if (PlayerPrefs.HasKey("MouseSensitivity"))
         {
@@ -683,7 +688,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             // If the force can be applied, add a force in the direction of the player's orientation.
             if (grappleGunReference.GetCanApplyForce())
             {
-                rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed()* 2 * Time.deltaTime);
+                rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * 2 * Time.deltaTime);
                 latestOrientation = orientation.transform.forward;
             }
         }
@@ -974,6 +979,20 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
+    private void OnCollisionExit(Collision collision)
+    {
+        // If the player is exiting a surface, change its physics material back to its original one.
+        if (collision.collider.tag == "GrapplePoint" || collision.collider.tag == "Platform")
+        {
+            if (applyPhysicsMaterial)
+            {
+                applyPhysicsMaterial = false;
+
+                collision.collider.material = originalMaterial;
+            }
+        }
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         int layer = other.gameObject.layer;
@@ -986,6 +1005,36 @@ public class Matt_PlayerMovement : MonoBehaviour
             if (IsFloor(normal))
             {
                 grappleGunReference.ResetGrapples();
+            }
+        }
+
+        // Determines whether or not the point collided with is a surface. 
+        if (other.collider.tag == "GrapplePoint" || other.collider.tag == "Platform")
+        {
+            RaycastHit hit;
+
+            // If it's a surface, determine whether the player is on top or on the side of the surface.
+            if (Physics.Raycast(gameObject.transform.position, Vector3.down, out hit, 1f))
+            {
+                if (hit.collider.gameObject != other.collider.gameObject)
+                {
+                    applyPhysicsMaterial = true;
+                }
+            }
+            else
+            {
+                applyPhysicsMaterial = true;
+            }
+
+            // If the player is on the side of the surface, set the surface's physics material to the frictionless material to prevent sticking.
+            if (applyPhysicsMaterial)
+            {
+                if (other.collider.material != null)
+                {
+                    originalMaterial = other.collider.material;
+                }
+
+                other.collider.material = frictionlessMat;
             }
         }
     }
@@ -1099,17 +1148,17 @@ public class Matt_PlayerMovement : MonoBehaviour
                 break;
         }
 
-                if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.V))
         {
             Save_System.SavePlayer(this);
             Debug.Log("player has saved.");
         }
-       
+
     }
 
     public void LoadPlayer()
     {
-        if(Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C))
         {
             PlayerData data = Save_System.LoadPlayer();
 
@@ -1121,7 +1170,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
             Debug.Log("player has loaded.");
         }
-        
+
     }
 
 
