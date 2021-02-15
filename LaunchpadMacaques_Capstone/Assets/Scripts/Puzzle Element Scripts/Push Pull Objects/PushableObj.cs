@@ -8,12 +8,13 @@
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
+using System.Collections;
 
 public class PushableObj : MonoBehaviour
 {
     #region Inspector Vars
     [Header("Visual Settings")]
-    [SerializeField][Tooltip("The Decal that will be placed to make part of object look Corrupted")] GameObject throwDecal;
+    [SerializeField] [Tooltip("The Decal that will be placed to make part of object look Corrupted")] GameObject throwDecal;
 
     [Header("Movement Settings")]
     [SerializeField] [Tooltip("The Variable that will be multiplyed by deafult grabity to apply gravity to this object")] float gravityScaler = 1.75f;
@@ -23,9 +24,9 @@ public class PushableObj : MonoBehaviour
 
     [Header("Change Distance Settings")]
     [SerializeField] [Tooltip("How much the distance will change when the player moves the mouse wheel")] float wheelSensitivity = 5;
-    [SerializeField] [Tooltip("The Bool which will determine if the player can change the Object Fly Distance")]  bool changeDistance = true;
-    [SerializeField] [Tooltip("The Min Fly Distance for the Object")]float minDistance = 5;
-    [SerializeField] [Tooltip("The Max Fly Distance for the Object")]float maxDistance = 40;
+    [SerializeField] [Tooltip("The Bool which will determine if the player can change the Object Fly Distance")] bool changeDistance = true;
+    [SerializeField] [Tooltip("The Min Fly Distance for the Object")] float minDistance = 5;
+    [SerializeField] [Tooltip("The Max Fly Distance for the Object")] float maxDistance = 40;
 
     [SerializeField, Tooltip("The Layer that is ground")] LayerMask ground;
 
@@ -33,7 +34,7 @@ public class PushableObj : MonoBehaviour
     [SerializeField, Tooltip("If True particles effects will scale depending on how far away the player is")] bool scaleWithDistance;
     [SerializeField, Tooltip("The amount the size of the particles will scale with player distance")] float sizeScaleAmount;
     [SerializeField, Tooltip("The amount the speed of the particles will scale with player distance")] float speedScaleAmount;
-
+    [SerializeField, Tooltip("The grappling point layers that should respawn the throwable cube. ")] private LayerMask grapplingPointLayers;
     #endregion
 
     #region Private Vars
@@ -54,7 +55,7 @@ public class PushableObj : MonoBehaviour
     private StudioEventEmitter soundEmitter;
 
     private ParticleSystem particles;
-    
+
     private ParticleSystem.MainModule main;
 
     private ParticleSystem.MinMaxCurve particleStartingSpeed;
@@ -66,12 +67,13 @@ public class PushableObj : MonoBehaviour
     private float cubeRadius;
 
     private bool objectHovered;
-
+    private CubeRespawn respawnRef;
     #endregion
 
     private void Awake()
     {
         pushPull = FindObjectOfType<PushPullObjects>();
+        respawnRef = GetComponent<CubeRespawn>();
         CreateDecalAndLine();
 
         grav = this.GetComponent<Gravity>();
@@ -180,7 +182,7 @@ public class PushableObj : MonoBehaviour
         if (wheelInput > 0)
         {
             distance += wheelSensitivity;
-            if(distance > maxDistance)
+            if (distance > maxDistance)
             {
                 distance = maxDistance;
             }
@@ -190,7 +192,7 @@ public class PushableObj : MonoBehaviour
         {
             distance -= wheelSensitivity;
 
-            if(distance < minDistance)
+            if (distance < minDistance)
             {
                 distance = minDistance;
             }
@@ -220,7 +222,7 @@ public class PushableObj : MonoBehaviour
             RaycastHit hit;
             Ray ray = new Ray(point1, point2 - point1);
 
-            if (Physics.Raycast(ray, out hit ,(point2 - point1).magnitude))
+            if (Physics.Raycast(ray, out hit, (point2 - point1).magnitude))
             {
                 if (!hit.collider.isTrigger)
                 {
@@ -262,7 +264,7 @@ public class PushableObj : MonoBehaviour
 
             /// If the thing predicts that it will run into a non trigger object it will stop the line there, and place a decal there.
             /// It if is an object the cube can affect the  line will turn green
-            if (Physics.SphereCast(ray, cubeRadius ,out hit, (point2 - point1).magnitude))
+            if (Physics.SphereCast(ray, cubeRadius, out hit, (point2 - point1).magnitude))
             {
                 if (hit.collider.gameObject.CompareTag("Collectible") || hit.collider.gameObject.CompareTag("PassBy"))
                 {
@@ -278,7 +280,7 @@ public class PushableObj : MonoBehaviour
                 }
 
 
-        
+
 
             }
 
@@ -295,7 +297,7 @@ public class PushableObj : MonoBehaviour
             lr.positionCount++;
 
             /// An If statement to stop the game from breaking if the Line becomes to big
-    
+
 
 
         }
@@ -329,7 +331,7 @@ public class PushableObj : MonoBehaviour
         int pos = lr.positionCount;
 
         Vector3 posLocation;
-        if(pos > 5)
+        if (pos > 5)
         {
             posLocation = lr.GetPosition(pos - 5);
         }
@@ -338,10 +340,10 @@ public class PushableObj : MonoBehaviour
         {
             posLocation = lr.GetPosition(pos - 1);
         }
-    
+
         RaycastHit hit;
 
-        if (Physics.Raycast(posLocation,Vector3.down,out hit, 20, ground))
+        if (Physics.Raycast(posLocation, Vector3.down, out hit, 20, ground))
         {
             return true;
         }
@@ -386,7 +388,6 @@ public class PushableObj : MonoBehaviour
 
         if (soundEmitter.IsPlaying()) soundEmitter.Stop();
         soundEmitter.Play();
-
     }
 
     /// <summary>
@@ -411,11 +412,27 @@ public class PushableObj : MonoBehaviour
     /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("Collision");
+
         if (beingPushed)
         {
             StopPushingObject();
         }
- 
+
+        if (!pickedUp)
+        {
+            CheckIfOnGrapplePoint();
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        Debug.Log("Collision Stay");
+
+        if (!pickedUp)
+        {
+            CheckIfOnGrapplePoint();
+        }
     }
 
     /// <summary>
@@ -429,7 +446,18 @@ public class PushableObj : MonoBehaviour
         pickedUp = false;
         lr.positionCount = 0;
         thisDecal.SetActive(false);
+    }
 
+    /// <summary>
+    /// Checks to see if the throwable cube landed on a grapple point. If it did, respawn the cube.
+    /// </summary>
+    private void CheckIfOnGrapplePoint()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 2.5f, grapplingPointLayers))
+        {
+            respawnRef.RespawnCube();
+        }
     }
 
     /// <summary>
@@ -440,6 +468,7 @@ public class PushableObj : MonoBehaviour
     {
         return beingPushed;
     }
+
 
     #endregion
 
@@ -491,11 +520,11 @@ public class PushableObj : MonoBehaviour
     /// <param name="enable"></param>
     public void EnableDisableOutline(bool enable)
     {
-        if(enable)
+        if (enable)
         {
             outlineObj.GetComponent<Renderer>().enabled = true;
         }
-        else if(!enable)
+        else if (!enable)
         {
             outlineObj.GetComponent<Renderer>().enabled = false;
         }

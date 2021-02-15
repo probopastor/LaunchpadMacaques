@@ -455,7 +455,14 @@ public class PushPullObjects : MonoBehaviour
     /// <returns></returns>
     public GameObject GetHeldCube()
     {
-        return objectRB.gameObject;
+        if (objectRB != null && objectRB.gameObject != null)
+        {
+            return objectRB.gameObject;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public GameObject GetHoverdObject()
