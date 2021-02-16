@@ -8,6 +8,7 @@
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.InputSystem;
 
 public class PushableObj : MonoBehaviour
 {
@@ -69,8 +70,14 @@ public class PushableObj : MonoBehaviour
 
     #endregion
 
+    PlayerControlls controls;
+    float wheelInput;
     private void Awake()
     {
+        controls = new PlayerControlls();
+        controls.GamePlay.Scroll.performed += ChangeDistance;
+        controls.GamePlay.Scroll.canceled += ChangeDistance;
+        
         pushPull = FindObjectOfType<PushPullObjects>();
         CreateDecalAndLine();
 
@@ -136,9 +143,9 @@ public class PushableObj : MonoBehaviour
             grav.gravity = grav.GetOrgGravity();
         }
 
-        if (changeDistance & pickedUp)
+        if(pickedUp && changeDistance)
         {
-            ChangeDistance();
+            ApplyDistanceChange();
         }
 
         ResetObjectPos();
@@ -173,14 +180,19 @@ public class PushableObj : MonoBehaviour
     /// <summary>
     /// Will Get The User's Mouse Wheel Input to Change Object Distance
     /// </summary>
-    private void ChangeDistance()
+    private void ChangeDistance(InputAction.CallbackContext cxt)
     {
-        var wheelInput = Input.GetAxis("Mouse ScrollWheel");
+        wheelInput = cxt.ReadValue<Vector2>().y;
 
+
+    }
+
+    private void ApplyDistanceChange()
+    {
         if (wheelInput > 0)
         {
             distance += wheelSensitivity;
-            if(distance > maxDistance)
+            if (distance > maxDistance)
             {
                 distance = maxDistance;
             }
@@ -190,18 +202,20 @@ public class PushableObj : MonoBehaviour
         {
             distance -= wheelSensitivity;
 
-            if(distance < minDistance)
+            if (distance < minDistance)
             {
                 distance = minDistance;
             }
         }
     }
 
+
     /// <summary>
     /// The Private method that is called to actually push an object
     /// </summary>
     private void PushObject()
     {
+        controls.Disable();
         pickedUp = false;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         grav.UseGravity(true);
@@ -374,6 +388,7 @@ public class PushableObj : MonoBehaviour
     /// <param name="cam"></param>
     public void PickedUpObject(GameObject cam)
     {
+        controls.Enable();
         //TurnOnOffParticles(false);
         tempCam = cam;
         beingPushed = false;
@@ -394,6 +409,7 @@ public class PushableObj : MonoBehaviour
     /// </summary>
     public void DroppedObject()
     {
+        controls.Disable();
         pickedUp = false;
         beingPushed = false;
         CheckParticleStatus();

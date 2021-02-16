@@ -37,10 +37,10 @@ public class MainMenuManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         anim.Play("MainMenuBG");
     }
-    
+
     private void Update()
     {
-        EscapeKey();
+        // EscapeKey();
     }
 
     /// <summary>
@@ -50,81 +50,88 @@ public class MainMenuManager : MonoBehaviour
     {
         int index = 0;
 
-        if (Input.GetButtonDown("Back"))
+        EventSystem eventSys = FindObjectOfType<EventSystem>();
+        for (index = 0; index <= menuPanels.Count - 1; index++)
+
         {
-
-            for (index = 0; index <= menuPanels.Count - 1; index++)
-
+      
+            switch (menuPanels[index].activeSelf)
             {
-                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-                switch (menuPanels[index].activeSelf)
-                {
 
-                    case true:
+                case true:
 
-                        switch (menuPanels[index].name)
-                        {
-                            case "Level Select Page1":
+                    switch (menuPanels[index].name)
+                    {
+                        case "Level Select Page1":
 
-                                menuPanels[index].SetActive(false);
-                                mainMenu_Panel.SetActive(true);
+                            menuPanels[index].SetActive(false);
+                            //eventSys.SetSelectedGameObject(null);
+                            mainMenu_Panel.SetActive(true);
 
-                                break;
+                            break;
 
-                            case "Level Select Page2":
+                        case "Level Select Page2":
 
-                                menuPanels[index].SetActive(false);
-                                menuPanels[1].SetActive(true);
+                            menuPanels[index].SetActive(false);
+                            //eventSys.SetSelectedGameObject(null);
+                            menuPanels[1].SetActive(true);
 
-                                break;
+                            break;
 
-                            case "HowToPlay Panel":
+                        case "HowToPlay Panel":
 
-                                menuPanels[index].SetActive(false);
-                                mainMenu_Panel.SetActive(true);
+                            menuPanels[index].SetActive(false);
+                            eventSys.SetSelectedGameObject(null);
+                            mainMenu_Panel.SetActive(true);
 
-                                break;
+                            break;
 
-                            case "Credits Panel":
+                        case "Credits Panel":
 
-                                menuPanels[index].SetActive(false);
-                                mainMenu_Panel.SetActive(true);
+                            menuPanels[index].SetActive(false);
+                            //eventSys.SetSelectedGameObject(null);
+                            mainMenu_Panel.SetActive(true);
 
-                                break;
+                            break;
 
-                            case "OptionsMenu":
+                        case "OptionsMenu":
 
-                                menuPanels[index].SetActive(false);
-                                mainMenu_Panel.SetActive(true);
+                            menuPanels[index].SetActive(false);
+                            //eventSys.SetSelectedGameObject(null);
+                            mainMenu_Panel.SetActive(true);
 
-                                break;
+                            break;
 
-                            case "GameplayOptionsPanel":
+                        case "GameplayOptionsPanel":
 
-                                menuPanels[index].SetActive(false);
-                                menuPanels[5].SetActive(true);
+                            menuPanels[index].SetActive(false);
+                            //eventSys.SetSelectedGameObject(null);
+                            menuPanels[5].SetActive(true);
 
-                                break;
+                            break;
 
-                            case "VideoOptionsPanel":
+                        case "VideoOptionsPanel":
 
-                                menuPanels[index].SetActive(false);
-                                menuPanels[5].SetActive(true);
+                            menuPanels[index].SetActive(false);
+                           // eventSys.SetSelectedGameObject(null);
+                            menuPanels[5].SetActive(true);
 
-                                break;
+                            break;
 
-                            case "AudioOptionsPanel":
+                        case "AudioOptionsPanel":
 
-                                menuPanels[index].SetActive(false);
-                                menuPanels[5].SetActive(true);
+                            menuPanels[index].SetActive(false);
+                           // eventSys.SetSelectedGameObject(null);
+                            menuPanels[5].SetActive(true);
 
-                                break;
+                            break;
 
-                        }
+                    }
 
-                        break;
+                    Debug.Log(eventSys.currentSelectedGameObject);
+                    break;
 
-                }
+                    
             }
         }
     }

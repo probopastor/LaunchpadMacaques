@@ -64,7 +64,7 @@ public class SettingsManager : MonoBehaviour
     #endregion
     void Start()
     {
-        if(SceneManager.GetActiveScene().name == "MainMenu")
+        if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             settingsHolder.SetActive(true);
 
@@ -112,7 +112,7 @@ public class SettingsManager : MonoBehaviour
 
     private void Update()
     {
-        HandleEscapeKey();
+        //HandleEscapeKey();
     }
 
     private void DisableStuff()
@@ -568,40 +568,39 @@ public class SettingsManager : MonoBehaviour
     #endregion
 
 
-    private void HandleEscapeKey()
+    public void HandleEscapeKey()
     {
-        if (/*SceneManager.GetActiveScene().name == "MainMenu"*/ true)
+
+        if (settingsHolder.activeSelf)
         {
-            if (Input.GetButtonDown("Back") && settingsHolder.activeSelf)
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+            if (optionsMenu.activeSelf)
             {
-                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-                if (optionsMenu.activeSelf)
-                {
-                    mainMenu.SetActive(true);
-                    settingsHolder.SetActive(false);
-                }
-
-                else if (videoSettings.activeSelf)
-                {
-                    optionsMenu.SetActive(true);
-                    videoSettings.SetActive(false);
-                }
-
-                else if (audioSettings.activeSelf)
-                {
-                    optionsMenu.SetActive(true);
-                    audioSettings.SetActive(false);
-                }
-
-                else if (gameplaySettings.activeSelf)
-                {
-                    optionsMenu.SetActive(true);
-                    gameplaySettings.SetActive(false);
-                }
-
-                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+                mainMenu.SetActive(true);
+                settingsHolder.SetActive(false);
             }
+
+            else if (videoSettings.activeSelf)
+            {
+                optionsMenu.SetActive(true);
+                videoSettings.SetActive(false);
+            }
+
+            else if (audioSettings.activeSelf)
+            {
+                optionsMenu.SetActive(true);
+                audioSettings.SetActive(false);
+            }
+
+            else if (gameplaySettings.activeSelf)
+            {
+                optionsMenu.SetActive(true);
+                gameplaySettings.SetActive(false);
+            }
+
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
         }
+
 
     }
 
