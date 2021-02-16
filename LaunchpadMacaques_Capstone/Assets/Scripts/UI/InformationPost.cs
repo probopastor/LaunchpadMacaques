@@ -120,7 +120,6 @@ public class InformationPost : A_InputType
 
             if (informationText)
             {
-                Debug.Log(controllerDetection.gameObject.name);
                 ChangeUI();
                 informationText.gameObject.transform.parent.gameObject.SetActive(true);
                 informationText.text = interactText;

@@ -28,8 +28,14 @@ public class MoveCamera : MonoBehaviour
 
     }
 
+    public void ScreenShake(float duriation, float intensity)
+    {
+        StopAllCoroutines();
+        StartCoroutine(StartScreenShake(duriation, intensity));
+    }
 
-    public IEnumerator StartScreenShake(float duriation, float intensity)
+
+    private IEnumerator StartScreenShake(float duriation, float intensity)
     {
         shaking = true;
         float elapsedTime = 0;

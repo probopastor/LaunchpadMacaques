@@ -186,6 +186,10 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float mouseX;
     private float mouseY;
 
+    private MoveCamera cam;
+
+    private bool resetVelocity = false;
+
     ParticleSystem system
     {
         get
@@ -238,7 +242,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         Cursor.visible = false;
         speedStorage = maxSpeed;
         grapplingGravityReference = grapplingGravity;
-
+        cam = FindObjectOfType<MoveCamera>();
         // Makes xVelocityResetRange, yVelocityResetRange, and zVelocityResetRange positive if they are negative.
         if (xVelocityResetRange < 0)
         {
@@ -702,6 +706,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 if (latestOrientation != null)
                 {
+                    rb.velocity = Vector3.zero;
                     rb.AddForce(latestOrientation * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
                 }
             }
@@ -975,6 +980,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        ScreenShake(other);
         int layer = other.gameObject.layer;
         if (whatIsGround != (whatIsGround | (1 << layer))) return;
 
@@ -1017,6 +1023,17 @@ public class Matt_PlayerMovement : MonoBehaviour
                 other.collider.material = frictionlessMat;
             }
         }
+    }
+
+    private void ScreenShake(Collision other)
+    {
+        if (!grounded)
+        {
+            Debug.Log("Other: " + other.gameObject.name);
+            Debug.Log(("Hit Ground"));
+            cam.ScreenShake(.1f, 20);
+        }
+
     }
 
     /// <summary>
