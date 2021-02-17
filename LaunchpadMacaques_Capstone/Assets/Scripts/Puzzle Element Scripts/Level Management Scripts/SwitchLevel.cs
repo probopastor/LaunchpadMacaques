@@ -16,6 +16,7 @@ public class SwitchLevel : MonoBehaviour
 {
     [SerializeField, Tooltip("The name of the scene this object should load when triggered. ")] private string nextLevelName;
     [SerializeField, Tooltip("Animator for transitions. ")] private Animator transition;
+    [SerializeField, Tooltip("Time to wait for transition. ")] private int transitionLength = 2;
 
     public bool levelComplete = false;
 
@@ -28,7 +29,7 @@ public class SwitchLevel : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            SwitchScenes();
+            StartCoroutine(SwitchScenes());
         }
     }
 
@@ -45,8 +46,11 @@ public class SwitchLevel : MonoBehaviour
     /// </summary>
     IEnumerator SwitchScenes()
     {
+        GameObject.Find("Player").GetComponent<Matt_PlayerMovement>().canMove = false;
+        GameObject.Find("Player").GetComponent<Matt_PlayerMovement>().pushBack = true;
+
         transition.SetTrigger("Exit_Status");
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(transitionLength);
         levelComplete = true;
         levelComplete = false;
         SceneManager.LoadScene(nextLevelName);

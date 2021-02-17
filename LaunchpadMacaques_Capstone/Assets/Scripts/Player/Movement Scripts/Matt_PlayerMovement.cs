@@ -48,6 +48,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float moveSpeed = 4500;
     [Range(0f, 1f), SerializeField, Tooltip("The movement speed multiplier while the player is airborn. ")] private float airMoveSpeedMultiplier = .75f;
     [SerializeField, Tooltip("The player's max speed. when walking, doesnt affect swing speed ")] private float maxSpeed = 20;
+    public bool canMove = true;
+    public bool pushBack = false;
 
     private bool killForce = false;
 
@@ -229,6 +231,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             minFOV = PlayerPrefs.GetInt("FovValue");
         }
 
+        canMove = true;
 
         playerScale = transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
@@ -266,11 +269,25 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) || Time.timeScale > 0)
+        if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && canMove || Time.timeScale > 0)
         {
             MyInput();
             Look();
             grappleGunReference.UpdateHandRotation(rb.velocity);
+        }
+
+
+        if (!canMove)
+        {
+            rb.velocity = Vector3.zero;
+        }
+
+        if (pushBack)
+        {
+            Vector3 temp = transform.position;
+            temp.x -= 1;
+            transform.position = temp;
+            pushBack = false;
         }
 
         //Debug.Log("canApplyForce is: " + grappleGunReference.GetCanApplyForce());
