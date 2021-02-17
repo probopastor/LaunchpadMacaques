@@ -15,6 +15,7 @@ using UnityEngine.SceneManagement;
 public class SwitchLevel : MonoBehaviour
 {
     [SerializeField, Tooltip("The name of the scene this object should load when triggered. ")] private string nextLevelName;
+    [SerializeField, Tooltip("Animator for transitions. ")] private Animator transition;
 
     public bool levelComplete = false;
 
@@ -30,15 +31,17 @@ public class SwitchLevel : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            SwitchScenes();
+            StartCoroutine(SwitchScenes());
         }
     }
 
     /// <summary>
     /// Switches the scene the player is in to a designated scene. 
     /// </summary>
-    private void SwitchScenes()
+    IEnumerator SwitchScenes()
     {
+        transition.SetTrigger("Exit_Status");
+        yield return new WaitForSeconds(2);
         levelComplete = true;
         levelComplete = false;
         SceneManager.LoadScene(nextLevelName);
