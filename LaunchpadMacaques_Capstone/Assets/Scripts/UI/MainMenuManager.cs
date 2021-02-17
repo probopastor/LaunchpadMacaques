@@ -25,10 +25,14 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField]
     private List<GameObject> menuPanels = new List<GameObject>();
 
+    [SerializeField, Tooltip("Animator for transitions. ")] private Animator transition;
+
+    [SerializeField, Tooltip("Time to wait to start second half of transition. ")] private int transitionLength = 1;
+
     public Animator anim;
     private void Start()
     {
-
+        transition = GameObject.FindGameObjectWithTag("Transition").GetComponent<Animator>();
         mainMenu_Panel.SetActive(true);
         levelSelect_Panel.SetActive(false);
 
@@ -56,80 +60,100 @@ public class MainMenuManager : MonoBehaviour
             for (index = 0; index <= menuPanels.Count - 1; index++)
 
             {
-                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-                switch (menuPanels[index].activeSelf)
-                {
-
-                    case true:
-
-                        switch (menuPanels[index].name)
-                        {
-                            case "Level Select Page1":
-
-                                menuPanels[index].SetActive(false);
-                                mainMenu_Panel.SetActive(true);
-
-                                break;
-
-                            case "Level Select Page2":
-
-                                menuPanels[index].SetActive(false);
-                                menuPanels[1].SetActive(true);
-
-                                break;
-
-                            case "HowToPlay Panel":
-
-                                menuPanels[index].SetActive(false);
-                                mainMenu_Panel.SetActive(true);
-
-                                break;
-
-                            case "Credits Panel":
-
-                                menuPanels[index].SetActive(false);
-                                mainMenu_Panel.SetActive(true);
-
-                                break;
-
-                            case "OptionsMenu":
-
-                                menuPanels[index].SetActive(false);
-                                mainMenu_Panel.SetActive(true);
-
-                                break;
-
-                            case "GameplayOptionsPanel":
-
-                                menuPanels[index].SetActive(false);
-                                menuPanels[5].SetActive(true);
-
-                                break;
-
-                            case "VideoOptionsPanel":
-
-                                menuPanels[index].SetActive(false);
-                                menuPanels[5].SetActive(true);
-
-                                break;
-
-                            case "AudioOptionsPanel":
-
-                                menuPanels[index].SetActive(false);
-                                menuPanels[5].SetActive(true);
-
-                                break;
-
-                        }
-
-                        break;
-
-                }
+                StartCoroutine(SwitchPanel(index));
             }
         }
     }
 
 
+    IEnumerator SwitchPanel( int index)
+    {
+        FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+        switch (menuPanels[index].activeSelf)
+        {
+
+            case true:
+
+                switch (menuPanels[index].name)
+                {
+                    case "Level Select Page1":
+
+                        transition.SetTrigger("Start");
+                        yield return new WaitForSeconds(transitionLength);
+                        menuPanels[index].SetActive(false);
+                        mainMenu_Panel.SetActive(true);
+
+                        break;
+
+                    case "Level Select Page2":
+
+                        transition.SetTrigger("Start");
+                        yield return new WaitForSeconds(transitionLength);
+                        menuPanels[index].SetActive(false);
+                        menuPanels[1].SetActive(true);
+
+                        break;
+
+                    case "HowToPlay Panel":
+
+                        transition.SetTrigger("Start");
+                        yield return new WaitForSeconds(transitionLength);
+                        menuPanels[index].SetActive(false);
+                        mainMenu_Panel.SetActive(true);
+
+                        break;
+
+                    case "Credits Panel":
+
+                        transition.SetTrigger("Start");
+                        yield return new WaitForSeconds(transitionLength);
+                        menuPanels[index].SetActive(false);
+                        mainMenu_Panel.SetActive(true);
+
+                        break;
+
+                    case "OptionsMenu":
+
+                        transition.SetTrigger("Start");
+                        yield return new WaitForSeconds(transitionLength);
+                        menuPanels[index].SetActive(false);
+                        mainMenu_Panel.SetActive(true);
+
+                        break;
+
+                    case "GameplayOptionsPanel":
+
+                        transition.SetTrigger("Start");
+                        yield return new WaitForSeconds(transitionLength);
+                        menuPanels[index].SetActive(false);
+                        menuPanels[5].SetActive(true);
+
+                        break;
+
+                    case "VideoOptionsPanel":
+
+                        transition.SetTrigger("Start");
+                        yield return new WaitForSeconds(transitionLength);
+                        menuPanels[index].SetActive(false);
+                        menuPanels[5].SetActive(true);
+
+                        break;
+
+                    case "AudioOptionsPanel":
+
+                        transition.SetTrigger("Start");
+                        yield return new WaitForSeconds(transitionLength);
+                        menuPanels[index].SetActive(false);
+                        menuPanels[5].SetActive(true);
+
+                        break;
+
+                }
+
+                break;
+
+        }
+    }
 
     /// <summary>
     /// Loads a specified scene.

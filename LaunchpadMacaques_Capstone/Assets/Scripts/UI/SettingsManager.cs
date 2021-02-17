@@ -45,6 +45,10 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The max volume for the Volume Sliders")] float maxVolume = 1;
     [SerializeField, Tooltip("The min volume for the Volume Sliders")] float minVolume = 0;
 
+    [SerializeField, Tooltip("Animator for transitions. ")] private Animator transition;
+
+    [SerializeField, Tooltip("Time to wait to start second half of transition. ")] private int transitionLength = 1;
+
     [SerializeField] Button playButton;
 
     Resolution[] reslolutions;
@@ -572,39 +576,51 @@ public class SettingsManager : MonoBehaviour
     {
         if (/*SceneManager.GetActiveScene().name == "MainMenu"*/ true)
         {
-            if (Input.GetButtonDown("Back") && settingsHolder.activeSelf)
-            {
-                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-                if (optionsMenu.activeSelf)
-                {
-                    mainMenu.SetActive(true);
-                    settingsHolder.SetActive(false);
-                }
-
-                else if (videoSettings.activeSelf)
-                {
-                    optionsMenu.SetActive(true);
-                    videoSettings.SetActive(false);
-                }
-
-                else if (audioSettings.activeSelf)
-                {
-                    optionsMenu.SetActive(true);
-                    audioSettings.SetActive(false);
-                }
-
-                else if (gameplaySettings.activeSelf)
-                {
-                    optionsMenu.SetActive(true);
-                    gameplaySettings.SetActive(false);
-                }
-
-                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-            }
+            StartCoroutine(SwitchPanel());
         }
 
     }
 
+    IEnumerator SwitchPanel()
+    {
+        if (Input.GetButtonDown("Back") && settingsHolder.activeSelf)
+        {
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+            if (optionsMenu.activeSelf)
+            {
+                transition.SetTrigger("Start");
+                yield return new WaitForSeconds(transitionLength);
+                mainMenu.SetActive(true);
+                settingsHolder.SetActive(false);
+            }
+
+            else if (videoSettings.activeSelf)
+            {
+                transition.SetTrigger("Start");
+                yield return new WaitForSeconds(transitionLength);
+                optionsMenu.SetActive(true);
+                videoSettings.SetActive(false);
+            }
+
+            else if (audioSettings.activeSelf)
+            {
+                transition.SetTrigger("Start");
+                yield return new WaitForSeconds(transitionLength);
+                optionsMenu.SetActive(true);
+                audioSettings.SetActive(false);
+            }
+
+            else if (gameplaySettings.activeSelf)
+            {
+                transition.SetTrigger("Start");
+                yield return new WaitForSeconds(transitionLength);
+                optionsMenu.SetActive(true);
+                gameplaySettings.SetActive(false);
+            }
+
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+        }
+    }
 
     public bool InSubSettings()
     {
