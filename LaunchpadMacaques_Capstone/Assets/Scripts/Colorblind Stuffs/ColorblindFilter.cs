@@ -42,51 +42,60 @@ public class ColorblindFilter: MonoBehaviour
         camreaVolume = FindObjectOfType<Camera>().GetComponent<Volume>();
 
         LoadProfiles();
-        SetProfile(currentColorblindMode);
+        SetProfile(PlayerPrefs.GetInt("ColorblindMode"));
 
         Debug.Log("The current length of the volumeProfiles Dictionary is: " + volumeProfiles.Count);
     }
 
     private void Update()
     {
-        SetProfile(currentColorblindMode);
+        SetProfile(PlayerPrefs.GetInt("ColorblindMode"));
     }
 
     /// <summary>
     /// This method sets the Volume profile of the Camera to the correct corresponding profile based on the chosen colorblind mode.
     /// </summary>
     /// <param name="currentColorBlindness"></param>
-    private void SetProfile(Colorblindness currentColorBlindness)
+    private void SetProfile(int currentColorBlindness)
     {
 
-        switch(currentColorblindMode)
+        switch(PlayerPrefs.GetInt("ColorblindMode"))
         {
-            case Colorblindness.NORMAL:
+            case 0:
                 camreaVolume.profile = volumeProfiles["Normal"];
+                currentColorblindMode = Colorblindness.NORMAL;
                 break;
-            case Colorblindness.ACHROMATOPSIA:
+            case 1:
                 camreaVolume.profile = volumeProfiles["Achromatopsia"];
+                currentColorblindMode = Colorblindness.ACHROMATOPSIA;
                 break;
-            case Colorblindness.ACHROMATOMALY:
+            case 2:
                 camreaVolume.profile = volumeProfiles["Achromatomaly"];
+                currentColorblindMode = Colorblindness.ACHROMATOMALY;
                 break;
-            case Colorblindness.DEUTERANOPIA:
+            case 3:
                 camreaVolume.profile = volumeProfiles["Deuteranopia"];
+                currentColorblindMode = Colorblindness.DEUTERANOPIA;
                 break;
-            case Colorblindness.DEUTERANOMALY:
+            case 4:
                 camreaVolume.profile = volumeProfiles["Deuteranomaly"];
+                currentColorblindMode = Colorblindness.DEUTERANOMALY;
                 break;
-            case Colorblindness.PROTANOPIA:
+            case 5:
                 camreaVolume.profile = volumeProfiles["Protanopia"];
+                currentColorblindMode = Colorblindness.PROTANOPIA;
                 break;
-            case Colorblindness.PROTANOMALY:
+            case 6:
                 camreaVolume.profile = volumeProfiles["Protanomaly"];
+                currentColorblindMode = Colorblindness.PROTANOMALY;
                 break;
-            case Colorblindness.TRITANOPIA:
+            case 7:
                 camreaVolume.profile = volumeProfiles["Tritanopia"];
+                currentColorblindMode = Colorblindness.TRITANOPIA;
                 break;
-            case Colorblindness.TRITANOMALY:
+            case 8:
                 camreaVolume.profile = volumeProfiles["Tritanomaly"];
+                currentColorblindMode = Colorblindness.TRITANOMALY;
                 break;
         }
     }

@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using FMODUnity;
+using UnityEngine.Rendering;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The Resolution Dropdown Box")] TMP_Dropdown resolutionDropdown;
     [SerializeField, Tooltip("The Full Screen Toggle")] Toggle fullScreenToggle;
     [SerializeField, Tooltip("The Graphics Quality Dropdown Box")] TMP_Dropdown graphicsQualityDropdown;
+    [SerializeField, Tooltip("The Colorblind Mode Dropdown Box")] TMP_Dropdown colorblindDropdown;
 
     [Header("Volume Sliders")]
     [SerializeField, Tooltip("The Dialouge Volume Slider")] Slider dialougeVolume;
@@ -46,12 +48,16 @@ public class SettingsManager : MonoBehaviour
     // The Deafult variables the sliders will be set to, upon an ititial launch (Player has never played game before)
     #region Deafult Variables
     private int deafultGraphicsQuality = 1;
+    private int defaultColorblindMode = 0;
     private float deafultDialouge = .5f;
     private float deafultMusic = .5f;
     private float deafultSoundEffects = .5f;
 
     private float deafultMouseSensitivity = 50;
     private float deafultFOV = 60;
+
+    private 
+
     #endregion
     void Start()
     {
@@ -65,6 +71,7 @@ public class SettingsManager : MonoBehaviour
         InitialMouseSensitivity();
         SetResolutionsDropDown();
         InitialFOV();
+        InitialColorblindMode();
 
         DisableStuff();
 
@@ -318,6 +325,34 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called on Start
+    /// Will Set the Value of the Colorblind Mode to either the default value or the "ColorblindMode" Player Prefs
+    /// Will then apply the value.
+    /// </summary>
+    private void InitialColorblindMode()
+    {
+
+        //Debug.Log("The current value of colorblind mode is: " + colorblindDropdown.value);
+
+        if(PlayerPrefs.HasKey("ColorblindMode"))
+        {
+            colorblindDropdown.SetValueWithoutNotify(PlayerPrefs.GetInt("ColorblindMode"));
+            SetColorblindMode(PlayerPrefs.GetInt("ColorblindMode"));
+
+            Debug.Log("The current value of colorblind mode is: " + colorblindDropdown.value);
+
+        }
+        else
+        {
+            SetColorblindMode(defaultColorblindMode);
+            colorblindDropdown.SetValueWithoutNotify(defaultColorblindMode);
+
+            Debug.Log("The current value of colorblind mode is: " + colorblindDropdown.value);
+
+        }
+    }
+
     #endregion
 
     // Is called when the player changes a setting on the options menu
@@ -468,6 +503,11 @@ public class SettingsManager : MonoBehaviour
         StudioGlobalParameterTrigger trigger = obj.GetComponent<StudioGlobalParameterTrigger>();
         trigger.value = volume;
         trigger.TriggerParameters();
+    }
+
+    public void SetColorblindMode(int colorblindType)
+    {
+        PlayerPrefs.SetInt("ColorblindMode", colorblindType);
     }
 
     #endregion

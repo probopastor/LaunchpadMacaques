@@ -5491,6 +5491,7 @@ GameObject:
   - component: {fileID: 7880684068563497861}
   - component: {fileID: 7880684068563497860}
   - component: {fileID: 7880684068563497857}
+  - component: {fileID: 1259218193664350381}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -5708,6 +5709,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ListenerNumber: -1
+--- !u!114 &1259218193664350381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7880684068563497858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 0}
 --- !u!1 &7880684068596782851
 GameObject:
   m_ObjectHideFlags: 0
@@ -6090,6 +6108,7 @@ MonoBehaviour:
   landingParticlesDuration: 1
   speedMultiplier: 1
   velocityThreshold: 7
+  minVelocityForParticles: 1
 --- !u!1 &7880684069204234816
 GameObject:
   m_ObjectHideFlags: 0
