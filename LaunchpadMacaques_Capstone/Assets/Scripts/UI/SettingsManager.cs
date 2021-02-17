@@ -68,7 +68,9 @@ public class SettingsManager : MonoBehaviour
     #endregion
     void Start()
     {
-        if(SceneManager.GetActiveScene().name == "MainMenu")
+        transition = GameObject.FindGameObjectWithTag("Transition").GetComponent<Animator>();
+
+        if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             settingsHolder.SetActive(true);
 

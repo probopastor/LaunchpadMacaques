@@ -282,13 +282,6 @@ public class Matt_PlayerMovement : MonoBehaviour
             rb.velocity = Vector3.zero;
         }
 
-        if (pushBack)
-        {
-            Vector3 temp = transform.position;
-            temp.x -= 1;
-            transform.position = temp;
-            pushBack = false;
-        }
 
         //Debug.Log("canApplyForce is: " + grappleGunReference.GetCanApplyForce());
         //Debug.Log("kill force is: " + killForce);

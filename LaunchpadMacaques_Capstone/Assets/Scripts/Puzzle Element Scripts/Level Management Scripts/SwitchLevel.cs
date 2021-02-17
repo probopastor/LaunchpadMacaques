@@ -47,7 +47,6 @@ public class SwitchLevel : MonoBehaviour
     IEnumerator SwitchScenes()
     {
         GameObject.Find("Player").GetComponent<Matt_PlayerMovement>().canMove = false;
-        GameObject.Find("Player").GetComponent<Matt_PlayerMovement>().pushBack = true;
 
         transition.SetTrigger("Exit_Status");
         yield return new WaitForSeconds(transitionLength);
