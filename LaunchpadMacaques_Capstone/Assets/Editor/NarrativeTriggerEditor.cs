@@ -15,6 +15,7 @@ using UnityEditor;
 public class NarrativeTriggerEditor : Editor
 {
     NarrativeTriggerHandler narrativeTriggerHandler;
+    //The foldout that contains every trigger
     bool triggerMainFoldout = true;
 
     private void OnEnable()
@@ -47,9 +48,11 @@ public class NarrativeTriggerEditor : Editor
 
         if(array.arraySize > 0)
             triggerMainFoldout = EditorGUILayout.Foldout(triggerMainFoldout, "Triggers", true);
+        //If the main foldout is out and all triggers are being shown
         if (triggerMainFoldout)
         {
             EditorGUI.indentLevel++;
+            //Iterate through and display each trigger in a foldout
             for (int i = 0; i < array.arraySize; i++)
             {
                 EditorGUILayout.BeginHorizontal();
@@ -72,13 +75,14 @@ public class NarrativeTriggerEditor : Editor
                     break;
                 }
                 EditorGUILayout.EndHorizontal();
+                //If the subfoldout should be out, display all the details for this trigger
                 if (arraySub.GetArrayElementAtIndex(i).boolValue)
                 {
 
                     SerializedProperty element = array.GetArrayElementAtIndex(i);
                     EditorGUILayout.LabelField("General", EditorStyles.boldLabel);
                     EditorGUILayout.PropertyField(element.FindPropertyRelative("type"));
-                    //Time in level ones should NEVER be repeatable
+                    //Time in level triggers should NEVER be repeatable as it only occurs once
                     if(!((element.FindPropertyRelative("type").enumValueIndex == (int)NarrativeTriggerHandler.TriggerType.OnEvent) &&
                        (element.FindPropertyRelative("eventType").enumValueIndex == (int)NarrativeTriggerHandler.EventType.TimeInLevel)))
                     EditorGUILayout.PropertyField(element.FindPropertyRelative("repeatable"));
@@ -87,9 +91,14 @@ public class NarrativeTriggerEditor : Editor
 
                     EditorGUILayout.LabelField("Text Options", EditorStyles.boldLabel);
                     EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField("Text to Display", GUILayout.Width(120));
+                    EditorGUILayout.LabelField("Text to Display", GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true), GUILayout.Width(120));
                     narrativeTriggerHandler.triggers[i].textToDisplay = EditorGUILayout.TextArea(narrativeTriggerHandler.triggers[i].textToDisplay, GUILayout.ExpandWidth(true));
                     EditorGUILayout.EndHorizontal();
+                    if (EditorGUIUtility.editingTextField)
+                    {
+                        EditorGUILayout.HelpBox("Text Effect Tag Format ex:) <EffectName>Text</EffectName>", MessageType.Info);
+                        EditorGUILayout.HelpBox("Available Effects: shaky, typewriter, rainbow", MessageType.Info);
+                    }
                     EditorGUILayout.PropertyField(element.FindPropertyRelative("textDisplayTime"));
 
                     EditorGUILayout.Space();
@@ -98,10 +107,8 @@ public class NarrativeTriggerEditor : Editor
                     EditorGUILayout.PropertyField(element.FindPropertyRelative("audioToPlay"));
                     EditorGUILayout.PropertyField(element.FindPropertyRelative("audioSource"));
 
-                   
-
-
                     int type = element.FindPropertyRelative("type").enumValueIndex;
+                    //Display Area Trigger specific options
                     if (type == (int)NarrativeTriggerHandler.TriggerType.Area)
                     {
                         EditorGUILayout.Space();
@@ -135,6 +142,7 @@ public class NarrativeTriggerEditor : Editor
                         EditorGUILayout.PropertyField(element.FindPropertyRelative("areaCenter"));
                         EditorGUILayout.PropertyField(element.FindPropertyRelative("boxSize"));
                     }
+                    //Display onEvent Trigger specific options
                     else if (type == (int)NarrativeTriggerHandler.TriggerType.OnEvent)
                     {
                         EditorGUILayout.Space();
@@ -180,7 +188,7 @@ public class NarrativeTriggerEditor : Editor
     {
         Handles.color = Color.cyan;
 
-        
+        //For area triggers, display a wireframe cube in the scene that represents the trigger area
         for(int i = 0; i < narrativeTriggerHandler.triggers.Length; i++)
         {
             GameObject currentAreaTrigger;
