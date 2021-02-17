@@ -62,11 +62,7 @@ public class MovingPlatformEditor : Editor
         EditorGUILayout.Space();
 
         EditorGUILayout.LabelField("Movement Properties", EditorStyles.boldLabel);
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("movementStyle"));
-        if(serializedObject.FindProperty("movementStyle").enumValueIndex == (int) MovingPlatform.MovementStyle.ConstantSpeed)
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("movementSpeed"));
-        else if (serializedObject.FindProperty("movementStyle").enumValueIndex == (int)MovingPlatform.MovementStyle.ConstantTime)
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("movementTime"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("movementSpeed"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("holdTime"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("loopPattern"));
 
