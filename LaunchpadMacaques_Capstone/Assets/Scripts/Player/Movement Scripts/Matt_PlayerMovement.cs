@@ -145,6 +145,16 @@ public class Matt_PlayerMovement : MonoBehaviour
     private bool useCourtineDash = true;
     #endregion
 
+
+    [Header("Screen Shake Settings")]
+    [SerializeField] float minVelocityForScreenShake = 30;
+    [SerializeField] float startingScreenShakeAmmount = 20;
+    [SerializeField] float shakeAmmountVelocityScaling = .1f;
+    [SerializeField] float maxScreenShakeAmmount = 50;
+    [SerializeField] float screenShakeLength = .1f;
+
+
+    [Header("Art Settings")]
     [SerializeField]
     Animator anim;
 
@@ -189,6 +199,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     private MoveCamera cam;
 
     private bool resetVelocity = false;
+
+    private float timeOffGround;
 
     ParticleSystem system
     {
@@ -307,6 +319,11 @@ public class Matt_PlayerMovement : MonoBehaviour
         var localVel = transform.InverseTransformDirection(rb.velocity);
         var psRotation = _CachedSystem.shape.rotation;
         psRotation = localVel;
+
+        if (!grounded)
+        {
+            timeOffGround += Time.deltaTime;
+        }
     }
 
 
@@ -948,6 +965,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             //FLOOR
             if (IsFloor(normal))
             {
+                timeOffGround = 0;
                 grounded = true;
                 cancellingGrounded = false;
                 normalVector = normal;
@@ -1027,11 +1045,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void ScreenShake(Collision other)
     {
-        if (!grounded)
+        if (!grounded && rb.velocity.magnitude > minVelocityForScreenShake && PlayerPrefs.GetInt("ScreenShake") == 1 && timeOffGround > .5f)
         {
-            Debug.Log("Other: " + other.gameObject.name);
-            Debug.Log(("Hit Ground"));
-            cam.ScreenShake(.1f, 20);
+            Debug.Log("Screen Shaked");
+            float tempShakeAmmount = startingScreenShakeAmmount + ((rb.velocity.magnitude - minVelocityForScreenShake) * shakeAmmountVelocityScaling);
+            cam.ScreenShake(screenShakeLength, tempShakeAmmount);
         }
 
     }
