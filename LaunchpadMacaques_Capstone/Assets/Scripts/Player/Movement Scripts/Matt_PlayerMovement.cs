@@ -32,6 +32,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     //Other
     private Rigidbody rb;
+    public int level = 0;
+    public DontDestroy saveData;
 
     //Save system
     public bool[] Completion = new bool[6];
@@ -234,6 +236,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
 
         currentMaxFOV = maxFOV;
+
+
     }
 
     private void FixedUpdate()
@@ -241,8 +245,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         Movement();
         LimitVelocity();
         SetGravityModifier();
-        SavePlayer();
-        LoadPlayer();
+       
 
 
     }
@@ -304,6 +307,8 @@ public class Matt_PlayerMovement : MonoBehaviour
             _CachedSystem.Stop();
         }
         */
+        SavePlayer();
+        LoadPlayer();
     }
 
 
@@ -1043,19 +1048,25 @@ public class Matt_PlayerMovement : MonoBehaviour
                 break;
         }
 
-                if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.V))
         {
+            level = SceneManager.GetActiveScene().buildIndex;
             Save_System.SavePlayer(this);
             Debug.Log("player has saved.");
+           
         }
        
     }
 
     public void LoadPlayer()
     {
-        if(Input.GetKeyDown(KeyCode.C))
+       
+        if (Input.GetKeyDown(KeyCode.C))
         {
-            PlayerData data = Save_System.LoadPlayer();
+            PlayerDataNew data = Save_System.LoadPlayer();
+
+            level = data.level;
+            SceneManager.LoadScene(level);
 
             Vector3 position;
             position.x = data.position[0];
@@ -1064,8 +1075,9 @@ public class Matt_PlayerMovement : MonoBehaviour
             transform.position = position;
 
             Debug.Log("player has loaded.");
+           
         }
-        
+       
     }
 
 

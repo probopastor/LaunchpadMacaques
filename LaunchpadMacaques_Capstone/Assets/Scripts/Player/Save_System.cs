@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public class Save_System
+public static class Save_System
 
 {
     public static void SavePlayer(Matt_PlayerMovement player)
@@ -11,13 +11,13 @@ public class Save_System
         string path = Application.persistentDataPath + "/player.something";
         FileStream stream = new FileStream(path, FileMode.Create);
 
-        PlayerData data = new PlayerData(player);
+        PlayerDataNew data = new PlayerDataNew(player);
 
         formatter.Serialize(stream, data);
         stream.Close();
     }
 
-    public static PlayerData LoadPlayer()
+    public static PlayerDataNew LoadPlayer()
     {
         string path = Application.persistentDataPath + "/player.something";
         if(File.Exists(path))
@@ -25,7 +25,7 @@ public class Save_System
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(path, FileMode.Open);
 
-            PlayerData data = formatter.Deserialize(stream) as PlayerData;
+            PlayerDataNew data = formatter.Deserialize(stream) as PlayerDataNew;
             stream.Close();
 
             return data;
