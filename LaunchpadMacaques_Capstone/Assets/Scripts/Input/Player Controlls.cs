@@ -344,7 +344,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                     ""id"": ""2a9e52c5-47ca-48c2-8b2c-f1fac02f78fc"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""ScaleVector2(x=1.3,y=1.3)"",
                     ""groups"": """",
                     ""action"": ""Look"",
                     ""isComposite"": false,
