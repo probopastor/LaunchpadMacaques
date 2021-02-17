@@ -19,6 +19,11 @@ public class SwitchLevel : MonoBehaviour
 
     public bool levelComplete = false;
 
+    private void Start()
+    {
+        transition = GameObject.FindGameObjectWithTag("Transition").GetComponent<Animator>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
