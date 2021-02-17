@@ -59,7 +59,7 @@ public abstract class A_InputType : MonoBehaviour
     /// </summary>
     public abstract void ChangeUI();
 
-    protected void OnEnable()
+    private void OnEnable()
     {
         controllerDetection = FindObjectOfType<DetectController>();
         controllerDetected = controllerDetection.ControllerEnabled();

@@ -171,8 +171,6 @@ public class GrapplingGun : MonoBehaviour
 
     Rigidbody playerRB;
 
-    float wheelInput;
-
     #endregion
 
     #region StartFunctions
@@ -347,34 +345,10 @@ public class GrapplingGun : MonoBehaviour
             currentMaxVelocity = Mathf.Clamp(currentMaxVelocity, 0, maxSwingVelocity);
         }
 
-        SetScroll();
-
-        if (pulling)
+        if (playerCanControlVelocity)
         {
-            player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxPullVelocity);
-        }
+            float wheelInput = Input.GetAxis("Mouse ScrollWheel");
 
-        else if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !actualMaxVelocity)
-        {
-            player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity);
-        }
-
-        else if (actualMaxVelocity)
-        {
-            player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity, currentMaxVelocity);
-        }
-    }
-
-    public void ChangeVelocity(float x, float y)
-    {
-        wheelInput = y;
-
-    }
-
-    private void SetScroll()
-    {
-        if (playerCanControlVelocity && IsGrappling())
-        {
             if (wheelInput > 0)
             {
                 currentMaxVelocity += mouseWheelSensitivity;
@@ -390,6 +364,21 @@ public class GrapplingGun : MonoBehaviour
                 }
             }
         }
+
+        if (pulling)
+        {
+            player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxPullVelocity);
+        }
+
+       else if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !actualMaxVelocity)
+        {
+            player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity);
+        }
+
+       else if (actualMaxVelocity)
+        {
+            player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity, currentMaxVelocity);
+        }
     }
     #endregion
 
@@ -399,30 +388,30 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     private void GrapplingInput()
     {
-        //if ((Input.GetButtonUp("Start Grapple") || !holdingDownGrapple) && IsGrappling())
-        //{
-        //    canHoldDownToGrapple = true;
-        //}
+        if ((Input.GetButtonUp("Start Grapple") || !holdingDownGrapple) && IsGrappling())
+        {
+            canHoldDownToGrapple = true;
+        }
 
-        //if ((Input.GetButton("Start Grapple") || GetGrappleTrigger()) && IsGrappling() && canHoldDownToGrapple == true /*&& !holdingDownGrapple*/)
-        //{
-        //    StartGrapple("Normal");
-        //}
+        if ((Input.GetButton("Start Grapple") || GetGrappleTrigger()) && IsGrappling() && canHoldDownToGrapple == true /*&& !holdingDownGrapple*/)
+        {
+            StartGrapple("Normal");
+        }
 
-        //else if ((Input.GetButton("Start Grapple") || GetGrappleTrigger()) && !IsGrappling() && !pushPull.IsGrabbing())
-        //{
-        //    StartGrapple("Normal");
-        //}
+        else if ((Input.GetButton("Start Grapple") || GetGrappleTrigger()) && !IsGrappling() && !pushPull.IsGrabbing())
+        {
+            StartGrapple("Normal");
+        }
 
-        //else if ((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTriggerDown()) && IsGrappling())
-        //{
-        //    StopGrapple();
-        //}
+        else if ((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTriggerDown()) && IsGrappling())
+        {
+            StopGrapple();
+        }
 
-        //else if((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTrigger()) && !IsGrappling())
-        //{
-        //    StartGrapple("Batman");
-        //}
+        else if((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTrigger()) && !IsGrappling())
+        {
+            StartGrapple("Batman");
+        }
 
 
 
@@ -698,47 +687,43 @@ public class GrapplingGun : MonoBehaviour
     /// <summary>
     /// Call whenever we want to start a grapple
     /// </summary>
-    public void StartGrapple()
+    void StartGrapple(string type)
     {
         if (CanFindGrappleLocation())
         {
-            StartGrapplingSettings();
-            CreateGrapplePoint();
+            if (IsGrappling())
+            {
+                StopGrapple();
+                
+            }
+
+            SetDifferentGrappleTypeSettings();
+
+            canHoldDownToGrapple = false;
+            holdingDownGrapple = true;
+
+
+            StopAllCoroutines();
+
+            anim.ResetTrigger("Dash");
+            anim.ResetTrigger("GrappleEnd");
+            anim.SetTrigger("GrappleStart");
+
+            StartCoroutine(DrawLine());
+            if(type == "Normal")
+            {
+                CreateGrapplePoint();
+            }
+
+            else
+            {
+                BatmanGrapple();
+            }
+
+
+
+
         }
-
-    }
-
-    public void StartBatManGrapple()
-    {
-        if (CanFindGrappleLocation())
-        {
-            StartGrapplingSettings();
-            BatmanGrapple();
-        }
-    }
-
-    private void StartGrapplingSettings()
-    {
-
-        if (IsGrappling())
-        {
-            StopGrapple();
-
-        }
-
-        SetDifferentGrappleTypeSettings();
-
-        canHoldDownToGrapple = false;
-        holdingDownGrapple = true;
-
-
-        StopAllCoroutines();
-
-        anim.ResetTrigger("Dash");
-        anim.ResetTrigger("GrappleEnd");
-        anim.SetTrigger("GrappleStart");
-
-        StartCoroutine(DrawLine());
     }
     /// <summary>
     /// Set settings based on what grapple type is chosen
@@ -867,7 +852,7 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     private void CreateGrapplePoint()
     {
-
+        
         currentGrappledObj = grappleRayHit.collider.gameObject;
 
         if (currentGrappledObj.GetComponent<GrapplePoint>() != null)
@@ -932,58 +917,41 @@ public class GrapplingGun : MonoBehaviour
         StartCoroutine(PullCourtine(grappleRayHit));
     }
 
-
-    public void StopGrappleInput()
-    {
-        if (CanFindGrappleLocation())
-        {
-            StartBatManGrapple();
-        }
-
-        else
-        {
-            StopGrapple();
-        }
-    }
     /// <summary>
     /// Call whenever we want to stop a grapple
     /// </summary>
     public void StopGrapple()
     {
-        if (IsGrappling())
+        anim.ResetTrigger("GrappleStart");
+        anim.SetTrigger("GrappleEnd");
+
+        if (grappleRayHit.collider != null)
         {
-            anim.ResetTrigger("GrappleStart");
-            anim.SetTrigger("GrappleEnd");
+            grappleRayHit.collider.isTrigger = false;
+        }
+ 
 
-            if (grappleRayHit.collider != null)
-            {
-                grappleRayHit.collider.isTrigger = false;
-            }
+        pulling = false;
+        StopCoroutine(PullCourtine(grappleRayHit));
+        currentGrappledObj = null;
 
-
-            pulling = false;
-            StopCoroutine(PullCourtine(grappleRayHit));
-            currentGrappledObj = null;
-
-            swingLockToggle = false;
+        swingLockToggle = false;
 
 
-            if (hitObjectClone)
-            {
-                Destroy(hitObjectClone.gameObject);
-            }
-
-            lr.positionCount = 0;
-
-            if (joint)
-            {
-                Destroy(joint);
-            }
-
-
-            StopAllCoroutines();
+        if (hitObjectClone)
+        {
+            Destroy(hitObjectClone.gameObject);
         }
 
+        lr.positionCount = 0;
+
+        if (joint)
+        {
+            Destroy(joint);
+        }
+
+
+        StopAllCoroutines();
     }
 
     #endregion
@@ -1000,7 +968,7 @@ public class GrapplingGun : MonoBehaviour
         Vector3 velocityX = Vector3.ProjectOnPlane(currentVelocity, Vector3.up); //Project the player's velocity onto the same horizontal plane
         float angleX = Vector3.Angle(camReferenceX, velocityX); //Get the angle between the two vectors (Since they're on the same horizontal plane, this will be the direction the velocity is relative to the player
         float horizontalCos = Mathf.Cos(angleX * Mathf.Deg2Rad);  //Get the cosine of the angle (1 when to the left or right of the player, 0 when to the front or back
-                                                                  //Prevent precision issues, if the number is small or big enough just set it to 0 or 1
+        //Prevent precision issues, if the number is small or big enough just set it to 0 or 1
         if (Mathf.Abs(horizontalCos) < roundingRange)
             horizontalCos = 0;
         else if (Mathf.Abs(horizontalCos) > 1 - roundingRange)
@@ -1041,7 +1009,7 @@ public class GrapplingGun : MonoBehaviour
     /// <returns></returns>
     public bool IsGrappling()
     {
-        if (joint != null || pulling == true)
+        if(joint != null || pulling == true)
         {
             return true;
         }

@@ -8,7 +8,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.InputSystem;
 
 public class InformationPost : A_InputType
 {
@@ -26,18 +25,11 @@ public class InformationPost : A_InputType
 
     private string interactText = "Press E";
 
-    private PlayerControlls controls;
 
     #endregion
 
-    private void Awake()
-    {
-        controls = new PlayerControlls();
-
-        controls.GamePlay.Interact.performed += InteractInput;
-    }
     // Start is called before the first frame update
-    new void Start()
+    void Start()
     {
         base.Start();
         isActive = false;
@@ -63,9 +55,10 @@ public class InformationPost : A_InputType
         }
     }
 
-    private void InteractInput(InputAction.CallbackContext cxt)
+    // Update is called once per frame
+    void Update()
     {
-        if (playerInRange)
+        if (playerInRange && Input.GetButtonDown("Interact"))
         {
             if (informationText.text.Equals(information))
             {
@@ -77,20 +70,16 @@ public class InformationPost : A_InputType
                 informationText.text = information;
             }
 
-            UpdateUI();
         }
     }
 
-    private new void OnEnable()
+    private void OnEnable()
     {
-        base.OnEnable();
-        controls.Enable();
         SetInformation();
     }
 
     private void OnDisable()
     {
-        controls.Disable();
         informationText.text = " ";
     }
 
@@ -120,6 +109,7 @@ public class InformationPost : A_InputType
 
             if (informationText)
             {
+                Debug.Log(controllerDetection.gameObject.name);
                 ChangeUI();
                 informationText.gameObject.transform.parent.gameObject.SetActive(true);
                 informationText.text = interactText;
