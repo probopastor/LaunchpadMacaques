@@ -1,14 +1,14 @@
 ﻿/* 
-* (Launchpad Macaques - [Trial and Error]) 
-* (Levi Schoof, William Nomikos) 
-* (PushableObj.CS) 
-* (The Script placed on object the player can pick up and throw) 
+* (Launchpad Macaques - [Trial and Error])
+* (Levi Schoof, William Nomikos)
+* (PushableObj.CS)
+* (The Script placed on object the player can pick up and throw)
 */
 
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
-using System.Collections;
+using UnityEngine.InputSystem;
 
 public class PushableObj : MonoBehaviour
 {
@@ -70,8 +70,14 @@ public class PushableObj : MonoBehaviour
     private CubeRespawn respawnRef;
     #endregion
 
+    PlayerControlls controls;
+    float wheelInput;
     private void Awake()
     {
+        controls = new PlayerControlls();
+        controls.GamePlay.Scroll.performed += ChangeDistance;
+        controls.GamePlay.Scroll.canceled += ChangeDistance;
+
         pushPull = FindObjectOfType<PushPullObjects>();
         respawnRef = GetComponent<CubeRespawn>();
         CreateDecalAndLine();
@@ -138,9 +144,9 @@ public class PushableObj : MonoBehaviour
             grav.gravity = grav.GetOrgGravity();
         }
 
-        if (changeDistance & pickedUp)
+        if(pickedUp && changeDistance)
         {
-            ChangeDistance();
+            ApplyDistanceChange();
         }
 
         ResetObjectPos();
@@ -175,10 +181,15 @@ public class PushableObj : MonoBehaviour
     /// <summary>
     /// Will Get The User's Mouse Wheel Input to Change Object Distance
     /// </summary>
-    private void ChangeDistance()
+    private void ChangeDistance(InputAction.CallbackContext cxt)
     {
-        var wheelInput = Input.GetAxis("Mouse ScrollWheel");
+        wheelInput = cxt.ReadValue<Vector2>().y;
 
+
+    }
+
+    private void ApplyDistanceChange()
+    {
         if (wheelInput > 0)
         {
             distance += wheelSensitivity;
@@ -199,11 +210,13 @@ public class PushableObj : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// The Private method that is called to actually push an object
     /// </summary>
     private void PushObject()
     {
+        controls.Disable();
         pickedUp = false;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         grav.UseGravity(true);
@@ -376,6 +389,7 @@ public class PushableObj : MonoBehaviour
     /// <param name="cam"></param>
     public void PickedUpObject(GameObject cam)
     {
+        controls.Enable();
         //TurnOnOffParticles(false);
         tempCam = cam;
         beingPushed = false;
@@ -395,6 +409,7 @@ public class PushableObj : MonoBehaviour
     /// </summary>
     public void DroppedObject()
     {
+        controls.Disable();
         pickedUp = false;
         beingPushed = false;
         CheckParticleStatus();
@@ -461,7 +476,7 @@ public class PushableObj : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns true if the object is being pushed from a throw. 
+    /// Returns true if the object is being pushed from a throw.
     /// </summary>
     /// <returns></returns>
     public bool GetPushStatus()
@@ -491,7 +506,7 @@ public class PushableObj : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks whether or not the cube particles should be enabled or disabled. 
+    /// Checks whether or not the cube particles should be enabled or disabled.
     /// </summary>
     public void CheckParticleStatus()
     {
