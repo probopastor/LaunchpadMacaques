@@ -2,11 +2,11 @@
  * Launchpad Macaques - Neon Oblivion
  * Zackary Seiple
  * NarrativeTriggerHandler.cs
- * This script controls the narrative triggers that cna be placed throughout a scene to play audio and trigger text appearing
- * It allows for several type of triggers such as: 
+ * This script creates and controls the narrative triggers that can be placed throughout a scene to play audio and display text to accompany it
+ * It allows for several type of triggers: 
  * Area: Triggers when a specified GameObject enters a specified area
  * Random: Waits for a random period within a specified amount of time and then pick one of any of the Random type triggers to activate
- * WIP:::: On Event: Triggers that occur when a specific event occurs in another script
+ * On Event: Triggers that occur when a specific event occurs in another script
  */
 
 using System.Collections;
@@ -57,9 +57,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
         [SerializeField, Tooltip("The text to display on Trigger activation")]
         public string textToDisplay;
         [Tooltip("The time text should be displayed")]
-        public float textDisplayTime;
-        [Tooltip("The audio to play on Trigger activation")]
-        public AudioClip audioToPlay;
+        public int textDisplayTime;
+        [Tooltip("The audio to play on Trigger activation"), FMODUnity.EventRef]
+        public string audioToPlay;
         [Tooltip("The audio source the audio will play from")]
         public AudioSource audioSource;
         [Tooltip("Whether this Trigger can be activated multiple times (true) or only once (false)")]
@@ -121,8 +121,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
         float randomCount = 0;
         float randomTarget = Random.Range(randomIntervalMin, randomIntervalMax);
 
+        //Always be checking for trigger activations
         while (true)
         {
+            //If an area trigger should be activated, activate it
             for (int i = 0; i < triggers.Length; i++)
             {
                 if (triggers[i].type == TriggerType.Area && AreaCheck(triggers[i]))
@@ -131,6 +133,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 }
             }
 
+            //Pick one of the triggers labeled random, at random, and trigger it when the count reaches target number
             if(RandomCheck(ref randomCount, randomTarget))
             {
 
@@ -178,10 +181,12 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         trigger.hasRan = true;
 
+        //If the trigger has an audio source assigned, play the associated sound (if it has one)
         if (trigger.audioSource != null)
         {
-            trigger.audioSource.clip = trigger.audioToPlay;
-            trigger.audioSource.Play();
+            FMOD.Studio.EventInstance playAudio = FMODUnity.RuntimeManager.CreateInstance(trigger.audioToPlay);
+            FMODUnity.RuntimeManager.GetEventDescription(trigger.audioToPlay).getLength(out trigger.textDisplayTime);
+            playAudio.start();
         }
 
         if (trigger.textToDisplay != "")
@@ -191,11 +196,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 if (!FindObjectOfType<InformationPost>().GetTutorialCanvas())
                 {
                     StartCoroutine(RunDialogue(trigger));
-                }
-
-                else
-                {
-                    Debug.Log("IN TUT");
                 }
             }
 
@@ -209,6 +209,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
         //Text appearing functionality
     }
 
+    /// <summary>
+    /// Performs a check on an object in sight to see if it matches up with any triggers, if so, run that trigger
+    /// </summary>
+    /// <param name="obj">The object in sight to check</param>
     public void ObjectInSightCheck(GameObject obj)
     {
         if (obj == null)
@@ -231,22 +235,35 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Stop any running dialogue from appearing
+    /// </summary>
     public void TurnOffDialouge()
     {
         dialogue.text = "";
         canvas.SetActive(false);
     }
+
+    /// <summary>
+    /// Run the dialogue on a given trigger
+    /// </summary>
+    /// <param name="trigger">The trigger to run the dialogue on</param>
+    /// <returns></returns>
     IEnumerator RunDialogue(Trigger trigger)
     {
     
         trigger.isRunning = true;
-        dialogue.text = trigger.textToDisplay;
 
+        //Turn on canvas
         canvas.SetActive(true);
 
+        //Run text effects and apply them to the dialogue window
+        TextEffectHandler.instance.RunText(dialogue, trigger.textToDisplay);
+
+        //Wait for the time given by the trigger
         yield return new WaitForSeconds(trigger.textDisplayTime);
 
+        //Turn of text
         if (canvas.gameObject.activeSelf)
         {
             dialogue.text = "";
@@ -258,6 +275,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
         trigger.isRunning = false;
     }
 
+    /// <summary>
+    /// For area triggers, check the area defined by the trigger for any GameObject that is in the area and matches the tags defined by the trigger
+    /// </summary>
+    /// <param name="triggerToCheck">The trigger to check</param>
+    /// <returns>true if the trigger being checked has an object in the specified area that also matches the specified tag</returns>
     private bool AreaCheck(Trigger triggerToCheck)
     {
         Collider[] hit = Physics.OverlapBox(triggerToCheck.areaCenter, triggerToCheck.boxSize / 2, Quaternion.identity);
@@ -271,6 +293,12 @@ public class NarrativeTriggerHandler : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Checks to see if the count has reached the current target number
+    /// </summary>
+    /// <param name="currentCount">The current count as a float (in seconds)</param>
+    /// <param name="target">The target number the count is supposed to reach as a float (in seconds)</param>
+    /// <returns>True if the count has reached the target number, false if not</returns>
     private bool RandomCheck(ref float currentCount, float target)
     {
         //Target Reached
@@ -278,6 +306,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         {
             return true;
         }
+        //Target not reached, add to the counter
         else
         {
             currentCount += Time.deltaTime;
@@ -285,6 +314,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// The function that will be called when the player hits the ground, picks one random trigger out of all the PlayerHitGround Triggers and activates it
+    /// </summary>
     private void PlayerHitGroundActivation()
     {
         //Filter triggers to locate only those that are OnEvent Triggers and are the type of event that activates when the player hits the ground
@@ -312,6 +344,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
     #region TimeInLevelEvent
     float timeInLevel = 0;
     Coroutine currentCount;
+    /// <summary>
+    /// Starts counting on scene load and restarts it on changing scenes, used for triggers that activate a set amount of time after the player is in the scene
+    /// </summary>
+    /// <param name="current"></param>
+    /// <param name="next"></param>
     private void TimeInLevelCountStart(UnityEngine.SceneManagement.Scene current, UnityEngine.SceneManagement.Scene next)
     {
         timeInLevel = 0;
@@ -320,6 +357,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
         currentCount = StartCoroutine(TimeInLevelCount());
     }
 
+    /// <summary>
+    /// Counting and checking for triggers to activate
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator TimeInLevelCount()
     {
         while (true)
@@ -351,11 +392,20 @@ public class NarrativeTriggerHandler : MonoBehaviour
     #endregion
 
     #region Getters/Setters
+    /// <summary>
+    /// Getter function for the name of the trigger based on the index
+    /// </summary>
+    /// <param name="index">the index of the trigger you want the name of</param>
+    /// <returns>the name of the trigger</returns>
     public string GetTriggerName(int index)
     {
         return triggerNames[index];
     }
 
+    /// <summary>
+    /// Getter function for the fall time (the set amount of time the player must be falling for a PlayerHitGround trigger to activate
+    /// </summary>
+    /// <returns>The fall time in seconds</returns>
     public float GetFallTime()
     {
         return fallTime;
