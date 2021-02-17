@@ -147,26 +147,36 @@ public class PushPullObjects : MonoBehaviour
     /// </summary>
     private void UserInput()
     {
-        if ((Input.GetButtonDown("Start Grapple") || GetStartGrappleDown()) && Time.timeScale != 0)
-        {
-            if (!grabbing)
-            {
-                PickUpObject();
-            }
-            else if (grabbing)
-            {
-                ThrowObject();
-            }
+        //if ((Input.GetButtonDown("Start Grapple") || GetStartGrappleDown()) && Time.timeScale != 0)
+        //{
+    
 
-        }
-        else if ((Input.GetButtonDown("Stop Grapple") || GetStopGrappleDown()) && Time.timeScale != 0)
-        {
-            if (grabbing)
-            {
-                DropObject();
-            }
-        }
+        //}
+        //else if ((Input.GetButtonDown("Stop Grapple") || GetStopGrappleDown()) && Time.timeScale != 0)
+        //{
+     
+        //}
 
+    }
+
+    public void StartGrab()
+    {
+        if (!grabbing)
+        {
+            PickUpObject();
+        }
+        else if (grabbing)
+        {
+            ThrowObject();
+        }
+    }
+
+    public void StopGrab()
+    {
+        if (grabbing)
+        {
+            DropObject();
+        }
     }
 
     private bool GetStartGrappleDown()

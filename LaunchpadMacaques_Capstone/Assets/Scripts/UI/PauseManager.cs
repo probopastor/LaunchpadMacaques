@@ -55,7 +55,7 @@ public class PauseManager : MonoBehaviour
             InformationPostText.SetActive(true);
         }
 
-        if(RopeLengthText != null)
+        if (RopeLengthText != null)
         {
             RopeLengthText.SetActive(true);
         }
@@ -64,40 +64,38 @@ public class PauseManager : MonoBehaviour
         narrative = FindObjectOfType<NarrativeTriggerHandler>();
         settings = FindObjectOfType<SettingsManager>();
         eventSystem = FindObjectOfType<EventSystem>();
-        
+
 
     }
 
 
-    private void Update()
-    {
-        if (Input.GetButtonDown("Pause"))
-        {
-            if (!gameLost && !gameWon && !HTPMenu.activeSelf && !optionsMenu.activeSelf)
-            {
-                PauseGame();
-            }
 
-            else if (HTPMenu.activeSelf)
-            {
-                HTPMenu.SetActive(false);
-                pausePanel.SetActive(true);
-            }
+    public void PauseInput()
+    {
+        if (!gameLost && !gameWon && !HTPMenu.activeSelf && !optionsMenu.activeSelf)
+        {
+            PauseGame();
         }
 
-        else if (Input.GetButtonDown("Back"))
+        else if (HTPMenu.activeSelf)
         {
-            if (!optionsMenu.activeSelf && !HTPMenu.activeSelf && paused)
-            {
-                PauseGame();
-            }
+            HTPMenu.SetActive(false);
+            pausePanel.SetActive(true);
+        }
+    }
 
-            else if (HTPMenu.activeSelf)
-            {
-                eventSystem.SetSelectedGameObject(null);
-                HTPMenu.SetActive(false);
-                pausePanel.SetActive(true);
-            }
+    public void BackInput()
+    {
+        if (!optionsMenu.activeSelf && !HTPMenu.activeSelf && paused)
+        {
+            PauseGame();
+        }
+        
+        else if (HTPMenu.activeSelf)
+        {
+            eventSystem.SetSelectedGameObject(null);
+            HTPMenu.SetActive(false);
+            pausePanel.SetActive(true);
         }
     }
 
@@ -114,7 +112,7 @@ public class PauseManager : MonoBehaviour
 
             PauseCanvas.SetActive(true);
             CursorCanvas.SetActive(false);
-     
+
 
 
             narrative.TurnOffDialouge();
@@ -132,7 +130,7 @@ public class PauseManager : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
 
-           
+
         }
         else if (paused == true)
         {
@@ -141,7 +139,7 @@ public class PauseManager : MonoBehaviour
             PauseCanvas.SetActive(false);
             CursorCanvas.SetActive(true);
 
-            if(InformationPostText != null)
+            if (InformationPostText != null)
             {
                 InformationPostText.SetActive(true);
             }
@@ -164,7 +162,7 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1;
         //SceneManager.LoadScene(thisScene);
 
-        Scene scene = SceneManager.GetActiveScene(); 
+        Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.name);
     }
 

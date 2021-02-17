@@ -5887,6 +5887,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8448
+  frictionlessMat: {fileID: 0}
   maxVelocity: 70
   counterMovement: 0.175
   threshold: 0.01
@@ -5911,6 +5912,11 @@ MonoBehaviour:
   courtineDashAmmount: 500
   dashLength: 0.1
   dashCooldown: 1.5
+  minVelocityForScreenShake: 0
+  startingScreenShakeAmmount: 5
+  shakeAmmountVelocityScaling: 0.2
+  maxScreenShakeAmmount: 80
+  screenShakeLength: 0.1
   anim: {fileID: 2125406432066585191}
   _CachedSystem: {fileID: 4904157833975051812}
   emitParticles: 30

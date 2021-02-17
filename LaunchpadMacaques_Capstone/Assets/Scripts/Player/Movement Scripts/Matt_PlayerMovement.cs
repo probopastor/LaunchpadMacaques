@@ -145,6 +145,16 @@ public class Matt_PlayerMovement : MonoBehaviour
     private bool useCourtineDash = true;
     #endregion
 
+
+    [Header("Screen Shake Settings")]
+    [SerializeField] float minVelocityForScreenShake = 30;
+    [SerializeField] float startingScreenShakeAmmount = 20;
+    [SerializeField] float shakeAmmountVelocityScaling = .1f;
+    [SerializeField] float maxScreenShakeAmmount = 50;
+    [SerializeField] float screenShakeLength = .1f;
+
+
+    [Header("Art Settings")]
     [SerializeField]
     Animator anim;
 
@@ -182,6 +192,15 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float lastVelocity = 0;
 
     private int lastMaxFOV;
+
+    private float mouseX;
+    private float mouseY;
+
+    private MoveCamera cam;
+
+    private bool resetVelocity = false;
+
+    private float timeOffGround;
 
     ParticleSystem system
     {
@@ -235,7 +254,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         Cursor.visible = false;
         speedStorage = maxSpeed;
         grapplingGravityReference = grapplingGravity;
-
+        cam = FindObjectOfType<MoveCamera>();
         // Makes xVelocityResetRange, yVelocityResetRange, and zVelocityResetRange positive if they are negative.
         if (xVelocityResetRange < 0)
         {
@@ -268,22 +287,14 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) || Time.timeScale > 0)
         {
-            MyInput();
             Look();
             grappleGunReference.UpdateHandRotation(rb.velocity);
         }
+        if (PlayerPrefs.HasKey("MouseSensitivity"))
+        {
+            sensitivity = PlayerPrefs.GetFloat("MouseSensitivity");
+        }
 
-        //Debug.Log("canApplyForce is: " + grappleGunReference.GetCanApplyForce());
-        //Debug.Log("kill force is: " + killForce);
-
-        // Press K, when grappling, to start the "Kill Force" Coroutine.
-        //if (Input.GetKeyDown(KeyCode.Minus) && !killForce)
-        //{
-        //    if(grappleGunReference.IsGrappling())
-        //    {
-        //        StartCoroutine(KillForces());
-        //    }
-        //}
 
         if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) &&
             (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) &&
@@ -308,19 +319,11 @@ public class Matt_PlayerMovement : MonoBehaviour
         var localVel = transform.InverseTransformDirection(rb.velocity);
         var psRotation = _CachedSystem.shape.rotation;
         psRotation = localVel;
-        /*
-        if (speed >= 20f)
+
+        if (!grounded)
         {
-            if (_CachedSystem.isStopped)
-            {
-                _CachedSystem.Play();
-            }
+            timeOffGround += Time.deltaTime;
         }
-        else if (_CachedSystem.isPlaying && speed <= 20f)
-        {
-            _CachedSystem.Stop();
-        }
-        */
     }
 
 
@@ -329,36 +332,40 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <summary>
     /// The method that is called to start the player dash
     /// </summary>
-    private void Dash()
+    public void Dash()
     {
 
-        if (grappleGunReference.IsGrappling())
+        if (!grounded)
         {
-            grappleGunReference.StopGrapple();
+            if (grappleGunReference.IsGrappling())
+            {
+                grappleGunReference.StopGrapple();
+            }
+
+            if (canDash)
+            {
+                anim.SetTrigger("Dash");
+
+                canDash = false;
+                StartCoroutine(DashCooldown());
+
+                if (useAddForceDash)
+                {
+                    _CachedSystem.Emit(emitParticles);
+                    AddForceDash();
+                }
+                else if (useCourtineDash)
+                {
+                    StartCoroutine(DashCourtine());
+                }
+
+                else
+                {
+                    ChangeDirectionDash();
+                }
+            }
         }
 
-        if (canDash)
-        {
-            anim.SetTrigger("Dash");
-
-            canDash = false;
-            StartCoroutine(DashCooldown());
-
-            if (useAddForceDash)
-            {
-                _CachedSystem.Emit(emitParticles);
-                AddForceDash();
-            }
-            else if (useCourtineDash)
-            {
-                StartCoroutine(DashCourtine());
-            }
-
-            else
-            {
-                ChangeDirectionDash();
-            }
-        }
     }
     /// <summary>
     /// The dash that will only change the player's direction does not change their speed
@@ -475,35 +482,61 @@ public class Matt_PlayerMovement : MonoBehaviour
     #endregion
 
     #region Input
+    public void SetLook(float x, float y)
+    {
+        mouseX = x;
+        mouseY = y;
+    }
+    public void CrouchInput()
+    {
+        if (!grappleGunReference.IsGrappling())
+        {
+            crouching = !crouching;
+
+            if (crouching)
+            {
+                StartCrouch();
+            }
+
+            else
+            {
+                StopCrouch();
+            }
+        }
+     
+    }
+
+    public void OnMoveInput(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void OnJumpInput()
+    {
+        jumping = !jumping;
+    }
 
     /// <summary>
-    /// Find user input. Should put this in its own class but im lazy.
+    /// Handles the player sprinting.
     /// </summary>
-    private void MyInput()
+    public void StartSprint()
     {
-        x = Input.GetAxisRaw("Horizontal");
-        y = Input.GetAxisRaw("Vertical");
-        jumping = Input.GetButton("Jump");
-        crouching = Input.GetKey(KeyCode.LeftControl);
-        sprinting = Input.GetButton("Dash");
-
-        //Crouching
-        if (Input.GetKeyDown(KeyCode.LeftControl) && !grappleGunReference.IsGrappling())
-            StartCrouch();
-        if (Input.GetKeyUp(KeyCode.LeftControl) && !grappleGunReference.IsGrappling())
-            StopCrouch();
-
-        //sprinting
-        if (Input.GetButtonDown("Dash"))
-            Sprint();
-        if (Input.GetButtonUp("Dash"))
-            StopSprint();
-
-        //dash, when grappling
-        if (Input.GetButtonDown("Dash") && !grounded)
+        if (grounded && readyToSprint)
         {
-            Dash();
+            readyToSprint = false;
+            //Apply sprint to player
+            maxSpeed = speedStorage * sprintMultiplier;
         }
+    }
+
+    /// <summary>
+    /// Stops the player from sprinting.
+    /// </summary>
+    public void StopSprint()
+    {
+        maxSpeed = speedStorage;
+        readyToSprint = true;
     }
 
     #endregion
@@ -613,7 +646,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         if (readyToJump && jumping) Jump();
 
         // If holding sprint && ready to sprint, then sprint
-        if (readyToSprint && sprinting) Sprint();
+        if (readyToSprint && sprinting) StartSprint();
 
         // Set max speed
         float maxSpeed = this.maxSpeed;
@@ -625,11 +658,19 @@ public class Matt_PlayerMovement : MonoBehaviour
             return;
         }
 
+        float tempX = x;
+        float tempY = y;
         // If speed is larger than maxspeed, cancel out the input so you don't go over max speed
-        if (x > 0 && xMag > maxSpeed) x = 0;
-        if (x < 0 && xMag < -maxSpeed) x = 0;
-        if (y > 0 && yMag > maxSpeed) y = 0;
-        if (y < 0 && yMag < -maxSpeed) y = 0;
+        if (tempX > 0 && xMag > maxSpeed) tempX = 0;
+        if (tempX < 0 && xMag < -maxSpeed) tempX = 0;
+        if (tempY > 0 && yMag > maxSpeed) tempY = 0;
+        if (tempY < 0 && yMag < -maxSpeed) tempY = 0;
+
+        //// If speed is larger than maxspeed, cancel out the input so you don't go over max speed
+        //if (x > 0 && xMag > maxSpeed) x = 0;
+        //if (x < 0 && xMag < -maxSpeed) x = 0;
+        //if (y > 0 && yMag > maxSpeed) y = 0;
+        //if (y < 0 && yMag < -maxSpeed) y = 0;
 
         // Some multipliers
         float multiplier = 1f, multiplierV = 1f;
@@ -659,28 +700,11 @@ public class Matt_PlayerMovement : MonoBehaviour
             canDash = true;
         }
 
-        //if (config.isActiveAndEnabled)
-        //{
-        //    Debug.Log("Config Joint");
-        //    if (!config.IsGrappling())
-        //    {
-        //        rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
-        //        rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
-        //    }
-        //    else if (config.IsGrappling())
-        //    {
-        //        if (/*config.GetCanApplyForce())*/true)
-        //        {
-        //            rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
-        //        }
-        //    }
-        //}
-
         // If the player is not grappling, add a force in the direction they are moving in.
         if (!grappleGunReference.IsGrappling())
         {
-            rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
-            rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
+            rb.AddForce(orientation.transform.forward * tempY * moveSpeed * Time.deltaTime * multiplier * multiplierV);
+            rb.AddForce(orientation.transform.right * tempX * moveSpeed * Time.deltaTime * multiplier);
         }
         // If Swing Lock is not active, and the player is grappling, add a force in the player's orientation
         else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
@@ -699,36 +723,11 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 if (latestOrientation != null)
                 {
+                    rb.velocity = Vector3.zero;
                     rb.AddForce(latestOrientation * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
                 }
             }
         }
-    }
-
-    #endregion
-
-    #region Sprinting Stuff
-
-    /// <summary>
-    /// Handles the player sprinting.
-    /// </summary>
-    private void Sprint()
-    {
-        if (grounded && readyToSprint)
-        {
-            readyToSprint = false;
-            //Apply sprint to player
-            maxSpeed = speedStorage * sprintMultiplier;
-        }
-    }
-
-    /// <summary>
-    /// Stops the player from sprinting.
-    /// </summary>
-    private void StopSprint()
-    {
-        maxSpeed = speedStorage;
-        readyToSprint = true;
     }
 
     #endregion
@@ -802,43 +801,46 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private float desiredX;
 
+
+
+
     /// <summary>
     /// Rotates the player in the direction they are looking in.
     /// </summary>
     private void Look()
     {
-        float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime;
+        float tempX = mouseX * sensitivity * Time.fixedDeltaTime;
+        float tempY = mouseY * sensitivity * Time.fixedDeltaTime;
 
-        float mouseInput = Mathf.Abs(mouseX) + Mathf.Abs(mouseY);
+        float mouseInput = Mathf.Abs(tempX) + Mathf.Abs(tempY);
         if (mouseInput > normalSpeedAmmount)
         {
-            mouseX *= 1 + (mouseAccerlationAmmount * (mouseInput - normalSpeedAmmount));
+            tempX *= 1 + (mouseAccerlationAmmount * (mouseInput - normalSpeedAmmount));
 
-            mouseY *= 1 + (mouseAccerlationAmmount * (mouseInput - normalSpeedAmmount));
+            tempY *= 1 + (mouseAccerlationAmmount * (mouseInput - normalSpeedAmmount));
 
         }
 
         Vector3 rot = playerCam.transform.localRotation.eulerAngles;
-        desiredX = rot.y + mouseX;
+        desiredX = rot.y + tempX;
 
         //Rotate, and also make sure we dont over- or under-rotate.
         if (PlayerPrefs.HasKey("InvertY"))
         {
             if (PlayerPrefs.GetInt("InvertY") == 1)
             {
-                xRotation += mouseY;
+                xRotation += tempY;
             }
 
             else
             {
-                xRotation -= mouseY;
+                xRotation -= tempY;
             }
         }
 
         else
         {
-            xRotation -= mouseY;
+            xRotation -= tempY;
         }
 
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
@@ -963,6 +965,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             //FLOOR
             if (IsFloor(normal))
             {
+                timeOffGround = 0;
                 grounded = true;
                 cancellingGrounded = false;
                 normalVector = normal;
@@ -995,6 +998,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        ScreenShake(other);
         int layer = other.gameObject.layer;
         if (whatIsGround != (whatIsGround | (1 << layer))) return;
 
@@ -1037,6 +1041,17 @@ public class Matt_PlayerMovement : MonoBehaviour
                 other.collider.material = frictionlessMat;
             }
         }
+    }
+
+    private void ScreenShake(Collision other)
+    {
+        if (!grounded && rb.velocity.magnitude > minVelocityForScreenShake && PlayerPrefs.GetInt("ScreenShake") == 1 && timeOffGround > .5f)
+        {
+            Debug.Log("Screen Shaked");
+            float tempShakeAmmount = startingScreenShakeAmmount + ((rb.velocity.magnitude - minVelocityForScreenShake) * shakeAmmountVelocityScaling);
+            cam.ScreenShake(screenShakeLength, tempShakeAmmount);
+        }
+
     }
 
     /// <summary>

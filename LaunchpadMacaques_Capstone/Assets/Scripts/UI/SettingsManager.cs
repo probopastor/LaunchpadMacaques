@@ -33,6 +33,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The Mouse Sensitivity Slider")] Slider mouseSensitivity;
     [SerializeField, Tooltip("The Field of View Slider")] Toggle fovToggle;
     [SerializeField, Tooltip("The Slider to set Starting FOV Value")] Slider fovSlider;
+    [SerializeField] Toggle screenShake;
 
     [Header("Settings Holder")]
     [SerializeField, Tooltip("Will hold all the settings Menu")] GameObject settingsHolder;
@@ -64,7 +65,7 @@ public class SettingsManager : MonoBehaviour
     #endregion
     void Start()
     {
-        if(SceneManager.GetActiveScene().name == "MainMenu")
+        if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             settingsHolder.SetActive(true);
 
@@ -79,6 +80,7 @@ public class SettingsManager : MonoBehaviour
             InitialMouseSensitivity();
             SetResolutionsDropDown();
             InitialFOV();
+            InitialScreenShake();
 
             DisableStuff();
 
@@ -93,6 +95,7 @@ public class SettingsManager : MonoBehaviour
         InitialInvertY();
         InitialMouseSensitivity();
         InitialFullScreen();
+        InitialScreenShake();
     }
 
     public void UpdateSound()
@@ -112,7 +115,7 @@ public class SettingsManager : MonoBehaviour
 
     private void Update()
     {
-        HandleEscapeKey();
+        //HandleEscapeKey();
     }
 
     private void DisableStuff()
@@ -211,6 +214,30 @@ public class SettingsManager : MonoBehaviour
         {
             fullScreenToggle.SetIsOnWithoutNotify(true);
             SetFullScreen(true);
+        }
+    }
+
+    private void InitialScreenShake()
+    {
+        if (PlayerPrefs.HasKey("ScreenShake"))
+        {
+            if(PlayerPrefs.GetInt("ScreenShake") == 1)
+            {
+                screenShake.SetIsOnWithoutNotify(true);
+                SetScreenShake(true);
+            }
+
+            else
+            {
+                screenShake.SetIsOnWithoutNotify(false);
+                SetScreenShake(false);
+            }
+        }
+
+        else
+        {
+            screenShake.SetIsOnWithoutNotify(true);
+            SetScreenShake(true);
         }
     }
 
@@ -443,6 +470,19 @@ public class SettingsManager : MonoBehaviour
             PlayerPrefs.SetInt("FullScreen", 0);
         }
     }
+    
+    public void SetScreenShake(bool useScreenShake)
+    {
+        if (useScreenShake)
+        {
+            PlayerPrefs.SetInt("ScreenShake", 1);
+        }
+
+        else
+        {
+            PlayerPrefs.SetInt("ScreenShake", 0);
+        }
+    }
 
     /// <summary>
     /// Will be called when the player changes the sesitivity slider
@@ -568,40 +608,39 @@ public class SettingsManager : MonoBehaviour
     #endregion
 
 
-    private void HandleEscapeKey()
+    public void HandleEscapeKey()
     {
-        if (/*SceneManager.GetActiveScene().name == "MainMenu"*/ true)
+
+        if (settingsHolder.activeSelf)
         {
-            if (Input.GetButtonDown("Back") && settingsHolder.activeSelf)
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+            if (optionsMenu.activeSelf)
             {
-                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-                if (optionsMenu.activeSelf)
-                {
-                    mainMenu.SetActive(true);
-                    settingsHolder.SetActive(false);
-                }
-
-                else if (videoSettings.activeSelf)
-                {
-                    optionsMenu.SetActive(true);
-                    videoSettings.SetActive(false);
-                }
-
-                else if (audioSettings.activeSelf)
-                {
-                    optionsMenu.SetActive(true);
-                    audioSettings.SetActive(false);
-                }
-
-                else if (gameplaySettings.activeSelf)
-                {
-                    optionsMenu.SetActive(true);
-                    gameplaySettings.SetActive(false);
-                }
-
-                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+                mainMenu.SetActive(true);
+                settingsHolder.SetActive(false);
             }
+
+            else if (videoSettings.activeSelf)
+            {
+                optionsMenu.SetActive(true);
+                videoSettings.SetActive(false);
+            }
+
+            else if (audioSettings.activeSelf)
+            {
+                optionsMenu.SetActive(true);
+                audioSettings.SetActive(false);
+            }
+
+            else if (gameplaySettings.activeSelf)
+            {
+                optionsMenu.SetActive(true);
+                gameplaySettings.SetActive(false);
+            }
+
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
         }
+
 
     }
 

@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 
 public class DetectController : MonoBehaviour
@@ -23,7 +26,12 @@ public class DetectController : MonoBehaviour
 
     public GameObject selectedGameObject;
 
+    EventSystem even;
 
+    private void Awake()
+    {
+        InputSystem.onDeviceChange += ControllerStatusChanged;
+    }
 
     private void Start()
     {
@@ -31,6 +39,7 @@ public class DetectController : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            //DontDestroyOnLoad(this.gameObject);
         }
 
         else
@@ -38,69 +47,101 @@ public class DetectController : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        StopCoroutine(DetectJoySticks());
-        StartCoroutine(DetectJoySticks());
+        even = FindObjectOfType<EventSystem>();
+
+        InitialDetection();
+
+        Invoke("InitialDetection", .1f);
+    }
+
+    private void InitialDetection()
+    {
+        var test = InputSystem.FindControls("<gamepad>");
+
+        var count = test.Count;
+
+        test.Dispose();
+
+        if (count >= 1)
+        {
+            ControllerConnected();
+        }
     }
 
     private void Update()
     {
 
+        if (even == null)
+        {
+            even = FindObjectOfType<EventSystem>();
+        }
+
+
         if (FindObjectOfType<Button>() & controller)
         {
-            EventSystem even = FindObjectOfType<EventSystem>();
-            if (even.currentSelectedGameObject == null)
+            if (FindObjectOfType<Button>().isActiveAndEnabled)
             {
-                ControllerConnected();
+
+                if (even.currentSelectedGameObject == null)
+                {
+                    ControllerConnected();
+                }
+
+                else if (even.currentSelectedGameObject.GetComponent<Button>())
+                {
+                    if (!even.currentSelectedGameObject.GetComponent<Button>().isActiveAndEnabled)
+                    {
+                        ControllerConnected();
+                    }
+                }
+
+                else if (even.currentSelectedGameObject.GetComponent<TMP_Dropdown>())
+                {
+                    if (!even.currentSelectedGameObject.GetComponent<TMP_Dropdown>().isActiveAndEnabled)
+                    {
+                        ControllerConnected();
+                    }
+                }
+
+                else if (even.currentSelectedGameObject.GetComponent<Slider>())
+                {
+                    if (!even.currentSelectedGameObject.GetComponent<Slider>().isActiveAndEnabled)
+                    {
+                        ControllerConnected();
+                    }
+                }
+
+                else if (even.currentSelectedGameObject.GetComponent<Toggle>())
+                {
+                    if (!even.currentSelectedGameObject.GetComponent<Toggle>().isActiveAndEnabled)
+                    {
+                        ControllerConnected();
+                    }
+                }
             }
+
         }
     }
 
 
-    /// <summary>
-    /// Loops through Joysticks to check if it can find Xbox Controller
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator DetectJoySticks()
+    private void ControllerStatusChanged(InputDevice device, InputDeviceChange change)
     {
-        while (true)
+        switch (change)
         {
-            yield return new WaitForSecondsRealtime(.5f);
-            foundController = false;
-
-            //Get Joystick Names
-            joySticks = Input.GetJoystickNames();
-
-
-            // Loops through all the joysticks
-            if (joySticks.Length > 0)
-            {
-                for (int i = 0; i < joySticks.Length; ++i)
-                {
-                    // Will check to see if the Joystick is empty
-                    if (!string.IsNullOrEmpty(joySticks[i]))
-                    {
-                        //joySticks[i] == "Controller (Xbox One For Windows)"
-                        // Will check to see if the joystick is an xbox controller
-                        if (true)
-                        {
-                            foundController = true;
-                            if (!controller)
-                            {
-                                ControllerConnected();
-
-                            }
-                        }
-
-                    }
-
-                }
-            }
-
-            if (!foundController)
-            {
+            case InputDeviceChange.Added:
+                Debug.Log("Controller Added");
+                ControllerConnected();
+                break;
+            case InputDeviceChange.Disconnected:
+                Debug.Log("Controller Removed");
                 ControllerDisconnected();
-            }
+                break;
+            case InputDeviceChange.Reconnected:
+                Debug.Log("Controller Added");
+                ControllerConnected();
+                break;
         }
+
     }
 
 
@@ -118,8 +159,8 @@ public class DetectController : MonoBehaviour
 
         if (FindObjectOfType<EventSystem>())
         {
-            EventSystem even = FindObjectOfType<EventSystem>();
-            if (selectedGameObject)
+
+            if (selectedGameObject && selectedGameObject.activeSelf)
             {
                 even.SetSelectedGameObject(selectedGameObject);
             }
