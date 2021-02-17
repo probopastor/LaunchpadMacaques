@@ -60,7 +60,7 @@ public  class TextEffectHandler : MonoBehaviour
         //Assign delegates to their corresponding functions
         shaky -= ShakyText;
         typewriter -= TypewriterText;
-        rainbow += RainbowText;
+        rainbow -= RainbowText;
     }
     private void Awake()
     {
@@ -86,8 +86,13 @@ public  class TextEffectHandler : MonoBehaviour
     /// <param name="textToRun">The string text to run through and put on the TMPro object</param>
     public void RunText(TMP_Text obj, string textToRun)
     {
-        tweener = obj.GetCharTweener();
         ParseText(obj, textToRun);
+    }
+
+    public void StopText()
+    {
+        tweener.DOKill();
+        StopAllCoroutines();
     }
 
     /// <summary>
@@ -262,9 +267,13 @@ public  class TextEffectHandler : MonoBehaviour
         obj.text = textToParse;
 
         //**3. Apply the effect to the now shortened string**//
-        for(int i = 0; i < effectsToApply.Count; i++)
+
+        tweener = obj.GetCharTweener();
+
+        for (int i = 0; i < effectsToApply.Count; i++)
         {
             EffectApplicationDetails currentDetails = effectsToApply[i];
+            Debug.Log(currentDetails.effectName +  " | " + currentDetails.effectStartIndex + " | " + currentDetails.effectEndIndex);
             StartCoroutine(effectLibrary[currentDetails.effectName](obj, currentDetails.effectStartIndex, currentDetails.effectEndIndex));
         }
     }
@@ -314,11 +323,14 @@ public  class TextEffectHandler : MonoBehaviour
             tweener.SetAlpha(i, 0);
         }
 
+        yield return new WaitForSecondsRealtime(0.1f);
+
         for (int i = startIndex; i < endIndex; i++)
         {
             tweener.SetAlpha(i, 1);
             yield return new WaitForSecondsRealtime(0.125f);
         }
+
     }
 
     /// <summary>
@@ -330,14 +342,29 @@ public  class TextEffectHandler : MonoBehaviour
     /// <returns></returns>
     private IEnumerator RainbowText(TMP_Text textObject, int startIndex, int endIndex)
     {
-        for (int i = startIndex; i < endIndex; i++)
+        bool[] activated = new bool[tweener.Text.textInfo.characterCount];
+        for(int i = 0; i < activated.Length; i++)
         {
-            var timeOffset = Mathf.Lerp(0, 1, (i - startIndex) / (float)(endIndex - startIndex + 1));
-            var colorTween = tweener.DOColor(i, UnityEngine.Random.ColorHSV(0, 1, 1, 1, 1, 1),
-                UnityEngine.Random.Range(0.1f, 0.5f))
-                .SetLoops(-1, LoopType.Yoyo);
-            colorTween.fullPosition = timeOffset;
+            activated[i] = false;
         }
-        yield return null;
+
+        while (true)
+        {
+            for (int i = startIndex; i < endIndex; i++)
+            {
+                var timeOffset = Mathf.Lerp(0, 1, (i - startIndex) / (float)(endIndex - startIndex + 1));
+                if (tweener.GetAlpha(i) != 0 && activated[i] == false)
+                {
+                    activated[i] = true;
+                    var colorTween = tweener.DOColor(i, UnityEngine.Random.ColorHSV(0, 1, 1, 1, 1, 1, tweener.GetAlpha(i), tweener.GetAlpha(i)),
+                        0.5f)
+                        .SetLoops(-1, LoopType.Yoyo);
+                    colorTween.fullPosition = timeOffset;
+                }
+            }
+            yield return null;
+        }
+
+        
     }
 }

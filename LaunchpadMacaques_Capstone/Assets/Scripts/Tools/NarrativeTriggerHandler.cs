@@ -269,6 +269,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
             dialogue.text = "";
         }
 
+        TextEffectHandler.instance.StopText();
+
 
         canvas.gameObject.SetActive(false);
 

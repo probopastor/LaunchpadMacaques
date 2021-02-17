@@ -26,6 +26,7 @@ public class NarrativeTriggerEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+        EditorStyles.textField.wordWrap = true;
 
         //Random Trigger Settings (Universal)
         EditorGUILayout.LabelField("Global Trigger Settings", EditorStyles.boldLabel);
