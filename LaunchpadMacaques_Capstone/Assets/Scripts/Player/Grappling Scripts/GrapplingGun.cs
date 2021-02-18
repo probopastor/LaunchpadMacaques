@@ -1,6 +1,6 @@
 ﻿/* 
 * Launchpad Macaques - Neon Oblivion
-* Matt Kirchoff, Levi Schoof, William Nomikos
+* Matt Kirchoff, Levi Schoof, William Nomikos, Connor Wolf
 * GrapplingGun.cs
 * Script handles grappling and ungrappling from objects, and swinging mechanics. 
 */
@@ -12,6 +12,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.PlayerLoop;
 using FMOD.Studio;
+using FMODUnity;
 
 public class GrapplingGun : MonoBehaviour
 {
@@ -109,6 +110,16 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField]
     Animator anim;
 
+    [Header("Audio Clips")]
+    [EventRef, SerializeField, Tooltip("Audio clip that plays when grapple is initiated.")]
+    private string grappleStart;
+    [EventRef, SerializeField, Tooltip("Audio clip that plays when grapple is active.")]
+    private string grappleActive;
+    [EventRef, SerializeField, Tooltip("Audio clip that plays when grapple is ended.")]
+    private string grappleEnd;
+
+    private EventInstance grapplingInstance;
+
 
     #endregion
 
@@ -193,6 +204,8 @@ public class GrapplingGun : MonoBehaviour
         SetGrapplesLeft();
 
         playerRB = player.GetComponent<Rigidbody>();
+
+        grapplingInstance = RuntimeManager.CreateInstance(grappleActive);
     }
 
     private void SetTypeOfGrapple()
@@ -274,6 +287,8 @@ public class GrapplingGun : MonoBehaviour
 
     private void GrappleUpdateChanges()
     {
+        grapplingInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
         if (IsGrappling() && joint)
         {
             timeGrappling += Time.deltaTime;
@@ -704,6 +719,11 @@ public class GrapplingGun : MonoBehaviour
         {
             StartGrapplingSettings();
             CreateGrapplePoint();
+
+            EventInstance beginGrappleInstance = RuntimeManager.CreateInstance(grappleStart);
+            beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            beginGrappleInstance.start();
+            grapplingInstance.start();
         }
 
     }
@@ -714,6 +734,11 @@ public class GrapplingGun : MonoBehaviour
         {
             StartGrapplingSettings();
             BatmanGrapple();
+
+            EventInstance beginGrappleInstance = RuntimeManager.CreateInstance(grappleStart);
+            beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            beginGrappleInstance.start();
+            grapplingInstance.start();
         }
     }
 
@@ -723,7 +748,6 @@ public class GrapplingGun : MonoBehaviour
         if (IsGrappling())
         {
             StopGrapple();
-
         }
 
         SetDifferentGrappleTypeSettings();
@@ -912,7 +936,6 @@ public class GrapplingGun : MonoBehaviour
         joint.massScale = springMass;
 
         currentGrapplePosition = hitObjectClone.transform.position;
-        GetComponent<FMODUnity.StudioEventEmitter>().Play();
 
 
 
@@ -982,6 +1005,11 @@ public class GrapplingGun : MonoBehaviour
 
 
             StopAllCoroutines();
+
+            EventInstance endGrappleInstance = RuntimeManager.CreateInstance(grappleEnd);
+            endGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            endGrappleInstance.start();
+            grapplingInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
 
     }
