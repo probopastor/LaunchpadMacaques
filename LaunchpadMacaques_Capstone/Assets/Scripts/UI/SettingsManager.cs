@@ -13,6 +13,7 @@ using TMPro;
 using FMODUnity;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using System;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The Resolution Dropdown Box")] TMP_Dropdown resolutionDropdown;
     [SerializeField, Tooltip("The Full Screen Toggle")] Toggle fullScreenToggle;
     [SerializeField, Tooltip("The Graphics Quality Dropdown Box")] TMP_Dropdown graphicsQualityDropdown;
+    [SerializeField, Tooltip("The Colorblind Mode Dropdown Box")] TMP_Dropdown colorblindModeDropdown;
 
     [Header("Volume Sliders")]
     [SerializeField, Tooltip("The Dialouge Volume Slider")] Slider dialougeVolume;
@@ -53,6 +55,7 @@ public class SettingsManager : MonoBehaviour
     // The Deafult variables the sliders will be set to, upon an ititial launch (Player has never played game before)
     #region Deafult Variables
     private int deafultGraphicsQuality = 1;
+    private int defaultColorblindMode = 0;
     private float deafultDialouge = .5f;
     private float deafultMusic = .5f;
     private float deafultSoundEffects = .5f;
@@ -81,6 +84,7 @@ public class SettingsManager : MonoBehaviour
             SetResolutionsDropDown();
             InitialFOV();
             InitialScreenShake();
+            InitialColorblindMode();
 
             DisableStuff();
 
@@ -111,6 +115,7 @@ public class SettingsManager : MonoBehaviour
         SetResolutionsDropDown();
         InitialFullScreen();
         InitialQuality();
+        InitialColorblindMode();
     }
 
     private void Update()
@@ -221,7 +226,7 @@ public class SettingsManager : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("ScreenShake"))
         {
-            if(PlayerPrefs.GetInt("ScreenShake") == 1)
+            if (PlayerPrefs.GetInt("ScreenShake") == 1)
             {
                 screenShake.SetIsOnWithoutNotify(true);
                 SetScreenShake(true);
@@ -306,6 +311,21 @@ public class SettingsManager : MonoBehaviour
             graphicsQualityDropdown.SetValueWithoutNotify(deafultGraphicsQuality);
             SetQuality(deafultGraphicsQuality);
         }
+    }
+
+    private void InitialColorblindMode()
+    {
+        if (PlayerPrefs.HasKey("ColorblindMode"))
+        {
+            colorblindModeDropdown.SetValueWithoutNotify(PlayerPrefs.GetInt("ColorblindMode"));
+            SetColorblindMode(PlayerPrefs.GetInt("ColorblindMode"));
+        }
+        else
+        {
+            SetColorblindMode(defaultColorblindMode);
+            colorblindModeDropdown.SetValueWithoutNotify(defaultColorblindMode);
+        }
+
     }
 
     /// <summary>
@@ -470,7 +490,7 @@ public class SettingsManager : MonoBehaviour
             PlayerPrefs.SetInt("FullScreen", 0);
         }
     }
-    
+
     public void SetScreenShake(bool useScreenShake)
     {
         if (useScreenShake)
@@ -549,6 +569,11 @@ public class SettingsManager : MonoBehaviour
         QualitySettings.SetQualityLevel(qualityLevel);
 
         PlayerPrefs.SetInt("QualityLevel", qualityLevel);
+    }
+
+    public void SetColorblindMode(int colorblindMode)
+    {
+        PlayerPrefs.SetInt("ColorblindMode", colorblindMode);
     }
 
     /// <summary>
