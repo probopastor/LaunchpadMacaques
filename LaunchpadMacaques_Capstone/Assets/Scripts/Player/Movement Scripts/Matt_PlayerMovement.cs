@@ -503,7 +503,7 @@ public class Matt_PlayerMovement : MonoBehaviour
                 StopCrouch();
             }
         }
-     
+
     }
 
     public void OnMoveInput(float x, float y)
@@ -1012,7 +1012,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
         }
 
-        // Determines whether or not the point collided with is a surface. 
+        // Determines whether or not the point collided with is a surface.
         if (other.collider.tag == "GrapplePoint" || other.collider.tag == "Platform")
         {
             RaycastHit hit;
@@ -1115,8 +1115,6 @@ public class Matt_PlayerMovement : MonoBehaviour
 
             lastMaxFOV = targetMaxFOV;
         }
-
-
     }
 
     public void SavePlayer()

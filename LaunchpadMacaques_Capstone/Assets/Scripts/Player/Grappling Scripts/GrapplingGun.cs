@@ -1,8 +1,8 @@
-﻿/* 
+﻿/*
 * Launchpad Macaques - Neon Oblivion
 * Matt Kirchoff, Levi Schoof, William Nomikos, Connor Wolf
 * GrapplingGun.cs
-* Script handles grappling and ungrappling from objects, and swinging mechanics. 
+* Script handles grappling and ungrappling from objects, and swinging mechanics.
 */
 
 using System.Collections;
@@ -123,6 +123,17 @@ public class GrapplingGun : MonoBehaviour
 
     #endregion
 
+    #region Particle Effects
+    [Header("Particle Effects Played While Grappling")]
+    [SerializeField, Tooltip(" An array of particle systems to be played while grappling. All will be played at once.")] private ParticleSystem[] grappleParticles;
+    [SerializeField, Tooltip(" The positions of each grappling particle system from the player. A value of 0 is at the player hand.")] private Vector3[] particlePositions;
+    [SerializeField, Tooltip(" The rotation  of each grappling particle system. 0 is default particle rotation.")] private Quaternion[] particleRotations;
+
+    private List<GameObject> particleObjs = new List<GameObject>();
+    private GameObject grappleParticlesObj;
+    private bool particlesStarted;
+    #endregion
+
     #region PrivateVariables
     // The current length of the rope
     private GameObject hitObjectClone;
@@ -206,6 +217,7 @@ public class GrapplingGun : MonoBehaviour
         playerRB = player.GetComponent<Rigidbody>();
 
         grapplingInstance = RuntimeManager.CreateInstance(grappleActive);
+        particlesStarted = false;
     }
 
     private void SetTypeOfGrapple()
@@ -762,6 +774,22 @@ public class GrapplingGun : MonoBehaviour
         anim.ResetTrigger("GrappleEnd");
         anim.SetTrigger("GrappleStart");
 
+        // Instantiate grappling particles and play them
+        if(grappleParticles != null && !particlesStarted)
+        {
+            particlesStarted = true;
+
+            for (int i = 0; i < grappleParticles.Length; i++)
+            {
+                Vector3 particlePos = new Vector3(transform.position.x + particlePositions[i].x, transform.position.y + particlePositions[i].y, transform.position.z + particlePositions[i].z);
+                GameObject grappleParticlesObj = Instantiate(grappleParticles[i].gameObject, particlePos, particleRotations[i]);
+                particleObjs.Add(grappleParticlesObj);
+                grappleParticlesObj.transform.parent = gameObject.transform;
+
+                grappleParticles[i].Play();
+            }
+        }
+
         StartCoroutine(DrawLine());
     }
     /// <summary>
@@ -859,8 +887,6 @@ public class GrapplingGun : MonoBehaviour
 
         float counter = 0;
 
-
-
         lr.SetPosition(0, ejectPoint.position);
 
         float tempAttachSpeed = startingAttachSpeed;
@@ -882,7 +908,6 @@ public class GrapplingGun : MonoBehaviour
         }
 
         drawlingLine = false;
-
     }
 
 
@@ -945,8 +970,6 @@ public class GrapplingGun : MonoBehaviour
         {
             pinwheel.TriggerRotation(grappleRayHit.collider.transform, cam.forward);
         }
-
-
     }
 
     private void BatmanGrapple()
@@ -987,6 +1010,20 @@ public class GrapplingGun : MonoBehaviour
             pulling = false;
             StopCoroutine(PullCourtine(grappleRayHit));
             currentGrappledObj = null;
+
+            if(grappleParticles != null && particlesStarted)
+            {
+                // Stop all grapple particles playing
+                for (int i = 0; i < grappleParticles.Length; i++)
+                {
+                    grappleParticles[i].Stop();
+                    Destroy(particleObjs[i]);
+                }
+                // Clear the particle object list so it can be reused.
+                particleObjs.Clear();
+
+                particlesStarted = false;
+            }
 
             swingLockToggle = false;
 
