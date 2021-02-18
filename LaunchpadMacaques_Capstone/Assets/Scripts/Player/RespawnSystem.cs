@@ -116,5 +116,7 @@ public class RespawnSystem : MonoBehaviour
         // Resets the player position/velocity
         this.transform.position = currentRespawnPosition;
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+        gg.StopGrapple();
     }
 }
