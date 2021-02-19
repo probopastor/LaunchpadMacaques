@@ -13,7 +13,8 @@ using UnityEngine.SceneManagement;
 public class HandleSaving : MonoBehaviour
 {
     [SerializeField, Tooltip("A array of levels that the player can complete")] Level[] levels;
-    private static HandleSaving instance;
+    [SerializeField] Ability[] abilities;
+    public static HandleSaving instance;
     Save_System saveSystem;
 
     private Vector3 playerPos;
@@ -199,6 +200,50 @@ public class HandleSaving : MonoBehaviour
         return false;
     }
 
+    private bool AreLevelsComplete(string[] levelNames)
+    {
+        foreach(string str in levelNames)
+        {
+            bool found = false;
+
+            foreach(Level l in levels)
+            {
+                if(str == l.levelName)
+                {
+                    if(l.completed == 1)
+                    {
+                        found = true;
+                    }
+
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if(found == false)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    public bool UnlockedAbility(Ability.AbilityType ability)
+    {
+        foreach(Ability a in abilities)
+        {
+            if(a.thisAbility == ability)
+            {
+                return AreLevelsComplete(a.levels);
+            }
+        }
+
+        return false;
+    }
 }
 
 
@@ -210,6 +255,17 @@ public class Level
 {
     public string levelName;
     public int completed = 0;
+}
+
+
+[System.Serializable]
+public class Ability 
+{
+    public enum AbilityType { Dash, Batman}
+
+    public AbilityType thisAbility;
+    public string[] levels;
+
 }
 
 

@@ -200,6 +200,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private float timeOffGround;
 
+    private bool dashUnlocked = false;
+
     ParticleSystem system
     {
         get
@@ -268,6 +270,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
 
         currentMaxFOV = maxFOV;
+
+
+        dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
     }
 
     private void FixedUpdate()
@@ -331,7 +336,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     public void Dash()
     {
 
-        if (!grounded)
+        if (!grounded && dashUnlocked)
         {
             if (grappleGunReference.IsGrappling())
             {

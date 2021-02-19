@@ -195,6 +195,8 @@ public class GrapplingGun : MonoBehaviour
 
     float wheelInput;
 
+    private bool canBatman;
+
     #endregion
 
     #region StartFunctions
@@ -270,6 +272,17 @@ public class GrapplingGun : MonoBehaviour
         pushPull = this.gameObject.GetComponent<PushPullObjects>();
 
         swingLockToggle = false;
+    }
+
+
+    private void Start()
+    {
+        CheckBatman();
+    }
+
+    private void CheckBatman()
+    {
+        canBatman = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Batman);
     }
     #endregion
 
@@ -456,77 +469,6 @@ public class GrapplingGun : MonoBehaviour
     }
 
     #region Handle Trigger Input
-    private bool GetGrappleTriggerDown()
-    {
-        if (Input.GetAxis("Start Grapple") > 0)
-        {
-            if (holdingDownGrapple)
-            {
-                return false;
-            }
-
-            else
-            {
-                if (!IsGrappling())
-                {
-                    holdingDownGrapple = true;
-                }
-
-                return true;
-            }
-        }
-
-        else return false;
-    }
-
-    private bool GetGrappleTrigger()
-    {
-        if (Input.GetAxis("Start Grapple") > 0)
-        {
-
-            return true;
-
-        }
-
-        else return false;
-    }
-
-    private bool GetStopGrappleTrigger()
-    {
-        if (Input.GetAxis("Start Grapple") < 0)
-        {
-            return true;
-        }
-
-        else
-        {
-            return false;
-        }
-    }
-
-    private bool GetStopGrappleTriggerDown()
-    {
-        if (Input.GetAxis("Start Grapple") < 0)
-        {
-            if (!holdingDownStopGrapple)
-            {
-                holdingDownStopGrapple = true;
-                return true;
-            }
-
-            else
-            {
-                return false;
-            }
-
-        }
-
-        else
-        {
-            holdingDownStopGrapple = false;
-            return false;
-        }
-    }
 
     #endregion
 
@@ -742,7 +684,7 @@ public class GrapplingGun : MonoBehaviour
 
     public void StartBatManGrapple()
     {
-        if (CanFindGrappleLocation())
+        if (CanFindGrappleLocation() && canBatman)
         {
             StartGrapplingSettings();
             BatmanGrapple();
@@ -775,7 +717,7 @@ public class GrapplingGun : MonoBehaviour
         anim.SetTrigger("GrappleStart");
 
         // Instantiate grappling particles and play them
-        if(grappleParticles != null && !particlesStarted)
+        if (grappleParticles != null && !particlesStarted)
         {
             particlesStarted = true;
 
@@ -1011,7 +953,7 @@ public class GrapplingGun : MonoBehaviour
             StopCoroutine(PullCourtine(grappleRayHit));
             currentGrappledObj = null;
 
-            if(grappleParticles != null && particlesStarted)
+            if (grappleParticles != null && particlesStarted)
             {
                 // Stop all grapple particles playing
                 for (int i = 0; i < grappleParticles.Length; i++)
