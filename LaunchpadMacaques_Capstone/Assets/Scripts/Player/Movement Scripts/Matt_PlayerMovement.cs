@@ -30,8 +30,6 @@ public class Matt_PlayerMovement : MonoBehaviour
     //Other
     private Rigidbody rb;
 
-    //Save system
-    public bool[] Completion = new bool[6];
 
     #region Player Sensitivity
     [Header("Player Rotation and Look")]
@@ -277,8 +275,6 @@ public class Matt_PlayerMovement : MonoBehaviour
         Movement();
         LimitVelocity();
         SetGravityModifier();
-        SavePlayer();
-        LoadPlayer();
 
 
     }
@@ -1117,74 +1113,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
-    public void SavePlayer()
-    {
-
-
-        switch (SceneManager.GetActiveScene().buildIndex)
-        {
-            case 2:
-                if (GameObject.Find("PortalPlane").GetComponent<SwitchLevel>().levelComplete)
-                {
-                    Completion[0] = true;
-                }
-                break;
-            case 3:
-                if (GameObject.Find("PortalPlane").GetComponent<SwitchLevel>().levelComplete)
-                {
-                    Completion[1] = true;
-                }
-                break;
-            case 4:
-                if (GameObject.Find("PortalPlane").GetComponent<SwitchLevel>().levelComplete)
-                {
-                    Completion[2] = true;
-                }
-                break;
-            case 5:
-                if (GameObject.Find("PortalPlane").GetComponent<SwitchLevel>().levelComplete)
-                {
-                    Completion[3] = true;
-                }
-                break;
-            case 6:
-                if (GameObject.Find("PortalPlane").GetComponent<SwitchLevel>().levelComplete)
-                {
-                    Completion[4] = true;
-                }
-                break;
-            case 7:
-                if (GameObject.Find("PortalPlane").GetComponent<SwitchLevel>().levelComplete)
-                {
-                    Completion[5] = true;
-                }
-                break;
-        }
-
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            Save_System.SavePlayer(this);
-            Debug.Log("player has saved.");
-        }
-
-    }
-
-    public void LoadPlayer()
-    {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            PlayerData data = Save_System.LoadPlayer();
-
-            Vector3 position;
-            position.x = data.position[0];
-            position.y = data.position[1];
-            position.z = data.position[2];
-            transform.position = position;
-
-            Debug.Log("player has loaded.");
-        }
-
-    }
 
 
 }
+
+

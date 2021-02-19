@@ -170,7 +170,7 @@ public class HandleSaving : MonoBehaviour
             }
         }
 
-        SavePlayer();
+        JustSaveLevels();
     }
 
     /// <summary>
