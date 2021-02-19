@@ -17,13 +17,20 @@ using UnityEngine;
 public class MovingPlatform : MonoBehaviour
 {
 
-    //PRIVATE:
     //Inspector:
     [SerializeField, Tooltip("The array Vector3 points that the platform will go to (in order)")]
     private Vector3[] points;
 
-    [SerializeField, Tooltip("The float speed that the platform will go when moving to the next point")]
+    public enum MovementStyle { ConstantSpeed , ConstantTime };
+    [SerializeField, Tooltip("The way the platform will move from point to point " +
+        "\nConstant Speed: Will move at the same speed regardless of the distance between the two points" +
+        "\nConstant Time: Will always take the same amount of time to get from point to point, but may alter speed to do so")]
+    private MovementStyle movementStyle = MovementStyle.ConstantSpeed;
+
+    [SerializeField, Tooltip("The float speed that the platform will go when moving to the next point. Only taken into account when the movement style is set to \"Constant Speed\"")]
     private float movementSpeed = 1;
+    [SerializeField, Tooltip("The time it takes for the platform to get from point to point. Only taken into account when the movement style is set to \"Constant Time\"")]
+    private float movementTime = 5f;
 
     [SerializeField, Tooltip("The time (in seconds) that the platform will wait at each point before continuing to the next")]
     private float holdTime = 0;
@@ -79,6 +86,8 @@ public class MovingPlatform : MonoBehaviour
             Vector3 startPoint = points[currentPointIndex];
             //The next point in the 
             Vector3 targetPoint = Vector3.zero;
+            float distance = 0;
+            float currentTime = 0;
 
             //Check if the point is the last point, if so, follow the loop pattern to continue
             if (currentPointIndex + 1 >= points.Length)
@@ -106,29 +115,47 @@ public class MovingPlatform : MonoBehaviour
                 targetPoint = points[currentPointIndex];
             }
 
+            distance = Vector3.Distance(startPoint, targetPoint);
+
             //Loop to move platform from startPoint to targetPoint
             while (transform.position != targetPoint)
             {
                 Vector3 oldPoint = transform.position;
                 Vector3 newPoint;
 
-                //Slow down toward beginning and end
-                if (easeInAndOut)
+                //Slow down toward beginning and end and move at a constant speed
+                if (easeInAndOut && movementStyle == MovementStyle.ConstantSpeed)
                 {
                     //New point moves toward target point while lerping to slow down as it approaches or leaves the start or target point respectively
-                    newPoint = Vector3.MoveTowards(transform.position, targetPoint,
-                        Mathf.Lerp(0, movementSpeed,
-                                   Mathf.Clamp((Mathf.Min(Vector3.Distance(transform.position, startPoint), Vector3.Distance(transform.position, targetPoint)) / easeDistance), 
-                                               0.05f, 
-                                               Mathf.Infinity))
-                                   * Time.deltaTime);
+                    newPoint = Vector3.MoveTowards(transform.position, 
+                                                   targetPoint,
+                                                   Mathf.Lerp(0, 
+                                                              movementSpeed,
+                                                              Mathf.Clamp(Mathf.Min(Vector3.Distance(transform.position, startPoint), Vector3.Distance(transform.position, targetPoint)) / easeDistance, 
+                                                                          0.05f, 
+                                                                          1))
+                                                   * Time.deltaTime);
                 }
-                else
+                //Don't slow down at the beginning and end and move at a constant speed
+                else if(!easeInAndOut && movementStyle == MovementStyle.ConstantSpeed)
                 {
                     newPoint = Vector3.MoveTowards(transform.position, targetPoint, movementSpeed * Time.deltaTime);
                 }
+                //Slow down at the beginning and end while arriving over a set time period
+                else if(easeInAndOut && movementStyle == MovementStyle.ConstantTime)
+                {
+                    //You were working on this, have to figure out how to combine easing in with a consistent movement time
+                    newPoint = Vector3.Lerp(startPoint, targetPoint, (currentTime / movementTime) * Time.deltaTime);
+                    //newPoint = Vector3.Lerp(startPoint, targetPoint, (currentTime / movementTime) ) * Time.deltaTime);
+                }
+                //Don't slow down at the beginning and end and arrive to destination over a set time period
+                else
+                {
+                    newPoint = Vector3.Lerp(startPoint, targetPoint, (currentTime / movementTime) * Time.deltaTime);
+                }
 
                 transform.position = newPoint;
+                currentTime += Time.deltaTime;
 
                 //Physics-based operations are used to detect and move objects on platforms, must wait for fixed update to do so
                 yield return new WaitForFixedUpdate();
@@ -146,6 +173,7 @@ public class MovingPlatform : MonoBehaviour
     /// </summary>
     private void CheckForObjectsOnPlatform()
     {
+        //Check slightly above the platform to see if player is on it
         Vector3 center = transform.position;
         center.y += 0.5f;
 
@@ -156,7 +184,8 @@ public class MovingPlatform : MonoBehaviour
 
         objectsOnPlatform.Clear();
         for (int i = 0; i < hit.Length; i++)
-        {
+        {   
+            //Only move players and cubes on the platform
             if (hit[i].tag == "Player" || hit[i].tag == "PlayerCube")
             {
                 UnityEngine.Debug.Log("Hit Player");
@@ -179,6 +208,9 @@ public class MovingPlatform : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Generate the line render that connects the points of the moving platform's path
+    /// </summary>
     private void InitializeLineRenderer()
     {
 
@@ -197,6 +229,9 @@ public class MovingPlatform : MonoBehaviour
         lineRenderer.loop = loopPattern == LoopPattern.Cycle;
     }
 
+    /// <summary>
+    /// Generate the end points at the stopping points along the moving platform's path
+    /// </summary>
     private void InitializeEndPoints()
     {
         GameObject endpoint;

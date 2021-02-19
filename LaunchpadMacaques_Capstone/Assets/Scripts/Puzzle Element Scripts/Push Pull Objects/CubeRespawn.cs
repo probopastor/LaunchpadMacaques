@@ -64,7 +64,7 @@ public class CubeRespawn : MonoBehaviour
     public void RespawnCube()
     {
         // If the player is holding the object, stop holding the object. 
-        if (pushPullObjectsRef.IsGrabbing() && gameObject == pushPullObjectsRef.GetHeldCube())
+        if (pushPullObjectsRef.IsGrabbing() && gameObject == pushPullObjectsRef.GetHeldCube() && pushPullObjectsRef.GetHeldCube() != null)
         {
             pushPullObjectsRef.DropObject();
         }
