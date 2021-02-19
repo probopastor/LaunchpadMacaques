@@ -112,7 +112,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The Gravtiy that will be applied to the player when they are in the air")] float inAirGravity = -12f;
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are swinging")] float grapplingGravity = -6;
     [SerializeField, Tooltip("The Gravity that will be applied when resetting rope velocity and rope length. The greater this value, " +
-        "the faster velocity and rope length are reset. ")] float grapplingResetGravity = -78.48f;
+        "the faster velocity and rope length are reset. ")]
+    float grapplingResetGravity = -78.48f;
 
     // grapplingGravityReference stores the grapplingGravity at Start, so that grapplingGravity may be reverted to its default easily.
     private float grapplingGravityReference = 0;
@@ -222,15 +223,15 @@ public class Matt_PlayerMovement : MonoBehaviour
         grapplingGravityReference = grapplingGravity;
 
         // Makes xVelocityResetRange, yVelocityResetRange, and zVelocityResetRange positive if they are negative.
-        if(xVelocityResetRange < 0)
+        if (xVelocityResetRange < 0)
         {
             xVelocityResetRange *= -1;
         }
-        if(yVelocityResetRange < 0)
+        if (yVelocityResetRange < 0)
         {
             yVelocityResetRange *= -1;
         }
-        if(zVelocityResetRange < 0)
+        if (zVelocityResetRange < 0)
         {
             zVelocityResetRange *= -1;
         }
@@ -245,7 +246,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         Movement();
         LimitVelocity();
         SetGravityModifier();
-       
+
 
 
     }
@@ -259,17 +260,6 @@ public class Matt_PlayerMovement : MonoBehaviour
             grappleGunReference.UpdateHandRotation(rb.velocity);
         }
 
-        //Debug.Log("canApplyForce is: " + grappleGunReference.GetCanApplyForce());
-        //Debug.Log("kill force is: " + killForce);
-
-        // Press K, when grappling, to start the "Kill Force" Coroutine.
-        //if (Input.GetKeyDown(KeyCode.Minus) && !killForce)
-        //{
-        //    if(grappleGunReference.IsGrappling())
-        //    {
-        //        StartCoroutine(KillForces());
-        //    }
-        //}
 
         if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) &&
             (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) &&
@@ -294,21 +284,6 @@ public class Matt_PlayerMovement : MonoBehaviour
         var localVel = transform.InverseTransformDirection(rb.velocity);
         var psRotation = _CachedSystem.shape.rotation;
         psRotation = localVel;
-        /*
-        if (speed >= 20f)
-        {
-            if (_CachedSystem.isStopped)
-            {
-                _CachedSystem.Play();
-            }
-        }
-        else if (_CachedSystem.isPlaying && speed <= 20f)
-        {
-            _CachedSystem.Stop();
-        }
-        */
-        SavePlayer();
-        LoadPlayer();
     }
 
 
@@ -426,7 +401,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         killForce = true;
 
-        if(lowVelocityDuration != 0)
+        if (lowVelocityDuration != 0)
         {
             yield return new WaitForSeconds(lowVelocityDuration);
         }
@@ -622,7 +597,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             multiplierV = airMoveSpeedMultiplier;
 
             //PlayerHitGround Event for Dialogue/Narrative Trigger System
-            if(fallCheckRunning == false)
+            if (fallCheckRunning == false)
                 StartCoroutine(FallCheck());
         }
 
@@ -756,13 +731,13 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <returns></returns>
     IEnumerator FallCheck()
     {
-        if(narrativeTriggerReference == null)
+        if (narrativeTriggerReference == null)
             yield break;
 
         fallCheckRunning = true;
 
         float airTime = 0;
-        while(!grounded)
+        while (!grounded)
         {
             if (grappleGunReference.IsGrappling())
                 airTime = 0;
@@ -771,7 +746,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             yield return null;
         }
 
-        if(airTime > narrativeTriggerReference.GetFallTime())
+        if (airTime > narrativeTriggerReference.GetFallTime())
         {
             GameEventManager.TriggerEvent("onPlayerHitGround");
         }
@@ -837,7 +812,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         RaycastHit hit;
         Physics.Raycast(playerCam.position, playerCam.transform.forward, out hit, Mathf.Infinity, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore);
-        if(hit.collider != null)
+        if (hit.collider != null)
         {
             return hit.collider.gameObject;
         }
@@ -848,7 +823,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
 
     }
-    
+
 
     /// <summary>
     /// Handles movement counter measures to maintain smooth movement.
@@ -967,17 +942,17 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void changeFOV()
     {
-        if(PlayerPrefs.GetInt("FOV") == 1)
+        if (PlayerPrefs.GetInt("FOV") == 1)
         {
             Camera.main.fieldOfView = m_fieldOfView;
-           var targetMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+            var targetMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
 
             if (currentMaxFOV < targetMaxFOV)
             {
                 currentMaxFOV += fovChangeRate * Time.deltaTime;
             }
 
-            else if(currentMaxFOV > targetMaxFOV)
+            else if (currentMaxFOV > targetMaxFOV)
             {
                 currentMaxFOV -= fovChangeRate * Time.deltaTime;
             }
@@ -1004,81 +979,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     }
 
-    public void SavePlayer()
-    {
 
-
-        switch (SceneManager.GetActiveScene().buildIndex)
-        {
-            case 2:
-                if (GameObject.Find("PortalPlane").GetComponent<SwitchLevel>().levelComplete)
-                {
-                    Completion[0] = true;
-                }
-                break;
-            case 3:
-                if (GameObject.Find("PortalPlane").GetComponent<SwitchLevel>().levelComplete)
-                {
-                    Completion[1] = true;
-                }
-                break;
-            case 4:
-                if (GameObject.Find("PortalPlane").GetComponent<SwitchLevel>().levelComplete)
-                {
-                    Completion[2] = true;
-                }
-                break;
-            case 5:
-                if (GameObject.Find("PortalPlane").GetComponent<SwitchLevel>().levelComplete)
-                {
-                    Completion[3] = true;
-                }
-                break;
-            case 6:
-                if (GameObject.Find("PortalPlane").GetComponent<SwitchLevel>().levelComplete)
-                {
-                    Completion[4] = true;
-                }
-                break;
-            case 7:
-                if (GameObject.Find("PortalPlane").GetComponent<SwitchLevel>().levelComplete)
-                {
-                    Completion[5] = true;
-                }
-                break;
-        }
-
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            level = SceneManager.GetActiveScene().buildIndex;
-            Save_System.SavePlayer(this);
-            Debug.Log("player has saved.");
-           
-        }
-       
-    }
-
-    public void LoadPlayer()
-    {
-       
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            PlayerDataNew data = Save_System.LoadPlayer();
-
-            level = data.level;
-            SceneManager.LoadScene(level);
-
-            Vector3 position;
-            position.x = data.position[0];
-            position.y = data.position[1];
-            position.z = data.position[2];
-            transform.position = position;
-
-            Debug.Log("player has loaded.");
-           
-        }
-       
-    }
 
 
 }

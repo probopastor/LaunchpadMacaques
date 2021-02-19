@@ -16,12 +16,19 @@ public class SwitchLevel : MonoBehaviour
 {
     [SerializeField, Tooltip("The name of the scene this object should load when triggered. ")] private string nextLevelName;
 
-    public bool levelComplete = false;
+    HandleSaving handleSaving;
+
+
+    private void Start()
+    {
+        handleSaving = FindObjectOfType<HandleSaving>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+       
             SwitchScenes();
         }
     }
@@ -39,8 +46,7 @@ public class SwitchLevel : MonoBehaviour
     /// </summary>
     private void SwitchScenes()
     {
-        levelComplete = true;
-        levelComplete = false;
+        handleSaving.LevelCompleted();
         SceneManager.LoadScene(nextLevelName);
         
     }
