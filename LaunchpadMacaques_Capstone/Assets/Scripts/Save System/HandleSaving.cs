@@ -202,10 +202,14 @@ public class HandleSaving : MonoBehaviour
 
     private bool AreLevelsComplete(string[] levelNames)
     {
+        string sceneName = SceneManager.GetActiveScene().name;
         foreach(string str in levelNames)
         {
             bool found = false;
-
+            if(sceneName == str)
+            {
+                return false;
+            }
             foreach(Level l in levels)
             {
                 if(str == l.levelName)
