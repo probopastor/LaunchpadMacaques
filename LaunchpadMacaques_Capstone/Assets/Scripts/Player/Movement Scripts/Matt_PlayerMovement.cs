@@ -271,8 +271,16 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         currentMaxFOV = maxFOV;
 
-
+        //if(HandleSaving.instance != null)
+        //{
+        //    dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
+        //}
+        //else
+        //{
+        //    dashUnlocked = true;
+        //}
         dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
+
     }
 
     private void FixedUpdate()

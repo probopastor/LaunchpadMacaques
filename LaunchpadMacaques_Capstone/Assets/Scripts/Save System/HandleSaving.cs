@@ -20,7 +20,7 @@ public class HandleSaving : MonoBehaviour
     private Vector3 playerPos;
     private string levelName;
 
-    private void Start()
+    private void Awake()
     {
         Singleton();
         SetLevels();
