@@ -59,6 +59,11 @@ public class HandleSaving : MonoBehaviour
             LoadPlayer();
         }
 
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            DeleteFile();
+        }
+
     }
 
 
@@ -70,6 +75,12 @@ public class HandleSaving : MonoBehaviour
         saveSystem.SavePlayer(FindObjectOfType<Matt_PlayerMovement>().gameObject, levels);
     }
 
+    public void DeleteFile()
+    {
+
+        saveSystem.DeleteFile();
+
+    }
     /// <summary>
     /// Will only save the level information
     /// </summary>
@@ -202,15 +213,15 @@ public class HandleSaving : MonoBehaviour
 
     private bool AreLevelsComplete(string[] levelNames)
     {
-        foreach(string str in levelNames)
+        foreach (string str in levelNames)
         {
             bool found = false;
 
-            foreach(Level l in levels)
+            foreach (Level l in levels)
             {
-                if(str == l.levelName)
+                if (str == l.levelName)
                 {
-                    if(l.completed == 1)
+                    if (l.completed == 1)
                     {
                         found = true;
                     }
@@ -222,7 +233,7 @@ public class HandleSaving : MonoBehaviour
                 }
             }
 
-            if(found == false)
+            if (found == false)
             {
                 return false;
             }
@@ -234,9 +245,9 @@ public class HandleSaving : MonoBehaviour
 
     public bool UnlockedAbility(Ability.AbilityType ability)
     {
-        foreach(Ability a in abilities)
+        foreach (Ability a in abilities)
         {
-            if(a.thisAbility == ability)
+            if (a.thisAbility == ability)
             {
                 return AreLevelsComplete(a.levels);
             }
@@ -259,9 +270,9 @@ public class Level
 
 
 [System.Serializable]
-public class Ability 
+public class Ability
 {
-    public enum AbilityType { Dash, Batman}
+    public enum AbilityType { Dash, Batman }
 
     public AbilityType thisAbility;
     public string[] levels;
