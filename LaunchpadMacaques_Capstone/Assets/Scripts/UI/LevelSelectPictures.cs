@@ -45,6 +45,9 @@ public class LevelSelectPictures : MonoBehaviour
         SetImages();
     }
 
+    /// <summary>
+    /// Sets level images on level select from the main menu scene.
+    /// </summary>
     private void SetImages()
     {
         if (eventSystem.currentSelectedGameObject == level1Button)

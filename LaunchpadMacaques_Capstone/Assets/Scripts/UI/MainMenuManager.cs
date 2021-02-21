@@ -36,7 +36,7 @@ public class MainMenuManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         anim.Play("MainMenuBG");
     }
-
+    
     private void Update()
     {
         EscapeKey();
@@ -128,51 +128,29 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    //public void StartGame()
-    //{
-    //    Time.timeScale = 1;
-    //    SceneManager.LoadScene(pushPullScene);
-    //}
+
 
     /// <summary>
-    /// Obsolete. Previously brought players to the push pull level.
+    /// Loads a specified scene.
     /// </summary>
-    //public void StartPushPullScene()
-    //{
-    //    Time.timeScale = 1;
-    //    Cursor.visible = false;
-    //    Cursor.lockState = CursorLockMode.Locked;
-    //    SceneManager.LoadScene(pushPullScene);
-    //}
-
-    ///// <summary>
-    ///// Starts the swing sandbox level upon button click.
-    ///// </summary>
-    //public void StartSwingScene()
-    //{
-    //    Time.timeScale = 1;
-    //    Cursor.visible = false;
-    //    Cursor.lockState = CursorLockMode.Locked;
-    //    SceneManager.LoadScene(swingScene);
-    //}
-
+    /// <param name="sceneName">The name of the scene to load (case sensitive). </param> 
     public void LoadScene(string sceneName)
-{
-    Time.timeScale = 1;
-    Cursor.visible = false;
-    Cursor.lockState = CursorLockMode.Locked;
-    SceneManager.LoadScene(sceneName);
-}
+    {
+        Time.timeScale = 1;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        SceneManager.LoadScene(sceneName);
+    }
 
-/// <summary>
-/// Exits the game.
-/// </summary>
-public void QuitGame()
-{
+    /// <summary>
+    /// Exits the game.
+    /// </summary>
+    public void QuitGame()
+    {
 #if UNITY_EDITOR
-    UnityEditor.EditorApplication.isPlaying = false;
+        UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif
-}
+    }
 }
