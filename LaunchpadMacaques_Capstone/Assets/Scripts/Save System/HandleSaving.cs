@@ -64,9 +64,23 @@ public class HandleSaving : MonoBehaviour
             DeleteFile();
         }
 
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            CompleteAllLevels();
+        }
+
     }
 
 
+    public void CompleteAllLevels()
+    {
+        for (int i = 0; i < levels.Length; i++)
+        {
+            levels[i].completed = 1;
+        }
+
+        JustSaveLevels();
+    }
     /// <summary>
     /// Saves the game
     /// </summary>
@@ -214,14 +228,14 @@ public class HandleSaving : MonoBehaviour
     private bool AreLevelsComplete(string[] levelNames)
     {
         string sceneName = SceneManager.GetActiveScene().name;
-        foreach(string str in levelNames)
+        foreach (string str in levelNames)
         {
             bool found = false;
-            if(sceneName == str)
+            if (sceneName == str)
             {
                 return false;
             }
-            foreach(Level l in levels)
+            foreach (Level l in levels)
             {
                 if (str == l.levelName)
                 {
