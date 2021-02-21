@@ -602,7 +602,7 @@ public class GrapplingGun : MonoBehaviour
         if (player.GetComponent<Rigidbody>().velocity.magnitude >= neededVelocityForAutoAim)
         {
             RaycastHit grappleObject;
-            if (Physics.SphereCast(cam.position, sphereRadius, cam.forward, out grappleObject, maxGrappleDistance, whatIsGrappleable))
+            if (Physics.SphereCast(cam.position, sphereRadius, cam.forward, out grappleObject, maxGrappleDistance, whatIsGrappleable, QueryTriggerInteraction.Collide))
             {
                 RaycastHit checkDownHit;
                 if (Physics.Raycast(cam.position, -cam.up, out checkDownHit, groundCheckDistance, whatIsGrappleable))
@@ -824,7 +824,8 @@ public class GrapplingGun : MonoBehaviour
     {
         drawlingLine = true;
         lr.positionCount = 2;
-        Vector3 grappled = grappleRayHit.point;
+        //Vector3 grappled = grappleRayHit.point;
+        Vector3 grappled = grappleRayHit.transform.position;
         dist = Vector3.Distance(ejectPoint.position, grappled);
 
         float counter = 0;
@@ -872,7 +873,8 @@ public class GrapplingGun : MonoBehaviour
         }
 
         hitObjectClone = Instantiate(hitObject);
-        hitObjectClone.transform.position = grappleRayHit.point;
+        //hitObjectClone.transform.position = grappleRayHit.point;
+        hitObjectClone.transform.position = grappleRayHit.transform.position;
         hitObjectClone.transform.parent = grappleRayHit.transform;
         grapplePoint = hitObjectClone.transform.position;
 

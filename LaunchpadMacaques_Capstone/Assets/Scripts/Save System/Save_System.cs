@@ -30,7 +30,6 @@ public class Save_System : MonoBehaviour
 
         string playerData = JsonUtility.ToJson(data, true);
         File.WriteAllText(Application.persistentDataPath + "/PlayerData.json", playerData);
-
     }
 
 
@@ -47,6 +46,16 @@ public class Save_System : MonoBehaviour
 
         string playerData = JsonUtility.ToJson(data, true);
         File.WriteAllText(Application.persistentDataPath + "/PlayerData.json", playerData);
+    }
+
+
+    public void DeleteFile()
+    {
+        if (CanFindFile("PlayerData"))
+        {
+            File.Delete(Application.persistentDataPath + "/PlayerData.json");
+        }
+
     }
 
     /// <summary>
