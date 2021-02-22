@@ -199,8 +199,9 @@ public class GrapplingGun : MonoBehaviour
 
     private bool passedGrapplePoint = false;
 
-    [SerializeField] [Tooltip("The Decal that will be placed to make part of object look Corrupted")] GameObject throwDecal;
+    [SerializeField] [Tooltip("The Decal that will appear on the ground while the player is grappling. ")] GameObject groundDecal;
     private GameObject thisDecal;
+    private bool displayShadow = false;
     #endregion
 
     #region StartFunctions
@@ -225,8 +226,10 @@ public class GrapplingGun : MonoBehaviour
         grapplingInstance = RuntimeManager.CreateInstance(grappleActive);
         particlesStarted = false;
 
-        thisDecal = Instantiate(throwDecal);
+        // Set up swinging decal objects
+        thisDecal = Instantiate(groundDecal);
         thisDecal.SetActive(false);
+        displayShadow = false;
     }
 
     private void SetTypeOfGrapple()
@@ -1017,9 +1020,12 @@ public class GrapplingGun : MonoBehaviour
 
     }
 
-    private bool displayShadow = false;
+    /// <summary>
+    /// Handles the decal and the line renderer that appear under the player while they are grappling.
+    /// </summary>
     private void HoverShadow()
     {
+        // Set display shadow status if the player is swinging. Keep display shadow on until the player hits the ground again.
         if (IsGrappling())
         {
             displayShadow = true;
@@ -1029,6 +1035,7 @@ public class GrapplingGun : MonoBehaviour
             displayShadow = false;
         }
 
+        // Do not change the active status of the decal if it is being changed to the same state. (e.g. Don't set it to true if it's already true).
         if (!(thisDecal.activeSelf && displayShadow) || !(!thisDecal.activeSelf && !displayShadow))
         {
             thisDecal.SetActive(displayShadow);
@@ -1039,12 +1046,10 @@ public class GrapplingGun : MonoBehaviour
         {
             MoveDecal(hit);
         }
-
-        Debug.Log("Shadow displayed?: " + displayShadow);
     }
 
     /// <summary>
-    /// Will Place The Decal at givin spot
+    ///  Places a decal at a given location.
     /// </summary>
     /// <param name="info"></param>
     private void MoveDecal(RaycastHit info)
