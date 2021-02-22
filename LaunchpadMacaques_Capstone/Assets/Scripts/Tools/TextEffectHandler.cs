@@ -16,9 +16,28 @@ using CharTween;
 public  class TextEffectHandler : MonoBehaviour
 {
     public static TextEffectHandler instance;
+
+    [Header("Typewriter Settings")]
+    [Tooltip("The time (in seconds) it waits between revealing a letter")]
+    public float typewriterSpeed = 0.025f;
+    [Tooltip("The time (in seconds) the typewriter effects waits to start upon ")]
+    public float typewriterDelay = 0.1f;
+
+    [Header("Shaky Settings")]
+    public float strength = 1.5f;
+    public int vibrato = 10;
+    public float randomness = 90;
+    public bool snapping = false;
+    public bool fadeOut = false;
+
+    [Header("Rainbow Settings")]
+    public float transitionSpeed = 0.5f;
+
     private delegate IEnumerator TextEffect(TMP_Text textObj, int startIndex, int endIndex);
     private Dictionary<string, TextEffect> effectLibrary;
     private CharTweener tweener;
+    private Sequence currentSequence;
+    private Color defaultTextColor;
 
     //Available Text Effects
     TextEffect shaky;
@@ -77,6 +96,7 @@ public  class TextEffectHandler : MonoBehaviour
             {"typewriter", typewriter },
             {"rainbow", rainbow }
         };
+
     }
 
     /// <summary>
@@ -86,13 +106,17 @@ public  class TextEffectHandler : MonoBehaviour
     /// <param name="textToRun">The string text to run through and put on the TMPro object</param>
     public void RunText(TMP_Text obj, string textToRun)
     {
+        tweener = obj.GetCharTweener();
+        defaultTextColor = obj.color;
         ParseText(obj, textToRun);
     }
 
+    /// <summary>
+    /// Public function to be called by other scripts to end any running text effects
+    /// </summary>
     public void StopText()
     {
-        tweener.DOKill();
-        StopAllCoroutines();
+        DOTween.KillAll(true);
     }
 
     /// <summary>
@@ -101,6 +125,13 @@ public  class TextEffectHandler : MonoBehaviour
     /// </summary>
     private void ParseText(TMP_Text obj, string textToParse)
     {
+        /* 
+        Three step Process:
+           1. Locate tags in the string to find effect tags, and mark them to be removes
+           2. Remove the effect tags, altering the indexes the effects should be applied along the way
+          3. Apply the effects to the new string that no longer has the tags
+        */
+
         List<EffectApplicationDetails> effectsToApply = new List<EffectApplicationDetails>();
         string tagName = "";
         int startTag_startIndex, endTag_startIndex;
@@ -268,27 +299,13 @@ public  class TextEffectHandler : MonoBehaviour
 
         //**3. Apply the effect to the now shortened string**//
 
-        tweener = obj.GetCharTweener();
-
         for (int i = 0; i < effectsToApply.Count; i++)
         {
             EffectApplicationDetails currentDetails = effectsToApply[i];
-            Debug.Log(currentDetails.effectName +  " | " + currentDetails.effectStartIndex + " | " + currentDetails.effectEndIndex);
+            //Debug.Log(currentDetails.effectName +  " | " + currentDetails.effectStartIndex + " | " + currentDetails.effectEndIndex);
             StartCoroutine(effectLibrary[currentDetails.effectName](obj, currentDetails.effectStartIndex, currentDetails.effectEndIndex));
         }
-    }
 
-    /// <summary>
-    /// Removes the first instance of a string in a second string. 
-    /// https://stackoverflow.com/questions/2201595/c-sharp-simplest-way-to-remove-first-occurrence-of-a-substring-from-another-st Daniel Felipe's solution used as reference.
-    /// </summary>
-    /// <param name="initialString"></param> The initial string.
-    /// <param name="stringToRemove"></param> The string that will be removed.
-    /// <returns></returns>
-    public string RemoveStringFromString(string initialString, string stringToRemove)
-    {
-        int startIndex = initialString.IndexOf(stringToRemove);
-        return startIndex < 0 ? initialString : initialString.Remove(startIndex, stringToRemove.Length);
     }
 
     /// <summary>
@@ -300,13 +317,24 @@ public  class TextEffectHandler : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ShakyText(TMP_Text textObject, int startIndex, int endIndex)
     {
+        Tween tween = null;
+
         for(int i = startIndex; i < endIndex; i++)
         {
+            var posOffset = tweener.GetPositionOffset(i);
             var timeOffset = Mathf.Lerp(0, 1, (i - startIndex) / (float)(endIndex - startIndex + 1));
-            tweener.DOShakePosition(i, 10, 1.5f, 10, 90, false, false)
-                .SetLoops(-1, LoopType.Restart);
+            int temp = i;
+            tween = tweener.DOShakePosition(i, 10, strength, vibrato, randomness, snapping, fadeOut)
+                .SetLoops(1, LoopType.Restart)
+                .OnKill(() => {
+                    tween.Restart();
+                } );
         }
-        yield return null;
+
+        yield return new WaitForSeconds(1f);
+        tween.Kill(true);
+
+        yield break;
     }
 
     /// <summary>
@@ -323,12 +351,12 @@ public  class TextEffectHandler : MonoBehaviour
             tweener.SetAlpha(i, 0);
         }
 
-        yield return new WaitForSecondsRealtime(0.1f);
+        yield return new WaitForSeconds(instance.typewriterSpeed);
 
         for (int i = startIndex; i < endIndex; i++)
         {
             tweener.SetAlpha(i, 1);
-            yield return new WaitForSecondsRealtime(0.125f);
+            yield return new WaitForSecondsRealtime(typewriterSpeed);
         }
 
     }
@@ -342,29 +370,46 @@ public  class TextEffectHandler : MonoBehaviour
     /// <returns></returns>
     private IEnumerator RainbowText(TMP_Text textObject, int startIndex, int endIndex)
     {
-        bool[] activated = new bool[tweener.Text.textInfo.characterCount];
+        bool[] activated = new bool[endIndex - startIndex];
         for(int i = 0; i < activated.Length; i++)
         {
             activated[i] = false;
         }
 
-        while (true)
+        bool complete = false;
+        while (!complete)
         {
             for (int i = startIndex; i < endIndex; i++)
             {
                 var timeOffset = Mathf.Lerp(0, 1, (i - startIndex) / (float)(endIndex - startIndex + 1));
-                if (tweener.GetAlpha(i) != 0 && activated[i] == false)
+                if (tweener.GetAlpha(i) == 1 && activated[i - startIndex] == false)
                 {
-                    activated[i] = true;
-                    var colorTween = tweener.DOColor(i, UnityEngine.Random.ColorHSV(0, 1, 1, 1, 1, 1, tweener.GetAlpha(i), tweener.GetAlpha(i)),
+                    activated[i - startIndex] = true;
+                    int temp = i;
+                    var tween = tweener.DOColor(i, UnityEngine.Random.ColorHSV(0, 1, 1, 1, 1, 1, tweener.GetAlpha(i), tweener.GetAlpha(i)),
                         0.5f)
-                        .SetLoops(-1, LoopType.Yoyo);
-                    colorTween.fullPosition = timeOffset;
+                        .SetLoops(-1, LoopType.Yoyo).OnKill(() =>
+                        {
+                            tweener.SetColor(temp, Color.white);
+                        });
+                    tween.fullPosition = timeOffset;
+                }
+                
+            }
+
+            complete = true;
+            for(int i = startIndex; i < endIndex; i++)
+            {
+                if(activated[i - startIndex] == false)
+                {
+                    complete = false;
                 }
             }
+
+            
             yield return null;
         }
 
-        
+
     }
 }
