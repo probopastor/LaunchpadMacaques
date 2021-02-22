@@ -199,13 +199,18 @@ public class GrapplingGun : MonoBehaviour
 
     private bool passedGrapplePoint = false;
 
+    #endregion
+
+    #region Shadow & Downwards Line Renferer
+    [Header("Grappling Shadow Settings")]
+
     [SerializeField] [Tooltip("The Decal that will appear on the ground while the player is grappling. ")] GameObject groundDecal;
     private GameObject thisDecal;
     private bool displayShadow = false;
 
     [SerializeField, Tooltip("The object with the grappling shadow line renderer. ")] private GameObject grapplingLrObj;
     private LineRenderer grapplingLr;
-    #endregion
+    #endregion 
 
     #region StartFunctions
     void Awake()
@@ -233,7 +238,7 @@ public class GrapplingGun : MonoBehaviour
         thisDecal = Instantiate(groundDecal);
         thisDecal.SetActive(false);
         displayShadow = false;
-        //grapplingLr.positionCount = 0;
+
         grapplingLr = grapplingLrObj.GetComponent<LineRenderer>();
         grapplingLr.enabled = false;
     }
@@ -1052,7 +1057,6 @@ public class GrapplingGun : MonoBehaviour
         if (Physics.Raycast(gameObject.transform.position, Vector3.down, out hit, Mathf.Infinity))
         {
             MoveDecal(hit);
-            //grapplingLrShootPos.transform.position
             MoveGrapplingShadowLineRenderer(grapplingLr, hit, grapplingLrObj.transform.position);
         }
     }
