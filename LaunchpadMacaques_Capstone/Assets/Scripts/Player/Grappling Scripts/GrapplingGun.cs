@@ -202,6 +202,9 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField] [Tooltip("The Decal that will appear on the ground while the player is grappling. ")] GameObject groundDecal;
     private GameObject thisDecal;
     private bool displayShadow = false;
+
+    [SerializeField, Tooltip("The object with the grappling shadow line renderer. ")] private GameObject grapplingLrObj;
+    private LineRenderer grapplingLr;
     #endregion
 
     #region StartFunctions
@@ -230,6 +233,9 @@ public class GrapplingGun : MonoBehaviour
         thisDecal = Instantiate(groundDecal);
         thisDecal.SetActive(false);
         displayShadow = false;
+        //grapplingLr.positionCount = 0;
+        grapplingLr = grapplingLrObj.GetComponent<LineRenderer>();
+        grapplingLr.enabled = false;
     }
 
     private void SetTypeOfGrapple()
@@ -1035,17 +1041,33 @@ public class GrapplingGun : MonoBehaviour
             displayShadow = false;
         }
 
-        // Do not change the active status of the decal if it is being changed to the same state. (e.g. Don't set it to true if it's already true).
+        // Do not change the active status of the decal and line renderer if it is being changed to the same state. (e.g. Don't set it to true if it's already true).
         if (!(thisDecal.activeSelf && displayShadow) || !(!thisDecal.activeSelf && !displayShadow))
         {
             thisDecal.SetActive(displayShadow);
+            grapplingLr.enabled = displayShadow;
         }
 
         RaycastHit hit;
         if (Physics.Raycast(gameObject.transform.position, Vector3.down, out hit, Mathf.Infinity))
         {
             MoveDecal(hit);
+            //grapplingLrShootPos.transform.position
+            MoveGrapplingShadowLineRenderer(grapplingLr, hit, grapplingLrObj.transform.position);
         }
+    }
+
+    /// <summary>
+    /// Moves the passed in line renderer to the point a raycast hits from the passed in position.
+    /// </summary>
+    /// <param name="lineRenderer">The line renderer to move. </param>
+    /// <param name="info">The RaycastHit of the raycast to move the line renderer to. </param>
+    /// <param name="shootPos">The position to shoot the line renderer from. </param>
+    private void MoveGrapplingShadowLineRenderer(LineRenderer lineRenderer, RaycastHit info, Vector3 shootPos)
+    {
+        lineRenderer.positionCount = 2;
+        lineRenderer.SetPosition(0, shootPos);
+        lineRenderer.SetPosition(1, info.point);
     }
 
     /// <summary>
