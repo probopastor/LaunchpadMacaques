@@ -806,7 +806,7 @@ public class GrapplingGun : MonoBehaviour
     {
         pulling = true;
         currentGrappledObj = hit.collider.gameObject;
-        hit.collider.isTrigger = true;
+        hit.collider.gameObject.GetComponent<BoxCollider>().isTrigger = true;
         yield return new WaitForEndOfFrame();
         float currentTime = 0;
 
@@ -963,7 +963,7 @@ public class GrapplingGun : MonoBehaviour
 
             if (grappleRayHit.collider != null)
             {
-                grappleRayHit.collider.isTrigger = false;
+                grappleRayHit.collider.gameObject.GetComponent<BoxCollider>().isTrigger = false;
             }
 
 
