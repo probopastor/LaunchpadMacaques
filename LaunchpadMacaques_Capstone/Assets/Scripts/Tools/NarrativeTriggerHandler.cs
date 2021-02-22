@@ -263,13 +263,15 @@ public class NarrativeTriggerHandler : MonoBehaviour
         //Wait for the time given by the trigger
         yield return new WaitForSeconds(trigger.textDisplayTime);
 
+        TextEffectHandler.instance.StopText();
+
         //Turn of text
         if (canvas.gameObject.activeSelf)
         {
             dialogue.text = "";
         }
 
-        TextEffectHandler.instance.StopText();
+
 
 
         canvas.gameObject.SetActive(false);
