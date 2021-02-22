@@ -199,6 +199,8 @@ public class GrapplingGun : MonoBehaviour
 
     private bool passedGrapplePoint = false;
 
+    [SerializeField] [Tooltip("The Decal that will be placed to make part of object look Corrupted")] GameObject throwDecal;
+    private GameObject thisDecal;
     #endregion
 
     #region StartFunctions
@@ -222,6 +224,9 @@ public class GrapplingGun : MonoBehaviour
 
         grapplingInstance = RuntimeManager.CreateInstance(grappleActive);
         particlesStarted = false;
+
+        thisDecal = Instantiate(throwDecal);
+        thisDecal.SetActive(false);
     }
 
     private void SetTypeOfGrapple()
@@ -296,6 +301,8 @@ public class GrapplingGun : MonoBehaviour
         CheckForGrapplingThroughWall();
 
         CheckToSeeIfTriggersHeldDown();
+
+        HoverShadow();
     }
 
     private void CheckToSeeIfTriggersHeldDown()
@@ -402,9 +409,9 @@ public class GrapplingGun : MonoBehaviour
             {
                 if (!passedGrapplePoint)
                 {
-                    player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity,currentMaxVelocity, 20);
+                    player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity, 20);
                 }
-              
+
             }
 
             else
@@ -412,7 +419,7 @@ public class GrapplingGun : MonoBehaviour
                 //passedGrapplePoint = true;
                 player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity);
             }
-      
+
         }
 
         else if (actualMaxVelocity)
@@ -938,7 +945,6 @@ public class GrapplingGun : MonoBehaviour
         StartCoroutine(PullCourtine(grappleRayHit));
     }
 
-
     public void StopGrappleInput()
     {
         if (CanFindGrappleLocation())
@@ -1008,6 +1014,43 @@ public class GrapplingGun : MonoBehaviour
             endGrappleInstance.start();
             grapplingInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
+
+    }
+
+    private bool displayShadow = false;
+    private void HoverShadow()
+    {
+        if (IsGrappling())
+        {
+            displayShadow = true;
+        }
+        else if (!IsGrappling() && playerMovementReference.GetGrounded())
+        {
+            displayShadow = false;
+        }
+
+        if (!(thisDecal.activeSelf && displayShadow) || !(!thisDecal.activeSelf && !displayShadow))
+        {
+            thisDecal.SetActive(displayShadow);
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(gameObject.transform.position, Vector3.down, out hit, Mathf.Infinity))
+        {
+            MoveDecal(hit);
+        }
+
+        Debug.Log("Shadow displayed?: " + displayShadow);
+    }
+
+    /// <summary>
+    /// Will Place The Decal at givin spot
+    /// </summary>
+    /// <param name="info"></param>
+    private void MoveDecal(RaycastHit info)
+    {
+        thisDecal.transform.position = info.point;
+        thisDecal.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), info.normal);
 
     }
 
