@@ -86,12 +86,7 @@ public class PauseManager : MonoBehaviour
 
     public void BackInput()
     {
-        if (!optionsMenu.activeSelf && !HTPMenu.activeSelf && paused)
-        {
-            PauseGame();
-        }
-        
-        else if (HTPMenu.activeSelf)
+        if (HTPMenu.activeSelf)
         {
             eventSystem.SetSelectedGameObject(null);
             HTPMenu.SetActive(false);

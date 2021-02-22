@@ -197,6 +197,8 @@ public class GrapplingGun : MonoBehaviour
 
     private bool canBatman;
 
+    private bool passedGrapplePoint = false;
+
     #endregion
 
     #region StartFunctions
@@ -394,9 +396,23 @@ public class GrapplingGun : MonoBehaviour
             player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxPullVelocity);
         }
 
-        else if (player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity && !actualMaxVelocity)
+        else if (/*player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity &&*/ !actualMaxVelocity)
         {
-            player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity);
+            if (!canApplyForce)
+            {
+                if (!passedGrapplePoint)
+                {
+                    player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity,currentMaxVelocity, 20);
+                }
+              
+            }
+
+            else
+            {
+                //passedGrapplePoint = true;
+                player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity);
+            }
+      
         }
 
         else if (actualMaxVelocity)
@@ -673,7 +689,7 @@ public class GrapplingGun : MonoBehaviour
         {
             StartGrapplingSettings();
             CreateGrapplePoint();
-
+            passedGrapplePoint = false;
             EventInstance beginGrappleInstance = RuntimeManager.CreateInstance(grappleStart);
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
