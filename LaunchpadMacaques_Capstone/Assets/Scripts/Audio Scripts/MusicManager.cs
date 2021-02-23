@@ -19,6 +19,7 @@ public class MusicManager : MonoBehaviour
 
     private void Awake()
     {
+        this.gameObject.transform.parent = null;
         if (instance == null)
         {
             DontDestroyOnLoad(gameObject);

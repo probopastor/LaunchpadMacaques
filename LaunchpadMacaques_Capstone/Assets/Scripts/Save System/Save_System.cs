@@ -22,7 +22,7 @@ public class Save_System : MonoBehaviour
         PlayerDataNew data = new PlayerDataNew(player, levels);
 
         string playerData = JsonUtility.ToJson(data, true);
-        File.WriteAllText(Application.persistentDataPath +"/" + PlayerPrefs.GetString("SaveFile") + ".json", playerData);
+        File.WriteAllText(Application.persistentDataPath + "/" + PlayerPrefs.GetString("SaveFile") + ".json", playerData);
     }
 
 
@@ -49,6 +49,25 @@ public class Save_System : MonoBehaviour
             File.Delete(Application.persistentDataPath + "/" + PlayerPrefs.GetString("SaveFile") + ".json");
         }
 
+    }
+
+    public void DeleteFile(string file)
+    {
+        if (CanFindFile(file))
+        {
+            File.Delete(Application.persistentDataPath + "/" + file + ".json");
+        }
+
+    }
+    public void DeleteAllFiles(string[] files)
+    {
+        for (int i = 0; i < files.Length; i++)
+        {
+            if (CanFindFile(files[i]))
+            {
+                File.Delete(Application.persistentDataPath + "/" + files[i] + ".json");
+            }
+        }
     }
 
     /// <summary>
