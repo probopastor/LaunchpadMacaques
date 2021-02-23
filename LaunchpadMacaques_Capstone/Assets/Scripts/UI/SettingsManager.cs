@@ -11,6 +11,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using FMODUnity;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using System;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -19,16 +22,20 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The Resolution Dropdown Box")] TMP_Dropdown resolutionDropdown;
     [SerializeField, Tooltip("The Full Screen Toggle")] Toggle fullScreenToggle;
     [SerializeField, Tooltip("The Graphics Quality Dropdown Box")] TMP_Dropdown graphicsQualityDropdown;
+    [SerializeField, Tooltip("The Colorblind Mode Dropdown Box")] TMP_Dropdown colorblindModeDropdown;
 
     [Header("Volume Sliders")]
     [SerializeField, Tooltip("The Dialouge Volume Slider")] Slider dialougeVolume;
     [SerializeField, Tooltip("The Music Volume Slider")] Slider musicVolume;
     [SerializeField, Tooltip("The Sound Effects Volume Slider")] Slider soundEffectsVolume;
+    [SerializeField, Tooltip("Master Volume Slider")] Slider masterSoundSlider;
 
     [Header("Gameplay Settings")]
     [SerializeField, Tooltip("The Invert Y Toggle Box")] Toggle invertY;
     [SerializeField, Tooltip("The Mouse Sensitivity Slider")] Slider mouseSensitivity;
     [SerializeField, Tooltip("The Field of View Slider")] Toggle fovToggle;
+    [SerializeField, Tooltip("The Slider to set Starting FOV Value")] Slider fovSlider;
+    [SerializeField] Toggle screenShake;
 
     [Header("Settings Holder")]
     [SerializeField, Tooltip("Will hold all the settings Menu")] GameObject settingsHolder;
@@ -41,47 +48,103 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The max volume for the Volume Sliders")] float maxVolume = 1;
     [SerializeField, Tooltip("The min volume for the Volume Sliders")] float minVolume = 0;
 
+    [SerializeField] Button playButton;
+
     Resolution[] reslolutions;
 
     // The Deafult variables the sliders will be set to, upon an ititial launch (Player has never played game before)
     #region Deafult Variables
     private int deafultGraphicsQuality = 1;
+    private int defaultColorblindMode = 0;
     private float deafultDialouge = .5f;
     private float deafultMusic = .5f;
     private float deafultSoundEffects = .5f;
 
     private float deafultMouseSensitivity = 50;
-    private float deafultFOV = 60;
+    private int deafultFOV = 60;
+    private float deafultMaster = 1;
+
+
     #endregion
     void Start()
     {
-        settingsHolder.SetActive(true);
-        InitialFullScreen();
-        InitialQuality();
-        InitialDialouge();
-        InitialMusic();
-        InitialSFX();
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            settingsHolder.SetActive(true);
+
+
+            InitialFullScreen();
+            InitialQuality();
+            InitialDialouge();
+            InitialMusic();
+            InitialMaster();
+            InitialSFX();
+            InitialInvertY();
+            InitialMouseSensitivity();
+            SetResolutionsDropDown();
+            InitialFOV();
+            InitialScreenShake();
+            InitialColorblindMode();
+
+            DisableStuff();
+
+
+        }
+
+    }
+
+    public void UpdateGameplay()
+    {
+        InitialFOV();
         InitialInvertY();
         InitialMouseSensitivity();
+        InitialFullScreen();
+        InitialScreenShake();
+    }
+
+    public void UpdateSound()
+    {
+        InitialDialouge();
+        InitialMusic();
+        InitialMaster();
+        InitialSFX();
+    }
+
+    public void UpdateVisuals()
+    {
         SetResolutionsDropDown();
-        InitialFOV();
-
-        DisableStuff();
-
+        InitialFullScreen();
+        InitialQuality();
+        InitialColorblindMode();
     }
 
     private void Update()
     {
-        HandleEscapeKey();
+        //HandleEscapeKey();
     }
-
 
     private void DisableStuff()
     {
+
         audioSettings.SetActive(false);
         videoSettings.SetActive(false);
         gameplaySettings.SetActive(false);
         settingsHolder.SetActive(false);
+
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            if (DetectController.instance)
+            {
+                DetectController.instance.selectedGameObject = playButton.gameObject;
+            }
+
+            else
+            {
+                FindObjectOfType<DetectController>().selectedGameObject = playButton.gameObject;
+            }
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(playButton.gameObject);
+        }
+
     }
 
     // Will set the sliders to have a starting value equal to either a deafult variable, or the relevant player prefs
@@ -159,6 +222,30 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    private void InitialScreenShake()
+    {
+        if (PlayerPrefs.HasKey("ScreenShake"))
+        {
+            if (PlayerPrefs.GetInt("ScreenShake") == 1)
+            {
+                screenShake.SetIsOnWithoutNotify(true);
+                SetScreenShake(true);
+            }
+
+            else
+            {
+                screenShake.SetIsOnWithoutNotify(false);
+                SetScreenShake(false);
+            }
+        }
+
+        else
+        {
+            screenShake.SetIsOnWithoutNotify(true);
+            SetScreenShake(true);
+        }
+    }
+
     /// <summary>
     /// Called On Start
     /// Will set the InvertY Toggle to be either the deafult value or the "InvertY" PlayerPrefs
@@ -168,7 +255,7 @@ public class SettingsManager : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("InvertY"))
         {
-            if(PlayerPrefs.GetInt("InvertY") == 1)
+            if (PlayerPrefs.GetInt("InvertY") == 1)
             {
                 invertY.SetIsOnWithoutNotify(true);
             }
@@ -226,6 +313,21 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    private void InitialColorblindMode()
+    {
+        if (PlayerPrefs.HasKey("ColorblindMode"))
+        {
+            colorblindModeDropdown.SetValueWithoutNotify(PlayerPrefs.GetInt("ColorblindMode"));
+            SetColorblindMode(PlayerPrefs.GetInt("ColorblindMode"));
+        }
+        else
+        {
+            SetColorblindMode(defaultColorblindMode);
+            colorblindModeDropdown.SetValueWithoutNotify(defaultColorblindMode);
+        }
+
+    }
+
     /// <summary>
     /// Called on Start
     /// Will Set the Value of the Dialouge Volume slider to either the deafult value or the "DialougeVolume" PlayerPrefs
@@ -245,6 +347,24 @@ public class SettingsManager : MonoBehaviour
         {
             dialougeVolume.SetValueWithoutNotify(deafultDialouge);
             SetDialougeVolume(deafultDialouge);
+        }
+    }
+
+    private void InitialMaster()
+    {
+        masterSoundSlider.maxValue = maxVolume;
+        masterSoundSlider.minValue = minVolume;
+
+        if (PlayerPrefs.HasKey("MasterVolume"))
+        {
+            masterSoundSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("MasterVolume"));
+            SetMasterVolume(PlayerPrefs.GetFloat("MasterVolume"));
+        }
+
+        else
+        {
+            masterSoundSlider.SetValueWithoutNotify(deafultMaster);
+            SetMasterVolume(deafultMaster);
         }
     }
 
@@ -301,7 +421,7 @@ public class SettingsManager : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("FOV"))
         {
-            if(PlayerPrefs.GetInt("FOV") == 1)
+            if (PlayerPrefs.GetInt("FOV") == 1)
             {
                 fovToggle.SetIsOnWithoutNotify(true);
             }
@@ -315,6 +435,18 @@ public class SettingsManager : MonoBehaviour
         else
         {
             fovToggle.SetIsOnWithoutNotify(true);
+        }
+
+        if (PlayerPrefs.HasKey("FovValue"))
+        {
+            fovSlider.SetValueWithoutNotify(PlayerPrefs.GetInt("FovValue"));
+            SetFOVValue(PlayerPrefs.GetInt("FovValue"));
+        }
+
+        else
+        {
+            fovSlider.SetValueWithoutNotify(deafultFOV);
+            SetFOVValue(deafultFOV);
         }
     }
 
@@ -359,6 +491,19 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    public void SetScreenShake(bool useScreenShake)
+    {
+        if (useScreenShake)
+        {
+            PlayerPrefs.SetInt("ScreenShake", 1);
+        }
+
+        else
+        {
+            PlayerPrefs.SetInt("ScreenShake", 0);
+        }
+    }
+
     /// <summary>
     /// Will be called when the player changes the sesitivity slider
     /// Will set the new float to the "MouseSensitivity" PlayerPref
@@ -387,6 +532,11 @@ public class SettingsManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("FOV", 0);
         }
+    }
+
+    public void SetFOVValue(float value)
+    {
+        PlayerPrefs.SetInt("FovValue", (int)value);
     }
 
     /// <summary>
@@ -419,6 +569,11 @@ public class SettingsManager : MonoBehaviour
         QualitySettings.SetQualityLevel(qualityLevel);
 
         PlayerPrefs.SetInt("QualityLevel", qualityLevel);
+    }
+
+    public void SetColorblindMode(int colorblindMode)
+    {
+        PlayerPrefs.SetInt("ColorblindMode", colorblindMode);
     }
 
     /// <summary>
@@ -458,6 +613,11 @@ public class SettingsManager : MonoBehaviour
         ChangeFMODSound(soundEffectsVolume.gameObject, volume);
     }
 
+    public void SetMasterVolume(float volume)
+    {
+        PlayerPrefs.SetFloat("MasterVolume", volume);
+    }
+
     /// <summary>
     /// The method the Volume methods call to actually set the FMOD volume
     /// </summary>
@@ -473,10 +633,12 @@ public class SettingsManager : MonoBehaviour
     #endregion
 
 
-    private void HandleEscapeKey()
+    public void HandleEscapeKey()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && settingsHolder.activeSelf)
+
+        if (settingsHolder.activeSelf)
         {
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
             if (optionsMenu.activeSelf)
             {
                 mainMenu.SetActive(true);
@@ -500,6 +662,24 @@ public class SettingsManager : MonoBehaviour
                 optionsMenu.SetActive(true);
                 gameplaySettings.SetActive(false);
             }
+
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+        }
+
+
+    }
+
+
+    public bool InSubSettings()
+    {
+        if (gameplaySettings.activeSelf || videoSettings.activeSelf || audioSettings.activeSelf)
+        {
+            return true;
+        }
+
+        else
+        {
+            return false;
         }
     }
 }

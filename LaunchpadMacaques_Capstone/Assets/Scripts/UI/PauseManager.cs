@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class PauseManager : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class PauseManager : MonoBehaviour
 
     [SerializeField, Tooltip("The scene this pause manager is located in. ")] private string thisScene;
     [SerializeField, Tooltip("The main menu scene name. ")] private string mainMenuScene;
+    [SerializeField, Tooltip("Options Menu")] GameObject optionsMenu;
+    [SerializeField, Tooltip("Resume Button")] GameObject resumeButton;
 
     [SerializeField, Tooltip("The pause panel that is being used as a menu. ")] private GameObject PauseCanvas;
     //[SerializeField] private GameObject LoseCanvas;
@@ -31,6 +34,8 @@ public class PauseManager : MonoBehaviour
     [SerializeField, Tooltip("The Information Post Text. ")] private GameObject InformationPostText;
     [SerializeField, Tooltip("The rope length text. ")] private GameObject RopeLengthText;
     private NarrativeTriggerHandler narrative;
+    private SettingsManager settings;
+    private EventSystem eventSystem;
 
     // Start is called before the first frame update
     void Start()
@@ -50,33 +55,45 @@ public class PauseManager : MonoBehaviour
             InformationPostText.SetActive(true);
         }
 
-        if(RopeLengthText != null)
+        if (RopeLengthText != null)
         {
             RopeLengthText.SetActive(true);
         }
 
         pausePanel = PauseCanvas.gameObject;
         narrative = FindObjectOfType<NarrativeTriggerHandler>();
+        settings = FindObjectOfType<SettingsManager>();
+        eventSystem = FindObjectOfType<EventSystem>();
+
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (!gameLost && !gameWon && !HTPMenu.activeSelf)
-            {
-                PauseGame();
-            }
 
-            if(HTPMenu.activeSelf)
-            {
-                HTPMenu.SetActive(false);
-                pausePanel.SetActive(true);
-            }
+
+    public void PauseInput()
+    {
+        if (!gameLost && !gameWon && !HTPMenu.activeSelf && !optionsMenu.activeSelf)
+        {
+            PauseGame();
+        }
+
+        else if (HTPMenu.activeSelf)
+        {
+            HTPMenu.SetActive(false);
+            pausePanel.SetActive(true);
         }
     }
+
+    public void BackInput()
+    {
+        if (HTPMenu.activeSelf)
+        {
+            eventSystem.SetSelectedGameObject(null);
+            HTPMenu.SetActive(false);
+            pausePanel.SetActive(true);
+        }
+    }
+
 
     /// <summary>
     /// Method handles pausing and unpausing, and enabling and disabling the proper objects.
@@ -87,8 +104,11 @@ public class PauseManager : MonoBehaviour
         {
             paused = true;
             Time.timeScale = 0;
+
             PauseCanvas.SetActive(true);
             CursorCanvas.SetActive(false);
+
+
 
             narrative.TurnOffDialouge();
 
@@ -104,6 +124,8 @@ public class PauseManager : MonoBehaviour
 
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+
+
         }
         else if (paused == true)
         {
@@ -112,7 +134,7 @@ public class PauseManager : MonoBehaviour
             PauseCanvas.SetActive(false);
             CursorCanvas.SetActive(true);
 
-            if(InformationPostText != null)
+            if (InformationPostText != null)
             {
                 InformationPostText.SetActive(true);
             }
@@ -135,7 +157,7 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1;
         //SceneManager.LoadScene(thisScene);
 
-        Scene scene = SceneManager.GetActiveScene(); 
+        Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.name);
     }
 

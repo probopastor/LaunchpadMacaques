@@ -61,6 +61,9 @@ public class PushPullObjects : MonoBehaviour
     private bool drawingLine = false;
 
     private float orgFollowSpeed;
+
+    private bool holdingDownStartGrapple;
+    private bool holdingDownStopGrapple;
     #endregion
 
     private void Awake()
@@ -108,6 +111,16 @@ public class PushPullObjects : MonoBehaviour
         PickUpFeedback();
         UserInput();
         ResetObjectFollowSpeed();
+
+        if(Input.GetAxis("Start Grapple") < 1 && holdingDownStartGrapple)
+        {
+            holdingDownStartGrapple = false;
+        }
+
+        if(Input.GetAxis("Start Grapple") > -1 && holdingDownStopGrapple)
+        {
+            holdingDownStopGrapple = false;
+        }
     }
 
     /// <summary>
@@ -134,28 +147,73 @@ public class PushPullObjects : MonoBehaviour
     /// </summary>
     private void UserInput()
     {
-        if (Input.GetMouseButtonDown(0) /*&& !grapplingGun.IsGrappling()*/)
-        {
-            if (!grabbing)
-            {
-                PickUpObject();
-            }
-            else if (grabbing)
-            {
-                ThrowObject();
-            }
+        //if ((Input.GetButtonDown("Start Grapple") || GetStartGrappleDown()) && Time.timeScale != 0)
+        //{
+    
 
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            if (grabbing)
-            {
-                DropObject();
-            }
-        }
+        //}
+        //else if ((Input.GetButtonDown("Stop Grapple") || GetStopGrappleDown()) && Time.timeScale != 0)
+        //{
+     
+        //}
 
     }
 
+    public void StartGrab()
+    {
+        if (!grabbing)
+        {
+            PickUpObject();
+        }
+        else if (grabbing)
+        {
+            ThrowObject();
+        }
+    }
+
+    public void StopGrab()
+    {
+        if (grabbing)
+        {
+            DropObject();
+        }
+    }
+
+    private bool GetStartGrappleDown()
+    {
+        if (Input.GetAxis("Start Grapple") > 0)
+        {
+            if (holdingDownStartGrapple)
+            {
+                return false;
+            }
+
+            else
+            {
+                return true;
+            }
+        }
+
+        else return false;
+    }
+
+    private bool GetStopGrappleDown()
+    {
+        if (Input.GetAxis("Start Grapple") < 0)
+        {
+            if (holdingDownStopGrapple)
+            {
+                return false;
+            }
+
+            else
+            {
+                return true;
+            }
+        }
+
+        else return false;
+    }
 
     private void FixedUpdate()
     {
@@ -207,6 +265,7 @@ public class PushPullObjects : MonoBehaviour
         RaycastHit hit = CanSeeBox();
         if (hit.collider != null)
         {
+            holdingDownStartGrapple = true;
             anim.ResetTrigger("Throw");
             anim.ResetTrigger("Drop");
             anim.SetTrigger("PickUp");
@@ -278,6 +337,7 @@ public class PushPullObjects : MonoBehaviour
     /// </summary>
     public void DropObject()
     {
+        holdingDownStopGrapple = true;
         anim.ResetTrigger("PickUp");
         anim.SetTrigger("Drop");
         //currentHoveredObj.GetComponent<PushableObj>().CheckParticleStatus();
@@ -299,12 +359,16 @@ public class PushPullObjects : MonoBehaviour
         anim.ResetTrigger("PickUp");
         anim.SetTrigger("Throw");
 
-        objectRB.isKinematic = false;
-        objectRB.GetComponent<PushableObj>().StartPush(cam);
-        objectRB.useGravity = false;
-        StartCoroutine(GrabbingFalse());
-        lr.positionCount = 0;
-        objectRB = null;
+        if (objectRB)
+        {
+            objectRB.isKinematic = false;
+            objectRB.GetComponent<PushableObj>().StartPush(cam);
+            objectRB.useGravity = false;
+            StartCoroutine(GrabbingFalse());
+            lr.positionCount = 0;
+            objectRB = null;
+        }
+
 
     }
 
@@ -401,7 +465,14 @@ public class PushPullObjects : MonoBehaviour
     /// <returns></returns>
     public GameObject GetHeldCube()
     {
-        return objectRB.gameObject;
+        if (objectRB != null && objectRB.gameObject != null)
+        {
+            return objectRB.gameObject;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public GameObject GetHoverdObject()

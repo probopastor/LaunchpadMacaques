@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
@@ -24,23 +25,25 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The transform of the player's camera. ")] private Transform playerCam;
     [SerializeField, Tooltip("The transform of the player's orientation ")] private Transform orientation;
     float m_fieldOfView = 60.0f;
-    //public float initialFieldofView = 90f;
-    //public float desiredFieldofView = 60f;
-    //public float fieldofViewTime = .5f;
     #endregion
 
     //Other
     private Rigidbody rb;
 
+
     #region Player Sensitivity
     [Header("Player Rotation and Look")]
     private float xRotation;
     [Tooltip("The player's look sensitivity. Higher value lets the player look around quicker. ")] private float sensitivity = 50f;
+    [SerializeField] float mouseAccerlationAmmount = .5f;
+    [SerializeField] float normalSpeedAmmount = 1;
+    private float lastFrameMouseInput;
+    private bool inMouseAccerlation = false;
     #endregion
 
     #region Player Movement Variables
     [Header("Player Movement Variables")]
-    [SerializeField, Tooltip("The player's movement speed. ")] private float moveSpeed = 4500;
+    private float moveSpeed = 4500;
     [Range(0f, 1f), SerializeField, Tooltip("The movement speed multiplier while the player is airborn. ")] private float airMoveSpeedMultiplier = .75f;
     [SerializeField, Tooltip("The player's max speed. when walking, doesnt affect swing speed ")] private float maxSpeed = 20;
 
@@ -50,6 +53,9 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     [HideInInspector] public bool grounded;
     [SerializeField, Tooltip("The layer for the ground. Anything on this layer will be considered ground. ")] private LayerMask whatIsGround;
+    [SerializeField, Tooltip("The physics material that platforms should obtain if they are collided with from the side")] private PhysicMaterial frictionlessMat;
+    private PhysicMaterial originalMaterial;
+    private bool applyPhysicsMaterial;
 
     [SerializeField, Tooltip("This is the max speed that the player can achieve when swinging. ")]
     private float maxVelocity = 50f;
@@ -67,7 +73,6 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField] private float zFOVActivationVel = 40f;
     [SerializeField] private float yFOVActicationVel = 15f;
     [SerializeField] private float fovChangeRate = 0.75f;
-    [SerializeField] private float minFOV = 60.75f;
     [SerializeField] private float maxFOV = 120.75f;
     [SerializeField] private float maxFOVSpeedScale = .05f;
     #endregion
@@ -106,7 +111,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The Gravtiy that will be applied to the player when they are in the air")] float inAirGravity = -12f;
     [SerializeField, Tooltip("The Gravity that will be applied to the player when they are swinging")] float grapplingGravity = -6;
     [SerializeField, Tooltip("The Gravity that will be applied when resetting rope velocity and rope length. The greater this value, " +
-        "the faster velocity and rope length are reset. ")] float grapplingResetGravity = -78.48f;
+        "the faster velocity and rope length are reset. ")]
+    float grapplingResetGravity = -78.48f;
 
     // grapplingGravityReference stores the grapplingGravity at Start, so that grapplingGravity may be reverted to its default easily.
     private float grapplingGravityReference = 0;
@@ -137,8 +143,20 @@ public class Matt_PlayerMovement : MonoBehaviour
     private bool useCourtineDash = true;
     #endregion
 
+
+    [Header("Screen Shake Settings")]
+    [SerializeField] float minVelocityForScreenShake = 30;
+    [SerializeField] float startingScreenShakeAmmount = 20;
+    [SerializeField] float shakeAmmountVelocityScaling = .1f;
+    [SerializeField] float maxScreenShakeAmmount = 50;
+    [SerializeField] float screenShakeLength = .1f;
+
+
+    [Header("Art Settings")]
     [SerializeField]
     Animator anim;
+
+    private float minFOV = 60;
 
     #region Getters/Setters
     public float GetMaxVelocity()
@@ -171,6 +189,19 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private float lastVelocity = 0;
 
+    private int lastMaxFOV;
+
+    private float mouseX;
+    private float mouseY;
+
+    private MoveCamera cam;
+
+    private bool resetVelocity = false;
+
+    private float timeOffGround;
+
+    private bool dashUnlocked = false;
+
     ParticleSystem system
     {
         get
@@ -200,6 +231,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         //Cannot dash while on the ground.
         canDash = false;
 
+        applyPhysicsMaterial = false;
+
         if (PlayerPrefs.HasKey("MouseSensitivity"))
         {
             sensitivity = PlayerPrefs.GetFloat("MouseSensitivity");
@@ -208,28 +241,46 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        if (PlayerPrefs.HasKey("FovValue"))
+        {
+            maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
+            m_fieldOfView = PlayerPrefs.GetInt("FovValue");
+            minFOV = PlayerPrefs.GetInt("FovValue");
+        }
+
 
         playerScale = transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         speedStorage = maxSpeed;
         grapplingGravityReference = grapplingGravity;
-
+        cam = FindObjectOfType<MoveCamera>();
         // Makes xVelocityResetRange, yVelocityResetRange, and zVelocityResetRange positive if they are negative.
-        if(xVelocityResetRange < 0)
+        if (xVelocityResetRange < 0)
         {
             xVelocityResetRange *= -1;
         }
-        if(yVelocityResetRange < 0)
+        if (yVelocityResetRange < 0)
         {
             yVelocityResetRange *= -1;
         }
-        if(zVelocityResetRange < 0)
+        if (zVelocityResetRange < 0)
         {
             zVelocityResetRange *= -1;
         }
 
         currentMaxFOV = maxFOV;
+
+        //if(HandleSaving.instance != null)
+        //{
+        //    dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
+        //}
+        //else
+        //{
+        //    dashUnlocked = true;
+        //}
+        dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
+
     }
 
     private void FixedUpdate()
@@ -245,22 +296,14 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) || Time.timeScale > 0)
         {
-            MyInput();
             Look();
             grappleGunReference.UpdateHandRotation(rb.velocity);
         }
+        if (PlayerPrefs.HasKey("MouseSensitivity"))
+        {
+            sensitivity = PlayerPrefs.GetFloat("MouseSensitivity");
+        }
 
-        //Debug.Log("canApplyForce is: " + grappleGunReference.GetCanApplyForce());
-        //Debug.Log("kill force is: " + killForce);
-
-        // Press K, when grappling, to start the "Kill Force" Coroutine.
-        //if (Input.GetKeyDown(KeyCode.Minus) && !killForce)
-        //{
-        //    if(grappleGunReference.IsGrappling())
-        //    {
-        //        StartCoroutine(KillForces());
-        //    }
-        //}
 
         if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) &&
             (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) &&
@@ -285,19 +328,11 @@ public class Matt_PlayerMovement : MonoBehaviour
         var localVel = transform.InverseTransformDirection(rb.velocity);
         var psRotation = _CachedSystem.shape.rotation;
         psRotation = localVel;
-        /*
-        if (speed >= 20f)
+
+        if (!grounded)
         {
-            if (_CachedSystem.isStopped)
-            {
-                _CachedSystem.Play();
-            }
+            timeOffGround += Time.deltaTime;
         }
-        else if (_CachedSystem.isPlaying && speed <= 20f)
-        {
-            _CachedSystem.Stop();
-        }
-        */
     }
 
 
@@ -306,36 +341,40 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <summary>
     /// The method that is called to start the player dash
     /// </summary>
-    private void Dash()
+    public void Dash()
     {
 
-        if (grappleGunReference.IsGrappling())
+        if (!grounded && dashUnlocked)
         {
-            grappleGunReference.StopGrapple();
+            if (grappleGunReference.IsGrappling())
+            {
+                grappleGunReference.StopGrapple();
+            }
+
+            if (canDash)
+            {
+                anim.SetTrigger("Dash");
+
+                canDash = false;
+                StartCoroutine(DashCooldown());
+
+                if (useAddForceDash)
+                {
+                    _CachedSystem.Emit(emitParticles);
+                    AddForceDash();
+                }
+                else if (useCourtineDash)
+                {
+                    StartCoroutine(DashCourtine());
+                }
+
+                else
+                {
+                    ChangeDirectionDash();
+                }
+            }
         }
 
-        if (canDash)
-        {
-            anim.SetTrigger("Dash");
-
-            canDash = false;
-            StartCoroutine(DashCooldown());
-
-            if (useAddForceDash)
-            {
-                _CachedSystem.Emit(emitParticles);
-                AddForceDash();
-            }
-            else if (useCourtineDash)
-            {
-                StartCoroutine(DashCourtine());
-            }
-
-            else
-            {
-                ChangeDirectionDash();
-            }
-        }
     }
     /// <summary>
     /// The dash that will only change the player's direction does not change their speed
@@ -372,6 +411,13 @@ public class Matt_PlayerMovement : MonoBehaviour
         _CachedSystem.Emit(emitParticles);
 
         yield return new WaitForEndOfFrame();
+
+        float startingSpeed = rb.velocity.magnitude;
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        rb.velocity = playerCam.forward * startingSpeed;
 
         while (currentTime < dashLength)
         {
@@ -415,7 +461,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         killForce = true;
 
-        if(lowVelocityDuration != 0)
+        if (lowVelocityDuration != 0)
         {
             yield return new WaitForSeconds(lowVelocityDuration);
         }
@@ -429,7 +475,7 @@ public class Matt_PlayerMovement : MonoBehaviour
            (rb.velocity.z < zVelocityResetRange && rb.velocity.z > -zVelocityResetRange))
         {
             grapplingGravity = grapplingResetGravity;
-            grappleGunReference.SetRopeLength(grappleGunReference.GetStartingRopeLength());
+            //grappleGunReference.SetRopeLength(grappleGunReference.GetStartingRopeLength());
 
             rb.velocity = -rb.velocity / 2;
             rb.velocity = Vector3.zero;
@@ -445,35 +491,61 @@ public class Matt_PlayerMovement : MonoBehaviour
     #endregion
 
     #region Input
+    public void SetLook(float x, float y)
+    {
+        mouseX = x;
+        mouseY = y;
+    }
+    public void CrouchInput()
+    {
+        if (!grappleGunReference.IsGrappling())
+        {
+            crouching = !crouching;
+
+            if (crouching)
+            {
+                StartCrouch();
+            }
+
+            else
+            {
+                StopCrouch();
+            }
+        }
+
+    }
+
+    public void OnMoveInput(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void OnJumpInput()
+    {
+        jumping = !jumping;
+    }
 
     /// <summary>
-    /// Find user input. Should put this in its own class but im lazy.
+    /// Handles the player sprinting.
     /// </summary>
-    private void MyInput()
+    public void StartSprint()
     {
-        x = Input.GetAxisRaw("Horizontal");
-        y = Input.GetAxisRaw("Vertical");
-        jumping = Input.GetButton("Jump");
-        crouching = Input.GetKey(KeyCode.LeftControl);
-        sprinting = Input.GetKey(KeyCode.LeftShift);
-
-        //Crouching
-        if (Input.GetKeyDown(KeyCode.LeftControl) && !grappleGunReference.IsGrappling())
-            StartCrouch();
-        if (Input.GetKeyUp(KeyCode.LeftControl) && !grappleGunReference.IsGrappling())
-            StopCrouch();
-
-        //sprinting
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-            Sprint();
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-            StopSprint();
-
-        //dash, when grappling
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !grounded)
+        if (grounded && readyToSprint)
         {
-            Dash();
+            readyToSprint = false;
+            //Apply sprint to player
+            maxSpeed = speedStorage * sprintMultiplier;
         }
+    }
+
+    /// <summary>
+    /// Stops the player from sprinting.
+    /// </summary>
+    public void StopSprint()
+    {
+        maxSpeed = speedStorage;
+        readyToSprint = true;
     }
 
     #endregion
@@ -583,7 +655,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         if (readyToJump && jumping) Jump();
 
         // If holding sprint && ready to sprint, then sprint
-        if (readyToSprint && sprinting) Sprint();
+        if (readyToSprint && sprinting) StartSprint();
 
         // Set max speed
         float maxSpeed = this.maxSpeed;
@@ -595,11 +667,19 @@ public class Matt_PlayerMovement : MonoBehaviour
             return;
         }
 
+        float tempX = x;
+        float tempY = y;
         // If speed is larger than maxspeed, cancel out the input so you don't go over max speed
-        if (x > 0 && xMag > maxSpeed) x = 0;
-        if (x < 0 && xMag < -maxSpeed) x = 0;
-        if (y > 0 && yMag > maxSpeed) y = 0;
-        if (y < 0 && yMag < -maxSpeed) y = 0;
+        if (tempX > 0 && xMag > maxSpeed) tempX = 0;
+        if (tempX < 0 && xMag < -maxSpeed) tempX = 0;
+        if (tempY > 0 && yMag > maxSpeed) tempY = 0;
+        if (tempY < 0 && yMag < -maxSpeed) tempY = 0;
+
+        //// If speed is larger than maxspeed, cancel out the input so you don't go over max speed
+        //if (x > 0 && xMag > maxSpeed) x = 0;
+        //if (x < 0 && xMag < -maxSpeed) x = 0;
+        //if (y > 0 && yMag > maxSpeed) y = 0;
+        //if (y < 0 && yMag < -maxSpeed) y = 0;
 
         // Some multipliers
         float multiplier = 1f, multiplierV = 1f;
@@ -611,7 +691,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             multiplierV = airMoveSpeedMultiplier;
 
             //PlayerHitGround Event for Dialogue/Narrative Trigger System
-            if(fallCheckRunning == false)
+            if (fallCheckRunning == false)
                 StartCoroutine(FallCheck());
         }
 
@@ -629,28 +709,11 @@ public class Matt_PlayerMovement : MonoBehaviour
             canDash = true;
         }
 
-        //if (config.isActiveAndEnabled)
-        //{
-        //    Debug.Log("Config Joint");
-        //    if (!config.IsGrappling())
-        //    {
-        //        rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
-        //        rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
-        //    }
-        //    else if (config.IsGrappling())
-        //    {
-        //        if (/*config.GetCanApplyForce())*/true)
-        //        {
-        //            rb.AddForce(orientation.transform.forward * swingSpeed * Time.deltaTime);
-        //        }
-        //    }
-        //}
-
         // If the player is not grappling, add a force in the direction they are moving in.
         if (!grappleGunReference.IsGrappling())
         {
-            rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
-            rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
+            rb.AddForce(orientation.transform.forward * tempY * moveSpeed * Time.deltaTime * multiplier * multiplierV);
+            rb.AddForce(orientation.transform.right * tempX * moveSpeed * Time.deltaTime * multiplier);
         }
         // If Swing Lock is not active, and the player is grappling, add a force in the player's orientation
         else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
@@ -658,7 +721,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             // If the force can be applied, add a force in the direction of the player's orientation.
             if (grappleGunReference.GetCanApplyForce())
             {
-                rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
+                rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * 2 * Time.deltaTime);
                 latestOrientation = orientation.transform.forward;
             }
         }
@@ -669,36 +732,11 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 if (latestOrientation != null)
                 {
+                    rb.velocity = Vector3.zero;
                     rb.AddForce(latestOrientation * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
                 }
             }
         }
-    }
-
-    #endregion
-
-    #region Sprinting Stuff
-
-    /// <summary>
-    /// Handles the player sprinting.
-    /// </summary>
-    private void Sprint()
-    {
-        if (grounded && readyToSprint)
-        {
-            readyToSprint = false;
-            //Apply sprint to player
-            maxSpeed = speedStorage * sprintMultiplier;
-        }
-    }
-
-    /// <summary>
-    /// Stops the player from sprinting.
-    /// </summary>
-    private void StopSprint()
-    {
-        maxSpeed = speedStorage;
-        readyToSprint = true;
     }
 
     #endregion
@@ -745,13 +783,13 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <returns></returns>
     IEnumerator FallCheck()
     {
-        if(narrativeTriggerReference == null)
+        if (narrativeTriggerReference == null)
             yield break;
 
         fallCheckRunning = true;
 
         float airTime = 0;
-        while(!grounded)
+        while (!grounded)
         {
             if (grappleGunReference.IsGrappling())
                 airTime = 0;
@@ -760,7 +798,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             yield return null;
         }
 
-        if(airTime > narrativeTriggerReference.GetFallTime())
+        if (airTime > narrativeTriggerReference.GetFallTime())
         {
             GameEventManager.TriggerEvent("onPlayerHitGround");
         }
@@ -772,35 +810,46 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private float desiredX;
 
+
+
+
     /// <summary>
     /// Rotates the player in the direction they are looking in.
     /// </summary>
     private void Look()
     {
-        float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime;
+        float tempX = mouseX * sensitivity * Time.fixedDeltaTime;
+        float tempY = mouseY * sensitivity * Time.fixedDeltaTime;
 
-        //Find current look rotation
+        float mouseInput = Mathf.Abs(tempX) + Mathf.Abs(tempY);
+        if (mouseInput > normalSpeedAmmount)
+        {
+            tempX *= 1 + (mouseAccerlationAmmount * (mouseInput - normalSpeedAmmount));
+
+            tempY *= 1 + (mouseAccerlationAmmount * (mouseInput - normalSpeedAmmount));
+
+        }
+
         Vector3 rot = playerCam.transform.localRotation.eulerAngles;
-        desiredX = rot.y + mouseX;
+        desiredX = rot.y + tempX;
 
         //Rotate, and also make sure we dont over- or under-rotate.
         if (PlayerPrefs.HasKey("InvertY"))
         {
             if (PlayerPrefs.GetInt("InvertY") == 1)
             {
-                xRotation -= mouseY;
+                xRotation += tempY;
             }
 
             else
             {
-                xRotation += mouseY;
+                xRotation -= tempY;
             }
         }
 
         else
         {
-            xRotation -= mouseY;
+            xRotation -= tempY;
         }
 
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
@@ -826,7 +875,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         RaycastHit hit;
         Physics.Raycast(playerCam.position, playerCam.transform.forward, out hit, Mathf.Infinity, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore);
-        if(hit.collider != null)
+        if (hit.collider != null)
         {
             return hit.collider.gameObject;
         }
@@ -837,7 +886,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
 
     }
-    
+
 
     /// <summary>
     /// Handles movement counter measures to maintain smooth movement.
@@ -925,6 +974,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             //FLOOR
             if (IsFloor(normal))
             {
+                timeOffGround = 0;
                 grounded = true;
                 cancellingGrounded = false;
                 normalVector = normal;
@@ -939,6 +989,78 @@ public class Matt_PlayerMovement : MonoBehaviour
             cancellingGrounded = true;
             Invoke(nameof(StopGrounded), Time.deltaTime * delay);
         }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        // If the player is exiting a surface, change its physics material back to its original one.
+        if (collision.collider.tag == "GrapplePoint" || collision.collider.tag == "Platform")
+        {
+            if (applyPhysicsMaterial)
+            {
+                applyPhysicsMaterial = false;
+
+                collision.collider.material = originalMaterial;
+            }
+        }
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        ScreenShake(other);
+        int layer = other.gameObject.layer;
+        if (whatIsGround != (whatIsGround | (1 << layer))) return;
+
+        for (int i = 0; i < other.contactCount; i++)
+        {
+            Vector3 normal = other.contacts[i].normal;
+            //FLOOR
+            if (IsFloor(normal))
+            {
+                grappleGunReference.ResetGrapples();
+            }
+        }
+
+        // Determines whether or not the point collided with is a surface.
+        if (other.collider.tag == "GrapplePoint" || other.collider.tag == "Platform")
+        {
+            RaycastHit hit;
+
+            // If it's a surface, determine whether the player is on top or on the side of the surface.
+            if (Physics.Raycast(gameObject.transform.position, Vector3.down, out hit, 1f))
+            {
+                if (hit.collider.gameObject != other.collider.gameObject)
+                {
+                    applyPhysicsMaterial = true;
+                }
+            }
+            else
+            {
+                applyPhysicsMaterial = true;
+            }
+
+            // If the player is on the side of the surface, set the surface's physics material to the frictionless material to prevent sticking.
+            if (applyPhysicsMaterial)
+            {
+                if (other.collider.material != null)
+                {
+                    originalMaterial = other.collider.material;
+                }
+
+                other.collider.material = frictionlessMat;
+            }
+        }
+    }
+
+    private void ScreenShake(Collision other)
+    {
+        if (!grounded && rb.velocity.magnitude > minVelocityForScreenShake && PlayerPrefs.GetInt("ScreenShake") == 1 && timeOffGround > .5f)
+        {
+            Debug.Log("Screen Shaked");
+            float tempShakeAmmount = startingScreenShakeAmmount + ((rb.velocity.magnitude - minVelocityForScreenShake) * shakeAmmountVelocityScaling);
+            cam.ScreenShake(screenShakeLength, tempShakeAmmount);
+        }
+
     }
 
     /// <summary>
@@ -956,17 +1078,23 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void changeFOV()
     {
-        if(PlayerPrefs.GetInt("FOV") == 1)
+
+        if (PlayerPrefs.GetInt("FOV") == 1)
         {
             Camera.main.fieldOfView = m_fieldOfView;
-           var targetMaxFOV = maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale));
+            var targetMaxFOV = (int)(maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale)));
 
-            if (currentMaxFOV < targetMaxFOV)
+            if (lastMaxFOV != 0 && Mathf.Abs(targetMaxFOV - lastMaxFOV) <= 2)
+            {
+                targetMaxFOV = lastMaxFOV;
+            }
+
+            if (currentMaxFOV < (targetMaxFOV - 2))
             {
                 currentMaxFOV += fovChangeRate * Time.deltaTime;
             }
 
-            else if(currentMaxFOV > targetMaxFOV)
+            else if (currentMaxFOV > (targetMaxFOV + 2))
             {
                 currentMaxFOV -= fovChangeRate * Time.deltaTime;
             }
@@ -981,17 +1109,25 @@ public class Matt_PlayerMovement : MonoBehaviour
                 rb.velocity.z <= -zFOVActivationVel)
             {
 
-                m_fieldOfView += fovChangeRate * Time.deltaTime;
+                m_fieldOfView += (fovChangeRate * Time.deltaTime);
+                //  m_fieldOfView = (int)m_fieldOfView;
             }
             else
-                m_fieldOfView -= fovChangeRate * Time.deltaTime;
+            {
+                m_fieldOfView -= (fovChangeRate * Time.deltaTime);
+                //   m_fieldOfView = (int)m_fieldOfView;
+            }
 
 
             lastVelocity = rb.velocity.magnitude;
+
+
+            lastMaxFOV = targetMaxFOV;
         }
-
-
     }
 
 
+
 }
+
+

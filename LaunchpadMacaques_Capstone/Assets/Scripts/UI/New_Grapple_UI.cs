@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using FMODUnity;
 
 public class New_Grapple_UI : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class New_Grapple_UI : MonoBehaviour
     GrapplingGun gg;
     PushPullObjects pushPull;
 
+    [Header("Audio Setting")]
+    [SerializeField, EventRef] string targetSoundEffect;
     
     // Start is called before the first frame update
     void Start()
@@ -38,6 +41,11 @@ public class New_Grapple_UI : MonoBehaviour
         if (gg.CanFindGrappleLocation() || pushPull.CanSeeBox().collider != null)
         {
             //retiicle.sprite = activeReticle;
+            if (anim.GetBool("isHighlighted") == false)
+            {
+                FMOD.Studio.EventInstance targetInstance = FMODUnity.RuntimeManager.CreateInstance(targetSoundEffect);
+                targetInstance.start();
+            }
             anim.SetBool("isHighlighted", true);
         }
 
