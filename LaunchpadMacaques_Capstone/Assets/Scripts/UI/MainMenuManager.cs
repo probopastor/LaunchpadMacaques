@@ -102,29 +102,6 @@ public class MainMenuManager : MonoBehaviour
 
                             break;
 
-                        //case "GameplayOptionsPanel":
-
-                        //    menuPanels[index].SetActive(false);
-                        //    //eventSys.SetSelectedGameObject(null);
-                        //    menuPanels[5].SetActive(true);
-
-                        //    break;
-
-                        //case "VideoOptionsPanel":
-
-                        //    menuPanels[index].SetActive(false);
-                        //   // eventSys.SetSelectedGameObject(null);
-                        //    menuPanels[5].SetActive(true);
-
-                        //    break;
-
-                        //case "AudioOptionsPanel":
-
-                        //    menuPanels[index].SetActive(false);
-                        //   // eventSys.SetSelectedGameObject(null);
-                        //    menuPanels[5].SetActive(true);
-
-                            break;
                         case "Save File Panel":
                             menuPanels[index].SetActive(false);
                             mainMenu_Panel.SetActive(true);
