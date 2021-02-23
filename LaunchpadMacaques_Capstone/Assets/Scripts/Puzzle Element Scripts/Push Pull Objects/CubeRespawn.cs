@@ -12,12 +12,23 @@ public class CubeRespawn : MonoBehaviour
 {
     #region Variables
     [SerializeField, Tooltip("The triggers that the button should read. Other triggers are ignored. ")] private string[] triggerTags;
-    [SerializeField, Tooltip("The Game Object at the position that this cube is respawned to. ")] private GameObject respawnPos;
+    [SerializeField, Tooltip("The Game Object at the position that this cube starts at. ")] private GameObject respawnPos;
+    private GameObject originalSpawnPos;
+
     [SerializeField, Tooltip("A modifier to the position the Game Object should be respawned at. ")] private Vector3 respawnPosModifiers = new Vector3(0, 0, 0);
+    [SerializeField, Tooltip("If true, cube will only respawn at the passed in cube holders. ")] private bool respawnAtSpecificHolders;
+    [SerializeField, Tooltip("The places this cube can respawn at. Will only respawn at these if respawnAtSpecificHolders is set to true. ")] private GameObject[] cubeHolders;
 
     private Quaternion respawnAngle;
     private PushPullObjects pushPullObjectsRef;
     private PushableObj pushableObjRef;
+
+    private GameObject[] holderRespawnPos;
+
+    private GameObject playerRef;
+
+    private bool startRespawn;
+    private bool keepDefaultPos;
     #endregion
 
     #region Start Functions
@@ -32,11 +43,35 @@ public class CubeRespawn : MonoBehaviour
     /// </summary>
     private void SetValues()
     {
+        startRespawn = true;
         respawnAngle = transform.rotation;
         pushPullObjectsRef = FindObjectOfType<PushPullObjects>();
         pushableObjRef = GetComponent<PushableObj>();
+        playerRef = FindObjectOfType<Matt_PlayerMovement>().gameObject;
+
+        if (!respawnAtSpecificHolders)
+        {
+            holderRespawnPos = GameObject.FindGameObjectsWithTag("Cube Holder");
+            
+            if(holderRespawnPos == null)
+            {
+                //respawnPos = gameObject;
+                keepDefaultPos = true;
+            }
+        }
+        else
+        {
+            if(cubeHolders == null)
+            {
+                //respawnPos = gameObject;
+                keepDefaultPos = true;
+            }
+        }
+
+        originalSpawnPos = respawnPos;
 
         RespawnCube();
+        startRespawn = false;
     }
 
     #endregion
@@ -79,6 +114,22 @@ public class CubeRespawn : MonoBehaviour
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
+        // Respawn the cube at the closest valid respawn point to the player. 
+        if(respawnAtSpecificHolders && !startRespawn && !keepDefaultPos)
+        {
+            respawnPos = FindClosestPosToPlayer(playerRef, cubeHolders);
+        }
+        else if(!respawnAtSpecificHolders && !startRespawn && !keepDefaultPos)
+        {
+            respawnPos = FindClosestPosToPlayer(playerRef, holderRespawnPos);
+        }
+
+        // If the respawn position already has a cube on it, respawn the cube at its original position.
+        if(respawnPos.CompareTag("Cube Holder Currently Holding Cube") && !startRespawn)
+        {
+            respawnPos = originalSpawnPos;
+        }
+
         if (respawnPos != null)
         {
             // Set the respawn position, and the respawn rotation. 
@@ -88,6 +139,51 @@ public class CubeRespawn : MonoBehaviour
 
             gameObject.transform.position = new Vector3(xPos, yPos, zPos);
             gameObject.transform.rotation = respawnAngle;
+
+            SetCubeHolderPickupTag(true, respawnPos);
+        }
+    }
+
+    /// <summary>
+    /// Returns the closest object to the player from a passed in array of objects.
+    /// </summary>
+    /// <param name="player">The player's game object reference. </param>
+    /// <param name="otherObjs">An array of objects being compared. </param>
+    /// <returns></returns>
+    private GameObject FindClosestPosToPlayer(GameObject player, GameObject[] otherObjs)
+    {
+        GameObject closestObj = otherObjs[0];
+
+        float closestPos = Mathf.Infinity;
+
+        for (int i = 0; i < otherObjs.Length; i++)
+        {
+            float distanceFromPlayer = (otherObjs[i].transform.position - playerRef.transform.position).magnitude;
+
+            if (distanceFromPlayer < closestPos)
+            {
+                closestPos = distanceFromPlayer;
+                closestObj = otherObjs[i];
+            }
+        }
+
+        return closestObj;
+    }
+
+    /// <summary>
+    /// Sets the tag for the cube holder. Pass in true if a cube is off the holder, pass in false if it's on the holder.
+    /// </summary>
+    /// <param name="pickedUp">The bool to determine if a cube is on or off the cube holder. True if picked up, false if otherwise. </param>
+    /// <param name="thisCubeHolder">The cube holder that is being looked at. </param>
+    public void SetCubeHolderPickupTag(bool pickedUp, GameObject thisCubeHolder)
+    {
+        if(pickedUp)
+        {
+            thisCubeHolder.tag = "Cube Holder";
+        }
+        else if(!pickedUp)
+        {
+            thisCubeHolder.tag = "Cube Holder Currently Holding Cube";
         }
     }
     #endregion 
