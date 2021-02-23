@@ -58,12 +58,20 @@ public class CubeRespawn : MonoBehaviour
                 //respawnPos = gameObject;
                 keepDefaultPos = true;
             }
+            else if(holderRespawnPos.Length < 1)
+            {
+                keepDefaultPos = true;
+            }
         }
         else
         {
             if(cubeHolders == null)
             {
                 //respawnPos = gameObject;
+                keepDefaultPos = true;
+            }
+            else if(cubeHolders.Length < 1)
+            {
                 keepDefaultPos = true;
             }
         }
@@ -125,7 +133,7 @@ public class CubeRespawn : MonoBehaviour
         }
 
         // If the respawn position already has a cube on it, respawn the cube at its original position.
-        if(respawnPos.CompareTag("Cube Holder Currently Holding Cube") && !startRespawn)
+        if(respawnPos.CompareTag("Cube Holder Currently Holding Cube") && !startRespawn && !keepDefaultPos)
         {
             respawnPos = originalSpawnPos;
         }
@@ -177,13 +185,16 @@ public class CubeRespawn : MonoBehaviour
     /// <param name="thisCubeHolder">The cube holder that is being looked at. </param>
     public void SetCubeHolderPickupTag(bool pickedUp, GameObject thisCubeHolder)
     {
-        if(pickedUp)
+        if(!keepDefaultPos)
         {
-            thisCubeHolder.tag = "Cube Holder";
-        }
-        else if(!pickedUp)
-        {
-            thisCubeHolder.tag = "Cube Holder Currently Holding Cube";
+            if (pickedUp)
+            {
+                thisCubeHolder.tag = "Cube Holder";
+            }
+            else if (!pickedUp)
+            {
+                thisCubeHolder.tag = "Cube Holder Currently Holding Cube";
+            }
         }
     }
     #endregion 
