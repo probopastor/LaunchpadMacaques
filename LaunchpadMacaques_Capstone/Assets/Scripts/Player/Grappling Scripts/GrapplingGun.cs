@@ -693,6 +693,7 @@ public class GrapplingGun : MonoBehaviour
             EventInstance beginGrappleInstance = RuntimeManager.CreateInstance(grappleStart);
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
+            beginGrappleInstance.release();
             grapplingInstance.start();
         }
 
@@ -704,11 +705,13 @@ public class GrapplingGun : MonoBehaviour
         {
             StartGrapplingSettings();
             BatmanGrapple();
-
+            
             EventInstance beginGrappleInstance = RuntimeManager.CreateInstance(grappleStart);
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
+            beginGrappleInstance.release();
             grapplingInstance.start();
+            
         }
     }
 
@@ -1006,6 +1009,7 @@ public class GrapplingGun : MonoBehaviour
             EventInstance endGrappleInstance = RuntimeManager.CreateInstance(grappleEnd);
             endGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             endGrappleInstance.start();
+            endGrappleInstance.release();
             grapplingInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
 
@@ -1160,6 +1164,13 @@ public class GrapplingGun : MonoBehaviour
         if (sm > (max * max)) return v.normalized * max;
         else if (sm < min * min) return v.normalized * min;
         return v;
+    }
+    #endregion
+
+    #region Unity Callbacks
+    private void OnDestroy()
+    {
+        grapplingInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
     #endregion
 }
