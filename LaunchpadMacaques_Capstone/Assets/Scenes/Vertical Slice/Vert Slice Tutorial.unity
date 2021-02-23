@@ -2512,17 +2512,17 @@ PrefabInstance:
     - target: {fileID: -4353870482453674913, guid: 44086c5ea3155b84dab9decddf5d8702,
         type: 3}
       propertyPath: corruptionStartPoint.x
-      value: -0.61
+      value: 0.83
       objectReference: {fileID: 0}
     - target: {fileID: -4353870482453674913, guid: 44086c5ea3155b84dab9decddf5d8702,
         type: 3}
       propertyPath: corruptionStartPoint.y
-      value: 9.1
+      value: 15.24
       objectReference: {fileID: 0}
     - target: {fileID: -4353870482453674913, guid: 44086c5ea3155b84dab9decddf5d8702,
         type: 3}
       propertyPath: corruptionStartPoint.z
-      value: 3.26
+      value: 3.07
       objectReference: {fileID: 0}
     - target: {fileID: -4353870482453674913, guid: 44086c5ea3155b84dab9decddf5d8702,
         type: 3}
@@ -7718,17 +7718,17 @@ PrefabInstance:
     - target: {fileID: 4417614449477873540, guid: 7868f41013436074f90de28d60c90166,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.71
+      value: -2.8319993
       objectReference: {fileID: 0}
     - target: {fileID: 4417614449477873540, guid: 7868f41013436074f90de28d60c90166,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 35
+      value: 35.249573
       objectReference: {fileID: 0}
     - target: {fileID: 4417614449477873540, guid: 7868f41013436074f90de28d60c90166,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -68.91
+      value: -68.81586
       objectReference: {fileID: 0}
     - target: {fileID: 4417614449477873540, guid: 7868f41013436074f90de28d60c90166,
         type: 3}
@@ -9739,7 +9739,7 @@ PrefabInstance:
     - target: {fileID: 1353874016672627472, guid: 8e1cfe756cbcd0e409480419e39109e8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 66.704
+      value: 67.07
       objectReference: {fileID: 0}
     - target: {fileID: 1353874016672627472, guid: 8e1cfe756cbcd0e409480419e39109e8,
         type: 3}
@@ -9749,7 +9749,7 @@ PrefabInstance:
     - target: {fileID: 1353874016672627472, guid: 8e1cfe756cbcd0e409480419e39109e8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -66.628044
+      value: -65.78
       objectReference: {fileID: 0}
     - target: {fileID: 1353874016672627472, guid: 8e1cfe756cbcd0e409480419e39109e8,
         type: 3}
@@ -10835,7 +10835,7 @@ PrefabInstance:
     - target: {fileID: 8373920185746154178, guid: 589863e4b238f074a8546a59b0ab1136,
         type: 3}
       propertyPath: wireframeColor.r
-      value: 1
+      value: 0.4862745
       objectReference: {fileID: 0}
     - target: {fileID: 8373920185746154178, guid: 589863e4b238f074a8546a59b0ab1136,
         type: 3}
@@ -11988,6 +11988,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36b2d8b69ddfef641a8a5f25514f866a, type: 3}
+--- !u!1 &1488211238 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1216859501839981411, guid: 36b2d8b69ddfef641a8a5f25514f866a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1488211237}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1488211239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488211238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958a08a5a996edb4e9c8ee5698f14db6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  corruptionState: 2
+  wireframeColor: {r: 0.4862745, g: 0, b: 1, a: 1}
+  corruptionStartPoint: {x: 0.01, y: 0, z: 0}
+  corruptionDistance: -0.5
+  staticCorruptionPoints: []
+  useWorldCoordinates: 0
 --- !u!4 &1493167523 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4318654301727670477, guid: 36b2d8b69ddfef641a8a5f25514f866a,
@@ -12156,7 +12180,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20886
+  m_Name: pb_Mesh20896
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -14206,6 +14230,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4353870482453674913, guid: 44086c5ea3155b84dab9decddf5d8702,
+        type: 3}
+      propertyPath: corruptionState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -4353870482453674913, guid: 44086c5ea3155b84dab9decddf5d8702,
+        type: 3}
+      propertyPath: corruptionDistance
+      value: 5.79
+      objectReference: {fileID: 0}
+    - target: {fileID: -4353870482453674913, guid: 44086c5ea3155b84dab9decddf5d8702,
+        type: 3}
+      propertyPath: corruptionStartPoint.z
+      value: -0.62
+      objectReference: {fileID: 0}
+    - target: {fileID: -4353870482453674913, guid: 44086c5ea3155b84dab9decddf5d8702,
+        type: 3}
+      propertyPath: corruptionStartPoint.y
+      value: 9.92
+      objectReference: {fileID: 0}
+    - target: {fileID: -4353870482453674913, guid: 44086c5ea3155b84dab9decddf5d8702,
+        type: 3}
+      propertyPath: wireframeColor.r
+      value: 0.4862745
+      objectReference: {fileID: 0}
     - target: {fileID: 4128410462201422816, guid: 44086c5ea3155b84dab9decddf5d8702,
         type: 3}
       propertyPath: m_Name
@@ -17518,6 +17567,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: SquareWall (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: wireframeColor.r
+      value: 0.4862745
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionDistance
+      value: 0.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionStartPoint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786596990628233211, guid: fb154f02c74c7794a89fcea4d90a9723,
+        type: 3}
+      propertyPath: corruptionStartPoint.z
+      value: 0.73
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb154f02c74c7794a89fcea4d90a9723, type: 3}
 --- !u!1001 &2113216815
@@ -18181,7 +18255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   corruptionState: 2
-  wireframeColor: {r: 1, g: 0, b: 1, a: 1}
+  wireframeColor: {r: 0.4862745, g: 0, b: 1, a: 1}
   corruptionStartPoint: {x: -0.18, y: 0, z: 0.28}
   corruptionDistance: 0.26
   staticCorruptionPoints: []
