@@ -352,6 +352,29 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1158174135355742540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9036749405759353398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Flames
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 3
+  OverrideMaxDistance: 80
 --- !u!1001 &5382772075363424496
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -526,6 +549,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: da83fa80d9b71144ea20ee0b94832e6c, type: 3}
+--- !u!1 &9036749405759353398 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: da83fa80d9b71144ea20ee0b94832e6c,
+    type: 3}
+  m_PrefabInstance: {fileID: 8190238361090199399}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8512695103615297676 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: da83fa80d9b71144ea20ee0b94832e6c,

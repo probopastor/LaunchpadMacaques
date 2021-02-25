@@ -10,14 +10,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+
 public class SwitchLevel : MonoBehaviour
 {
     [SerializeField, Tooltip("The name of the scene this object should load when triggered. ")] private string nextLevelName;
+
+    HandleSaving handleSaving;
+
+
+    private void Start()
+    {
+        handleSaving = FindObjectOfType<HandleSaving>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+       
             SwitchScenes();
         }
     }
@@ -35,6 +46,8 @@ public class SwitchLevel : MonoBehaviour
     /// </summary>
     private void SwitchScenes()
     {
+        handleSaving.LevelCompleted();
         SceneManager.LoadScene(nextLevelName);
+        
     }
 }
