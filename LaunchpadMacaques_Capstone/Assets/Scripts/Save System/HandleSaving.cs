@@ -121,7 +121,7 @@ public class HandleSaving : MonoBehaviour
     /// </summary>
     private void SetLevels()
     {
-        if (saveSystem.CanFindFile("PlayerData"))
+        if (saveSystem.CanFindFile(PlayerPrefs.GetString("SaveFile")))
         {
             PlayerDataNew data = saveSystem.LoadPlayer();
 

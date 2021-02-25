@@ -636,10 +636,10 @@ public class SettingsManager : MonoBehaviour
     public void HandleEscapeKey()
     {
 
-        if (settingsHolder.activeSelf)
+        if (settingsHolder.activeSelf && SceneManager.GetActiveScene().name == "MainMenu")
         {
             FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-            if (optionsMenu.activeSelf)
+            if (optionsMenu.activeSelf )
             {
                 mainMenu.SetActive(true);
                 settingsHolder.SetActive(false);

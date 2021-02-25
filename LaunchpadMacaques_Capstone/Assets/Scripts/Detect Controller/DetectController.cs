@@ -118,6 +118,14 @@ public class DetectController : MonoBehaviour
                         ControllerConnected();
                     }
                 }
+
+                else if (even.currentSelectedGameObject.GetComponent<Scrollbar>())
+                {
+                    if (!even.currentSelectedGameObject.GetComponent<Scrollbar>().isActiveAndEnabled)
+                    {
+                        ControllerConnected();
+                    }
+                }
             }
 
         }
