@@ -6,7 +6,7 @@
 */
 using UnityEngine;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+
 
 public class Save_System : MonoBehaviour
 {
@@ -19,17 +19,10 @@ public class Save_System : MonoBehaviour
     /// <param name="levels"></param>
     public void SavePlayer(GameObject player, Level[] levels)
     {
-        //BinaryFormatter formatter = new BinaryFormatter();
-        //string path = Application.persistentDataPath + "/player.something";
-        //FileStream stream = new FileStream(path, FileMode.Create);
-
-
-        //formatter.Serialize(stream, data);
-        //stream.Close();
         PlayerDataNew data = new PlayerDataNew(player, levels);
 
         string playerData = JsonUtility.ToJson(data, true);
-        File.WriteAllText(Application.persistentDataPath + "/PlayerData.json", playerData);
+        File.WriteAllText(Application.persistentDataPath + "/" + PlayerPrefs.GetString("SaveFile") + ".json", playerData);
     }
 
 
@@ -45,17 +38,36 @@ public class Save_System : MonoBehaviour
         PlayerDataNew data = new PlayerDataNew(pos, levelName, levels);
 
         string playerData = JsonUtility.ToJson(data, true);
-        File.WriteAllText(Application.persistentDataPath + "/PlayerData.json", playerData);
+        File.WriteAllText(Application.persistentDataPath + "/" + PlayerPrefs.GetString("SaveFile") + ".json", playerData);
     }
 
 
     public void DeleteFile()
     {
-        if (CanFindFile("PlayerData"))
+        if (CanFindFile(PlayerPrefs.GetString("SaveFile")))
         {
-            File.Delete(Application.persistentDataPath + "/PlayerData.json");
+            File.Delete(Application.persistentDataPath + "/" + PlayerPrefs.GetString("SaveFile") + ".json");
         }
 
+    }
+
+    public void DeleteFile(string file)
+    {
+        if (CanFindFile(file))
+        {
+            File.Delete(Application.persistentDataPath + "/" + file + ".json");
+        }
+
+    }
+    public void DeleteAllFiles(string[] files)
+    {
+        for (int i = 0; i < files.Length; i++)
+        {
+            if (CanFindFile(files[i]))
+            {
+                File.Delete(Application.persistentDataPath + "/" + files[i] + ".json");
+            }
+        }
     }
 
     /// <summary>
@@ -64,27 +76,10 @@ public class Save_System : MonoBehaviour
     /// <returns></returns>
     public PlayerDataNew LoadPlayer()
     {
-        //string path = Application.persistentDataPath + "/player.something";
-        //if(File.Exists(path))
-        //{
-        //    BinaryFormatter formatter = new BinaryFormatter();
-        //    FileStream stream = new FileStream(path, FileMode.Open);
 
-        //    PlayerDataNew data = formatter.Deserialize(stream) as PlayerDataNew;
-        //    stream.Close();
-
-        //    return data;
-        //}
-        //else
-        //{
-        //    Debug.LogError("Save file not found in" + path);
-        //    return null;
-        //}
-
-
-        if (CanFindFile("PlayerData"))
+        if (CanFindFile(PlayerPrefs.GetString("SaveFile")))
         {
-            string fileInfo = File.ReadAllText(Application.persistentDataPath + "/" + "PlayerData" + ".json");
+            string fileInfo = File.ReadAllText(Application.persistentDataPath + "/" + PlayerPrefs.GetString("SaveFile") + ".json");
             return JsonUtility.FromJson<PlayerDataNew>(fileInfo);
 
         }
@@ -94,6 +89,19 @@ public class Save_System : MonoBehaviour
             Debug.LogError("Save file not found in");
             return null;
         }
+    }
+
+
+
+    /// <summary>
+    /// Will load save file with the given name
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    public PlayerDataNew LoadPlayer(string fileName)
+    {
+        string fileInfo = File.ReadAllText(Application.persistentDataPath + "/" + fileName + ".json");
+        return JsonUtility.FromJson<PlayerDataNew>(fileInfo);
     }
 
     #endregion
