@@ -5488,8 +5488,6 @@ GameObject:
   - component: {fileID: 7880684068563497863}
   - component: {fileID: 7880684068563497856}
   - component: {fileID: 7880684068563497862}
-  - component: {fileID: 7880684068563497861}
-  - component: {fileID: 7880684068563497860}
   - component: {fileID: 7880684068563497857}
   - component: {fileID: 1259218193664350381}
   m_Layer: 0
@@ -5662,40 +5660,6 @@ MonoBehaviour:
       data1: 0
       data2: 0
   defaultFrameSettings: 0
---- !u!114 &7880684068563497861
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7880684068563497858}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e34a9270097736d49b39ccecbc71d15e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grappleAimingDecal: {fileID: 8593126659679085998, guid: 8504b6a8de395544fb5dba7cd9b52963,
-    type: 3}
-  whatIsGrappleable:
-    serializedVersion: 2
-    m_Bits: 256
---- !u!114 &7880684068563497860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7880684068563497858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0feb8564bd1e7a418305d29ca4879ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grappleAimingDecal: {fileID: 8593126659679085998, guid: 8504b6a8de395544fb5dba7cd9b52963,
-    type: 3}
-  whatIsGrappleable:
-    serializedVersion: 2
-    m_Bits: 256
 --- !u!114 &7880684068563497857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5929,7 +5893,7 @@ MonoBehaviour:
   courtineDashAmmount: 500
   dashLength: 0.1
   dashCooldown: 1.5
-  minVelocityForScreenShake: 0
+  minVelocityForScreenShake: 5
   startingScreenShakeAmmount: 5
   shakeAmmountVelocityScaling: 0.2
   maxScreenShakeAmmount: 80
@@ -6436,7 +6400,6 @@ MonoBehaviour:
   particleRotations: []
   groundDecal: {fileID: 0}
   grapplingLrObj: {fileID: 0}
-  grapplingLrShootPos: {fileID: 0}
 --- !u!114 &7880684069554880042
 MonoBehaviour:
   m_ObjectHideFlags: 0
