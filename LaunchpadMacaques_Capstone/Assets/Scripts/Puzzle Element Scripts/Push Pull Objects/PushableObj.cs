@@ -540,7 +540,7 @@ public class PushableObj : MonoBehaviour
     /// <param name="enable"></param>
     public void EnableDisableOutline(bool enable)
     {
-        if (enable)
+        if (enable && pushPull.CanPickUpObjects())
         {
             outlineObj.GetComponent<Renderer>().enabled = true;
         }
