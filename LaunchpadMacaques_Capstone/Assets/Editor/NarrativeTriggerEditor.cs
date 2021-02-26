@@ -113,8 +113,8 @@ public class NarrativeTriggerEditor : Editor
 
                     //Camera Options
                     EditorGUILayout.LabelField("Camera Options", EditorStyles.boldLabel);
-                    EditorGUILayout.PropertyField(element.FindPropertyRelative("haveCameraMovement"));
-                    if (element.FindPropertyRelative("haveCameraMovement").boolValue == true)
+                    EditorGUILayout.PropertyField(element.FindPropertyRelative("hasCameraMovement"));
+                    if (element.FindPropertyRelative("hasCameraMovement").boolValue == true)
                     {
                         EditorGUILayout.PropertyField(element.FindPropertyRelative("cameraTime"));
                         EditorGUILayout.Space();
@@ -138,6 +138,7 @@ public class NarrativeTriggerEditor : Editor
                             }
 
                             virtualCam.AddCinemachineComponent<CinemachineHardLookAt>();
+                            virtualCam.m_Lens.FieldOfView = Camera.main.fieldOfView;
                             
                         }
                         //Only create a "Go to" button if an object is already assigned
@@ -358,7 +359,12 @@ public class NarrativeTriggerEditor : Editor
         Handles.DrawWireCube(obj.transform.position, obj.transform.localScale);
         Vector3 positionforLabel = obj.transform.position;
         positionforLabel.y += obj.transform.localScale.y / 2;
-        Handles.Label(positionforLabel, labelName);
+
+        GUIStyle style = new GUIStyle();
+        style.richText = true;
+        labelName = string.Format("<color=yellow>{0}</color>", labelName);
+
+        Handles.Label(positionforLabel, labelName, style);
         if(includePosition)
             position = Handles.PositionHandle(obj.transform.position, Quaternion.identity);
         if(includeScale)
