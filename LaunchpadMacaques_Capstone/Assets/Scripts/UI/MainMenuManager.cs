@@ -20,9 +20,6 @@ public class MainMenuManager : MonoBehaviour
     private GameObject mainMenu_Panel;
 
     [SerializeField]
-    private GameObject levelSelect_Panel;
-
-    [SerializeField]
     private List<GameObject> menuPanels = new List<GameObject>();
 
     public Animator anim;
@@ -30,7 +27,6 @@ public class MainMenuManager : MonoBehaviour
     {
 
         mainMenu_Panel.SetActive(true);
-        levelSelect_Panel.SetActive(false);
 
         Time.timeScale = 1;
         Cursor.visible = true;
