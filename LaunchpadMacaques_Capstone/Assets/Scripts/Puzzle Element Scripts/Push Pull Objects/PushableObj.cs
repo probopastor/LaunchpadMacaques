@@ -294,8 +294,10 @@ public class PushableObj : MonoBehaviour
                     MoveDecal(hit);
                     break;
                 }
-
-
+                else
+                {
+                    thisDecal.SetActive(false);
+                }
 
 
             }
