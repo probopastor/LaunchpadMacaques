@@ -327,7 +327,7 @@ public  class TextEffectHandler : MonoBehaviour
             tween = tweener.DOShakePosition(i, 10, strength, vibrato, randomness, snapping, fadeOut)
                 .SetLoops(-1, LoopType.Restart)
                 .OnComplete(() => {
-                    tween.fullPosition = 0;
+                    tween.Rewind();
                 } );
         }
 

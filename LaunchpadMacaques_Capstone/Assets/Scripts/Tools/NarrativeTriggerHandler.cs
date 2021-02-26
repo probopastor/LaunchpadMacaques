@@ -71,7 +71,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         public bool repeatable;
 
         [Tooltip("Whether a camera movement should be associated with this trigger activation or not")]
-        public bool haveCameraMovement;
+        public bool hasCameraMovement;
         [Tooltip("The time (in seconds) the camera will be at the destination")]
         public float cameraTime;
         [Tooltip("The point the camera will move to")]
@@ -175,6 +175,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 int triggerToActivate = Random.Range(0, (int)randomTriggers.Count);
 
                 ActivateTrigger(randomTriggers[triggerToActivate]);
+
             }
 
 
@@ -222,7 +223,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
   
         }
 
-        if(trigger.haveCameraMovement && trigger.cameraPoint != null && trigger.cameraTarget != null)
+        if(trigger.hasCameraMovement && trigger.cameraPoint != null && trigger.cameraTarget != null)
         {
             StartCoroutine(PanCamera(trigger));
         }
