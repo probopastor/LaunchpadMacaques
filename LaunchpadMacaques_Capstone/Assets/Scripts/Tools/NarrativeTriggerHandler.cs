@@ -15,6 +15,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
+using Cinemachine;
+using FMODUnity;
 
 [RequireComponent(typeof(GameEventManager))]
 public class NarrativeTriggerHandler : MonoBehaviour
@@ -31,11 +33,13 @@ public class NarrativeTriggerHandler : MonoBehaviour
         "as well as its own text and audio outputs")]
     public Trigger[] triggers;
     
+    //Editor variables
     [SerializeField]
     private bool[] triggerSubFoldout;
     [SerializeField]
     private string[] triggerNames;
 
+    //Handler Variables
     [SerializeField, Tooltip("The lower end of the interval that a random trigger can be called")]
     private float randomIntervalMin;
     [SerializeField, Tooltip("The upper end of the interval that a random trigger can be called")]
@@ -43,6 +47,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
     [SerializeField, Tooltip("The time (in seconds) that the player must be falling in order for the \"Player Hitting Ground\" event to trigger")]
     private float fallTime;
 
+    //UI variables
     [SerializeField]
     private TMP_Text dialogue;
     [SerializeField]
@@ -64,6 +69,16 @@ public class NarrativeTriggerHandler : MonoBehaviour
         public AudioSource audioSource;
         [Tooltip("Whether this Trigger can be activated multiple times (true) or only once (false)")]
         public bool repeatable;
+
+        [Tooltip("Whether a camera movement should be associated with this trigger activation or not")]
+        public bool hasCameraMovement;
+        [Tooltip("The time (in seconds) the camera will be at the destination")]
+        public float cameraTime;
+        [Tooltip("The point the camera will move to")]
+        public GameObject cameraPoint;
+        [Tooltip("The GameObject for the camera to look at")]
+        public GameObject cameraTarget;
+
         public bool hasRan = false;
         public bool isRunning = false;
 
@@ -160,6 +175,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 int triggerToActivate = Random.Range(0, (int)randomTriggers.Count);
 
                 ActivateTrigger(randomTriggers[triggerToActivate]);
+
             }
 
 
@@ -167,7 +183,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
-    /// <summary>
+    /// <summary>artL
     /// Activates trigger at given index
     /// </summary>
     /// <param name="trigger">The index of the trigger to activate</param>
@@ -181,8 +197,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         trigger.hasRan = true;
 
+        FMOD.Studio.EventDescription desc;
         //If the trigger has an audio source assigned, play the associated sound (if it has one)
-        if (trigger.audioSource != null)
+        if (FMODUnity.RuntimeManager.StudioSystem.getEvent(trigger.audioToPlay, out desc) == FMOD.RESULT.OK)
         {
             FMOD.Studio.EventInstance playAudio = FMODUnity.RuntimeManager.CreateInstance(trigger.audioToPlay);
             FMODUnity.RuntimeManager.GetEventDescription(trigger.audioToPlay).getLength(out trigger.textDisplayTime);
@@ -204,6 +221,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 StartCoroutine(RunDialogue(trigger));
             }
   
+        }
+
+        if(trigger.hasCameraMovement && trigger.cameraPoint != null && trigger.cameraTarget != null)
+        {
+            StartCoroutine(PanCamera(trigger));
         }
 
         //Text appearing functionality
@@ -261,11 +283,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
         TextEffectHandler.instance.RunText(dialogue, trigger.textToDisplay);
 
         //Wait for the time given by the trigger
-        yield return new WaitForSeconds(trigger.textDisplayTime);
+        yield return new WaitForSecondsRealtime(trigger.textDisplayTime);
 
         TextEffectHandler.instance.StopText();
 
-        //Turn of text
+        //Turn off text
         if (canvas.gameObject.activeSelf)
         {
             dialogue.text = "";
@@ -318,6 +340,26 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
+
+    bool isPanning = false;
+    private IEnumerator PanCamera(Trigger triggerWithCamInfo)
+    {
+        isPanning = true;
+
+        Time.timeScale = 0;
+
+        CinemachineVirtualCamera camera = triggerWithCamInfo.cameraPoint.GetComponent<CinemachineVirtualCamera>();
+        int originalPriorityValue = camera.m_Priority;
+        camera.m_Priority = 420;
+        yield return new WaitForSecondsRealtime(triggerWithCamInfo.cameraTime);
+        camera.m_Priority = originalPriorityValue;
+
+        Time.timeScale = 1;
+
+        isPanning = false;
+    }
+
+    #region PlayerHitGround Event
     /// <summary>
     /// The function that will be called when the player hits the ground, picks one random trigger out of all the PlayerHitGround Triggers and activates it
     /// </summary>
@@ -344,8 +386,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
         ActivateTrigger(currentTrigger);
 
     }
+    #endregion
 
-    #region TimeInLevelEvent
+    #region TimeInLevel Event
     float timeInLevel = 0;
     Coroutine currentCount;
     /// <summary>

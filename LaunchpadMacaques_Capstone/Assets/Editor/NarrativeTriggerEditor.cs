@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Cinemachine;
 
 [CustomEditor(typeof(NarrativeTriggerHandler)), CanEditMultipleObjects]
 public class NarrativeTriggerEditor : Editor
@@ -108,43 +109,125 @@ public class NarrativeTriggerEditor : Editor
                     EditorGUILayout.PropertyField(element.FindPropertyRelative("audioToPlay"));
                     EditorGUILayout.PropertyField(element.FindPropertyRelative("audioSource"));
 
+                    EditorGUILayout.Space();
+
+                    //Camera Options
+                    EditorGUILayout.LabelField("Camera Options", EditorStyles.boldLabel);
+                    EditorGUILayout.PropertyField(element.FindPropertyRelative("hasCameraMovement"));
+                    if (element.FindPropertyRelative("hasCameraMovement").boolValue == true)
+                    {
+                        EditorGUILayout.PropertyField(element.FindPropertyRelative("cameraTime"));
+                        EditorGUILayout.Space();
+                        EditorGUILayout.BeginHorizontal();
+                        //Camera Point
+                        if(GUILayout.Button("Spawn Camera Point"))
+                        {
+                            CinemachineVirtualCamera virtualCam = SpawnExclusiveObject(/*property=*/ref element, /*variableToAccess=*/"cameraPoint", /*nameOfObjectToCreate=*/"Camera Point " + (i + 1))
+                                .AddComponent<CinemachineVirtualCamera>();
+
+                            //If target already exists, assign it to be looked at
+                            GameObject potentialTarget;
+                            if((potentialTarget = (GameObject) element.FindPropertyRelative("cameraTarget").objectReferenceValue) != null)
+                            {
+                                virtualCam.LookAt = potentialTarget.transform;
+                            }
+                            //Otherwise don't have it look at anything
+                            else
+                            {
+                                virtualCam.LookAt = null;
+                            }
+
+                            virtualCam.AddCinemachineComponent<CinemachineHardLookAt>();
+                            virtualCam.m_Lens.FieldOfView = Camera.main.fieldOfView;
+                            
+                        }
+                        //Only create a "Go to" button if an object is already assigned
+                        if(element.FindPropertyRelative("cameraPoint").objectReferenceValue != null)
+                        {
+                            if(GUILayout.Button("Go to Camera Point"))
+                            {
+                                JumpToObject(narrativeTriggerHandler.triggers[i].cameraPoint);
+                            }
+                        }
+                        EditorGUILayout.EndHorizontal();
+                        EditorGUILayout.PropertyField(element.FindPropertyRelative("cameraPoint"));
+
+                        //Camera Target
+                        EditorGUILayout.Space();
+                        EditorGUILayout.BeginHorizontal();
+                        if (GUILayout.Button("Spawn Camera Target"))
+                        {
+                            GameObject camTarget = SpawnExclusiveObject(/*property=*/ref element, /*variableToAccess=*/"cameraTarget", /*nameOfObjectToCreate=*/"Camera Target " + (i + 1));
+
+                            //If a virtual cam already exists, properly assign this new target to that camera
+                            GameObject potentialVirtualCam;
+                            if ((potentialVirtualCam = (GameObject) element.FindPropertyRelative("cameraPoint").objectReferenceValue) != null)
+                            {
+                                potentialVirtualCam.GetComponent<CinemachineVirtualCamera>().LookAt = camTarget.transform;
+                            }
+                        }
+                        if (element.FindPropertyRelative("cameraTarget").objectReferenceValue != null)
+                        {
+                            if(GUILayout.Button("Go to Camera Target"))
+                            {
+                                JumpToObject(narrativeTriggerHandler.triggers[i].cameraTarget);
+                            }
+                        }
+                        EditorGUILayout.EndHorizontal();
+                        EditorGUILayout.PropertyField(element.FindPropertyRelative("cameraTarget"));
+                    }
+                    //Have Camera Movement has been unchecked, clean up any remaining objects (if any)
+                    else
+                    {
+                        Object current;
+                        if ((current = element.FindPropertyRelative("cameraPoint").objectReferenceValue) != null
+                            && current.name.Contains("Camera Point"))
+                            DestroyImmediate(current);
+                        if ((current = element.FindPropertyRelative("cameraTarget").objectReferenceValue) != null
+                            && current.name.Contains("Camera Target"))
+                            DestroyImmediate(current);
+                    }
+
                     int type = element.FindPropertyRelative("type").enumValueIndex;
                     //Display Area Trigger specific options
                     if (type == (int)NarrativeTriggerHandler.TriggerType.Area)
                     {
                         EditorGUILayout.Space();
+
                         EditorGUILayout.LabelField("Area Trigger Options", EditorStyles.boldLabel);
                         EditorGUILayout.BeginHorizontal();
                         EditorGUILayout.LabelField("Triggering Tag");
                         element.FindPropertyRelative("triggeringTag").stringValue = EditorGUILayout.TagField(element.FindPropertyRelative("triggeringTag").stringValue);
                         EditorGUILayout.EndHorizontal();
+
+                        //Trigger Zone Buttons
                         EditorGUILayout.BeginHorizontal();
                         if (GUILayout.Button("Spawn Trigger Zone"))
                         {
-                            GameObject newAreaTrigger = new GameObject("Area Trigger");
+                            GameObject newAreaTrigger = SpawnExclusiveObject(/*property=*/ref element, /*variableToAccess=*/"areaTrigger", /*nameOfObjectToCreate=*/"Area Trigger " + (i + 1));
                             newAreaTrigger.transform.localScale = new Vector3(5, 5, 5);
-                            element.FindPropertyRelative("areaTrigger").objectReferenceValue = newAreaTrigger;
-                            serializedObject.ApplyModifiedProperties();
-                            Selection.activeGameObject = newAreaTrigger;
-                            SceneView.FrameLastActiveSceneView();
-                            Selection.activeGameObject = narrativeTriggerHandler.gameObject;
                         }
                         if (narrativeTriggerHandler.triggers[i].areaTrigger != null)
                         {
                             if (GUILayout.Button("Go to Trigger"))
                             {
-                                Selection.activeGameObject = narrativeTriggerHandler.triggers[i].areaTrigger;
-                                SceneView.FrameLastActiveSceneView();
-                                Selection.activeGameObject = narrativeTriggerHandler.gameObject;
-
+                                JumpToObject(narrativeTriggerHandler.triggers[i].areaTrigger);
                             }
                         }
                         EditorGUILayout.EndHorizontal();
                         EditorGUILayout.PropertyField(element.FindPropertyRelative("areaCenter"));
                         EditorGUILayout.PropertyField(element.FindPropertyRelative("boxSize"));
                     }
-                    //Display onEvent Trigger specific options
-                    else if (type == (int)NarrativeTriggerHandler.TriggerType.OnEvent)
+                    //If not area trigger, remove active trigger object (if any)
+                    else
+                    {
+                        Object current;
+                        if ((current = element.FindPropertyRelative("areaTrigger").objectReferenceValue) != null)
+                            DestroyImmediate(current);
+                    }
+                    
+                    //Display onEvent Trigger specific options if applicable
+                    if (type == (int)NarrativeTriggerHandler.TriggerType.OnEvent)
                     {
                         EditorGUILayout.Space();
                         EditorGUILayout.LabelField("Event Trigger Options", EditorStyles.boldLabel);
@@ -189,33 +272,115 @@ public class NarrativeTriggerEditor : Editor
     {
         Handles.color = Color.cyan;
 
-        //For area triggers, display a wireframe cube in the scene that represents the trigger area
+        //For area triggers, draw wireframe cubes and give them handles to move around
         for(int i = 0; i < narrativeTriggerHandler.triggers.Length; i++)
         {
-            GameObject currentAreaTrigger;
-            if((currentAreaTrigger = narrativeTriggerHandler.triggers[i].areaTrigger) != null)
+            GameObject currentTriggerObject;
+            if((currentTriggerObject = narrativeTriggerHandler.triggers[i].areaTrigger) != null)
             {
-                EditorGUI.BeginChangeCheck();
-
-                Handles.DrawWireCube(currentAreaTrigger.transform.position, currentAreaTrigger.transform.localScale);
-                Vector3 positionforLabel = currentAreaTrigger.transform.position;
-                positionforLabel.y += currentAreaTrigger.transform.localScale.y / 2;
-                Handles.Label(positionforLabel, narrativeTriggerHandler.GetTriggerName(i));
-                Vector3 position =  Handles.PositionHandle(currentAreaTrigger.transform.position, Quaternion.identity);
-                Vector3 scale = Handles.ScaleHandle(currentAreaTrigger.transform.localScale, currentAreaTrigger.transform.position, Quaternion.identity, 10);
-                Quaternion rotation = Handles.RotationHandle(currentAreaTrigger.transform.localRotation, currentAreaTrigger.transform.position);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RecordObject(target, "Changed Trigger Properties");
-                    currentAreaTrigger.transform.position = narrativeTriggerHandler.triggers[i].areaCenter = position;
-                    currentAreaTrigger.transform.localScale = narrativeTriggerHandler.triggers[i].boxSize = scale;
-                    currentAreaTrigger.transform.localRotation = rotation;
-                }
+                CreateHandlesForObject(/*Object=*/currentTriggerObject, /*labelName=*/string.Format("Trigger {0} Area", i + 1),
+                    /*includePosition=*/true, /*includeRotation=*/true, /*includeScale=*/true);
+                narrativeTriggerHandler.triggers[i].areaCenter = currentTriggerObject.transform.position;
+                narrativeTriggerHandler.triggers[i].boxSize = currentTriggerObject.transform.localScale;
+            }
+            
+            if((currentTriggerObject = narrativeTriggerHandler.triggers[i].cameraPoint) != null)
+            {
+                CreateHandlesForObject(/*Object=*/currentTriggerObject, /*labelName=*/string.Format("Trigger {0} Cam Point", i + 1),
+                    /*includePosition=*/true, /*includeRotation=*/false, /*includeScale=*/false);
             }
 
-           
+            if((currentTriggerObject = narrativeTriggerHandler.triggers[i].cameraTarget) != null)
+            {
+                CreateHandlesForObject(/*Object=*/currentTriggerObject, /*labelName=*/string.Format("Trigger {0} Cam Target", i + 1),
+                    /*includePosition=*/true, /*includeRotation=*/false, /*includeScale=*/false);
+            }
         }
         
+    }
+
+    /// <summary>
+    /// Spawns a new GameObject named [(string) nameOfCreatedObject], and sets it to variable [(SerializedObject) property].[(string) objectVariableName]. Destroys prexisting object if any are present
+    /// </summary>
+    /// <param name="property">The SerializedProperty to access and check object on</param>
+    /// <param name="objectVariableName">The string variable name to access on the property</param>
+    /// <param name="nameOfCreatedObject">The name of the new object that will be created</param>
+    /// <returns></returns>
+    private GameObject SpawnExclusiveObject(ref SerializedProperty property, string objectVariableName, string nameOfCreatedObject)
+    {
+        //Destroy old object (if any)
+        if (property.FindPropertyRelative(objectVariableName).objectReferenceValue != null)
+        {
+            DestroyImmediate(property.FindPropertyRelative(objectVariableName).objectReferenceValue);
+        }
+
+        //Create point
+        Vector3 spawnPoint = Selection.activeGameObject.transform.position;
+        spawnPoint.y -= 2 * Selection.activeGameObject.transform.localScale.y;
+
+        GameObject newCameraPoint = new GameObject(nameOfCreatedObject);
+        newCameraPoint.transform.position = spawnPoint;
+        property.FindPropertyRelative(objectVariableName).objectReferenceValue = newCameraPoint;
+        serializedObject.ApplyModifiedProperties();
+
+        //Move Camera/Selection
+        Selection.activeGameObject = newCameraPoint;
+        SceneView.FrameLastActiveSceneView();
+        Selection.activeGameObject = narrativeTriggerHandler.gameObject;
+
+        return newCameraPoint;
+    }
+
+    /// <summary>
+    /// Jumps the camera to the given GameObject's position without switching the targeting
+    /// </summary>
+    /// <param name="obj">The GameObject to jump to</param>
+    private void JumpToObject(GameObject obj)
+    {
+        Selection.activeGameObject = obj;
+        SceneView.FrameLastActiveSceneView();
+        Selection.activeGameObject = narrativeTriggerHandler.gameObject;
+    }
+
+    /// <summary>
+    /// Creates a wireframe cube and control handles for a given object
+    /// </summary>
+    /// <param name="obj">The GameObject to affect</param>
+    /// <param name="labelName">The name of the label to be placed on the object</param>
+    /// <param name="includePosition">If set to true, position handles will be added</param>
+    /// <param name="includeRotation">If set to true, rotation handles will be added</param>
+    /// <param name="includeScale">If set to true, scaling handles will be added</param>
+    private void CreateHandlesForObject(GameObject obj, string labelName, bool includePosition = true, bool includeRotation = false, bool includeScale = false)
+    {
+        Vector3 position = Vector3.zero, scale = Vector3.zero;
+        Quaternion rotation = Quaternion.identity;
+        EditorGUI.BeginChangeCheck();
+
+        Handles.DrawWireCube(obj.transform.position, obj.transform.localScale);
+        Vector3 positionforLabel = obj.transform.position;
+        positionforLabel.y += obj.transform.localScale.y / 2;
+
+        GUIStyle style = new GUIStyle();
+        style.richText = true;
+        labelName = string.Format("<color=yellow>{0}</color>", labelName);
+
+        Handles.Label(positionforLabel, labelName, style);
+        if(includePosition)
+            position = Handles.PositionHandle(obj.transform.position, Quaternion.identity);
+        if(includeScale)
+            scale = Handles.ScaleHandle(obj.transform.localScale, obj.transform.position, Quaternion.identity, 10);
+        if(includeRotation)
+            rotation = Handles.RotationHandle(obj.transform.localRotation, obj.transform.position);
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            Undo.RecordObject(target, "Changed Trigger Properties");
+            if(includePosition)
+                obj.transform.position = position;
+            if(includeScale)
+                obj.transform.localScale = scale;
+            if(includeRotation)
+                obj.transform.localRotation = rotation;
+        }
     }
 }
