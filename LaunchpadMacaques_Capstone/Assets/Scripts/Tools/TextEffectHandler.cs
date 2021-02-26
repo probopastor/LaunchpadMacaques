@@ -325,14 +325,14 @@ public  class TextEffectHandler : MonoBehaviour
             var timeOffset = Mathf.Lerp(0, 1, (i - startIndex) / (float)(endIndex - startIndex + 1));
             int temp = i;
             tween = tweener.DOShakePosition(i, 10, strength, vibrato, randomness, snapping, fadeOut)
-                .SetLoops(1, LoopType.Restart)
-                .OnKill(() => {
-                    tween.Restart();
+                .SetLoops(-1, LoopType.Restart)
+                .OnComplete(() => {
+                    tween.fullPosition = 0;
                 } );
         }
 
-        yield return new WaitForSeconds(1f);
-        tween.Kill(true);
+//yield return new WaitForSecondsRealtime(1f);
+       // tween.Kill(true);
 
         yield break;
     }
@@ -351,7 +351,7 @@ public  class TextEffectHandler : MonoBehaviour
             tweener.SetAlpha(i, 0);
         }
 
-        yield return new WaitForSeconds(instance.typewriterSpeed);
+        yield return new WaitForSecondsRealtime(instance.typewriterSpeed);
 
         for (int i = startIndex; i < endIndex; i++)
         {

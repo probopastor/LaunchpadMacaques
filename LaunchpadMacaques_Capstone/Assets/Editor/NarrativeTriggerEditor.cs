@@ -136,6 +136,8 @@ public class NarrativeTriggerEditor : Editor
                             {
                                 virtualCam.LookAt = null;
                             }
+
+                            virtualCam.AddCinemachineComponent<CinemachineHardLookAt>();
                             
                         }
                         //Only create a "Go to" button if an object is already assigned

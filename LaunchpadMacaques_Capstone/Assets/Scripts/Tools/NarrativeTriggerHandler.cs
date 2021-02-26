@@ -16,6 +16,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 using Cinemachine;
+using FMODUnity;
 
 [RequireComponent(typeof(GameEventManager))]
 public class NarrativeTriggerHandler : MonoBehaviour
@@ -195,8 +196,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         trigger.hasRan = true;
 
+        FMOD.Studio.EventDescription desc;
         //If the trigger has an audio source assigned, play the associated sound (if it has one)
-        if (trigger.audioSource != null)
+        if (FMODUnity.RuntimeManager.StudioSystem.getEvent(trigger.audioToPlay, out desc) == FMOD.RESULT.OK)
         {
             FMOD.Studio.EventInstance playAudio = FMODUnity.RuntimeManager.CreateInstance(trigger.audioToPlay);
             FMODUnity.RuntimeManager.GetEventDescription(trigger.audioToPlay).getLength(out trigger.textDisplayTime);
@@ -220,7 +222,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
   
         }
 
-        if(trigger.haveCameraMovement)
+        if(trigger.haveCameraMovement && trigger.cameraPoint != null && trigger.cameraTarget != null)
         {
             StartCoroutine(PanCamera(trigger));
         }
@@ -280,7 +282,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         TextEffectHandler.instance.RunText(dialogue, trigger.textToDisplay);
 
         //Wait for the time given by the trigger
-        yield return new WaitForSeconds(trigger.textDisplayTime);
+        yield return new WaitForSecondsRealtime(trigger.textDisplayTime);
 
         TextEffectHandler.instance.StopText();
 
@@ -337,13 +339,23 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
+
+    bool isPanning = false;
     private IEnumerator PanCamera(Trigger triggerWithCamInfo)
     {
+        isPanning = true;
+
+        Time.timeScale = 0;
+
         CinemachineVirtualCamera camera = triggerWithCamInfo.cameraPoint.GetComponent<CinemachineVirtualCamera>();
         int originalPriorityValue = camera.m_Priority;
-        camera.m_Priority = 20;
-        yield return new WaitForSeconds(triggerWithCamInfo.cameraTime);
+        camera.m_Priority = 420;
+        yield return new WaitForSecondsRealtime(triggerWithCamInfo.cameraTime);
         camera.m_Priority = originalPriorityValue;
+
+        Time.timeScale = 1;
+
+        isPanning = false;
     }
 
     #region PlayerHitGround Event
