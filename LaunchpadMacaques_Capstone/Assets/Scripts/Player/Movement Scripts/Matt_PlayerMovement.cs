@@ -1082,6 +1082,14 @@ public class Matt_PlayerMovement : MonoBehaviour
         if (PlayerPrefs.GetInt("FOV") == 1)
         {
             Camera.main.fieldOfView = m_fieldOfView;
+
+            Cinemachine.CinemachineVirtualCamera[] camArray = FindObjectsOfType<Cinemachine.CinemachineVirtualCamera>();
+            foreach(Cinemachine.CinemachineVirtualCamera cam in camArray)
+            {
+                cam.m_Lens.FieldOfView = Camera.main.fieldOfView;
+            }
+
+
             var targetMaxFOV = (int)(maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale)));
 
             if (lastMaxFOV != 0 && Mathf.Abs(targetMaxFOV - lastMaxFOV) <= 2)

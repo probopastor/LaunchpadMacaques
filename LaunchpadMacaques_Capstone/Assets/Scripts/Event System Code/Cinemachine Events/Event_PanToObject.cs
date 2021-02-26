@@ -45,11 +45,11 @@ public class Event_PanToObject : MonoBehaviour
 
     public void PanCamera()
     {
-        StartCoroutine(PanCamreaToDoor(panningCamera, panTime));
+        StartCoroutine(PanCameraToDoor(panningCamera, panTime));
     }
 
 
-    private IEnumerator PanCamreaToDoor(CinemachineVirtualCamera camToPan, float time)
+    private IEnumerator PanCameraToDoor(CinemachineVirtualCamera camToPan, float time)
     {
         initPriority = panningCamera.m_Priority;
         Time.timeScale = .99f;
