@@ -290,7 +290,7 @@ public class Level
 [System.Serializable]
 public class Ability
 {
-    public enum AbilityType { Dash, Batman }
+    public enum AbilityType { Dash, Batman, CubePickUp }
 
     public AbilityType thisAbility;
     public string[] levels;

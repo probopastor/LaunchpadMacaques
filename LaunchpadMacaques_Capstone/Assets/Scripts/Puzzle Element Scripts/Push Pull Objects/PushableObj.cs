@@ -294,8 +294,10 @@ public class PushableObj : MonoBehaviour
                     MoveDecal(hit);
                     break;
                 }
-
-
+                else
+                {
+                    thisDecal.SetActive(false);
+                }
 
 
             }
@@ -540,7 +542,7 @@ public class PushableObj : MonoBehaviour
     /// <param name="enable"></param>
     public void EnableDisableOutline(bool enable)
     {
-        if (enable)
+        if (enable && pushPull.CanPickUpObjects())
         {
             outlineObj.GetComponent<Renderer>().enabled = true;
         }
