@@ -48,7 +48,7 @@ public class Player_Audio : MonoBehaviour
         footstepInstance.set3DAttributes(RuntimeUtils.To3DAttributes(transform.position));
 
 
-        if (Physics.Raycast(transform.position, Vector3.down, 1.5f, collisions)) grounded = true;
+        if (Physics.Raycast(transform.position, Vector3.down, 4f, collisions)) grounded = true;
         else grounded = false;
 
         if (grounded && !landed)
@@ -67,11 +67,13 @@ public class Player_Audio : MonoBehaviour
         if (grounded && landed && footState == PLAYBACK_STATE.STOPPED && magnitude > 0.1f)
         {
             footstepInstance.start();
+            Debug.Log("Starting footsteps");
         }
 
-        if (footState == PLAYBACK_STATE.PLAYING && (!grounded || magnitude < 0.1f) || pauseManager.GetPaused())
+        if ((footState == PLAYBACK_STATE.PLAYING && (!grounded || magnitude < 0.1f)) || pauseManager.GetPaused())
         {
             footstepInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            Debug.Log("stop footsteps");
         }
 
     }

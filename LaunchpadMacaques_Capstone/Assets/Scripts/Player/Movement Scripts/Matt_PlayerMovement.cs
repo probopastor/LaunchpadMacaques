@@ -498,20 +498,20 @@ public class Matt_PlayerMovement : MonoBehaviour
     }
     public void CrouchInput()
     {
-        if (!grappleGunReference.IsGrappling())
-        {
-            crouching = !crouching;
+        //if (!grappleGunReference.IsGrappling())
+        //{
+        //    crouching = !crouching;
 
-            if (crouching)
-            {
-                StartCrouch();
-            }
+        //    if (crouching)
+        //    {
+        //        StartCrouch();
+        //    }
 
-            else
-            {
-                StopCrouch();
-            }
-        }
+        //    else
+        //    {
+        //        StopCrouch();
+        //    }
+        //}
 
     }
 

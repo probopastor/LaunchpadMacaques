@@ -139,7 +139,8 @@ public class SaveFileButtonHandler : MonoBehaviour
                 numCompleted++;
             }
         }
-        return (numCompleted / levels.Length) * 100;
+
+        return (int) ((numCompleted / levels.Length) * 100); 
     }
 
     public void SetSaveFile(string saveFileName)
