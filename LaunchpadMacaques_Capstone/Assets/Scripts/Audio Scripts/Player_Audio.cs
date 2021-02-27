@@ -25,8 +25,11 @@ public class Player_Audio : MonoBehaviour
     private EventInstance jumpInstance;
     private EventInstance footstepInstance;
 
+    private PauseManager pauseManager;
+
     void Start()
     {
+        pauseManager = FindObjectOfType<PauseManager>();
         m_rb = GetComponent<Rigidbody>();
 
         grounded = true;
@@ -38,7 +41,9 @@ public class Player_Audio : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {        
+    {
+        if (pauseManager.GetPaused()) swingingEmitter.Stop();
+        else if (!swingingEmitter.IsPlaying()) swingingEmitter.Play();
         jumpInstance.set3DAttributes(RuntimeUtils.To3DAttributes(transform.position));
         footstepInstance.set3DAttributes(RuntimeUtils.To3DAttributes(transform.position));
 

@@ -288,4 +288,5 @@ public class PauseManager : MonoBehaviour
     {
         return gameLost;
     }
+    
 }

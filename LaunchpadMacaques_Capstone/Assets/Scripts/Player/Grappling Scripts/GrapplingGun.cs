@@ -118,8 +118,8 @@ public class GrapplingGun : MonoBehaviour
     [EventRef, SerializeField, Tooltip("Audio clip that plays when grapple is ended.")]
     private string grappleEnd;
 
-    private EventInstance grapplingInstance;
-
+    public StudioEventEmitter grapplingEmitter;
+    private PauseManager pauseManager;
 
     #endregion
 
@@ -231,7 +231,6 @@ public class GrapplingGun : MonoBehaviour
 
         playerRB = player.GetComponent<Rigidbody>();
 
-        grapplingInstance = RuntimeManager.CreateInstance(grappleActive);
         particlesStarted = false;
 
         // Set up swinging decal objects
@@ -299,6 +298,8 @@ public class GrapplingGun : MonoBehaviour
     private void Start()
     {
         CheckBatman();
+
+        pauseManager = FindObjectOfType<PauseManager>();
     }
 
     private void CheckBatman()
@@ -317,6 +318,9 @@ public class GrapplingGun : MonoBehaviour
         CheckToSeeIfTriggersHeldDown();
 
         HoverShadow();
+
+        if (pauseManager.GetPaused() || !IsGrappling()) grapplingEmitter.Stop();
+        else if (!grapplingEmitter.IsPlaying()) grapplingEmitter.Play();
     }
 
     private void CheckToSeeIfTriggersHeldDown()
@@ -335,7 +339,6 @@ public class GrapplingGun : MonoBehaviour
 
     private void GrappleUpdateChanges()
     {
-        grapplingInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 
         if (IsGrappling() && joint)
         {
@@ -715,7 +718,6 @@ public class GrapplingGun : MonoBehaviour
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
             beginGrappleInstance.release();
-            grapplingInstance.start();
         }
 
     }
@@ -731,7 +733,6 @@ public class GrapplingGun : MonoBehaviour
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
             beginGrappleInstance.release();
-            grapplingInstance.start();
             
         }
     }
@@ -1030,7 +1031,6 @@ public class GrapplingGun : MonoBehaviour
             endGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             endGrappleInstance.start();
             endGrappleInstance.release();
-            grapplingInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
 
     }
@@ -1242,9 +1242,5 @@ public class GrapplingGun : MonoBehaviour
     #endregion
 
     #region Unity Callbacks
-    private void OnDestroy()
-    {
-        grapplingInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-    }
     #endregion
 }
