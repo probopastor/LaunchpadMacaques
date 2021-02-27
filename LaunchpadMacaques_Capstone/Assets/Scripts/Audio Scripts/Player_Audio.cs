@@ -69,7 +69,7 @@ public class Player_Audio : MonoBehaviour
             footstepInstance.start();
         }
 
-        if (footState == PLAYBACK_STATE.PLAYING && (!grounded || magnitude < 0.1f))
+        if (footState == PLAYBACK_STATE.PLAYING && (!grounded || magnitude < 0.1f) || pauseManager.GetPaused())
         {
             footstepInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
