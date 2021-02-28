@@ -32,6 +32,13 @@ public class MainMenuManager : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         anim.Play("MainMenuBG");
+
+
+        if (HandleSaving.instance)
+        {
+            Destroy(HandleSaving.instance.gameObject);
+        }
+
     }
 
     private void Update()

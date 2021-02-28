@@ -3359,6 +3359,8 @@ GameObject:
   - component: {fileID: 336346458}
   - component: {fileID: 336346460}
   - component: {fileID: 336346459}
+  - component: {fileID: 336346461}
+  - component: {fileID: 336346462}
   m_Layer: 5
   m_Name: Start Game Panel
   m_TagString: Untagged
@@ -3426,6 +3428,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 336346457}
   m_CullTransparentMesh: 0
+--- !u!114 &336346461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336346457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 525964b78a8d03941ba5edca4ba8be8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tutorialLevelName: Tutorial Redesign
+  hubLevelName: Hub
+--- !u!114 &336346462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336346457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23ca60d86d9f6ff4dbd6e80502416d31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &337936263
 GameObject:
   m_ObjectHideFlags: 0
@@ -15270,10 +15298,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1545432907}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+      - m_Target: {fileID: 336346461}
+        m_TargetAssemblyTypeName: StartGamePanel, Assembly-CSharp
+        m_MethodName: StartGame
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
