@@ -121,6 +121,9 @@ public class GrapplingGun : MonoBehaviour
     public StudioEventEmitter grapplingEmitter;
     private PauseManager pauseManager;
 
+
+    [SerializeField] LayerMask groundDecalLayer;
+
     #endregion
 
     #region Particle Effects
@@ -1058,7 +1061,7 @@ public class GrapplingGun : MonoBehaviour
         }
 
         RaycastHit hit;
-        if (Physics.Raycast(gameObject.transform.position, Vector3.down, out hit, Mathf.Infinity, playerMovementReference.GetGround()))
+        if (Physics.Raycast(gameObject.transform.position, Vector3.down, out hit, Mathf.Infinity, groundDecalLayer))
         {
             MoveDecal(hit);
             MoveGrapplingShadowLineRenderer(grapplingLr, hit, grapplingLrObj.transform.position);
