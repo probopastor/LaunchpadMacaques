@@ -515,6 +515,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     }
 
+    public LayerMask GetGround()
+    {
+        return whatIsGround;
+    }
+
     public void OnMoveInput(float x, float y)
     {
         this.x = x;

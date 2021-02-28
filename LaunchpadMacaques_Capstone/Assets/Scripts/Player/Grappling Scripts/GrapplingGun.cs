@@ -1058,7 +1058,7 @@ public class GrapplingGun : MonoBehaviour
         }
 
         RaycastHit hit;
-        if (Physics.Raycast(gameObject.transform.position, Vector3.down, out hit, Mathf.Infinity))
+        if (Physics.Raycast(gameObject.transform.position, Vector3.down, out hit, Mathf.Infinity, playerMovementReference.GetGround()))
         {
             MoveDecal(hit);
             MoveGrapplingShadowLineRenderer(grapplingLr, hit, grapplingLrObj.transform.position);
