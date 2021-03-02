@@ -46,7 +46,8 @@ public class SwitchLevel : MonoBehaviour
     /// </summary>
     private void SwitchScenes()
     {
-        handleSaving.LevelCompleted();
+        // handleSaving.LevelCompleted();
+        FindObjectOfType<HandleSaving>().LevelCompleted();
         SceneManager.LoadScene(nextLevelName);
         
     }

@@ -1,106 +1,88 @@
 ﻿using FMODUnity;
+using FMOD.Studio;
 using UnityEngine;
 
 public class Player_Audio : MonoBehaviour
 {
-    public float PLAYER_TOP_SPEED;
+    public float playerTopSpeed;
     public LayerMask collisions;
-    public LayerMask corruption;
-    public float corruptionAmbientMaxRange;
-    public float earSpacing;
-    public GameObject orientation;
 
-    public ScriptableEmitter[] emitters;
-
-    private StudioEventEmitter m_swing;
-    private StudioEventEmitter m_land;
-    private StudioEventEmitter m_footsteps;
-    private StudioEventEmitter m_corruption;
-
+    
     private Rigidbody m_rb;
     private bool grounded;
     private bool landed;
 
     private static float magnitude;
 
+    [Header("FMOD References")]
+    [EventRef] public string landing;
+    [EventRef] public string jumping;
+    [EventRef] public string footsteps;
+    public StudioEventEmitter swingingEmitter;
+
+    private EventInstance swingInstance;
+    private EventInstance landInstance;
+    private EventInstance jumpInstance;
+    private EventInstance footstepInstance;
+
+    private PauseManager pauseManager;
+
     void Start()
     {
-        m_swing = AudioUtilities.FindEmitter(emitters, "Swing");
-        m_land = AudioUtilities.FindEmitter(emitters, "Land");
-        m_footsteps = AudioUtilities.FindEmitter(emitters, "Footsteps");
-        m_corruption = AudioUtilities.FindEmitter(emitters, "Corruption");
-
+        pauseManager = FindObjectOfType<PauseManager>();
         m_rb = GetComponent<Rigidbody>();
 
         grounded = true;
         landed = true;
+
+        jumpInstance = RuntimeManager.CreateInstance(jumping);
+        footstepInstance = RuntimeManager.CreateInstance(footsteps);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, 1.5f, collisions)) grounded = true;
+        if (pauseManager.GetPaused()) swingingEmitter.Stop();
+        else if (!swingingEmitter.IsPlaying()) swingingEmitter.Play();
+        jumpInstance.set3DAttributes(RuntimeUtils.To3DAttributes(transform.position));
+        footstepInstance.set3DAttributes(RuntimeUtils.To3DAttributes(transform.position));
+
+
+        if (Physics.Raycast(transform.position, Vector3.down, 4f, collisions)) grounded = true;
         else grounded = false;
 
         if (grounded && !landed)
         {   
             landed = true;
-            m_land.Play();
+            landInstance = RuntimeManager.CreateInstance(landing);
+            landInstance.set3DAttributes(RuntimeUtils.To3DAttributes(transform.position));
+            landInstance.setParameterByName("parameter:/Player Magnitude", GetMagnitude());
+            landInstance.start();
         }
 
         landed = grounded;
 
-        if (grounded && landed && !m_footsteps.IsPlaying() && magnitude > 0.1f)
+        PLAYBACK_STATE footState;
+        footstepInstance.getPlaybackState(out footState);
+        if (grounded && landed && footState == PLAYBACK_STATE.STOPPED && magnitude > 0.1f)
         {
-            m_footsteps.Play();
+            footstepInstance.start();
+            Debug.Log("Starting footsteps");
         }
 
-        if (m_footsteps.IsPlaying() && (!grounded || magnitude < 0.1f))
+        if ((footState == PLAYBACK_STATE.PLAYING && (!grounded || magnitude < 0.1f)) || pauseManager.GetPaused())
         {
-            m_footsteps.Stop();
+            footstepInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            Debug.Log("stop footsteps");
         }
 
     }
 
     private void LateUpdate()
     {
-        magnitude = Mathf.Lerp(magnitude, m_rb.velocity.magnitude / PLAYER_TOP_SPEED, 0.1f);
+        magnitude = Mathf.Lerp(magnitude, m_rb.velocity.magnitude / playerTopSpeed, 0.1f);
         if (Input.GetKeyDown(KeyCode.M)) Debug.Log(magnitude);
-        m_swing.SetParameter("Magnitude", magnitude);
-        m_land.SetParameter("Magnitude", magnitude);
-        m_footsteps.SetParameter("Magnitude", magnitude);
-
-        //ambience
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, corruptionAmbientMaxRange, transform.forward, 1, corruption);
-        Transform nearestCorruptable = null;
-        foreach (RaycastHit hit in hits)
-        {
-            if (nearestCorruptable == null)
-            {
-                nearestCorruptable = hit.transform;
-                continue;
-            }
-
-            if (Vector3.Distance(hit.transform.position, transform.position) < Vector3.Distance(nearestCorruptable.position, transform.position))
-            {
-                nearestCorruptable = hit.transform;
-                continue;
-            }
-        }
-
-        if (nearestCorruptable != null)
-        {
-            m_corruption.SetParameter("Proximity", (corruptionAmbientMaxRange - Vector3.Distance(nearestCorruptable.position, transform.position)) / corruptionAmbientMaxRange);
-
-            Vector3 rightEar = transform.position + (orientation.transform.right * earSpacing);
-            Vector3 leftEar = transform.position + (orientation.transform.right * -earSpacing);
-
-            float earWeight = (Vector3.Distance(leftEar, nearestCorruptable.position) - 
-                Vector3.Distance(rightEar, nearestCorruptable.position));
-
-            m_corruption.SetParameter("Direction", earWeight * 50);
-
-        }
+        swingingEmitter.SetParameter("parameter:/Player Magnitude", magnitude);
     }
 
     public static float GetMagnitude()

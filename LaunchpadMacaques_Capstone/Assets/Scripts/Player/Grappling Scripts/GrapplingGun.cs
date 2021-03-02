@@ -118,8 +118,11 @@ public class GrapplingGun : MonoBehaviour
     [EventRef, SerializeField, Tooltip("Audio clip that plays when grapple is ended.")]
     private string grappleEnd;
 
-    private EventInstance grapplingInstance;
+    public StudioEventEmitter grapplingEmitter;
+    private PauseManager pauseManager;
 
+
+    [SerializeField] LayerMask groundDecalLayer;
 
     #endregion
 
@@ -201,6 +204,17 @@ public class GrapplingGun : MonoBehaviour
 
     #endregion
 
+    #region Shadow & Downwards Line Renferer
+    [Header("Grappling Shadow Settings")]
+
+    [SerializeField] [Tooltip("The Decal that will appear on the ground while the player is grappling. ")] GameObject groundDecal;
+    private GameObject thisDecal;
+    private bool displayShadow = false;
+
+    [SerializeField, Tooltip("The object with the grappling shadow line renderer. ")] private GameObject grapplingLrObj;
+    private LineRenderer grapplingLr;
+    #endregion 
+
     #region StartFunctions
     void Awake()
     {
@@ -220,8 +234,15 @@ public class GrapplingGun : MonoBehaviour
 
         playerRB = player.GetComponent<Rigidbody>();
 
-        grapplingInstance = RuntimeManager.CreateInstance(grappleActive);
         particlesStarted = false;
+
+        // Set up swinging decal objects
+        thisDecal = Instantiate(groundDecal);
+        thisDecal.SetActive(false);
+        displayShadow = false;
+
+        grapplingLr = grapplingLrObj.GetComponent<LineRenderer>();
+        grapplingLr.enabled = false;
     }
 
     private void SetTypeOfGrapple()
@@ -280,6 +301,8 @@ public class GrapplingGun : MonoBehaviour
     private void Start()
     {
         CheckBatman();
+
+        pauseManager = FindObjectOfType<PauseManager>();
     }
 
     private void CheckBatman()
@@ -296,6 +319,11 @@ public class GrapplingGun : MonoBehaviour
         CheckForGrapplingThroughWall();
 
         CheckToSeeIfTriggersHeldDown();
+
+        HoverShadow();
+
+        if (pauseManager.GetPaused() || !IsGrappling()) grapplingEmitter.Stop();
+        else if (!grapplingEmitter.IsPlaying()) grapplingEmitter.Play();
     }
 
     private void CheckToSeeIfTriggersHeldDown()
@@ -314,7 +342,6 @@ public class GrapplingGun : MonoBehaviour
 
     private void GrappleUpdateChanges()
     {
-        grapplingInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 
         if (IsGrappling() && joint)
         {
@@ -402,9 +429,9 @@ public class GrapplingGun : MonoBehaviour
             {
                 if (!passedGrapplePoint)
                 {
-                    player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity,currentMaxVelocity, 20);
+                    player.GetComponent<Rigidbody>().velocity = CustomClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity, 20);
                 }
-              
+
             }
 
             else
@@ -412,7 +439,7 @@ public class GrapplingGun : MonoBehaviour
                 //passedGrapplePoint = true;
                 player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity);
             }
-      
+
         }
 
         else if (actualMaxVelocity)
@@ -693,7 +720,7 @@ public class GrapplingGun : MonoBehaviour
             EventInstance beginGrappleInstance = RuntimeManager.CreateInstance(grappleStart);
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
-            grapplingInstance.start();
+            beginGrappleInstance.release();
         }
 
     }
@@ -704,11 +731,12 @@ public class GrapplingGun : MonoBehaviour
         {
             StartGrapplingSettings();
             BatmanGrapple();
-
+            
             EventInstance beginGrappleInstance = RuntimeManager.CreateInstance(grappleStart);
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
-            grapplingInstance.start();
+            beginGrappleInstance.release();
+            
         }
     }
 
@@ -806,7 +834,7 @@ public class GrapplingGun : MonoBehaviour
     {
         pulling = true;
         currentGrappledObj = hit.collider.gameObject;
-        hit.collider.isTrigger = true;
+        hit.collider.gameObject.GetComponent<BoxCollider>().isTrigger = true;
         yield return new WaitForEndOfFrame();
         float currentTime = 0;
 
@@ -938,7 +966,6 @@ public class GrapplingGun : MonoBehaviour
         StartCoroutine(PullCourtine(grappleRayHit));
     }
 
-
     public void StopGrappleInput()
     {
         if (CanFindGrappleLocation())
@@ -963,7 +990,7 @@ public class GrapplingGun : MonoBehaviour
 
             if (grappleRayHit.collider != null)
             {
-                grappleRayHit.collider.isTrigger = false;
+                grappleRayHit.collider.gameObject.GetComponent<BoxCollider>().isTrigger = false;
             }
 
 
@@ -1006,8 +1033,62 @@ public class GrapplingGun : MonoBehaviour
             EventInstance endGrappleInstance = RuntimeManager.CreateInstance(grappleEnd);
             endGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             endGrappleInstance.start();
-            grapplingInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            endGrappleInstance.release();
         }
+
+    }
+
+    /// <summary>
+    /// Handles the decal and the line renderer that appear under the player while they are grappling.
+    /// </summary>
+    private void HoverShadow()
+    {
+        // Set display shadow status if the player is swinging. Keep display shadow on until the player hits the ground again.
+        if (IsGrappling())
+        {
+            displayShadow = true;
+        }
+        else if (!IsGrappling() && playerMovementReference.GetGrounded())
+        {
+            displayShadow = false;
+        }
+
+        // Do not change the active status of the decal and line renderer if it is being changed to the same state. (e.g. Don't set it to true if it's already true).
+        if (!(thisDecal.activeSelf && displayShadow) || !(!thisDecal.activeSelf && !displayShadow))
+        {
+            thisDecal.SetActive(displayShadow);
+            grapplingLr.enabled = displayShadow;
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(gameObject.transform.position, Vector3.down, out hit, Mathf.Infinity, groundDecalLayer))
+        {
+            MoveDecal(hit);
+            MoveGrapplingShadowLineRenderer(grapplingLr, hit, grapplingLrObj.transform.position);
+        }
+    }
+
+    /// <summary>
+    /// Moves the passed in line renderer to the point a raycast hits from the passed in position.
+    /// </summary>
+    /// <param name="lineRenderer">The line renderer to move. </param>
+    /// <param name="info">The RaycastHit of the raycast to move the line renderer to. </param>
+    /// <param name="shootPos">The position to shoot the line renderer from. </param>
+    private void MoveGrapplingShadowLineRenderer(LineRenderer lineRenderer, RaycastHit info, Vector3 shootPos)
+    {
+        lineRenderer.positionCount = 2;
+        lineRenderer.SetPosition(0, shootPos);
+        lineRenderer.SetPosition(1, info.point);
+    }
+
+    /// <summary>
+    ///  Places a decal at a given location.
+    /// </summary>
+    /// <param name="info"></param>
+    private void MoveDecal(RaycastHit info)
+    {
+        thisDecal.transform.position = info.point;
+        thisDecal.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), info.normal);
 
     }
 
@@ -1161,5 +1242,8 @@ public class GrapplingGun : MonoBehaviour
         else if (sm < min * min) return v.normalized * min;
         return v;
     }
+    #endregion
+
+    #region Unity Callbacks
     #endregion
 }

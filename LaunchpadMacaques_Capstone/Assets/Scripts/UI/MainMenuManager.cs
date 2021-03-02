@@ -20,9 +20,6 @@ public class MainMenuManager : MonoBehaviour
     private GameObject mainMenu_Panel;
 
     [SerializeField]
-    private GameObject levelSelect_Panel;
-
-    [SerializeField]
     private List<GameObject> menuPanels = new List<GameObject>();
 
     public Animator anim;
@@ -30,12 +27,18 @@ public class MainMenuManager : MonoBehaviour
     {
 
         mainMenu_Panel.SetActive(true);
-        levelSelect_Panel.SetActive(false);
 
         Time.timeScale = 1;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         anim.Play("MainMenuBG");
+
+
+        if (HandleSaving.instance)
+        {
+            Destroy(HandleSaving.instance.gameObject);
+        }
+
     }
 
     private void Update()
@@ -66,7 +69,7 @@ public class MainMenuManager : MonoBehaviour
 
                             menuPanels[index].SetActive(false);
                             //eventSys.SetSelectedGameObject(null);
-                            mainMenu_Panel.SetActive(true);
+                            menuPanels[6].SetActive(true);
 
                             break;
 
@@ -102,28 +105,14 @@ public class MainMenuManager : MonoBehaviour
 
                             break;
 
-                        case "GameplayOptionsPanel":
-
+                        case "Save File Panel":
                             menuPanels[index].SetActive(false);
-                            //eventSys.SetSelectedGameObject(null);
-                            menuPanels[5].SetActive(true);
-
+                            mainMenu_Panel.SetActive(true);
                             break;
 
-                        case "VideoOptionsPanel":
-
+                        case "Start Game Panel":
                             menuPanels[index].SetActive(false);
-                           // eventSys.SetSelectedGameObject(null);
                             menuPanels[5].SetActive(true);
-
-                            break;
-
-                        case "AudioOptionsPanel":
-
-                            menuPanels[index].SetActive(false);
-                           // eventSys.SetSelectedGameObject(null);
-                            menuPanels[5].SetActive(true);
-
                             break;
 
                     }

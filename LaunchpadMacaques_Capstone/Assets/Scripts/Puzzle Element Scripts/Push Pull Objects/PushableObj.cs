@@ -62,6 +62,7 @@ public class PushableObj : MonoBehaviour
     private ParticleSystem.MinMaxCurve particleStartingSize;
     private PushPullObjects pushPull;
 
+    private ParticleTrigger Trigger;
     private GameObject outlineObj;
 
     private float cubeRadius;
@@ -81,6 +82,8 @@ public class PushableObj : MonoBehaviour
         pushPull = FindObjectOfType<PushPullObjects>();
         respawnRef = GetComponent<CubeRespawn>();
         CreateDecalAndLine();
+
+        Trigger = this.GetComponent<ParticleTrigger>();
 
         grav = this.GetComponent<Gravity>();
         cc = FindObjectOfType<CollectibleController>();
@@ -291,8 +294,10 @@ public class PushableObj : MonoBehaviour
                     MoveDecal(hit);
                     break;
                 }
-
-
+                else
+                {
+                    thisDecal.SetActive(false);
+                }
 
 
             }
@@ -497,6 +502,8 @@ public class PushableObj : MonoBehaviour
         if (onOff)
         {
             particles.Play();
+            Trigger.Trigger();
+            
         }
 
         else
@@ -535,7 +542,7 @@ public class PushableObj : MonoBehaviour
     /// <param name="enable"></param>
     public void EnableDisableOutline(bool enable)
     {
-        if (enable)
+        if (enable && pushPull.CanPickUpObjects())
         {
             outlineObj.GetComponent<Renderer>().enabled = true;
         }

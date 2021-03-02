@@ -21,7 +21,7 @@ public class ParticleTrigger : MonoBehaviour
     private GameObject landingParticlesObject;
     private bool onGround = false;
     private float absoluteVelocity;
-
+    private bool ready = false;
 
     // Start is called before the first frame update
     void Start()
@@ -51,7 +51,11 @@ public class ParticleTrigger : MonoBehaviour
             {
                 StartCoroutine(LandingParticles());
             }
-
+            else if(ready)
+            {
+                StartCoroutine(LandingParticles());
+                ready = false;
+            }
             //var main = LandingEffect.main;
             //main.startSpeed = (GetComponent<Rigidbody>().velocity.y * speedMultiplier);
             //LandingEffect.Simulate(0.0f, true, true);
@@ -59,6 +63,11 @@ public class ParticleTrigger : MonoBehaviour
             //LandingEffect.Stop();
             //LandingEffect.Play();
         }
+    }
+
+    public void Trigger()
+    {
+        ready = true;
     }
 
     private IEnumerator LandingParticles()

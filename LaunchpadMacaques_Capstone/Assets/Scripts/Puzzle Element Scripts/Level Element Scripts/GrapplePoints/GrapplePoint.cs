@@ -59,7 +59,8 @@ public class GrapplePoint : MonoBehaviour
     public void EnablePoint()
     {
         breaking = false;
-        this.gameObject.GetComponent<Collider>().enabled = true;
+        this.gameObject.GetComponent<BoxCollider>().enabled = true;
+        this.gameObject.GetComponent<SphereCollider>().enabled = true;
         this.gameObject.GetComponent<Renderer>().enabled = true;
 
         notGrappleableReference.UncorruptSingleObject(gameObject);
@@ -99,7 +100,8 @@ public class GrapplePoint : MonoBehaviour
         }
 
         // Disable this object. 
-        this.gameObject.GetComponent<Collider>().enabled = false;
+        this.gameObject.GetComponent<BoxCollider>().enabled = false;
+        this.gameObject.GetComponent<SphereCollider>().enabled = false;
         this.gameObject.GetComponent<Renderer>().enabled = false;
 
         // Reset breakTime back to its default value in the scenario that breakTime was changed. 
