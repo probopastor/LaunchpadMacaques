@@ -268,8 +268,8 @@ public class SettingsManager : MonoBehaviour
 
         else
         {
-            invertY.SetIsOnWithoutNotify(true);
-            SetInvertY(true);
+            invertY.SetIsOnWithoutNotify(false);
+            SetInvertY(false);
         }
     }
 

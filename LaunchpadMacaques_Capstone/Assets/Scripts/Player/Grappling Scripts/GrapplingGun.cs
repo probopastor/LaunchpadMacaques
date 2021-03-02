@@ -318,28 +318,11 @@ public class GrapplingGun : MonoBehaviour
         GrapplingInput();
         CheckForGrapplingThroughWall();
 
-        CheckToSeeIfTriggersHeldDown();
-
         HoverShadow();
 
         if (pauseManager.GetPaused() || !IsGrappling()) grapplingEmitter.Stop();
         else if (!grapplingEmitter.IsPlaying()) grapplingEmitter.Play();
     }
-
-    private void CheckToSeeIfTriggersHeldDown()
-    {
-
-        if (Input.GetAxis("Start Grapple") < 1 && holdingDownGrapple)
-        {
-            holdingDownGrapple = false;
-        }
-
-        if (Input.GetAxis("Start Grapple") > -1 && holdingDownStopGrapple)
-        {
-            holdingDownStopGrapple = false;
-        }
-    }
-
     private void GrappleUpdateChanges()
     {
 
@@ -545,28 +528,6 @@ public class GrapplingGun : MonoBehaviour
 
     #endregion
 
-    #region Explosion Settings
-    //adds explosion force to raycast point when called
-    void Explode()
-    {
-        print("Explode");
-        RaycastHit hit;
-        if (Physics.Raycast(cam.position, cam.forward, out hit, maxGrappleDistance, whatIsGrappleable))
-        {
-            Vector3 explosionPos = transform.position;
-            Collider[] colliders = Physics.OverlapSphere(explosionPos, explosionRadius);
-            foreach (Collider rbHit in colliders)
-            {
-                Rigidbody rb = rbHit.GetComponent<Rigidbody>();
-
-                if (rb != null)
-                {
-                    rb.AddExplosionForce(explosionPower, explosionPos, explosionRadius, 0.0f, ForceMode.Impulse);
-                }
-            }
-        }
-    }
-    #endregion
 
     #region Look For Grapple Location
     /// <summary>
@@ -847,10 +808,9 @@ public class GrapplingGun : MonoBehaviour
         Vector3 dir = (target - this.transform.position).normalized;
         playerRB.velocity = dir * startingSpeed;
 
-        while (Vector3.Distance(currentGrappledObj.transform.position, player.position) > 10 && currentTime < pullLength)
+        while (currentTime < pullLength)
         {
             playerRB.AddForce(dir * pullSpeed * Time.deltaTime, ForceMode.Impulse);
-            dir = (target - this.transform.position).normalized;
             currentTime += Time.deltaTime;
             yield return new WaitForSeconds(0);
         }
