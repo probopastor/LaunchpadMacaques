@@ -9315,8 +9315,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1947822024967688996}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 323.5535, y: -8.5, z: -34.66664}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 70.84039, y: 34.549988, z: 59.52416}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 229712723945304053}
@@ -28221,9 +28221,9 @@ MonoBehaviour:
   batmanEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1790872068382441553}
-        m_TargetAssemblyTypeName: PushPullObjects, Assembly-CSharp
-        m_MethodName: StopGrab
+      - m_Target: {fileID: 1790872068382441563}
+        m_TargetAssemblyTypeName: GrapplingGun, Assembly-CSharp
+        m_MethodName: BatmanGrappleInput
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -28233,9 +28233,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1790872068382441563}
-        m_TargetAssemblyTypeName: GrapplingGun, Assembly-CSharp
-        m_MethodName: BatmanGrappleInput
+  dropCubeEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1790872068382441553}
+        m_TargetAssemblyTypeName: PushPullObjects, Assembly-CSharp
+        m_MethodName: StopGrab
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
