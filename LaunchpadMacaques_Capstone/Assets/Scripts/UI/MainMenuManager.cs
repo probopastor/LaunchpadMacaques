@@ -69,7 +69,7 @@ public class MainMenuManager : MonoBehaviour
 
                             menuPanels[index].SetActive(false);
                             //eventSys.SetSelectedGameObject(null);
-                            menuPanels[6].SetActive(true);
+                            menuPanels[5].SetActive(true);
 
                             break;
 
@@ -77,7 +77,7 @@ public class MainMenuManager : MonoBehaviour
 
                             menuPanels[index].SetActive(false);
                             //eventSys.SetSelectedGameObject(null);
-                            menuPanels[1].SetActive(true);
+                            menuPanels[0].SetActive(true);
 
                             break;
 
@@ -112,7 +112,7 @@ public class MainMenuManager : MonoBehaviour
 
                         case "Start Game Panel":
                             menuPanels[index].SetActive(false);
-                            menuPanels[5].SetActive(true);
+                            menuPanels[4].SetActive(true);
                             break;
 
                     }
