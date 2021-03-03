@@ -50,7 +50,7 @@ public class PauseManager : MonoBehaviour
         gameWon = false;
         PauseCanvas.SetActive(false);
         //LoseCanvas.SetActive(false);
-        WinCanvas.SetActive(false);
+        //WinCanvas.SetActive(false);
         UICanvas.SetActive(true);
 
         if (InformationPostText != null)
@@ -70,7 +70,6 @@ public class PauseManager : MonoBehaviour
 
 
     }
-
 
 
     public void PauseInput()
@@ -175,6 +174,7 @@ public class PauseManager : MonoBehaviour
             Time.timeScale = 0;
 
             PauseCanvas.SetActive(true);
+          //  eventSystem.SetSelectedGameObject(resumeButton);
             CursorCanvas.SetActive(false);
 
 
@@ -193,6 +193,8 @@ public class PauseManager : MonoBehaviour
 
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+
+      
 
 
         }
@@ -215,6 +217,8 @@ public class PauseManager : MonoBehaviour
 
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+
+
         }
     }
 
