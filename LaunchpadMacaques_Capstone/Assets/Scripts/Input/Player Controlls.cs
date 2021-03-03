@@ -113,6 +113,14 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""StartBatman Grapple"",
+                    ""type"": ""Button"",
+                    ""id"": ""dfcc6911-f34f-4caf-92c2-b9e347252065"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -207,7 +215,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""003fe933-9e3f-4dd8-a97d-8585594e199c"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -218,7 +226,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""cff95999-9bae-475f-88ab-e3fcaf78bf1e"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
@@ -412,6 +420,28 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                     ""action"": ""Controller Back"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""494e8edc-3c8f-4c7c-b465-e477903c7847"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StartBatman Grapple"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0b413451-918f-4f15-9074-d9c1c3f80777"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StartBatman Grapple"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -432,6 +462,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
         m_GamePlay_Back = m_GamePlay.FindAction("Back", throwIfNotFound: true);
         m_GamePlay_Interact = m_GamePlay.FindAction("Interact", throwIfNotFound: true);
         m_GamePlay_ControllerBack = m_GamePlay.FindAction("Controller Back", throwIfNotFound: true);
+        m_GamePlay_StartBatmanGrapple = m_GamePlay.FindAction("StartBatman Grapple", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -493,6 +524,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
     private readonly InputAction m_GamePlay_Back;
     private readonly InputAction m_GamePlay_Interact;
     private readonly InputAction m_GamePlay_ControllerBack;
+    private readonly InputAction m_GamePlay_StartBatmanGrapple;
     public struct GamePlayActions
     {
         private @PlayerControlls m_Wrapper;
@@ -509,6 +541,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
         public InputAction @Back => m_Wrapper.m_GamePlay_Back;
         public InputAction @Interact => m_Wrapper.m_GamePlay_Interact;
         public InputAction @ControllerBack => m_Wrapper.m_GamePlay_ControllerBack;
+        public InputAction @StartBatmanGrapple => m_Wrapper.m_GamePlay_StartBatmanGrapple;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -554,6 +587,9 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                 @ControllerBack.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnControllerBack;
                 @ControllerBack.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnControllerBack;
                 @ControllerBack.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnControllerBack;
+                @StartBatmanGrapple.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnStartBatmanGrapple;
+                @StartBatmanGrapple.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnStartBatmanGrapple;
+                @StartBatmanGrapple.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnStartBatmanGrapple;
             }
             m_Wrapper.m_GamePlayActionsCallbackInterface = instance;
             if (instance != null)
@@ -594,6 +630,9 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                 @ControllerBack.started += instance.OnControllerBack;
                 @ControllerBack.performed += instance.OnControllerBack;
                 @ControllerBack.canceled += instance.OnControllerBack;
+                @StartBatmanGrapple.started += instance.OnStartBatmanGrapple;
+                @StartBatmanGrapple.performed += instance.OnStartBatmanGrapple;
+                @StartBatmanGrapple.canceled += instance.OnStartBatmanGrapple;
             }
         }
     }
@@ -612,5 +651,6 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
         void OnBack(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnControllerBack(InputAction.CallbackContext context);
+        void OnStartBatmanGrapple(InputAction.CallbackContext context);
     }
 }

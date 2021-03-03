@@ -692,12 +692,12 @@ public class GrapplingGun : MonoBehaviour
         {
             StartGrapplingSettings();
             BatmanGrapple();
-            
+
             EventInstance beginGrappleInstance = RuntimeManager.CreateInstance(grappleStart);
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
             beginGrappleInstance.release();
-            
+
         }
     }
 
@@ -928,14 +928,14 @@ public class GrapplingGun : MonoBehaviour
 
     public void StopGrappleInput()
     {
+        StopGrapple();
+    }
+
+    public void BatmanGrappleInput()
+    {
         if (CanFindGrappleLocation())
         {
             StartBatManGrapple();
-        }
-
-        else
-        {
-            StopGrapple();
         }
     }
     /// <summary>
