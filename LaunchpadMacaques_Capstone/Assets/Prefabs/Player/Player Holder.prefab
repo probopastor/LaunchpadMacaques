@@ -5491,6 +5491,7 @@ GameObject:
   - component: {fileID: 7880684068563497861}
   - component: {fileID: 7880684068563497860}
   - component: {fileID: 7880684068563497857}
+  - component: {fileID: 1259218193664350381}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -5708,6 +5709,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ListenerNumber: -1
+--- !u!114 &1259218193664350381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7880684068563497858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 0}
 --- !u!1 &7880684068596782851
 GameObject:
   m_ObjectHideFlags: 0
@@ -5756,9 +5774,9 @@ GameObject:
   - component: {fileID: 7880684068815890848}
   - component: {fileID: 7880684068815890849}
   - component: {fileID: 7880684068815890876}
+  - component: {fileID: 7582105618991414077}
   - component: {fileID: 9209580305524660373}
   - component: {fileID: 7709234657013800401}
-  - component: {fileID: 7582105618991414077}
   - component: {fileID: 4404003325946500984}
   m_Layer: 9
   m_Name: Player
@@ -5878,38 +5896,45 @@ MonoBehaviour:
   currentGravityText: {fileID: 0}
   playerCam: {fileID: 7880684068529821271}
   orientation: {fileID: 7880684069204234823}
-  moveSpeed: 4500
+  Completion: 000000000000
+  mouseAccerlationAmmount: 0.09
+  normalSpeedAmmount: 3.2
   airMoveSpeedMultiplier: 0.75
-  maxSpeed: 10
+  maxSpeed: 15
   grounded: 0
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8448
-  maxVelocity: 50
+  frictionlessMat: {fileID: 0}
+  maxVelocity: 70
   counterMovement: 0.175
   threshold: 0.01
   maxSlopeAngle: 50
   xFOVActivationVel: 15
   zFOVActivationVel: 15
-  yFOVActicationVel: 20
+  yFOVActicationVel: 15
   fovChangeRate: 15
-  minFOV: 60.75
   maxFOV: 70
-  maxFOVSpeedScale: 0.003
+  maxFOVSpeedScale: 0.00003
   xVelocityResetRange: 1
   yVelocityResetRange: 1
   zVelocityResetRange: 1
   lowVelocityDuration: 0.01
   jumpCooldown: 0.25
-  jumpForce: 400
+  jumpForce: 700
   gravity: -9.81
-  inAirGravity: -20
+  inAirGravity: -50
   grapplingGravity: -5
   grapplingResetGravity: -78.48
   sprintMultiplier: 1.75
   courtineDashAmmount: 500
   dashLength: 0.1
   dashCooldown: 1.5
+  minVelocityForScreenShake: 0
+  startingScreenShakeAmmount: 5
+  shakeAmmountVelocityScaling: 0.2
+  maxScreenShakeAmmount: 80
+  screenShakeLength: 0.1
   anim: {fileID: 2125406432066585191}
   _CachedSystem: {fileID: 4904157833975051812}
   emitParticles: 30
@@ -6003,9 +6028,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CollisionTag: 
-  Event: event:/Walking
+  Event: event:/Footsteps
   PlayEvent: 0
   StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &7582105618991414077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7880684068815890873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
@@ -6049,29 +6097,6 @@ MonoBehaviour:
   scaleAmount: 0.9
   leftFootPos: {fileID: 4887189289661250856}
   rightFootPos: {fileID: 8778899206465010495}
---- !u!114 &7582105618991414077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7880684068815890873}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  Event: event:/Corruption
-  PlayEvent: 0
-  StopEvent: 0
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
 --- !u!114 &4404003325946500984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6166,7 +6191,6 @@ GameObject:
   - component: {fileID: 7880684069554880038}
   - component: {fileID: 7880684069554880039}
   - component: {fileID: 7880684069554880032}
-  - component: {fileID: 7880684069554880041}
   - component: {fileID: 7880684069554880042}
   m_Layer: 0
   m_Name: Hand
@@ -6361,30 +6385,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2db3bcdbec063fc439e4e9bea7338987, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grappleToggleEnabledText: {fileID: 0}
-  grappleToggleDisabledText: {fileID: 0}
-  ropeLengthText: {fileID: 0}
   ejectPoint: {fileID: 7880684068596782850}
   cam: {fileID: 7880684068563497863}
   player: {fileID: 7880684068815890877}
   hitObject: {fileID: 1736345935115610924, guid: 0294f38c6695ef344b4efa4c29f1c223,
     type: 3}
-  currentSwingSpeedText: {fileID: 0}
-  actualVelocityText: {fileID: 0}
-  ropeLengthSlider: {fileID: 0}
   postText: {fileID: 0}
+  grapplesLeftTextBox: {fileID: 0}
   whatIsGrappleable:
     serializedVersion: 2
     m_Bits: 4352
   whatIsNotGrappleable:
     serializedVersion: 2
     m_Bits: 3639
-  maxGrappleDistance: 100
+  maxGrappleDistance: 70
   grappleSpeed: 10
-  minDistance: 0
-  maxDistance: 70
-  newSwingGrappleLength: 10
-  wheelSensitivity: 2
+  typeOfGrapple: 1
+  ropeLength: 15
   startingAttachSpeed: 20
   attachSpeedIncrease: 10
   springValue: 5
@@ -6392,9 +6409,17 @@ MonoBehaviour:
   springMass: 5
   minSwingAngle: -90
   maxSwingAngle: 90
-  swingSpeed: 4500
-  maxSwingVelocity: 18
-  useConstantVelocity: 0
+  swingSpeed: 4000
+  maxSwingVelocity: 60
+  pullSpeed: 400
+  maxPullVelocity: 80
+  pullLength: 0.5
+  minDistanceFromObject: 5
+  increaseAmmount: 5
+  minStartingVelocity: 25
+  mouseWheelSensitivity: 1
+  maxGrapples: 10
+  useMaxGrapples: 1
   sphereRadius: 4
   neededVelocityForAutoAim: 0
   groundCheckDistance: 5
@@ -6404,29 +6429,9 @@ MonoBehaviour:
   useVerticalMovementWhileGrappling: 1
   roundingRange: 0.2
   anim: {fileID: 2125406432066585191}
---- !u!114 &7880684069554880041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7880684069554880034}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  Event: event:/Grapple
-  PlayEvent: 0
-  StopEvent: 0
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
+  grappleStart: event:/Grapple
+  grappleActive: event:/Grappling
+  grappleEnd: event:/Grapple Break
 --- !u!114 &7880684069554880042
 MonoBehaviour:
   m_ObjectHideFlags: 0
