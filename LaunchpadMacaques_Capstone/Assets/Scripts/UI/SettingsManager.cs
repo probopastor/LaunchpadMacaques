@@ -52,6 +52,11 @@ public class SettingsManager : MonoBehaviour
 
     Resolution[] reslolutions;
 
+    private Animator transition;
+
+
+    ButtonTransitionManager transitionManager;
+
     // The Deafult variables the sliders will be set to, upon an ititial launch (Player has never played game before)
     #region Deafult Variables
     private int deafultGraphicsQuality = 1;
@@ -91,6 +96,8 @@ public class SettingsManager : MonoBehaviour
 
         }
 
+        transition = FindObjectOfType<ButtonTransitionManager>().GetComponent<Animator>();
+        transitionManager = FindObjectOfType<ButtonTransitionManager>();
     }
 
     public void UpdateGameplay()
@@ -635,37 +642,38 @@ public class SettingsManager : MonoBehaviour
 
     public void HandleEscapeKey()
     {
-
-        if (settingsHolder.activeSelf && SceneManager.GetActiveScene().name == "MainMenu")
+        if (settingsHolder.activeSelf && SceneManager.GetActiveScene().name == "MainMenu" && !transitionManager.IsInTransition())
         {
             FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-            if (optionsMenu.activeSelf )
+            if (optionsMenu.activeSelf)
             {
-                mainMenu.SetActive(true);
-                settingsHolder.SetActive(false);
+                transitionManager.enable = mainMenu;
+                transitionManager.disable = settingsHolder;
+                transitionManager.StartTransisiton();
             }
 
             else if (videoSettings.activeSelf)
             {
-                optionsMenu.SetActive(true);
-                videoSettings.SetActive(false);
+                transitionManager.enable = optionsMenu;
+                transitionManager.disable = videoSettings;
+                transitionManager.StartTransisiton();
             }
 
             else if (audioSettings.activeSelf)
             {
-                optionsMenu.SetActive(true);
-                audioSettings.SetActive(false);
+                transitionManager.enable = optionsMenu;
+                transitionManager.disable = audioSettings;
+                transitionManager.StartTransisiton();
             }
 
             else if (gameplaySettings.activeSelf)
             {
-                optionsMenu.SetActive(true);
-                gameplaySettings.SetActive(false);
+                transitionManager.enable = optionsMenu;
+                transitionManager.disable = gameplaySettings;
+                transitionManager.StartTransisiton();
             }
 
-            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
         }
-
 
     }
 

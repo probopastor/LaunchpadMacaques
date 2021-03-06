@@ -23,6 +23,8 @@ public class MainMenuManager : MonoBehaviour
     private List<GameObject> menuPanels = new List<GameObject>();
 
     public Animator anim;
+
+    private ButtonTransitionManager transitionManager;
     private void Start()
     {
 
@@ -39,12 +41,9 @@ public class MainMenuManager : MonoBehaviour
             Destroy(HandleSaving.instance.gameObject);
         }
 
+        transitionManager = FindObjectOfType<ButtonTransitionManager>();
     }
 
-    private void Update()
-    {
-        // EscapeKey();
-    }
 
     /// <summary>
     /// Handles the functionality for making the escape key back out of menus.
@@ -52,12 +51,9 @@ public class MainMenuManager : MonoBehaviour
     public void EscapeKey()
     {
         int index = 0;
-
-        EventSystem eventSys = FindObjectOfType<EventSystem>();
         for (index = 0; index <= menuPanels.Count - 1; index++)
 
         {
-      
             switch (menuPanels[index].activeSelf)
             {
 
@@ -66,61 +62,59 @@ public class MainMenuManager : MonoBehaviour
                     switch (menuPanels[index].name)
                     {
                         case "Level Select Page1":
-
-                            menuPanels[index].SetActive(false);
-                            //eventSys.SetSelectedGameObject(null);
-                            menuPanels[5].SetActive(true);
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = menuPanels[5];
+                            transitionManager.StartTransisiton();
 
                             break;
 
                         case "Level Select Page2":
-
-                            menuPanels[index].SetActive(false);
-                            //eventSys.SetSelectedGameObject(null);
-                            menuPanels[0].SetActive(true);
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = menuPanels[0];
+                            transitionManager.StartTransisiton();
 
                             break;
 
                         case "HowToPlay Panel":
-
-                            menuPanels[index].SetActive(false);
-                            eventSys.SetSelectedGameObject(null);
-                            mainMenu_Panel.SetActive(true);
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = mainMenu_Panel;
+                            transitionManager.StartTransisiton();
 
                             break;
 
                         case "Credits Panel":
-
-                            menuPanels[index].SetActive(false);
-                            //eventSys.SetSelectedGameObject(null);
-                            mainMenu_Panel.SetActive(true);
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = mainMenu_Panel;
+                            transitionManager.StartTransisiton();
 
                             break;
 
                         case "OptionsMenu":
-
-                            menuPanels[index].SetActive(false);
-                            //eventSys.SetSelectedGameObject(null);
-                            mainMenu_Panel.SetActive(true);
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = mainMenu_Panel;
+                            transitionManager.StartTransisiton();
 
                             break;
 
                         case "Save File Panel":
-                            menuPanels[index].SetActive(false);
-                            mainMenu_Panel.SetActive(true);
+
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = mainMenu_Panel;
+                            transitionManager.StartTransisiton();
                             break;
 
                         case "Start Game Panel":
-                            menuPanels[index].SetActive(false);
-                            menuPanels[4].SetActive(true);
+
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = menuPanels[4];
+                            transitionManager.StartTransisiton();
                             break;
 
                     }
 
-                    Debug.Log(eventSys.currentSelectedGameObject);
                     break;
 
-                    
+
             }
         }
     }

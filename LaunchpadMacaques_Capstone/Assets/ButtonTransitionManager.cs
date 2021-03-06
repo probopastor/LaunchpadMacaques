@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class ButtonTransitionManager : MonoBehaviour
 {
@@ -13,17 +14,17 @@ public class ButtonTransitionManager : MonoBehaviour
     public GameObject disable;
     public GameObject enable;
 
+    GameObject nextSelectedGameObject;
+    EventSystem eventSystem;
+
+    private bool inTransisiton = false;
+
 
     // Start is called before the first frame update
     void Start()
     {
         transition = GameObject.FindGameObjectWithTag("Transition").GetComponent<Animator>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        eventSystem = FindObjectOfType<EventSystem>();
     }
 
     public void AssignEnable(GameObject enableTarget)
@@ -36,15 +37,19 @@ public class ButtonTransitionManager : MonoBehaviour
         disable = disableTarget;
     }
 
-
-    public void SwitchPanel()
+    public void AssignCurrentSelected(GameObject selectedObject)
     {
-        StartCoroutine(Transition(disable, enable));
+        nextSelectedGameObject = selectedObject;
     }
 
     public void SwitchScene(string levelname)
     {
         StartCoroutine(LevelLoader(levelname));
+    }
+
+    public void SwitchScene()
+    {
+        StartCoroutine(LevelLoader(FindObjectOfType<StartGamePanel>().GetCorrectLevelName()));
     }
 
     IEnumerator LevelLoader(string levelName)
@@ -57,13 +62,35 @@ public class ButtonTransitionManager : MonoBehaviour
         SceneManager.LoadScene(levelName);
     }
 
-    IEnumerator Transition(GameObject disable, GameObject enable)
+
+
+    public void StartTransisiton()
     {
+        StartCoroutine(Transition());
+    }
+    private IEnumerator Transition()
+    {
+        inTransisiton = true;
         transition.SetTrigger("Start");
         yield return new WaitForSeconds(transitionLength);
         disable.SetActive(false);
         enable.SetActive(true);
+        if (nextSelectedGameObject != null)
+        {
+            eventSystem.SetSelectedGameObject(nextSelectedGameObject);
+        }
+
+        nextSelectedGameObject = null;
+        disable = null;
+        enable = null;
+
+        inTransisiton = false;
     }
 
+
+    public bool IsInTransition()
+    {
+        return inTransisiton;
+    }
 
 }
