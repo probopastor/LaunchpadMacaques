@@ -12,14 +12,18 @@ using UnityEngine.EventSystems;
 public class ButtonTransitionManager : MonoBehaviour
 {
     #region Inspector Variables
-    [SerializeField, Tooltip("Time to wait to start second half of panel changing transition. ")] private int panelTransitionLength = 1;
     [SerializeField, Tooltip("The Intro Transition that should play when this scene is loaded")] IntroTransitionTypes introTransition;
     [SerializeField, Tooltip("The Outro Transition that should be used before loading the next scene")] OutroTransistionTypes outroTransition;
+
+    [Header("Panel Transition Settings")]
+    [SerializeField, Tooltip("The Transitions that should be played between changing Main Menu Panels")] PanelTransitionTypes mainMenuPanelsTransitions;
+    [SerializeField, Tooltip("Time to wait to start second half of panel changing transition. ")] private int panelTransitionLength = 1;
     #endregion
-    
+
     #region Enums
     public enum IntroTransitionTypes { none, swipe };
     public enum OutroTransistionTypes { none, swipe };
+    public enum PanelTransitionTypes { none, swipe};
     #endregion
 
     [HideInInspector] public GameObject disable;
@@ -53,7 +57,7 @@ public class ButtonTransitionManager : MonoBehaviour
     {
         if (!inTransisiton)
         {
-            StartCoroutine(ExitFadeTransition(levelname));
+            StartCoroutine(ExitTransition(levelname));
         }
 
     }
@@ -65,7 +69,7 @@ public class ButtonTransitionManager : MonoBehaviour
     {
         if (!inTransisiton)
         {
-            StartCoroutine(ExitFadeTransition(FindObjectOfType<StartGamePanel>().GetCorrectLevelName()));
+            StartCoroutine(ExitTransition(FindObjectOfType<StartGamePanel>().GetCorrectLevelName()));
         }
 
     }
@@ -83,6 +87,9 @@ public class ButtonTransitionManager : MonoBehaviour
     #endregion
 
     #region Transitions/Transition Helpers
+
+
+    #region IntroTransition
     /// <summary>
     /// Handles Intro Transitions on a scene
     /// </summary>
@@ -95,24 +102,52 @@ public class ButtonTransitionManager : MonoBehaviour
                 break;
         }
     }
+    #endregion
+
+    #region Panel Transition
     /// <summary>
     /// Handles the panel swipe Coroutine
     /// </summary>
     /// <returns></returns>
     private IEnumerator PanelTransition()
     {
+        if(mainMenuPanelsTransitions != PanelTransitionTypes.none)
+        {
+            inTransisiton = true;
 
-        inTransisiton = true;
+            transition.StopPlayback();
 
-        transition.StopPlayback();
+            this.GetComponent<RectTransform>().position = startingPos;
 
-        this.GetComponent<RectTransform>().position = startingPos;
+            transition.SetTrigger(GetPanelTransitionTrigger());
+            yield return new WaitForSeconds(panelTransitionLength);
 
-        transition.SetTrigger("Swipe_Panel");
-        yield return new WaitForSeconds(panelTransitionLength);
+            ChangePanels();
+            inTransisiton = false;
+        }
 
-        ChangePanels();
-        inTransisiton = false;
+        else
+        {
+            ChangePanels();
+        }
+
+    }
+
+    /// <summary>
+    /// Returns the correct Triger String for panel transitions
+    /// </summary>
+    /// <returns></returns>
+    private string GetPanelTransitionTrigger()
+    {
+        string returnString = "";
+        switch (mainMenuPanelsTransitions)
+        {
+            case PanelTransitionTypes.swipe:
+                returnString = "Swipe_Panel";
+                break;
+        }
+
+        return returnString;
     }
 
 
@@ -134,12 +169,15 @@ public class ButtonTransitionManager : MonoBehaviour
         enable = null;
     }
 
+    #endregion
+
+    #region OutroTransition
     /// <summary>
     /// Handles the Exit Transition
     /// </summary>
     /// <param name="levelName"></param>
     /// <returns></returns>
-    IEnumerator ExitFadeTransition(string levelName)
+    IEnumerator ExitTransition(string levelName)
     {
         // Will Start A transition if one is selected
         if (outroTransition != OutroTransistionTypes.none)
@@ -200,6 +238,7 @@ public class ButtonTransitionManager : MonoBehaviour
 
         return triggerName;
     }
+    #endregion
 
     #endregion
 
