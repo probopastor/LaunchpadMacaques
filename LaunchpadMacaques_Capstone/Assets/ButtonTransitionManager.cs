@@ -52,6 +52,12 @@ public class ButtonTransitionManager : MonoBehaviour
         StartCoroutine(LevelLoader(FindObjectOfType<StartGamePanel>().GetCorrectLevelName()));
     }
 
+    public void EndOfLevelSwitchScene(string sceneName)
+    {
+        // StopAllCoroutines();
+        StartCoroutine(ExitFadeTransition(sceneName));
+    }
+
     IEnumerator LevelLoader(string levelName)
     {
         transition.SetTrigger("Start");
@@ -85,6 +91,18 @@ public class ButtonTransitionManager : MonoBehaviour
         enable = null;
 
         inTransisiton = false;
+    }
+
+    IEnumerator ExitFadeTransition(string levelName)
+    {
+        AsyncOperation async = SceneManager.LoadSceneAsync(levelName);
+        async.allowSceneActivation = false;
+        transition.SetTrigger("Exit_Status");
+        Debug.Log((transition.GetCurrentAnimatorStateInfo(0).length));
+        yield return new WaitForSeconds(transition.GetCurrentAnimatorStateInfo(0).length - .1f);
+
+        async.allowSceneActivation = true;
+    
     }
 
 
