@@ -8,6 +8,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ButtonTransitionManager : MonoBehaviour
 {
@@ -17,13 +18,13 @@ public class ButtonTransitionManager : MonoBehaviour
 
     [Header("Panel Transition Settings")]
     [SerializeField, Tooltip("The Transitions that should be played between changing Main Menu Panels")] PanelTransitionTypes mainMenuPanelsTransitions;
-    [SerializeField, Tooltip("Time to wait to start second half of panel changing transition. ")] private int panelTransitionLength = 1;
+    [SerializeField, Tooltip("Time to wait to start second half of panel changing transition. ")] private float panelTransitionLength = 1;
     #endregion
 
     #region Enums
-    public enum IntroTransitionTypes { none, swipe };
-    public enum OutroTransistionTypes { none, swipe };
-    public enum PanelTransitionTypes { none, swipe};
+    public enum IntroTransitionTypes { none, swipe, FadeIn };
+    public enum OutroTransistionTypes { none, swipe, FadeOut };
+    public enum PanelTransitionTypes { none, swipe };
     #endregion
 
     [HideInInspector] public GameObject disable;
@@ -100,6 +101,9 @@ public class ButtonTransitionManager : MonoBehaviour
             case IntroTransitionTypes.swipe:
                 transition.SetTrigger("Swipe_In");
                 break;
+            case IntroTransitionTypes.FadeIn:
+                transition.SetTrigger("Fade_In");
+                break;
         }
     }
     #endregion
@@ -111,15 +115,15 @@ public class ButtonTransitionManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PanelTransition()
     {
-        if(mainMenuPanelsTransitions != PanelTransitionTypes.none)
+        if (mainMenuPanelsTransitions != PanelTransitionTypes.none)
         {
             inTransisiton = true;
 
             transition.StopPlayback();
 
-            this.GetComponent<RectTransform>().position = startingPos;
+            string triggerName = GetPanelTransitionTrigger();
+            transition.SetTrigger(triggerName);
 
-            transition.SetTrigger(GetPanelTransitionTrigger());
             yield return new WaitForSeconds(panelTransitionLength);
 
             ChangePanels();
@@ -144,9 +148,9 @@ public class ButtonTransitionManager : MonoBehaviour
         {
             case PanelTransitionTypes.swipe:
                 returnString = "Swipe_Panel";
+                this.GetComponent<RectTransform>().position = startingPos;
                 break;
         }
-
         return returnString;
     }
 
@@ -233,6 +237,10 @@ public class ButtonTransitionManager : MonoBehaviour
             case OutroTransistionTypes.swipe:
                 transition.SetTrigger("Exit_Status");
                 triggerName = "Exit_Status";
+                break;
+            case OutroTransistionTypes.FadeOut:
+                transition.SetTrigger("Fade_Out");
+                triggerName = "Fade_Out";
                 break;
         }
 

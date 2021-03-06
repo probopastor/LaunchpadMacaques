@@ -873,6 +873,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2409314869535637150, guid: bc2a666f9d6531741a11865afe280aef,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -1817
+      objectReference: {fileID: 0}
     - target: {fileID: 2806554536889482242, guid: bc2a666f9d6531741a11865afe280aef,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -998,6 +1003,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TransitionCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 7205428877245882322, guid: bc2a666f9d6531741a11865afe280aef,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8969457694586111437, guid: bc2a666f9d6531741a11865afe280aef, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bc2a666f9d6531741a11865afe280aef, type: 3}
@@ -1019,8 +1029,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 879d9b1c55b19724f98ec896242c720a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  introTransition: 1
-  outroTransition: 1
+  introTransition: 2
+  outroTransition: 2
   mainMenuPanelsTransitions: 1
   panelTransitionLength: 1
   disable: {fileID: 0}
@@ -17110,12 +17120,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1756370681}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1760690048 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7081044735007044643, guid: 05636b887903cda4c8620310557feabf,
-    type: 3}
-  m_PrefabInstance: {fileID: 176611068560506530}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1771767038
 GameObject:
   m_ObjectHideFlags: 0
@@ -21870,7 +21874,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 1760690048}
+      objectReference: {fileID: 2051194146}
     - target: {fileID: 7081044735007044641, guid: 05636b887903cda4c8620310557feabf,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
