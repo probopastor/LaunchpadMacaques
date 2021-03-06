@@ -125,11 +125,6 @@ public class SettingsManager : MonoBehaviour
         InitialColorblindMode();
     }
 
-    private void Update()
-    {
-        //HandleEscapeKey();
-    }
-
     private void DisableStuff()
     {
 

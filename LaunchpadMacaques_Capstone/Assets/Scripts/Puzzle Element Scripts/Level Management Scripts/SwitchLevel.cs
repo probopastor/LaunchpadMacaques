@@ -40,7 +40,7 @@ public class SwitchLevel : MonoBehaviour
     {
         player.SetPlayerCanMove(false);
         FindObjectOfType<HandleSaving>().LevelCompleted();
-        FindObjectOfType<ButtonTransitionManager>().EndOfLevelSwitchScene(nextLevelName);
+        FindObjectOfType<ButtonTransitionManager>().SwitchScene(nextLevelName);
         
     }
 }
