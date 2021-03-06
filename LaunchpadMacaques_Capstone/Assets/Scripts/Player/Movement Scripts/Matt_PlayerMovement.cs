@@ -202,6 +202,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private bool dashUnlocked = false;
 
+    private bool playerCanMove = true;
+
     ParticleSystem system
     {
         get

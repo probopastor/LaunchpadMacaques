@@ -7,12 +7,12 @@ using UnityEngine.EventSystems;
 public class ButtonTransitionManager : MonoBehaviour
 {
 
-    [SerializeField, Tooltip("Animator for transitions. ")] private Animator transition;
+    private Animator transition;
 
     [SerializeField, Tooltip("Time to wait to start second half of transition. ")] private int transitionLength = 1;
 
-    public GameObject disable;
-    public GameObject enable;
+    [HideInInspector] public GameObject disable;
+    [HideInInspector] public GameObject enable;
 
     GameObject nextSelectedGameObject;
     EventSystem eventSystem;
