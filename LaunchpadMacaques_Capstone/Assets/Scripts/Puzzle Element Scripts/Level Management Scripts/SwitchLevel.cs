@@ -5,12 +5,7 @@
 * Handles basic scene and level switching when triggering a set object. 
 */
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
-
 
 public class SwitchLevel : MonoBehaviour
 {

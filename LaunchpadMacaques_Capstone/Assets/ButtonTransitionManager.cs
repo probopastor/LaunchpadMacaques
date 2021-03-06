@@ -1,35 +1,38 @@
 ﻿/*
 * Launchpad Macaques - Neon Oblivion
-* Levi Schoof Jamey Colleen
+* Levi Schoof, Jamey Colleen
 * ButtonTransitionManager.cs
 * Handles Screen Transistions
 */
-
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 
 public class ButtonTransitionManager : MonoBehaviour
 {
-
-    [SerializeField, Tooltip("Time to wait to start second half of transition. ")] private int transitionLength = 1;
+    #region Inspector Variables
+    [SerializeField, Tooltip("Time to wait to start second half of panel changing transition. ")] private int panelTransitionLength = 1;
     [SerializeField, Tooltip("The Intro Transition that should play when this scene is loaded")] IntroTransitionTypes introTransition;
     [SerializeField, Tooltip("The Outro Transition that should be used before loading the next scene")] OutroTransistionTypes outroTransition;
+    #endregion
+    
+    #region Enums
+    public enum IntroTransitionTypes { none, swipe };
+    public enum OutroTransistionTypes { none, swipe };
+    #endregion
 
     [HideInInspector] public GameObject disable;
     [HideInInspector] public GameObject enable;
 
+    #region Private Variables
     GameObject nextSelectedGameObject;
     EventSystem eventSystem;
 
     private bool inTransisiton = false;
     private Animator transition;
-
-    public enum IntroTransitionTypes { none, swipe };
-    public enum OutroTransistionTypes { swipe };
     Vector3 startingPos;
+    #endregion
 
 
     private void Awake()
@@ -40,21 +43,8 @@ public class ButtonTransitionManager : MonoBehaviour
         IntroTransition();
     }
 
-    /// <summary>
-    /// Handles Intro Transitions on a scene
-    /// </summary>
-    private void IntroTransition()
-    {
-        switch (introTransition)
-        {
-            case IntroTransitionTypes.swipe:
-                transition.SetTrigger("Swipe_In");
-                break;
-        }
-    }
 
-
-
+    #region Public Start Transition Methods
     /// <summary>
     /// Will load the given scene using a Transition
     /// </summary>
@@ -71,7 +61,7 @@ public class ButtonTransitionManager : MonoBehaviour
     /// <summary>
     /// Will load the correct opening scene Tutorial/Hub
     /// </summary>
-    public void SwitchScene()
+    public void StartGame()
     {
         if (!inTransisiton)
         {
@@ -90,14 +80,28 @@ public class ButtonTransitionManager : MonoBehaviour
             StartCoroutine(PanelTransition());
         }
     }
+    #endregion
 
+    #region Transitions/Transition Helpers
+    /// <summary>
+    /// Handles Intro Transitions on a scene
+    /// </summary>
+    private void IntroTransition()
+    {
+        switch (introTransition)
+        {
+            case IntroTransitionTypes.swipe:
+                transition.SetTrigger("Swipe_In");
+                break;
+        }
+    }
     /// <summary>
     /// Handles the panel swipe Coroutine
     /// </summary>
     /// <returns></returns>
     private IEnumerator PanelTransition()
     {
- 
+
         inTransisiton = true;
 
         transition.StopPlayback();
@@ -105,9 +109,18 @@ public class ButtonTransitionManager : MonoBehaviour
         this.GetComponent<RectTransform>().position = startingPos;
 
         transition.SetTrigger("Swipe_Panel");
-        yield return new WaitForSeconds(transitionLength);
+        yield return new WaitForSeconds(panelTransitionLength);
+
+        ChangePanels();
+        inTransisiton = false;
+    }
 
 
+    /// <summary>
+    /// Will Enable and Disable the correct panel objects
+    /// </summary>
+    private void ChangePanels()
+    {
         disable.SetActive(false);
         enable.SetActive(true);
 
@@ -116,15 +129,9 @@ public class ButtonTransitionManager : MonoBehaviour
             eventSystem.SetSelectedGameObject(nextSelectedGameObject);
         }
 
-
-
         nextSelectedGameObject = null;
         disable = null;
         enable = null;
-
-        inTransisiton = false;
-
-
     }
 
     /// <summary>
@@ -134,37 +141,67 @@ public class ButtonTransitionManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator ExitFadeTransition(string levelName)
     {
-        inTransisiton = true;
-        Time.timeScale = 1;
-        AsyncOperation async = SceneManager.LoadSceneAsync(levelName);
-        async.allowSceneActivation = false;
-        transition.ResetTrigger("Exit_Status");
+        // Will Start A transition if one is selected
+        if (outroTransition != OutroTransistionTypes.none)
+        {
+            inTransisiton = true;
+            Time.timeScale = 1;
 
+            // Starts loading the next scene, but stops it from fully loading
+            AsyncOperation async = SceneManager.LoadSceneAsync(levelName);
+            async.allowSceneActivation = false;
+
+            // Finds the trigger the chosen outro is supposed to use
+            string triggerName = FindOutroTriggerString();
+
+            // Starts the outro animation and gets a reference to it
+            transition.SetTrigger(triggerName);
+            AnimatorClipInfo[] anim = transition.GetCurrentAnimatorClipInfo(0);
+
+            // A fix to handle if the animation is not started upon first clicking button
+            while (anim.Length < 1)
+            {
+                transition.SetTrigger(triggerName);
+                anim = transition.GetCurrentAnimatorClipInfo(0);
+                yield return null;
+            }
+
+            // Will wait until 75 percent of the animation is done
+            yield return new WaitForSecondsRealtime(anim[0].clip.length * .75f);
+
+            // Allows the next scene to be loaded
+            async.allowSceneActivation = true;
+            inTransisiton = false;
+        }
+
+        // If no outro is selected, will just load the next scene
+        else
+        {
+            SceneManager.LoadScene(levelName);
+        }
+
+
+    }
+
+    /// <summary>
+    /// Will Return the correct Trigger String for the outro animation
+    /// </summary>
+    /// <returns></returns>
+    private string FindOutroTriggerString()
+    {
+        string triggerName = "";
         switch (outroTransition)
         {
             case OutroTransistionTypes.swipe:
                 transition.SetTrigger("Exit_Status");
+                triggerName = "Exit_Status";
                 break;
         }
 
-        yield return new WaitForEndOfFrame();
-
-        AnimatorClipInfo[] anim = transition.GetCurrentAnimatorClipInfo(0);
-
-        while (anim.Length < 1)
-        {
-            transition.SetTrigger("Exit_Status");
-            anim = transition.GetCurrentAnimatorClipInfo(0);
-            yield return null;
-        }
-
-        yield return new WaitForSecondsRealtime(anim[0].clip.length * .75f);
-
-        async.allowSceneActivation = true;
-        inTransisiton = false;
-
+        return triggerName;
     }
 
+    #endregion
 
     #region Getters/Setters
     /// <summary>
