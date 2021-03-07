@@ -5,6 +5,7 @@
 * Handles Screen Transistions
 */
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
@@ -48,6 +49,8 @@ public class ButtonTransitionManager : MonoBehaviour
     MainMenuManager mainMenu;
 
     SettingsManager settings;
+
+    List<GameObject> useTransitionOnBack;
     #endregion
 
 
@@ -59,6 +62,7 @@ public class ButtonTransitionManager : MonoBehaviour
         IntroTransition();
         mainMenu = FindObjectOfType<MainMenuManager>();
         settings = FindObjectOfType<SettingsManager>();
+        useTransitionOnBack = new List<GameObject>();
     }
 
 
@@ -109,19 +113,34 @@ public class ButtonTransitionManager : MonoBehaviour
             ChangePanels();
         }
 
-        if (useTransition && mainMenu)
+        if (useTransition)
         {
             if (mainMenu)
             {
                 mainMenu.SetUseEscapeTransition(enable.name);
             }
 
-            if(settings && useTransition)
+            if(settings)
             {
                 settings.SetTransitionObject(enable);
             }
-   
+
+            useTransitionOnBack.Add(enable);
         }
+        StartCoroutine(PanelTransition(useTransition));
+    }
+
+    public void BackButton()
+    {
+       bool useTransition = false;
+        for (int i = 0; i < useTransitionOnBack.Count; i++)
+        {
+            if (disable == useTransitionOnBack[i])
+            {
+                useTransition = true;
+            }
+        }
+
         StartCoroutine(PanelTransition(useTransition));
     }
     #endregion
