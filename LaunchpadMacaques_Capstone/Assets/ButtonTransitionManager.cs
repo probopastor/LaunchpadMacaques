@@ -44,6 +44,10 @@ public class ButtonTransitionManager : MonoBehaviour
     private bool inTransisiton = false;
     private Animator transition;
     Vector3 startingPos;
+
+    MainMenuManager mainMenu;
+
+    SettingsManager settings;
     #endregion
 
 
@@ -53,6 +57,8 @@ public class ButtonTransitionManager : MonoBehaviour
         eventSystem = FindObjectOfType<EventSystem>();
         startingPos = this.GetComponent<RectTransform>().position;
         IntroTransition();
+        mainMenu = FindObjectOfType<MainMenuManager>();
+        settings = FindObjectOfType<SettingsManager>();
     }
 
 
@@ -95,7 +101,7 @@ public class ButtonTransitionManager : MonoBehaviour
     /// <summary>
     /// Will Start the swipe transition between panels
     /// </summary>
-    public void StartTransisiton()
+    public void StartTransisiton(bool useTransition = true)
     {
         if (inTransisiton)
         {
@@ -103,7 +109,20 @@ public class ButtonTransitionManager : MonoBehaviour
             ChangePanels();
         }
 
-        StartCoroutine(PanelTransition());
+        if (useTransition && mainMenu)
+        {
+            if (mainMenu)
+            {
+                mainMenu.SetUseEscapeTransition(enable.name);
+            }
+
+            if(settings && useTransition)
+            {
+                settings.SetTransitionObject(enable);
+            }
+   
+        }
+        StartCoroutine(PanelTransition(useTransition));
     }
     #endregion
 
@@ -134,12 +153,12 @@ public class ButtonTransitionManager : MonoBehaviour
     /// Handles the panel swipe Coroutine
     /// </summary>
     /// <returns></returns>
-    private IEnumerator PanelTransition()
+    private IEnumerator PanelTransition(bool useTransition)
     {
         previousEnable = enable;
         previousDisable = disable;
         previousSelectObject = nextSelectedGameObject;
-        if (mainMenuPanelsTransitions != PanelTransitionTypes.none)
+        if (mainMenuPanelsTransitions != PanelTransitionTypes.none && useTransition)
         {
             inTransisiton = true;
             yield return null;

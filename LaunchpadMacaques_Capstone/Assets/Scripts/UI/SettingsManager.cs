@@ -57,6 +57,9 @@ public class SettingsManager : MonoBehaviour
 
     ButtonTransitionManager transitionManager;
 
+
+    List<GameObject> useTransitionObjects;
+
     // The Deafult variables the sliders will be set to, upon an ititial launch (Player has never played game before)
     #region Deafult Variables
     private int deafultGraphicsQuality = 1;
@@ -73,6 +76,7 @@ public class SettingsManager : MonoBehaviour
     #endregion
     void Start()
     {
+        useTransitionObjects = new List<GameObject>();
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             settingsHolder.SetActive(true);
@@ -644,30 +648,38 @@ public class SettingsManager : MonoBehaviour
             {
                 transitionManager.enable = mainMenu;
                 transitionManager.disable = settingsHolder;
-                transitionManager.StartTransisiton();
             }
 
             else if (videoSettings.activeSelf)
             {
                 transitionManager.enable = optionsMenu;
                 transitionManager.disable = videoSettings;
-                transitionManager.StartTransisiton();
             }
 
             else if (audioSettings.activeSelf)
             {
                 transitionManager.enable = optionsMenu;
                 transitionManager.disable = audioSettings;
-                transitionManager.StartTransisiton();
             }
 
             else if (gameplaySettings.activeSelf)
             {
                 transitionManager.enable = optionsMenu;
                 transitionManager.disable = gameplaySettings;
-                transitionManager.StartTransisiton();
             }
 
+
+            bool useTransition = false;
+
+            for(int i = 0; i < useTransitionObjects.Count; i++)
+            {
+                if(transitionManager.disable == useTransitionObjects[i])
+                {
+                    useTransition = true;
+                }
+            }
+
+            transitionManager.StartTransisiton(useTransition);
         }
 
     }
@@ -685,4 +697,11 @@ public class SettingsManager : MonoBehaviour
             return false;
         }
     }
+
+    public void SetTransitionObject(GameObject newObject)
+    {
+        useTransitionObjects.Add(newObject);
+    }
+
+
 }
