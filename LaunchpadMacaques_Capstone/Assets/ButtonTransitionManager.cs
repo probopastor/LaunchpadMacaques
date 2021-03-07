@@ -306,6 +306,7 @@ public class ButtonTransitionManager : MonoBehaviour
         else
         {
             FindObjectOfType<RespawnSystem>().RespawnPlayer();
+            FindObjectOfType<RespawnSystem>().PlayerCanMove();
         }
     }
 
