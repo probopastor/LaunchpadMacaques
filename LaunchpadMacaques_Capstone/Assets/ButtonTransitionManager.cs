@@ -208,8 +208,16 @@ public class ButtonTransitionManager : MonoBehaviour
     /// </summary>
     private void ChangePanels()
     {
-        previousDisable.SetActive(false);
-        previousEnable.SetActive(true);
+        if (previousDisable)
+        {
+            previousDisable.SetActive(false);
+        }
+
+        if (previousEnable)
+        {
+            previousEnable.SetActive(true);
+        }
+
 
         if (previousSelectObject)
         {
@@ -237,10 +245,6 @@ public class ButtonTransitionManager : MonoBehaviour
             inTransisiton = true;
             Time.timeScale = 1;
 
-            // Starts loading the next scene, but stops it from fully loading
-            AsyncOperation async = SceneManager.LoadSceneAsync(levelName);
-            async.allowSceneActivation = false;
-
             // Finds the trigger the chosen outro is supposed to use
             string triggerName = FindOutroTriggerString();
 
@@ -257,10 +261,10 @@ public class ButtonTransitionManager : MonoBehaviour
             }
 
             // Will wait until 75 percent of the animation is done
-            yield return new WaitForSecondsRealtime((anim[0].clip.length * (1 /transition.GetCurrentAnimatorStateInfo(0).speed)) * .95f);
+            yield return new WaitForSecondsRealtime((anim[0].clip.length * (1 / transition.GetCurrentAnimatorStateInfo(0).speed)));
 
-            // Allows the next scene to be loaded
-            async.allowSceneActivation = true;
+
+            SceneManager.LoadScene(levelName);
             inTransisiton = false;
         }
 
@@ -332,7 +336,7 @@ public class ButtonTransitionManager : MonoBehaviour
                 yield return null;
             }
 
-            yield return new WaitForSecondsRealtime((anim[0].clip.length * ( 1/ transition.GetCurrentAnimatorStateInfo(0).speed)) * .5f);
+            yield return new WaitForSecondsRealtime((anim[0].clip.length * (1 / transition.GetCurrentAnimatorStateInfo(0).speed)) * .5f);
 
             FindObjectOfType<RespawnSystem>().PlayerCanMove();
             inTransisiton = false;
