@@ -1159,6 +1159,10 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
+    public bool CanPlayerMove()
+    {
+        return canMove;
+    }
 
 
 }

@@ -15,6 +15,7 @@ public class ButtonTransitionManager : MonoBehaviour
     #region Inspector Variables
     [SerializeField, Tooltip("The Intro Transition that should play when this scene is loaded")] IntroTransitionTypes introTransition;
     [SerializeField, Tooltip("The Outro Transition that should be used before loading the next scene")] OutroTransistionTypes outroTransition;
+    [SerializeField, Tooltip("The Transition that will be used when the player respawns")] RespawnTransitionTypes respawnTransition;
 
     [Header("Panel Transition Settings")]
     [SerializeField, Tooltip("The Transitions that should be played between changing Main Menu Panels")] PanelTransitionTypes mainMenuPanelsTransitions;
@@ -25,6 +26,8 @@ public class ButtonTransitionManager : MonoBehaviour
     public enum IntroTransitionTypes { none, swipe, FadeIn };
     public enum OutroTransistionTypes { none, swipe, FadeOut };
     public enum PanelTransitionTypes { none, swipe };
+
+    public enum RespawnTransitionTypes { none, swipe }
     #endregion
 
     [HideInInspector] public GameObject disable;
@@ -50,6 +53,16 @@ public class ButtonTransitionManager : MonoBehaviour
 
 
     #region Public Start Transition Methods
+
+
+    public void RespawnPlayerTranstion()
+    {
+        if (!inTransisiton)
+        {
+            StartCoroutine(RespawnTransition());
+        }
+
+    }
     /// <summary>
     /// Will load the given scene using a Transition
     /// </summary>
@@ -209,7 +222,7 @@ public class ButtonTransitionManager : MonoBehaviour
             }
 
             // Will wait until 75 percent of the animation is done
-            yield return new WaitForSecondsRealtime(anim[0].clip.length * .75f);
+            yield return new WaitForSecondsRealtime(anim[0].clip.length * .95f);
 
             // Allows the next scene to be loaded
             async.allowSceneActivation = true;
@@ -224,6 +237,7 @@ public class ButtonTransitionManager : MonoBehaviour
 
 
     }
+
 
     /// <summary>
     /// Will Return the correct Trigger String for the outro animation
@@ -241,6 +255,68 @@ public class ButtonTransitionManager : MonoBehaviour
             case OutroTransistionTypes.FadeOut:
                 transition.SetTrigger("Fade_Out");
                 triggerName = "Fade_Out";
+                break;
+        }
+
+        return triggerName;
+    }
+
+    IEnumerator RespawnTransition()
+    {
+        // Will Start A transition if one is selected
+        if (respawnTransition != RespawnTransitionTypes.none)
+        {
+            inTransisiton = true;
+            Time.timeScale = 1; ;
+
+            // Finds the trigger the chosen outro is supposed to use
+            string triggerName = FindTransitionTriggerString();
+
+            // Starts the outro animation and gets a reference to it
+            transition.SetTrigger(triggerName);
+            AnimatorClipInfo[] anim = transition.GetCurrentAnimatorClipInfo(0);
+
+            // A fix to handle if the animation is not started upon first clicking button
+            while (anim.Length < 1)
+            {
+                transition.SetTrigger(triggerName);
+                anim = transition.GetCurrentAnimatorClipInfo(0);
+                yield return null;
+            }
+
+            // Will wait until 75 percent of the animation is done
+            yield return new WaitForSecondsRealtime(anim[0].clip.length);
+
+            FindObjectOfType<RespawnSystem>().RespawnPlayer();
+            yield return null;
+
+            anim = transition.GetCurrentAnimatorClipInfo(0);
+            while (anim.Length < 1)
+            {
+                anim = transition.GetCurrentAnimatorClipInfo(0);
+                yield return null;
+            }
+
+            yield return new WaitForSecondsRealtime(anim[0].clip.length * .5f);
+
+            FindObjectOfType<RespawnSystem>().PlayerCanMove();
+            inTransisiton = false;
+        }
+
+        else
+        {
+            FindObjectOfType<RespawnSystem>().RespawnPlayer();
+        }
+    }
+
+    private string FindTransitionTriggerString()
+    {
+        string triggerName = "";
+        switch (respawnTransition)
+        {
+            case RespawnTransitionTypes.swipe:
+                transition.SetTrigger("Swipe_Respawn");
+                triggerName = "Swipe_Respawn";
                 break;
         }
 
