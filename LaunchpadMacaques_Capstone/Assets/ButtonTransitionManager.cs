@@ -19,7 +19,6 @@ public class ButtonTransitionManager : MonoBehaviour
 
     [Header("Panel Transition Settings")]
     [SerializeField, Tooltip("The Transitions that should be played between changing Main Menu Panels")] PanelTransitionTypes mainMenuPanelsTransitions;
-    [SerializeField, Tooltip("Time to wait to start second half of panel changing transition. ")] private float panelTransitionLength = 1;
     #endregion
 
     #region Enums
@@ -32,6 +31,11 @@ public class ButtonTransitionManager : MonoBehaviour
 
     [HideInInspector] public GameObject disable;
     [HideInInspector] public GameObject enable;
+
+
+    private GameObject previousEnable;
+    private GameObject previousDisable;
+    private GameObject previousSelectObject;
 
     #region Private Variables
     GameObject nextSelectedGameObject;
@@ -93,10 +97,13 @@ public class ButtonTransitionManager : MonoBehaviour
     /// </summary>
     public void StartTransisiton()
     {
-        if (!inTransisiton)
+        if (inTransisiton)
         {
-            StartCoroutine(PanelTransition());
+            StopAllCoroutines();
+            ChangePanels();
         }
+
+        StartCoroutine(PanelTransition());
     }
     #endregion
 
@@ -113,6 +120,7 @@ public class ButtonTransitionManager : MonoBehaviour
         {
             case IntroTransitionTypes.swipe:
                 transition.SetTrigger("Swipe_In");
+                Debug.Log(transition.GetCurrentAnimatorStateInfo(0).speed);
                 break;
             case IntroTransitionTypes.FadeIn:
                 transition.SetTrigger("Fade_In");
@@ -128,19 +136,46 @@ public class ButtonTransitionManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PanelTransition()
     {
+        previousEnable = enable;
+        previousDisable = disable;
+        previousSelectObject = nextSelectedGameObject;
         if (mainMenuPanelsTransitions != PanelTransitionTypes.none)
         {
             inTransisiton = true;
+            yield return null;
+            inTransisiton = false;
 
             transition.StopPlayback();
 
+            transition.Rebind();
+            transition.Update(0f);
+
             string triggerName = GetPanelTransitionTrigger();
             transition.SetTrigger(triggerName);
+            yield return null;
+            AnimatorClipInfo[] anim = transition.GetCurrentAnimatorClipInfo(0);
 
-            yield return new WaitForSeconds(panelTransitionLength);
+            // A fix to handle if the animation is not started upon first clicking button
+            while (anim.Length < 1)
+            {
+                transition.SetTrigger(triggerName);
+                anim = transition.GetCurrentAnimatorClipInfo(0);
+                yield return null;
+            }
+
+            transition.ResetTrigger(triggerName);
+            yield return new WaitForSeconds(anim[0].clip.length * (1 / transition.GetCurrentAnimatorStateInfo(0).speed) * .75f);
 
             ChangePanels();
-            inTransisiton = false;
+            yield return null;
+            while (anim.Length < 1)
+            {
+                anim = transition.GetCurrentAnimatorClipInfo(0);
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(anim[0].clip.length * (1 / transition.GetCurrentAnimatorStateInfo(0).speed));
+            //inTransisiton = false;
         }
 
         else
@@ -173,17 +208,17 @@ public class ButtonTransitionManager : MonoBehaviour
     /// </summary>
     private void ChangePanels()
     {
-        disable.SetActive(false);
-        enable.SetActive(true);
+        previousDisable.SetActive(false);
+        previousEnable.SetActive(true);
 
-        if (nextSelectedGameObject != null)
+        if (previousSelectObject)
         {
-            eventSystem.SetSelectedGameObject(nextSelectedGameObject);
+            eventSystem.SetSelectedGameObject(previousSelectObject);
         }
 
-        nextSelectedGameObject = null;
-        disable = null;
-        enable = null;
+        previousSelectObject = null;
+        previousDisable = null;
+        previousEnable = null;
     }
 
     #endregion
@@ -222,7 +257,7 @@ public class ButtonTransitionManager : MonoBehaviour
             }
 
             // Will wait until 75 percent of the animation is done
-            yield return new WaitForSecondsRealtime(anim[0].clip.length * .95f);
+            yield return new WaitForSecondsRealtime((anim[0].clip.length * (1 /transition.GetCurrentAnimatorStateInfo(0).speed)) * .95f);
 
             // Allows the next scene to be loaded
             async.allowSceneActivation = true;
@@ -285,7 +320,7 @@ public class ButtonTransitionManager : MonoBehaviour
             }
 
             // Will wait until 75 percent of the animation is done
-            yield return new WaitForSecondsRealtime(anim[0].clip.length);
+            yield return new WaitForSecondsRealtime(anim[0].clip.length * (1 / transition.GetCurrentAnimatorStateInfo(0).speed));
 
             FindObjectOfType<RespawnSystem>().RespawnPlayer();
             yield return null;
@@ -297,7 +332,7 @@ public class ButtonTransitionManager : MonoBehaviour
                 yield return null;
             }
 
-            yield return new WaitForSecondsRealtime(anim[0].clip.length * .5f);
+            yield return new WaitForSecondsRealtime((anim[0].clip.length * ( 1/ transition.GetCurrentAnimatorStateInfo(0).speed)) * .5f);
 
             FindObjectOfType<RespawnSystem>().PlayerCanMove();
             inTransisiton = false;
