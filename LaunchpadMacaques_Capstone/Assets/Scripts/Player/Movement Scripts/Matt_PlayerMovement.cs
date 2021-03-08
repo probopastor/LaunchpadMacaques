@@ -864,18 +864,18 @@ public class Matt_PlayerMovement : MonoBehaviour
                         EnableInitialCoyoteObj();
                     }
                     
-                    if(!grounded || jumping || gameObjectStoodOn == null)
-                    {
-                        if(coyoteObj.activeSelf)
-                        {
-                            StopCoroutine(BeginCoyoteTimeObject());
+                    //if(!grounded || jumping || gameObjectStoodOn == null)
+                    //{
+                    //    if(coyoteObj.activeSelf)
+                    //    {
+                    //        StopCoroutine(BeginCoyoteTimeObject());
 
-                            SetCoyoteObject(false);
-                            coyoteTimeInProgress = false;
-                            startCoyoteCountdown = false;
-                            moveCoyoteObj = false;
-                        }
-                    }
+                    //        SetCoyoteObject(false);
+                    //        coyoteTimeInProgress = false;
+                    //        startCoyoteCountdown = false;
+                    //        moveCoyoteObj = false;
+                    //    }
+                    //}
 
                     if (coyoteTimeDisableCheck == 0)
                     {
