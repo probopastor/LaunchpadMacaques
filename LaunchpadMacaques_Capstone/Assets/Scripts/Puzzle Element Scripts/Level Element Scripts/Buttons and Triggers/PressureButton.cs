@@ -14,17 +14,24 @@ using FMODUnity;
 public class PressureButton : MonoBehaviour
 {
     [SerializeField, Tooltip("The objects linked to the button. Objects in this array will be disabled when the button is active. ")] private GameObject[] objectsLinkedToButton;
+    [SerializeField, Tooltip("Enable Or disable the linked objects")] private bool disableObjects = true;
+
+    [Header("Trigger Settings")]
     [SerializeField, Tooltip("The triggers that the button should read. Other triggers are ignored. ")] private string[] triggerTags;
     [SerializeField, Tooltip("The amount of objects on a pressure button required for it to be activated. ")] private int triggerEnableGoal = 2;
 
     [SerializeField, Tooltip("The distance the button will move from its origin when activated. ")] private Vector3 buttonMovementDirection = new Vector3(0,0,0); 
 
+    [Header("Timer Settings")]
     [SerializeField, Tooltip("If active, objects linked to the button will be deactivated after a period of time from when activated. ")] private bool useTimer;
     [SerializeField, Tooltip("Used only if useTimer is true. The amount of seconds waited before deactive objects are reactivated. ")] private float timeUntilReactivation = 1f;
 
+    [Header("Button Materials")]
     [SerializeField, Tooltip("Material of active object. ")] private Material activeButtonMaterial;
     [SerializeField, Tooltip("Material of inactive object. ")] private Material inactiveButtonMaterial;
 
+
+    [Header("Proximity Settings")]
     [SerializeField, Tooltip("If true, button can be activated in a proximity. ")] private bool proximityTrigger;
     [SerializeField, Tooltip("The area around this button that will trigger it. Only active if proximityTrigger is true. ")] private Vector3 proximityTriggerArea;
 
@@ -103,7 +110,7 @@ public class PressureButton : MonoBehaviour
     /// <param name="isActive"></param>
     private void ActivateDeactivateButton(bool isActive)
     {
-        if (isActive)
+        if ((isActive && disableObjects) || (!isActive && !disableObjects))
         {
             buttonRend.material = activeButtonMaterial;
 
@@ -130,7 +137,7 @@ public class PressureButton : MonoBehaviour
             //    StartCoroutine(DisableAfterTime());
             //}
         }
-        else if (!isActive)
+        else if ((!isActive && disableObjects) || (isActive && !disableObjects))
         {
             buttonRend.material = inactiveButtonMaterial;
 
