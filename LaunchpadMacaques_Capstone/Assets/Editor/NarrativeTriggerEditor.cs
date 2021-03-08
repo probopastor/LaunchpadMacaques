@@ -90,8 +90,18 @@ public class NarrativeTriggerEditor : Editor
                     EditorGUILayout.PropertyField(element.FindPropertyRelative("repeatable"));
 
                     EditorGUILayout.Space();
-
                     EditorGUILayout.LabelField("Text Options", EditorStyles.boldLabel);
+                    if(GUILayout.Button("Edit Dialogue"))
+                    {
+                        serializedObject.Update();
+                        if(element.FindPropertyRelative("dialogue").objectReferenceValue == null /*|| element.FindPropertyRelative("dialogue").objectReferenceValue != null*/) 
+                        {
+                            Debug.Log("Creating new dialogue");
+                            element.FindPropertyRelative("dialogue").objectReferenceValue = ScriptableObject.CreateInstance<Dialogue>();
+                            serializedObject.ApplyModifiedProperties();
+                        }
+                        DialogueBuilder.ShowWindow(ref narrativeTriggerHandler, i);
+                    }
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.LabelField("Text to Display", GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true), GUILayout.Width(120));
                     narrativeTriggerHandler.triggers[i].textToDisplay = EditorGUILayout.TextArea(narrativeTriggerHandler.triggers[i].textToDisplay, GUILayout.ExpandWidth(true));
@@ -189,7 +199,7 @@ public class NarrativeTriggerEditor : Editor
                     }
 
                     int type = element.FindPropertyRelative("type").enumValueIndex;
-                    //Display Area Trigger specific options
+                    //Display Area Trigger specific optionsin
                     if (type == (int)NarrativeTriggerHandler.TriggerType.Area)
                     {
                         EditorGUILayout.Space();
@@ -265,7 +275,6 @@ public class NarrativeTriggerEditor : Editor
         }
 
         serializedObject.ApplyModifiedProperties();
-        EditorUtility.SetDirty(narrativeTriggerHandler);
     }
 
     private void OnSceneGUI()
