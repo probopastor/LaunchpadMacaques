@@ -143,6 +143,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     private bool useCourtineDash = true;
     #endregion
 
+    #region Platform Landing Settings
+    [Header("Platform Landing Settings")]
+    [SerializeField] private string[] tagsToCancelVelocity;
+    private bool notLandedAfterAirTime = false;
+    #endregion 
+
 
     [Header("Screen Shake Settings")]
     [SerializeField] float minVelocityForScreenShake = 30;
@@ -338,6 +344,11 @@ public class Matt_PlayerMovement : MonoBehaviour
         if (!grounded)
         {
             timeOffGround += Time.deltaTime;
+
+            if (!notLandedAfterAirTime)
+            {
+                notLandedAfterAirTime = true;
+            }
         }
     }
 
@@ -1070,6 +1081,21 @@ public class Matt_PlayerMovement : MonoBehaviour
                 other.collider.material = frictionlessMat;
             }
         }
+
+        // Sets velocity to 0 when initially grounded to prevent sliding.
+        foreach (string tag in tagsToCancelVelocity)
+        {
+            if (other.collider.tag == tag)
+            {
+                if (notLandedAfterAirTime)
+                {
+                    Debug.Log("Landed - Velocity Cancelled. ");
+                    notLandedAfterAirTime = false;
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                }
+            }
+        }
     }
 
     private void ScreenShake(Collision other)
@@ -1109,7 +1135,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             Camera.main.fieldOfView = m_fieldOfView;
 
             Cinemachine.CinemachineVirtualCamera[] camArray = FindObjectsOfType<Cinemachine.CinemachineVirtualCamera>();
-            foreach(Cinemachine.CinemachineVirtualCamera cam in camArray)
+            foreach (Cinemachine.CinemachineVirtualCamera cam in camArray)
             {
                 cam.m_Lens.FieldOfView = Camera.main.fieldOfView;
             }
