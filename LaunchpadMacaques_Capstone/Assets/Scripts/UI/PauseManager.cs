@@ -40,9 +40,12 @@ public class PauseManager : MonoBehaviour
     private SettingsManager settings;
     private EventSystem eventSystem;
 
+    private Matt_PlayerMovement player;
+
     // Start is called before the first frame update
     void Start()
     {
+        player = FindObjectOfType<Matt_PlayerMovement>();
         Time.timeScale = 1;
         gameLost = false;
 
@@ -74,47 +77,51 @@ public class PauseManager : MonoBehaviour
 
     public void PauseInput()
     {
-        if (!gameLost && !gameWon && !HTPMenu.activeSelf && !optionsMenu.transform.parent.gameObject.activeSelf)
+        if (player.CanPlayerMove())
         {
-            PauseGame();
-        }
-
-        else if (HTPMenu.activeSelf)
-        {
-            eventSystem.SetSelectedGameObject(null);
-            HTPMenu.SetActive(false);
-            pausePanel.SetActive(true);
-        }
-
-        else if (optionsMenu.transform.parent.gameObject.activeSelf)
-        {
-            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-            if (optionsMenu.activeSelf)
+            if (!gameLost && !gameWon && !HTPMenu.activeSelf && !optionsMenu.transform.parent.gameObject.activeSelf)
             {
-                optionsMenu.transform.parent.gameObject.SetActive(false);
+                PauseGame();
+            }
+
+            else if (HTPMenu.activeSelf)
+            {
+                eventSystem.SetSelectedGameObject(null);
+                HTPMenu.SetActive(false);
                 pausePanel.SetActive(true);
             }
 
-            else if (videoSettings.activeSelf)
+            else if (optionsMenu.transform.parent.gameObject.activeSelf)
             {
-                optionsMenu.SetActive(true);
-                videoSettings.SetActive(false);
-            }
+                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+                if (optionsMenu.activeSelf)
+                {
+                    optionsMenu.transform.parent.gameObject.SetActive(false);
+                    pausePanel.SetActive(true);
+                }
 
-            else if (audioSettings.activeSelf)
-            {
-                optionsMenu.SetActive(true);
-                audioSettings.SetActive(false);
-            }
+                else if (videoSettings.activeSelf)
+                {
+                    optionsMenu.SetActive(true);
+                    videoSettings.SetActive(false);
+                }
 
-            else if (gameplaySettings.activeSelf)
-            {
-                optionsMenu.SetActive(true);
-                gameplaySettings.SetActive(false);
-            }
+                else if (audioSettings.activeSelf)
+                {
+                    optionsMenu.SetActive(true);
+                    audioSettings.SetActive(false);
+                }
 
-            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+                else if (gameplaySettings.activeSelf)
+                {
+                    optionsMenu.SetActive(true);
+                    gameplaySettings.SetActive(false);
+                }
+
+                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+            }
         }
+     
 
     }
 

@@ -540,11 +540,6 @@ public class GrapplingGun : MonoBehaviour
         {
             return false;
         }
-
-        if (currentGrapplesLeft <= 0 && useMaxGrapples)
-        {
-            return false;
-        }
         RaycastHit hit = new RaycastHit();
 
         // Cheks if the Normal Raycast returns a RayCastHit with a collider
