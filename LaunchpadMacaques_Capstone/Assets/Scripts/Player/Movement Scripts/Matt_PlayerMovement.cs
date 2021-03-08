@@ -147,7 +147,11 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Platform Landing Settings")]
     [SerializeField] private string[] tagsToCancelVelocity;
     private bool notLandedAfterAirTime = false;
-    #endregion 
+
+    [SerializeField] private bool disableWalkingOffPlatform = false;
+    [SerializeField] private GameObject[] movementBlockers = new GameObject[4];
+
+    #endregion
 
 
     [Header("Screen Shake Settings")]
@@ -738,6 +742,72 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 rb.AddForce(orientation.transform.forward * tempY * moveSpeed * Time.deltaTime * multiplier * multiplierV);
                 rb.AddForce(orientation.transform.right * tempX * moveSpeed * Time.deltaTime * multiplier);
+
+                // If the player cannot walk off of platforms.
+                if (disableWalkingOffPlatform && grounded && !jumping)
+                {
+                    Vector3 downRight = new Vector3(1, -1, 0);
+                    Vector3 downLeft = new Vector3(-1, -1, 0);
+
+                    Vector3 downForward = new Vector3(0, -1, 1);
+                    Vector3 downBackwards = new Vector3(0, -1, -1);
+
+                    // 4 Raycasts determine whether the player is on the edge of a platform. 
+                    #region Edge Checking
+                    if (!Physics.Raycast(gameObject.transform.position, downRight, 2f, whatIsGround) && grounded && !jumping)
+                    {
+                        if (rb.velocity.x > 0)
+                        {
+                            SetMovementBlockersActivity(true, 1);
+                            SetBlockerLocation(1);
+                        }
+                    }
+                    else
+                    {
+                        SetMovementBlockersActivity(false, 1);
+                    }
+
+                    if (!Physics.Raycast(gameObject.transform.position, downLeft, 2f, whatIsGround) && grounded && !jumping)
+                    {
+                        if (rb.velocity.x < 0)
+                        {
+                            SetMovementBlockersActivity(true, 3);
+                            SetBlockerLocation(3);
+                        }
+                    }
+                    else
+                    {
+                        SetMovementBlockersActivity(false, 3);
+                    }
+
+
+                    if (!Physics.Raycast(gameObject.transform.position, downForward, 2f, whatIsGround) && grounded && !jumping)
+                    {
+                        if (rb.velocity.z > 0)
+                        {
+                            SetMovementBlockersActivity(true, 0);
+                            SetBlockerLocation(0);
+                        }
+                    }
+                    else
+                    {
+                        SetMovementBlockersActivity(false, 0);
+                    }
+
+                    if (!Physics.Raycast(gameObject.transform.position, downBackwards, 2f, whatIsGround) && grounded && !jumping)
+                    {
+                        if (rb.velocity.z < 0)
+                        {
+                            SetMovementBlockersActivity(true, 2);
+                            SetBlockerLocation(2);
+                        }
+                    }
+                    else
+                    {
+                        SetMovementBlockersActivity(false, 2);
+                    }
+                    #endregion
+                }
             }
             // If Swing Lock is not active, and the player is grappling, add a force in the player's orientation
             else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
@@ -767,8 +837,45 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             rb.velocity = Vector3.zero;
         }
-
     }
+
+    #region Edge Blocker Methods
+    /// <summary>
+    /// Sets the specified blocker to the specified active state.
+    /// </summary>
+    /// <param name="active">The active status this blocker should be.</param>
+    /// <param name="blockerNumber">The number of the blocker that should be moved. 0 is forward, 1 is right, 2 is back, 3 is left.</param>
+    private void SetMovementBlockersActivity(bool active, int blockerNumber)
+    {
+        if (movementBlockers[blockerNumber].activeSelf != active)
+        {
+            movementBlockers[blockerNumber].SetActive(active);
+        }
+    }
+
+    /// <summary>
+    /// Moves blockers to their proper positions following the player
+    /// </summary>
+    /// <param name="blockerNumber">The number of the blocker that should be moved. 0 is forward, 1 is right, 2 is back, 3 is left.</param>
+    private void SetBlockerLocation(int blockerNumber)
+    {
+        switch (blockerNumber)
+        {
+            case 0:
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z + 0.8f);
+                break;
+            case 1:
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x + 0.8f, orientation.transform.position.y, orientation.transform.position.z);
+                break;
+            case 2:
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z - 0.8f);
+                break;
+            case 3:
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x - 0.8f, orientation.transform.position.y, orientation.transform.position.z);
+                break;
+        }
+    }
+    #endregion 
 
     #endregion
 
@@ -1032,6 +1139,15 @@ public class Matt_PlayerMovement : MonoBehaviour
                 applyPhysicsMaterial = false;
 
                 collision.collider.material = originalMaterial;
+            }
+        }
+
+        // Disable all movement blockers if the player exits the ground. 
+        if(collision.gameObject.layer == whatIsGround && disableWalkingOffPlatform)
+        {
+           for(int i = 0; i < movementBlockers.Length; i++)
+            {
+                SetMovementBlockersActivity(false, i);
             }
         }
     }
