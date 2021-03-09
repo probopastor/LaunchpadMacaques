@@ -143,6 +143,16 @@ public class Matt_PlayerMovement : MonoBehaviour
     private bool useCourtineDash = true;
     #endregion
 
+    #region Platform Landing Settings
+    [Header("Platform Landing Settings")]
+    [SerializeField] private string[] tagsToCancelVelocity;
+    private bool notLandedAfterAirTime = false;
+
+    [SerializeField] private bool disableWalkingOffPlatform = false;
+    [SerializeField] private GameObject[] movementBlockers = new GameObject[4];
+
+    #endregion
+
 
     [Header("Screen Shake Settings")]
     [SerializeField] float minVelocityForScreenShake = 30;
@@ -201,6 +211,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float timeOffGround;
 
     private bool dashUnlocked = false;
+
+    private bool canMove = true;
 
     ParticleSystem system
     {
@@ -296,8 +308,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) || Time.timeScale > 0)
         {
-            Look();
-            grappleGunReference.UpdateHandRotation(rb.velocity);
+            if (canMove)
+            {
+                Look();
+                grappleGunReference.UpdateHandRotation(rb.velocity);
+            }
+
         }
         if (PlayerPrefs.HasKey("MouseSensitivity"))
         {
@@ -332,6 +348,11 @@ public class Matt_PlayerMovement : MonoBehaviour
         if (!grounded)
         {
             timeOffGround += Time.deltaTime;
+
+            if (!notLandedAfterAirTime)
+            {
+                notLandedAfterAirTime = true;
+            }
         }
     }
 
@@ -649,100 +670,212 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// </summary>
     private void Movement()
     {
-        // Find actual velocity relative to where player is looking
-        Vector2 mag = FindVelRelativeToLook();
-        float xMag = mag.x, yMag = mag.y;
-
-        // Counteract sliding and sloppy movement
-        CounterMovement(x, y, mag);
-
-        // If holding jump && ready to jump, then jump
-        if (readyToJump && jumping) Jump();
-
-        // If holding sprint && ready to sprint, then sprint
-        if (readyToSprint && sprinting) StartSprint();
-
-        // Set max speed
-        float maxSpeed = this.maxSpeed;
-
-        // If sliding down a ramp, add force down so player stays grounded and also builds speed
-        if (crouching && grounded && readyToJump)
+        if (canMove)
         {
-            rb.AddForce(Vector3.down * Time.deltaTime * 3000);
-            return;
-        }
+            // Find actual velocity relative to where player is looking
+            Vector2 mag = FindVelRelativeToLook();
+            float xMag = mag.x, yMag = mag.y;
 
-        float tempX = x;
-        float tempY = y;
-        // If speed is larger than maxspeed, cancel out the input so you don't go over max speed
-        if (tempX > 0 && xMag > maxSpeed) tempX = 0;
-        if (tempX < 0 && xMag < -maxSpeed) tempX = 0;
-        if (tempY > 0 && yMag > maxSpeed) tempY = 0;
-        if (tempY < 0 && yMag < -maxSpeed) tempY = 0;
+            // Counteract sliding and sloppy movement
+            CounterMovement(x, y, mag);
 
-        //// If speed is larger than maxspeed, cancel out the input so you don't go over max speed
-        //if (x > 0 && xMag > maxSpeed) x = 0;
-        //if (x < 0 && xMag < -maxSpeed) x = 0;
-        //if (y > 0 && yMag > maxSpeed) y = 0;
-        //if (y < 0 && yMag < -maxSpeed) y = 0;
+            // If holding jump && ready to jump, then jump
+            if (readyToJump && jumping) Jump();
 
-        // Some multipliers
-        float multiplier = 1f, multiplierV = 1f;
+            // If holding sprint && ready to sprint, then sprint
+            if (readyToSprint && sprinting) StartSprint();
 
-        // Movement in air
-        if (!grounded)
-        {
-            multiplier = airMoveSpeedMultiplier;
-            multiplierV = airMoveSpeedMultiplier;
+            // Set max speed
+            float maxSpeed = this.maxSpeed;
 
-            //PlayerHitGround Event for Dialogue/Narrative Trigger System
-            if (fallCheckRunning == false)
-                StartCoroutine(FallCheck());
-        }
-
-        // Movement while sliding
-        if (grounded && crouching) multiplierV = 0f;
-
-        // If the player is grounded, they cannot dash.
-        if (grounded)
-        {
-            canDash = false;
-        }
-        // Dash cooldown is reset if the player grapples again.
-        else if (grappleGunReference.IsGrappling() && !canDash)
-        {
-            canDash = true;
-        }
-
-        // If the player is not grappling, add a force in the direction they are moving in.
-        if (!grappleGunReference.IsGrappling())
-        {
-            rb.AddForce(orientation.transform.forward * tempY * moveSpeed * Time.deltaTime * multiplier * multiplierV);
-            rb.AddForce(orientation.transform.right * tempX * moveSpeed * Time.deltaTime * multiplier);
-        }
-        // If Swing Lock is not active, and the player is grappling, add a force in the player's orientation
-        else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
-        {
-            // If the force can be applied, add a force in the direction of the player's orientation.
-            if (grappleGunReference.GetCanApplyForce())
+            // If sliding down a ramp, add force down so player stays grounded and also builds speed
+            if (crouching && grounded && readyToJump)
             {
-                rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * 2 * Time.deltaTime);
-                latestOrientation = orientation.transform.forward;
+                rb.AddForce(Vector3.down * Time.deltaTime * 3000);
+                return;
             }
-        }
-        // If the swing lock is enabled and the player is grappling, apply force to the player in the most recent orientation they were facing.
-        else if (grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
-        {
-            if (grappleGunReference.GetCanApplyForce())
+
+            float tempX = x;
+            float tempY = y;
+            // If speed is larger than maxspeed, cancel out the input so you don't go over max speed
+            if (tempX > 0 && xMag > maxSpeed) tempX = 0;
+            if (tempX < 0 && xMag < -maxSpeed) tempX = 0;
+            if (tempY > 0 && yMag > maxSpeed) tempY = 0;
+            if (tempY < 0 && yMag < -maxSpeed) tempY = 0;
+
+            //// If speed is larger than maxspeed, cancel out the input so you don't go over max speed
+            //if (x > 0 && xMag > maxSpeed) x = 0;
+            //if (x < 0 && xMag < -maxSpeed) x = 0;
+            //if (y > 0 && yMag > maxSpeed) y = 0;
+            //if (y < 0 && yMag < -maxSpeed) y = 0;
+
+            // Some multipliers
+            float multiplier = 1f, multiplierV = 1f;
+
+            // Movement in air
+            if (!grounded)
             {
-                if (latestOrientation != null)
+                multiplier = airMoveSpeedMultiplier;
+                multiplierV = airMoveSpeedMultiplier;
+
+                //PlayerHitGround Event for Dialogue/Narrative Trigger System
+                if (fallCheckRunning == false)
+                    StartCoroutine(FallCheck());
+            }
+
+            // Movement while sliding
+            if (grounded && crouching) multiplierV = 0f;
+
+            // If the player is grounded, they cannot dash.
+            if (grounded)
+            {
+                canDash = false;
+            }
+            // Dash cooldown is reset if the player grapples again.
+            else if (grappleGunReference.IsGrappling() && !canDash)
+            {
+                canDash = true;
+            }
+
+            // If the player is not grappling, add a force in the direction they are moving in.
+            if (!grappleGunReference.IsGrappling())
+            {
+                rb.AddForce(orientation.transform.forward * tempY * moveSpeed * Time.deltaTime * multiplier * multiplierV);
+                rb.AddForce(orientation.transform.right * tempX * moveSpeed * Time.deltaTime * multiplier);
+
+                // If the player cannot walk off of platforms.
+                if (disableWalkingOffPlatform && grounded && !jumping)
                 {
-                    rb.velocity = Vector3.zero;
-                    rb.AddForce(latestOrientation * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
+                    Vector3 downRight = new Vector3(1, -1, 0);
+                    Vector3 downLeft = new Vector3(-1, -1, 0);
+
+                    Vector3 downForward = new Vector3(0, -1, 1);
+                    Vector3 downBackwards = new Vector3(0, -1, -1);
+
+                    // 4 Raycasts determine whether the player is on the edge of a platform. 
+                    #region Edge Checking
+                    if (!Physics.Raycast(gameObject.transform.position, downRight, 2f, whatIsGround) && grounded && !jumping)
+                    {
+                        if (rb.velocity.x > 0)
+                        {
+                            SetMovementBlockersActivity(true, 1);
+                            SetBlockerLocation(1);
+                        }
+                    }
+                    else
+                    {
+                        SetMovementBlockersActivity(false, 1);
+                    }
+
+                    if (!Physics.Raycast(gameObject.transform.position, downLeft, 2f, whatIsGround) && grounded && !jumping)
+                    {
+                        if (rb.velocity.x < 0)
+                        {
+                            SetMovementBlockersActivity(true, 3);
+                            SetBlockerLocation(3);
+                        }
+                    }
+                    else
+                    {
+                        SetMovementBlockersActivity(false, 3);
+                    }
+
+
+                    if (!Physics.Raycast(gameObject.transform.position, downForward, 2f, whatIsGround) && grounded && !jumping)
+                    {
+                        if (rb.velocity.z > 0)
+                        {
+                            SetMovementBlockersActivity(true, 0);
+                            SetBlockerLocation(0);
+                        }
+                    }
+                    else
+                    {
+                        SetMovementBlockersActivity(false, 0);
+                    }
+
+                    if (!Physics.Raycast(gameObject.transform.position, downBackwards, 2f, whatIsGround) && grounded && !jumping)
+                    {
+                        if (rb.velocity.z < 0)
+                        {
+                            SetMovementBlockersActivity(true, 2);
+                            SetBlockerLocation(2);
+                        }
+                    }
+                    else
+                    {
+                        SetMovementBlockersActivity(false, 2);
+                    }
+                    #endregion
+                }
+            }
+            // If Swing Lock is not active, and the player is grappling, add a force in the player's orientation
+            else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
+            {
+                // If the force can be applied, add a force in the direction of the player's orientation.
+                if (grappleGunReference.GetCanApplyForce())
+                {
+                    rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * 2 * Time.deltaTime);
+                    latestOrientation = orientation.transform.forward;
+                }
+            }
+            // If the swing lock is enabled and the player is grappling, apply force to the player in the most recent orientation they were facing.
+            else if (grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
+            {
+                if (grappleGunReference.GetCanApplyForce())
+                {
+                    if (latestOrientation != null)
+                    {
+                        rb.velocity = Vector3.zero;
+                        rb.AddForce(latestOrientation * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
+                    }
                 }
             }
         }
+
+        else
+        {
+            rb.velocity = Vector3.zero;
+        }
     }
+
+    #region Edge Blocker Methods
+    /// <summary>
+    /// Sets the specified blocker to the specified active state.
+    /// </summary>
+    /// <param name="active">The active status this blocker should be.</param>
+    /// <param name="blockerNumber">The number of the blocker that should be moved. 0 is forward, 1 is right, 2 is back, 3 is left.</param>
+    private void SetMovementBlockersActivity(bool active, int blockerNumber)
+    {
+        if (movementBlockers[blockerNumber].activeSelf != active)
+        {
+            movementBlockers[blockerNumber].SetActive(active);
+        }
+    }
+
+    /// <summary>
+    /// Moves blockers to their proper positions following the player
+    /// </summary>
+    /// <param name="blockerNumber">The number of the blocker that should be moved. 0 is forward, 1 is right, 2 is back, 3 is left.</param>
+    private void SetBlockerLocation(int blockerNumber)
+    {
+        switch (blockerNumber)
+        {
+            case 0:
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z + 0.8f);
+                break;
+            case 1:
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x + 0.8f, orientation.transform.position.y, orientation.transform.position.z);
+                break;
+            case 2:
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z - 0.8f);
+                break;
+            case 3:
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x - 0.8f, orientation.transform.position.y, orientation.transform.position.z);
+                break;
+        }
+    }
+    #endregion 
 
     #endregion
 
@@ -1008,6 +1141,15 @@ public class Matt_PlayerMovement : MonoBehaviour
                 collision.collider.material = originalMaterial;
             }
         }
+
+        // Disable all movement blockers if the player exits the ground. 
+        if(collision.gameObject.layer == whatIsGround && disableWalkingOffPlatform)
+        {
+           for(int i = 0; i < movementBlockers.Length; i++)
+            {
+                SetMovementBlockersActivity(false, i);
+            }
+        }
     }
 
     private void OnCollisionEnter(Collision other)
@@ -1055,6 +1197,21 @@ public class Matt_PlayerMovement : MonoBehaviour
                 other.collider.material = frictionlessMat;
             }
         }
+
+        // Sets velocity to 0 when initially grounded to prevent sliding.
+        foreach (string tag in tagsToCancelVelocity)
+        {
+            if (other.collider.tag == tag)
+            {
+                if (notLandedAfterAirTime)
+                {
+                    Debug.Log("Landed - Velocity Cancelled. ");
+                    notLandedAfterAirTime = false;
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                }
+            }
+        }
     }
 
     private void ScreenShake(Collision other)
@@ -1081,6 +1238,11 @@ public class Matt_PlayerMovement : MonoBehaviour
         return grounded;
     }
 
+    public void SetPlayerCanMove(bool move)
+    {
+        canMove = move;
+    }
+
     void changeFOV()
     {
 
@@ -1089,7 +1251,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             Camera.main.fieldOfView = m_fieldOfView;
 
             Cinemachine.CinemachineVirtualCamera[] camArray = FindObjectsOfType<Cinemachine.CinemachineVirtualCamera>();
-            foreach(Cinemachine.CinemachineVirtualCamera cam in camArray)
+            foreach (Cinemachine.CinemachineVirtualCamera cam in camArray)
             {
                 cam.m_Lens.FieldOfView = Camera.main.fieldOfView;
             }
@@ -1139,6 +1301,10 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
+    public bool CanPlayerMove()
+    {
+        return canMove;
+    }
 
 
 }

@@ -60,4 +60,18 @@ public class StartGamePanel : MonoBehaviour
             SceneManager.LoadScene(hubLevelName);
         }
     }
+
+
+    public string GetCorrectLevelName()
+    {
+        if (!playedTutorial)
+        {
+            return tutorialLevelName;
+        }
+
+        else
+        {
+            return hubLevelName;
+        }
+    }
 }

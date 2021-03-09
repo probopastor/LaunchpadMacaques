@@ -52,6 +52,14 @@ public class SettingsManager : MonoBehaviour
 
     Resolution[] reslolutions;
 
+    private Animator transition;
+
+
+    ButtonTransitionManager transitionManager;
+
+
+    List<GameObject> useTransitionObjects;
+
     // The Deafult variables the sliders will be set to, upon an ititial launch (Player has never played game before)
     #region Deafult Variables
     private int deafultGraphicsQuality = 1;
@@ -68,6 +76,7 @@ public class SettingsManager : MonoBehaviour
     #endregion
     void Start()
     {
+        useTransitionObjects = new List<GameObject>();
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             settingsHolder.SetActive(true);
@@ -91,6 +100,8 @@ public class SettingsManager : MonoBehaviour
 
         }
 
+        transition = FindObjectOfType<ButtonTransitionManager>().GetComponent<Animator>();
+        transitionManager = FindObjectOfType<ButtonTransitionManager>();
     }
 
     public void UpdateGameplay()
@@ -116,11 +127,6 @@ public class SettingsManager : MonoBehaviour
         InitialFullScreen();
         InitialQuality();
         InitialColorblindMode();
-    }
-
-    private void Update()
-    {
-        //HandleEscapeKey();
     }
 
     private void DisableStuff()
@@ -268,8 +274,8 @@ public class SettingsManager : MonoBehaviour
 
         else
         {
-            invertY.SetIsOnWithoutNotify(true);
-            SetInvertY(true);
+            invertY.SetIsOnWithoutNotify(false);
+            SetInvertY(false);
         }
     }
 
@@ -635,37 +641,46 @@ public class SettingsManager : MonoBehaviour
 
     public void HandleEscapeKey()
     {
-
-        if (settingsHolder.activeSelf && SceneManager.GetActiveScene().name == "MainMenu")
+        if (settingsHolder.activeSelf && SceneManager.GetActiveScene().name == "MainMenu" && !transitionManager.IsInTransition())
         {
             FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-            if (optionsMenu.activeSelf )
+            if (optionsMenu.activeSelf)
             {
-                mainMenu.SetActive(true);
-                settingsHolder.SetActive(false);
+                transitionManager.enable = mainMenu;
+                transitionManager.disable = settingsHolder;
             }
 
             else if (videoSettings.activeSelf)
             {
-                optionsMenu.SetActive(true);
-                videoSettings.SetActive(false);
+                transitionManager.enable = optionsMenu;
+                transitionManager.disable = videoSettings;
             }
 
             else if (audioSettings.activeSelf)
             {
-                optionsMenu.SetActive(true);
-                audioSettings.SetActive(false);
+                transitionManager.enable = optionsMenu;
+                transitionManager.disable = audioSettings;
             }
 
             else if (gameplaySettings.activeSelf)
             {
-                optionsMenu.SetActive(true);
-                gameplaySettings.SetActive(false);
+                transitionManager.enable = optionsMenu;
+                transitionManager.disable = gameplaySettings;
             }
 
-            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-        }
 
+            bool useTransition = false;
+
+            for(int i = 0; i < useTransitionObjects.Count; i++)
+            {
+                if(transitionManager.disable == useTransitionObjects[i])
+                {
+                    useTransition = true;
+                }
+            }
+
+            transitionManager.StartTransisiton(useTransition);
+        }
 
     }
 
@@ -682,4 +697,11 @@ public class SettingsManager : MonoBehaviour
             return false;
         }
     }
+
+    public void SetTransitionObject(GameObject newObject)
+    {
+        useTransitionObjects.Add(newObject);
+    }
+
+
 }

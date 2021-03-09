@@ -25,6 +25,8 @@ public class GameplayInputController : MonoBehaviour
     [SerializeField, Tooltip("The Event that is Called When player lets go the dash/sprint input")] DashCancel dashCancelEvent;
     [SerializeField, Tooltip("The Event That is Called when player rotates camera (Vector 2)")] LookEvent lookEvent;
     [SerializeField, Tooltip("The Event that Is Called when Player Lets Go Of/Presses Crouch")] CrouchEvent crouchEvent;
+    [SerializeField, Tooltip("The Event that is Called when Player Presses Batman Grapple Input")] BatmanEvent batmanEvent;
+    [SerializeField, Tooltip("The Event that is Called when Player Presses Drop Cube Input")] DropCubeEvent dropCubeEvent;
 
 
     [SerializeField, Tooltip("The Event that is Called When player Presses pause Input ")] PauseEvent pauseEvent;
@@ -47,6 +49,8 @@ public class GameplayInputController : MonoBehaviour
         SetLook();
         SetPauseEvent();
         SetCrouchEvent();
+        SetBatmanGrapple();
+        SetDropCube();
     }
 
     #region SetInputs
@@ -71,9 +75,19 @@ public class GameplayInputController : MonoBehaviour
         controls.GamePlay.StartGrapple.performed += OnStartGrapple;
     }
 
+    private void SetBatmanGrapple()
+    {
+        controls.GamePlay.StartBatmanGrapple.performed += OnBatmanGrapple;
+    }
+
     private void SetStopGrapple()
     {
         controls.GamePlay.StopGrapple.performed += OnStopGrapple;
+    }
+
+    private void SetDropCube()
+    {
+        controls.GamePlay.DropCube.performed += OnDropCube;
     }
 
     private void SetScroll()
@@ -121,10 +135,19 @@ public class GameplayInputController : MonoBehaviour
         startGrappleEvent.Invoke(cxt.ReadValue<float>());
     }
 
+    private void OnBatmanGrapple(InputAction.CallbackContext cxt)
+    {
+        batmanEvent.Invoke(cxt.ReadValue<float>());
+    }
 
     private void OnStopGrapple(InputAction.CallbackContext cxt)
     {
         stopGrappleEvent.Invoke(cxt.ReadValue<float>());
+    }
+
+    private void OnDropCube(InputAction.CallbackContext cxt)
+    {
+        dropCubeEvent.Invoke(cxt.ReadValue<float>());
     }
 
     private void OnMovePerformed(InputAction.CallbackContext cxt)
@@ -178,5 +201,9 @@ public class GameplayInputController : MonoBehaviour
 [Serializable] public class PauseEvent : UnityEvent<float> { }
 
 [Serializable] public class CrouchEvent : UnityEvent<float> { }
+
+[Serializable] public class BatmanEvent : UnityEvent<float> { }
+
+[Serializable] public class DropCubeEvent : UnityEvent<float> { }
 
 
