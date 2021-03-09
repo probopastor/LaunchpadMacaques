@@ -1005,16 +1005,16 @@ public class Matt_PlayerMovement : MonoBehaviour
         switch (blockerNumber)
         {
             case 0:
-                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z + 0.8f);
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z + 0.6f);
                 break;
             case 1:
-                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x + 0.8f, orientation.transform.position.y, orientation.transform.position.z);
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x + 0.6f, orientation.transform.position.y, orientation.transform.position.z);
                 break;
             case 2:
-                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z - 0.8f);
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z - 0.6f);
                 break;
             case 3:
-                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x - 0.8f, orientation.transform.position.y, orientation.transform.position.z);
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x - 0.6f, orientation.transform.position.y, orientation.transform.position.z);
                 break;
         }
     }
