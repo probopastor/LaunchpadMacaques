@@ -73,6 +73,8 @@ public class GameplayInputController : MonoBehaviour
     private void SetStartGrapple()
     {
         controls.GamePlay.StartGrapple.performed += OnStartGrapple;
+
+        controls.GamePlay.StartGrapple.canceled += OnStopGrapple;
     }
 
     private void SetBatmanGrapple()
@@ -82,7 +84,7 @@ public class GameplayInputController : MonoBehaviour
 
     private void SetStopGrapple()
     {
-        controls.GamePlay.StopGrapple.performed += OnStopGrapple;
+        //controls.GamePlay.StopGrapple.performed += OnStopGrapple;
     }
 
     private void SetDropCube()
