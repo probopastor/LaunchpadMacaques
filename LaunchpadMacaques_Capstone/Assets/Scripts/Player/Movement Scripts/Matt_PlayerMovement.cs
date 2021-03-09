@@ -283,14 +283,6 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         currentMaxFOV = maxFOV;
 
-        //if(HandleSaving.instance != null)
-        //{
-        //    dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
-        //}
-        //else
-        //{
-        //    dashUnlocked = true;
-        //}
         dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
 
     }
@@ -1161,11 +1153,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         for (int i = 0; i < other.contactCount; i++)
         {
             Vector3 normal = other.contacts[i].normal;
-            //FLOOR
-            if (IsFloor(normal))
-            {
-                grappleGunReference.ResetGrapples();
-            }
+
         }
 
         // Determines whether or not the point collided with is a surface.

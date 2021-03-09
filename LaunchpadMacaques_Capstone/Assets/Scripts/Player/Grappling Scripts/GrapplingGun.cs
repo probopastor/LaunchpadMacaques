@@ -38,8 +38,7 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField]
     enum GrappleTypes
     {
-        PlayerControlled_Constant_Velocity,
-        PlayerControlled_Non_Constant_Velocity, IncreasingVelocity_Constant_Velocity, IncreasingVelocity_Non_Constant_Velocity, JustConstantVelocit, Just_Non_Constant_Velocity
+        JustConstantVelocit, Just_Non_Constant_Velocity
     }
 
 
@@ -71,19 +70,8 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField, Tooltip("The max length the pull can last")] float pullLength = .5f;
     [SerializeField, Tooltip("The Min Distance the player can be from the object and still get pulled towards it")] float minDistanceFromObject = 5;
 
-    [Header("Increasing Velocity Settings")]
-    [SerializeField, Tooltip("How fast the players velocity will increase while swinging")] float increaseAmmount = 10;
-    [SerializeField, Tooltip("The Minimum velocity the player will have when they start swinging")] float minStartingVelocity = 5;
-    [Tooltip("If the Players velocity should increase while they swing")] bool useIncreasingVelocity = true;
 
 
-    [Header("Player Control Velocity Settings")]
-    bool playerCanControlVelocity;
-    [SerializeField] float mouseWheelSensitivity = 1;
-
-    [Header("Max Grapple Settings")]
-    [SerializeField, Tooltip("The Max Amount of times the player can grapple before hitting ground")] int maxGrapples = 4;
-    [SerializeField, Tooltip("If the amount of graples should be limited")] bool useMaxGrapples = true;
 
     [Header("Auto Aim Settings")]
     [SerializeField] [Tooltip("The Radius of the Sphere that will be created to handle Auto Aim")] float sphereRadius = 2;
@@ -189,7 +177,6 @@ public class GrapplingGun : MonoBehaviour
     private bool actualMaxVelocity;
     private float currentMaxVelocity = 0;
 
-    private int currentGrapplesLeft;
 
     private bool holdingDownGrapple;
     private bool holdingDownStopGrapple;
@@ -229,8 +216,6 @@ public class GrapplingGun : MonoBehaviour
 
         currentSwingSpeed = swingSpeed;
 
-        currentGrapplesLeft = maxGrapples;
-        SetGrapplesLeft();
 
         playerRB = player.GetComponent<Rigidbody>();
 
@@ -249,35 +234,11 @@ public class GrapplingGun : MonoBehaviour
     {
         switch (typeOfGrapple)
         {
-            case GrappleTypes.IncreasingVelocity_Constant_Velocity:
-                useConstantVelocity = true;
-                useIncreasingVelocity = true;
-                playerCanControlVelocity = false;
-                break;
-            case GrappleTypes.IncreasingVelocity_Non_Constant_Velocity:
-                useConstantVelocity = false;
-                useIncreasingVelocity = true;
-                playerCanControlVelocity = false;
-                break;
             case GrappleTypes.JustConstantVelocit:
                 useConstantVelocity = true;
-                useIncreasingVelocity = false;
-                playerCanControlVelocity = false;
-                break;
-            case GrappleTypes.PlayerControlled_Constant_Velocity:
-                useConstantVelocity = true;
-                useIncreasingVelocity = false;
-                playerCanControlVelocity = true;
-                break;
-            case GrappleTypes.PlayerControlled_Non_Constant_Velocity:
-                useConstantVelocity = false;
-                useIncreasingVelocity = false;
-                playerCanControlVelocity = true;
                 break;
             case GrappleTypes.Just_Non_Constant_Velocity:
                 useConstantVelocity = false;
-                useIncreasingVelocity = false;
-                playerCanControlVelocity = false;
                 break;
 
         }
@@ -392,21 +353,12 @@ public class GrapplingGun : MonoBehaviour
             actualMaxVelocity = true;
         }
 
-        if (useIncreasingVelocity)
-        {
-            currentMaxVelocity += increaseAmmount * Time.deltaTime;
-
-            currentMaxVelocity = Mathf.Clamp(currentMaxVelocity, 0, maxSwingVelocity);
-        }
-
-        SetScroll();
-
         if (pulling)
         {
             player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, maxPullVelocity);
         }
 
-        else if (/*player.GetComponent<Rigidbody>().velocity.magnitude > maxSwingVelocity &&*/ !actualMaxVelocity)
+        else if (!actualMaxVelocity)
         {
             if (!canApplyForce)
             {
@@ -419,7 +371,6 @@ public class GrapplingGun : MonoBehaviour
 
             else
             {
-                //passedGrapplePoint = true;
                 player.GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(player.GetComponent<Rigidbody>().velocity, currentMaxVelocity);
             }
 
@@ -437,26 +388,6 @@ public class GrapplingGun : MonoBehaviour
 
     }
 
-    private void SetScroll()
-    {
-        if (playerCanControlVelocity && IsGrappling())
-        {
-            if (wheelInput > 0)
-            {
-                currentMaxVelocity += mouseWheelSensitivity;
-            }
-
-            if (wheelInput < 0)
-            {
-                currentMaxVelocity -= mouseWheelSensitivity;
-
-                if (currentMaxVelocity < minStartingVelocity)
-                {
-                    currentMaxVelocity = minStartingVelocity;
-                }
-            }
-        }
-    }
     #endregion
 
     #region UserInput
@@ -739,22 +670,14 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     private void SetDifferentGrappleTypeSettings()
     {
-        currentGrapplesLeft--;
-        SetGrapplesLeft();
+
 
         timeGrappling = 0;
 
-        if (useIncreasingVelocity)
-        {
-            actualMaxVelocity = true;
 
-            currentMaxVelocity = Mathf.Clamp(player.GetComponent<Rigidbody>().velocity.magnitude, minStartingVelocity, maxSwingVelocity);
-        }
 
-        else
-        {
-            currentMaxVelocity = maxSwingVelocity;
-        }
+        currentMaxVelocity = maxSwingVelocity;
+
 
         if (useConstantVelocity && !useConstantVelocity)
         {
@@ -762,24 +685,7 @@ public class GrapplingGun : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Sets how many grapples the player has left
-    /// </summary>
-    private void SetGrapplesLeft()
-    {
-        if (grapplesLeftTextBox && useMaxGrapples)
-        {
-            if (useMaxGrapples)
-            {
-                grapplesLeftTextBox.text = "Grapples: " + currentGrapplesLeft;
-            }
 
-            else
-            {
-                grapplesLeftTextBox.text = "";
-            }
-        }
-    }
 
     /// <summary>
     /// Will Pull player to point until they are within a certin distant from the point
@@ -1165,15 +1071,6 @@ public class GrapplingGun : MonoBehaviour
         return ropeLength;
     }
 
-    public void ResetGrapples()
-    {
-        if (!IsGrappling())
-        {
-            currentGrapplesLeft = maxGrapples;
-            SetGrapplesLeft();
-        }
-
-    }
 
     public float SetRopeLength(float value)
     {
