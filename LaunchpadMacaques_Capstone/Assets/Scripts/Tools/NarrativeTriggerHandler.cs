@@ -49,9 +49,16 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     //UI variables
     [SerializeField]
-    private TMP_Text dialogue;
-    [SerializeField]
     private GameObject canvas;
+    [SerializeField]
+    private TMP_Text dialogueText;
+    [SerializeField]
+    private GameObject[] nameplate;
+    [SerializeField]
+    private TMP_Text[] nameplateText;
+    [SerializeField]
+    private GameObject clickToContinue;
+
 
 
     [System.Serializable]
@@ -59,14 +66,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
     {
         [Tooltip("The type of activation used for this Trigger")]
         public TriggerType type;
-        [SerializeField, Tooltip("The text to display on Trigger activation")]
-        public string textToDisplay;
-        [Tooltip("The time text should be displayed")]
-        public int textDisplayTime;
-        [Tooltip("The audio to play on Trigger activation"), FMODUnity.EventRef]
-        public string audioToPlay;
-        [Tooltip("The audio source the audio will play from")]
-        public AudioSource audioSource;
+
+        //Text
+        [SerializeField]
+        public Dialogue dialogue;
+
         [Tooltip("Whether this Trigger can be activated multiple times (true) or only once (false)")]
         public bool repeatable;
 
@@ -117,8 +121,23 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private void Awake()
     {
-        dialogue = GetComponentInChildren<TMP_Text>();
-        canvas = dialogue.GetComponentInParent<Canvas>().gameObject;
+        dialogueText = GameObject.Find("Dialogue Text").GetComponent<TMP_Text>();
+        canvas = dialogueText.GetComponentInParent<Canvas>().gameObject;
+
+        nameplate = new GameObject[2];
+        nameplateText = new TMP_Text[2];
+        //Nameplate 1
+        nameplate[0] = GameObject.Find("Character 1 Nameplate").gameObject;
+        nameplateText[0] = nameplate[0].GetComponentInChildren<TMP_Text>();
+        nameplate[0].SetActive(false);
+        //Nameplate 2
+        nameplate[1] = GameObject.Find("Character 2 Nameplate").gameObject;
+        nameplateText[1] = nameplate[1].GetComponentInChildren<TMP_Text>();
+        nameplate[1].SetActive(false);
+
+        clickToContinue = GameObject.Find("ClickToContinue").gameObject;
+        clickToContinue.SetActive(false);
+
         canvas.SetActive(false);
     }
 
@@ -197,16 +216,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         trigger.hasRan = true;
 
-        FMOD.Studio.EventDescription desc;
-        //If the trigger has an audio source assigned, play the associated sound (if it has one)
-        if (FMODUnity.RuntimeManager.StudioSystem.getEvent(trigger.audioToPlay, out desc) == FMOD.RESULT.OK)
-        {
-            FMOD.Studio.EventInstance playAudio = FMODUnity.RuntimeManager.CreateInstance(trigger.audioToPlay);
-            FMODUnity.RuntimeManager.GetEventDescription(trigger.audioToPlay).getLength(out trigger.textDisplayTime);
-            playAudio.start();
-        }
-
-        if (trigger.textToDisplay != "")
+        if (trigger.dialogue != null)
         {
             if (FindObjectOfType<InformationPost>())
             {
@@ -262,7 +272,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
     /// </summary>
     public void TurnOffDialouge()
     {
-        dialogue.text = "";
+        dialogueText.text = "";
         canvas.SetActive(false);
     }
 
@@ -273,32 +283,135 @@ public class NarrativeTriggerHandler : MonoBehaviour
     /// <returns></returns>
     IEnumerator RunDialogue(Trigger trigger)
     {
-    
+        if (trigger.dialogue == null)
+            yield break;
+
         trigger.isRunning = true;
 
         //Turn on canvas
         canvas.SetActive(true);
 
-        //Run text effects and apply them to the dialogue window
-        TextEffectHandler.instance.RunText(dialogue, trigger.textToDisplay);
+        //Get Every line in the dialogue
+        Dialogue.Line currentLine;
+        int lastNameplateUsed = -1;
+        while ((currentLine = trigger.dialogue.NextLine()) != null)
+        {
+            //Update nameplates
+            //No nameplate yet
+            if(lastNameplateUsed == -1)
+            {
+                nameplate[0].SetActive(true);
+                nameplateText[0].text = currentLine.character.characterName;
+                lastNameplateUsed = 0;
+            }
+            //New character introduced
+            else if(currentLine.character.characterName != nameplateText[lastNameplateUsed].text)
+            {
+                int newNameplate = (lastNameplateUsed == 0 ? 1 : 0);
 
-        //Wait for the time given by the trigger
-        yield return new WaitForSecondsRealtime(trigger.textDisplayTime);
+                //Fade new nameplate in
+                if (!nameplate[newNameplate].activeSelf)
+                    nameplate[newNameplate].SetActive(true);
+                nameplateText[newNameplate].text = currentLine.character.characterName;
 
-        TextEffectHandler.instance.StopText();
+                nameplate[newNameplate].GetComponent<Image>().CrossFadeAlpha(1, 0.25f, true);
+                nameplateText[newNameplate].CrossFadeAlpha(1, 0.25f, true);
+
+                //Fade old out
+                nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeAlpha(0.5f, 0.25f, true);
+                nameplateText[lastNameplateUsed].CrossFadeAlpha(0.5f, 0.25f, true);
+
+                lastNameplateUsed = newNameplate;
+
+            }
+
+            //Run text effects and apply them to the dialogue window
+            TextEffectHandler.instance.RunText(dialogueText, currentLine.text);
+
+            //Play audio for associated line if applicable
+            FMOD.Studio.EventDescription desc;
+            //If the trigger has an audio source assigned, play the associated sound (if it has one)
+            if (FMODUnity.RuntimeManager.StudioSystem.getEvent(currentLine.audioToPlay, out desc) == FMOD.RESULT.OK)
+            {
+                FMOD.Studio.EventInstance playAudio = FMODUnity.RuntimeManager.CreateInstance(currentLine.audioToPlay);
+                desc.getLength(out trigger.dialogue.textDisplayTime);
+                playAudio.start();
+            }
+
+            //Dialogue type is click to proceed
+            if (trigger.dialogue.pauseForDuration)
+            {
+                Time.timeScale = 0;
+
+                //Wait until effects are done or player has clicked to skip
+                while(TextEffectHandler.instance.RunningEffectCount > 0)
+                {
+                    if(Input.GetButtonDown("Fire1"))
+                    {
+                        TextEffectHandler.instance.SkipToEndOfEffects();
+                    }
+                    yield return null;
+                }
+
+                clickToContinue.SetActive(true);
+                StartCoroutine(Flash(clickToContinue));
+
+                //Effects are done, player must click to proceed to the next 
+                while(!Input.GetButtonDown("Fire1"))
+                {
+                    yield return null;
+                }
+                shouldFlash = false;
+            }
+            //Dialogue type is show for a pre-determined time
+            else
+            {
+                //Wait until effects are done before starting the timer
+                while(TextEffectHandler.instance.RunningEffectCount > 0)
+                {
+                    yield return null;
+                }
+                yield return new WaitForSecondsRealtime(trigger.dialogue.textDisplayTime);
+            }
+            TextEffectHandler.instance.StopText();
+
+            yield return null;
+        }
 
         //Turn off text
         if (canvas.gameObject.activeSelf)
         {
-            dialogue.text = "";
+            dialogueText.text = "";
         }
 
+        //Resume game
+        Time.timeScale = 1;
 
-
+        //Reset Nameplates
+        foreach(TMP_Text text in nameplateText)
+        {
+            text.text = "";
+        }
+        foreach(GameObject nameplate in nameplate)
+        {
+            nameplate.SetActive(false);
+        }
 
         canvas.gameObject.SetActive(false);
 
         trigger.isRunning = false;
+    }
+
+    float flashInterval = 0.5f;
+    bool shouldFlash = false;
+    private IEnumerator Flash(GameObject objectToFlash)
+    {
+        shouldFlash = true;
+        while (shouldFlash)
+        {
+            objectToFlash.SetActive(!objectToFlash.activeSelf);
+            yield return new WaitForSecondsRealtime(flashInterval);
+        }
     }
 
     /// <summary>
