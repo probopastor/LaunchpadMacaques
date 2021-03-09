@@ -91,10 +91,10 @@ public class NarrativeTriggerEditor : Editor
 
                     EditorGUILayout.Space();
                     EditorGUILayout.LabelField("Text Options", EditorStyles.boldLabel);
-                    if(GUILayout.Button("Edit Dialogue"))
+                    if (GUILayout.Button("Edit Dialogue"))
                     {
                         serializedObject.Update();
-                        if(element.FindPropertyRelative("dialogue").objectReferenceValue == null /*|| element.FindPropertyRelative("dialogue").objectReferenceValue != null*/) 
+                        if (element.FindPropertyRelative("dialogue").objectReferenceValue == null /*|| element.FindPropertyRelative("dialogue").objectReferenceValue != null*/)
                         {
                             Debug.Log("Creating new dialogue");
                             element.FindPropertyRelative("dialogue").objectReferenceValue = ScriptableObject.CreateInstance<Dialogue>();
@@ -102,22 +102,6 @@ public class NarrativeTriggerEditor : Editor
                         }
                         DialogueBuilder.ShowWindow(ref narrativeTriggerHandler, i);
                     }
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField("Text to Display", GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true), GUILayout.Width(120));
-                    narrativeTriggerHandler.triggers[i].textToDisplay = EditorGUILayout.TextArea(narrativeTriggerHandler.triggers[i].textToDisplay, GUILayout.ExpandWidth(true));
-                    EditorGUILayout.EndHorizontal();
-                    if (EditorGUIUtility.editingTextField)
-                    {
-                        EditorGUILayout.HelpBox("Text Effect Tag Format ex:) <EffectName>Text</EffectName>", MessageType.Info);
-                        EditorGUILayout.HelpBox("Available Effects: shaky, typewriter, rainbow", MessageType.Info);
-                    }
-                    EditorGUILayout.PropertyField(element.FindPropertyRelative("textDisplayTime"));
-
-                    EditorGUILayout.Space();
-
-                    EditorGUILayout.LabelField("Audio Options", EditorStyles.boldLabel);
-                    EditorGUILayout.PropertyField(element.FindPropertyRelative("audioToPlay"));
-                    EditorGUILayout.PropertyField(element.FindPropertyRelative("audioSource"));
 
                     EditorGUILayout.Space();
 

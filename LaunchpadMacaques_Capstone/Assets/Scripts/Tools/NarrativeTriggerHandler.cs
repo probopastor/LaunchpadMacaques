@@ -71,14 +71,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
         [SerializeField]
         public Dialogue dialogue;
 
-        [SerializeField, Tooltip("The text to display on Trigger activation")]
-        public string textToDisplay;
-        [Tooltip("The time text should be displayed")]
-        public int textDisplayTime;
-        [Tooltip("The audio to play on Trigger activation"), FMODUnity.EventRef]
-        public string audioToPlay;
-        [Tooltip("The audio source the audio will play from")]
-        public AudioSource audioSource;
         [Tooltip("Whether this Trigger can be activated multiple times (true) or only once (false)")]
         public bool repeatable;
 
@@ -224,7 +216,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         trigger.hasRan = true;
 
-        if (trigger.textToDisplay != "")
+        if (trigger.dialogue != null)
         {
             if (FindObjectOfType<InformationPost>())
             {
@@ -291,6 +283,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
     /// <returns></returns>
     IEnumerator RunDialogue(Trigger trigger)
     {
+        if (trigger.dialogue == null)
+            yield break;
+
         trigger.isRunning = true;
 
         //Turn on canvas
