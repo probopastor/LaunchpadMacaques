@@ -121,21 +121,21 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private void Awake()
     {
-        dialogueText = GameObject.Find("Dialogue Text").GetComponent<TMP_Text>();
+        dialogueText = transform.Find("DialogueCanvas/Background/TextContainer/DialogueText").GetComponent<TMP_Text>();
         canvas = dialogueText.GetComponentInParent<Canvas>().gameObject;
 
         nameplate = new GameObject[2];
         nameplateText = new TMP_Text[2];
         //Nameplate 1
-        nameplate[0] = GameObject.Find("Character 1 Nameplate").gameObject;
+        nameplate[0] = transform.Find("DialogueCanvas/Background/Character1Nameplate").gameObject;
         nameplateText[0] = nameplate[0].GetComponentInChildren<TMP_Text>();
         nameplate[0].SetActive(false);
         //Nameplate 2
-        nameplate[1] = GameObject.Find("Character 2 Nameplate").gameObject;
+        nameplate[1] = transform.Find("DialogueCanvas/Background/Character2Nameplate").gameObject;
         nameplateText[1] = nameplate[1].GetComponentInChildren<TMP_Text>();
         nameplate[1].SetActive(false);
 
-        clickToContinue = GameObject.Find("ClickToContinue").gameObject;
+        clickToContinue = transform.Find("DialogueCanvas/Background/ClickToContinue").gameObject;
         clickToContinue.SetActive(false);
 
         canvas.SetActive(false);
@@ -143,6 +143,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private void Start()
     {
+
         StartCoroutine(CheckForTriggerActivations());
     }
 
