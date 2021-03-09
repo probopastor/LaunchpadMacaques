@@ -58,12 +58,20 @@ public class CubeRespawn : MonoBehaviour
                 //respawnPos = gameObject;
                 keepDefaultPos = true;
             }
+            else if(holderRespawnPos.Length < 1)
+            {
+                keepDefaultPos = true;
+            }
         }
         else
         {
             if(cubeHolders == null)
             {
                 //respawnPos = gameObject;
+                keepDefaultPos = true;
+            }
+            else if(cubeHolders.Length < 1)
+            {
                 keepDefaultPos = true;
             }
         }
@@ -98,50 +106,54 @@ public class CubeRespawn : MonoBehaviour
     /// </summary>
     public void RespawnCube()
     {
-        // If the player is holding the object, stop holding the object. 
-        if (pushPullObjectsRef.IsGrabbing() && gameObject == pushPullObjectsRef.GetHeldCube() && pushPullObjectsRef.GetHeldCube() != null)
-        {
-            pushPullObjectsRef.DropObject();
-        }
-
-        // If the cube is being pushed from a throw, stop the push. 
-        if (pushableObjRef.GetPushStatus())
-        {
-            pushableObjRef.StopPushingObject();
-        }
-
-        // Zero the velocity of the cube.
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-
-        // Respawn the cube at the closest valid respawn point to the player. 
-        if(respawnAtSpecificHolders && !startRespawn && !keepDefaultPos)
-        {
-            respawnPos = FindClosestPosToPlayer(playerRef, cubeHolders);
-        }
-        else if(!respawnAtSpecificHolders && !startRespawn && !keepDefaultPos)
-        {
-            respawnPos = FindClosestPosToPlayer(playerRef, holderRespawnPos);
-        }
-
-        // If the respawn position already has a cube on it, respawn the cube at its original position.
-        if(respawnPos.CompareTag("Cube Holder Currently Holding Cube") && !startRespawn)
-        {
-            respawnPos = originalSpawnPos;
-        }
-
         if (respawnPos != null)
         {
-            // Set the respawn position, and the respawn rotation. 
-            float xPos = respawnPos.transform.position.x + respawnPosModifiers.x;
-            float yPos = respawnPos.transform.position.y + respawnPosModifiers.y;
-            float zPos = respawnPos.transform.position.z + respawnPosModifiers.z;
+            // If the player is holding the object, stop holding the object. 
+            if (pushPullObjectsRef.IsGrabbing() && gameObject == pushPullObjectsRef.GetHeldCube() && pushPullObjectsRef.GetHeldCube() != null)
+            {
+                pushPullObjectsRef.DropObject();
+            }
 
-            gameObject.transform.position = new Vector3(xPos, yPos, zPos);
-            gameObject.transform.rotation = respawnAngle;
+            // If the cube is being pushed from a throw, stop the push. 
+            if (pushableObjRef.GetPushStatus())
+            {
+                pushableObjRef.StopPushingObject();
+            }
 
-            SetCubeHolderPickupTag(true, respawnPos);
+            // Zero the velocity of the cube.
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
+            // Respawn the cube at the closest valid respawn point to the player. 
+            if (respawnAtSpecificHolders && !startRespawn && !keepDefaultPos)
+            {
+                respawnPos = FindClosestPosToPlayer(playerRef, cubeHolders);
+            }
+            else if (!respawnAtSpecificHolders && !startRespawn && !keepDefaultPos)
+            {
+                respawnPos = FindClosestPosToPlayer(playerRef, holderRespawnPos);
+            }
+
+            // If the respawn position already has a cube on it, respawn the cube at its original position.
+            if (respawnPos.CompareTag("Cube Holder Currently Holding Cube") && !startRespawn && !keepDefaultPos)
+            {
+                respawnPos = originalSpawnPos;
+            }
+
+            if (respawnPos != null)
+            {
+                // Set the respawn position, and the respawn rotation. 
+                float xPos = respawnPos.transform.position.x + respawnPosModifiers.x;
+                float yPos = respawnPos.transform.position.y + respawnPosModifiers.y;
+                float zPos = respawnPos.transform.position.z + respawnPosModifiers.z;
+
+                gameObject.transform.position = new Vector3(xPos, yPos, zPos);
+                gameObject.transform.rotation = respawnAngle;
+
+                SetCubeHolderPickupTag(true, respawnPos);
+            }
         }
+     
     }
 
     /// <summary>
@@ -177,13 +189,16 @@ public class CubeRespawn : MonoBehaviour
     /// <param name="thisCubeHolder">The cube holder that is being looked at. </param>
     public void SetCubeHolderPickupTag(bool pickedUp, GameObject thisCubeHolder)
     {
-        if(pickedUp)
+        if(!keepDefaultPos)
         {
-            thisCubeHolder.tag = "Cube Holder";
-        }
-        else if(!pickedUp)
-        {
-            thisCubeHolder.tag = "Cube Holder Currently Holding Cube";
+            if (pickedUp)
+            {
+                thisCubeHolder.tag = "Cube Holder";
+            }
+            else if (!pickedUp)
+            {
+                thisCubeHolder.tag = "Cube Holder Currently Holding Cube";
+            }
         }
     }
     #endregion 

@@ -121,7 +121,7 @@ public class HandleSaving : MonoBehaviour
     /// </summary>
     private void SetLevels()
     {
-        if (saveSystem.CanFindFile("PlayerData"))
+        if (saveSystem.CanFindFile(PlayerPrefs.GetString("SaveFile")))
         {
             PlayerDataNew data = saveSystem.LoadPlayer();
 
@@ -290,7 +290,7 @@ public class Level
 [System.Serializable]
 public class Ability
 {
-    public enum AbilityType { Dash, Batman }
+    public enum AbilityType { Dash, Batman, CubePickUp }
 
     public AbilityType thisAbility;
     public string[] levels;

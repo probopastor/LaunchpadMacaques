@@ -77,21 +77,22 @@ public class DetectController : MonoBehaviour
         }
 
 
-        if (FindObjectOfType<Button>() & controller)
+        if (FindObjectOfType<Button>())
         {
             if (FindObjectOfType<Button>().isActiveAndEnabled)
             {
 
                 if (even.currentSelectedGameObject == null)
                 {
-                    ControllerConnected();
+
+                    UpdateUI();
                 }
 
                 else if (even.currentSelectedGameObject.GetComponent<Button>())
                 {
                     if (!even.currentSelectedGameObject.GetComponent<Button>().isActiveAndEnabled)
                     {
-                        ControllerConnected();
+                        UpdateUI();
                     }
                 }
 
@@ -99,7 +100,7 @@ public class DetectController : MonoBehaviour
                 {
                     if (!even.currentSelectedGameObject.GetComponent<TMP_Dropdown>().isActiveAndEnabled)
                     {
-                        ControllerConnected();
+                        UpdateUI();
                     }
                 }
 
@@ -107,7 +108,7 @@ public class DetectController : MonoBehaviour
                 {
                     if (!even.currentSelectedGameObject.GetComponent<Slider>().isActiveAndEnabled)
                     {
-                        ControllerConnected();
+                        UpdateUI();
                     }
                 }
 
@@ -115,7 +116,15 @@ public class DetectController : MonoBehaviour
                 {
                     if (!even.currentSelectedGameObject.GetComponent<Toggle>().isActiveAndEnabled)
                     {
-                        ControllerConnected();
+                        UpdateUI();
+                    }
+                }
+
+                else if (even.currentSelectedGameObject.GetComponent<Scrollbar>())
+                {
+                    if (!even.currentSelectedGameObject.GetComponent<Scrollbar>().isActiveAndEnabled)
+                    {
+                        UpdateUI();
                     }
                 }
             }
@@ -163,6 +172,24 @@ public class DetectController : MonoBehaviour
             if (selectedGameObject && selectedGameObject.activeSelf)
             {
                 even.SetSelectedGameObject(selectedGameObject);
+            }
+
+        }
+    }
+
+    private void UpdateUI()
+    {
+        if (FindObjectOfType<EventSystem>())
+        {
+
+            if (selectedGameObject && selectedGameObject.activeSelf)
+            {
+                even.SetSelectedGameObject(selectedGameObject);
+            }
+
+            else
+            {
+                even.SetSelectedGameObject(FindObjectOfType<Button>().gameObject);
             }
 
         }
