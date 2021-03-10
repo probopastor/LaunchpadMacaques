@@ -3134,101 +3134,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7868f41013436074f90de28d60c90166, type: 3}
---- !u!1 &301271662
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 301271663}
-  - component: {fileID: 301271666}
-  - component: {fileID: 301271665}
-  - component: {fileID: 301271664}
-  m_Layer: 13
-  m_Name: Coyote Time Object
-  m_TagString: Platform
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &301271663
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 301271662}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 50, y: 1, z: 50}
-  m_Children: []
-  m_Father: {fileID: 1919121421}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &301271664
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 301271662}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &301271665
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 301271662}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &301271666
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 301271662}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &314864194
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18817,18 +18722,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1790872067108165593, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
-      propertyPath: coyoteObj
-      value: 
-      objectReference: {fileID: 301271662}
-    - target: {fileID: 1790872067108165593, guid: e02315d1bca9dd54489263b84334ae29,
-        type: 3}
-      propertyPath: enableCoyoteTime
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1790872067108165593, guid: e02315d1bca9dd54489263b84334ae29,
-        type: 3}
       propertyPath: disableWalkingOffPlatform
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2205510989687640733, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -19014,6 +18909,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -20.500122
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7840260332642151202, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -20119,12 +20034,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1997736921237231860, guid: 46bb679fbd350424d91c1ab3dc0580f7,
     type: 3}
   m_PrefabInstance: {fileID: 1777183457}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1778314048 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 229712723945304053, guid: e02315d1bca9dd54489263b84334ae29,
-    type: 3}
-  m_PrefabInstance: {fileID: 1696001279}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1779046089
 PrefabInstance:
@@ -21641,37 +21550,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1917853740}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1919121420
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1919121421}
-  m_Layer: 0
-  m_Name: Coyote Time Obj Holder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1919121421
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1919121420}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 75.539734, y: -95.02467, z: 14.341358}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 301271663}
-  m_Father: {fileID: 1778314048}
-  m_RootOrder: 15
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1919519154
 PrefabInstance:
   m_ObjectHideFlags: 0

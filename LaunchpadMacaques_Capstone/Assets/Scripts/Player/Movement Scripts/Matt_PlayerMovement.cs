@@ -1263,9 +1263,9 @@ public class Matt_PlayerMovement : MonoBehaviour
             Invoke(nameof(StopGrounded), Time.deltaTime * delay);
         }
 
-        if (other.collider.tag == "Platform")
+        if (other.collider.tag == "Platform" || other.gameObject.layer.Equals("Ground"))
         {
-            if (gameObjectStoodOn != other.collider.gameObject || other.gameObject.layer.Equals("Ground"))
+            if (gameObjectStoodOn != other.collider.gameObject)
             {
                 gameObjectStoodOn = other.collider.gameObject;
             }
