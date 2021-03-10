@@ -61,6 +61,8 @@ public class SettingsManager : MonoBehaviour
 
     List<GameObject> useTransitionObjects;
 
+    private SetPostProcessing postProcessing;
+
 
     // The Deafult variables the sliders will be set to, upon an ititial launch (Player has never played game before)
     #region Deafult Variables
@@ -78,6 +80,7 @@ public class SettingsManager : MonoBehaviour
     #endregion
     void Start()
     {
+        postProcessing = FindObjectOfType<SetPostProcessing>();
         useTransitionObjects = new List<GameObject>();
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
@@ -540,6 +543,8 @@ public class SettingsManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("Bloom", 0);
         }
+
+        postProcessing.SetBloom();
     }
 
     public void SetScreenShake(bool useScreenShake)

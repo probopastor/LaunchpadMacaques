@@ -3027,7 +3027,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -25.000061, y: -20.500061}
+  m_AnchoredPosition: {x: -25, y: -20.500061}
   m_SizeDelta: {x: -132.83289, y: -285.4723}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &393179405
@@ -19871,6 +19871,7 @@ GameObject:
   - component: {fileID: 2143251229}
   - component: {fileID: 2143251231}
   - component: {fileID: 2143251230}
+  - component: {fileID: 2143251232}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -20078,6 +20079,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ListenerNumber: -1
+--- !u!114 &2143251232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143251225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 075b91221f4acfc4fbbbcbd6f211ab5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraVolume: {fileID: 2143251230}
 --- !u!1 &2144757345
 GameObject:
   m_ObjectHideFlags: 0
@@ -21210,6 +21224,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -5415198252324321248, guid: 0ccd2a5cf9ed9c64f977f2e7cdd03728,
         type: 2}
+    - target: {fileID: 5125954182620733355, guid: 05636b887903cda4c8620310557feabf,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetBloom
+      objectReference: {fileID: 0}
     - target: {fileID: 5672972810704387196, guid: 05636b887903cda4c8620310557feabf,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
