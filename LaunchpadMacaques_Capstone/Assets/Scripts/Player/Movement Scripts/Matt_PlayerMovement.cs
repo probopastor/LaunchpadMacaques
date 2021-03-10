@@ -291,14 +291,6 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         currentMaxFOV = maxFOV;
 
-        //if(HandleSaving.instance != null)
-        //{
-        //    dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
-        //}
-        //else
-        //{
-        //    dashUnlocked = true;
-        //}
         dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
 
     }
@@ -317,7 +309,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) || Time.timeScale > 0)
+        if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && Time.timeScale > 0)
         {
             if (canMove)
             {
@@ -1331,11 +1323,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         for (int i = 0; i < other.contactCount; i++)
         {
             Vector3 normal = other.contacts[i].normal;
-            //FLOOR
-            if (IsFloor(normal))
-            {
-                grappleGunReference.ResetGrapples();
-            }
+
         }
 
         if (other.collider.tag == "Platform" || other.gameObject.layer.Equals("Ground"))

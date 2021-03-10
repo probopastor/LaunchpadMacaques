@@ -23,6 +23,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The Full Screen Toggle")] Toggle fullScreenToggle;
     [SerializeField, Tooltip("The Graphics Quality Dropdown Box")] TMP_Dropdown graphicsQualityDropdown;
     [SerializeField, Tooltip("The Colorblind Mode Dropdown Box")] TMP_Dropdown colorblindModeDropdown;
+    [SerializeField, Tooltip("The Bloom Toggle")] Toggle bloomToggle;
 
     [Header("Volume Sliders")]
     [SerializeField, Tooltip("The Dialouge Volume Slider")] Slider dialougeVolume;
@@ -60,6 +61,9 @@ public class SettingsManager : MonoBehaviour
 
     List<GameObject> useTransitionObjects;
 
+    private SetPostProcessing postProcessing;
+
+
     // The Deafult variables the sliders will be set to, upon an ititial launch (Player has never played game before)
     #region Deafult Variables
     private int deafultGraphicsQuality = 1;
@@ -76,32 +80,38 @@ public class SettingsManager : MonoBehaviour
     #endregion
     void Start()
     {
+        postProcessing = FindObjectOfType<SetPostProcessing>();
         useTransitionObjects = new List<GameObject>();
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
-            settingsHolder.SetActive(true);
-
-
-            InitialFullScreen();
-            InitialQuality();
-            InitialDialouge();
-            InitialMusic();
-            InitialMaster();
-            InitialSFX();
-            InitialInvertY();
-            InitialMouseSensitivity();
-            SetResolutionsDropDown();
-            InitialFOV();
-            InitialScreenShake();
-            InitialColorblindMode();
-
-            DisableStuff();
-
-
+            StartCoroutine(SetAllMenuElements());
         }
 
         transition = FindObjectOfType<ButtonTransitionManager>().GetComponent<Animator>();
         transitionManager = FindObjectOfType<ButtonTransitionManager>();
+    }
+
+    IEnumerator SetAllMenuElements()
+    {
+        settingsHolder.SetActive(true);
+        yield return new WaitForEndOfFrame();
+
+        InitialFullScreen();
+        InitialQuality();
+        InitialDialouge();
+        InitialMusic();
+        InitialMaster();
+        InitialSFX();
+        InitialInvertY();
+        InitialMouseSensitivity();
+        SetResolutionsDropDown();
+        InitialFOV();
+        InitialScreenShake();
+        InitialColorblindMode();
+        InitialBloom();
+
+        yield return new WaitForEndOfFrame();
+        DisableStuff();
     }
 
     public void UpdateGameplay()
@@ -127,6 +137,7 @@ public class SettingsManager : MonoBehaviour
         InitialFullScreen();
         InitialQuality();
         InitialColorblindMode();
+        InitialBloom();
     }
 
     private void DisableStuff()
@@ -225,6 +236,30 @@ public class SettingsManager : MonoBehaviour
         {
             fullScreenToggle.SetIsOnWithoutNotify(true);
             SetFullScreen(true);
+        }
+    }
+
+    private void InitialBloom()
+    {
+        if (PlayerPrefs.HasKey("Bloom"))
+        {
+            if(PlayerPrefs.GetInt("Bloom") == 1)
+            {
+                bloomToggle.SetIsOnWithoutNotify(true);
+                SetBloom(true);
+            }
+
+            else
+            {
+                bloomToggle.SetIsOnWithoutNotify(false);
+                SetBloom(false);
+            }
+        }
+
+        else
+        {
+            bloomToggle.SetIsOnWithoutNotify(true);
+            SetBloom(true);
         }
     }
 
@@ -495,6 +530,21 @@ public class SettingsManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("FullScreen", 0);
         }
+    }
+
+    public void SetBloom(bool useBloom)
+    {
+        if (useBloom)
+        {
+            PlayerPrefs.SetInt("Bloom", 1);
+        }
+
+        else
+        {
+            PlayerPrefs.SetInt("Bloom", 0);
+        }
+
+        postProcessing.SetBloom();
     }
 
     public void SetScreenShake(bool useScreenShake)
