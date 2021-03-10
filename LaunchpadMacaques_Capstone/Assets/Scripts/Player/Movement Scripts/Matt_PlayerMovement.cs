@@ -298,7 +298,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) || Time.timeScale > 0)
+        if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && Time.timeScale > 0)
         {
             if (canMove)
             {
