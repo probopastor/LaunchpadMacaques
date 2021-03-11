@@ -1106,6 +1106,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 timeOffGround = 0;
                 grounded = true;
+                rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
                 cancellingGrounded = false;
                 normalVector = normal;
                 CancelInvoke(nameof(StopGrounded));

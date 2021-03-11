@@ -276,7 +276,6 @@ public class GrapplingGun : MonoBehaviour
     void Update()
     {
         GrappleUpdateChanges();
-        GrapplingInput();
         CheckForGrapplingThroughWall();
 
         HoverShadow();
@@ -391,39 +390,8 @@ public class GrapplingGun : MonoBehaviour
     #endregion
 
     #region UserInput
-    /// <summary>
-    /// Will Get input for things relevant to grappling
-    /// </summary>
-    private void GrapplingInput()
-    {
-        //if ((Input.GetButtonUp("Start Grapple") || !holdingDownGrapple) && IsGrappling())
-        //{
-        //    canHoldDownToGrapple = true;
-        //}
+   
 
-        //if ((Input.GetButton("Start Grapple") || GetGrappleTrigger()) && IsGrappling() && canHoldDownToGrapple == true /*&& !holdingDownGrapple*/)
-        //{
-        //    StartGrapple("Normal");
-        //}
-
-        //else if ((Input.GetButton("Start Grapple") || GetGrappleTrigger()) && !IsGrappling() && !pushPull.IsGrabbing())
-        //{
-        //    StartGrapple("Normal");
-        //}
-
-        //else if ((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTriggerDown()) && IsGrappling())
-        //{
-        //    StopGrapple();
-        //}
-
-        //else if((Input.GetButtonDown("Stop Grapple") || GetStopGrappleTrigger()) && !IsGrappling())
-        //{
-        //    StartGrapple("Batman");
-        //}
-
-
-
-    }
 
     #region Handle Trigger Input
 
@@ -603,6 +571,7 @@ public class GrapplingGun : MonoBehaviour
         {
             StartGrapplingSettings();
             CreateGrapplePoint();
+            playerRB.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             passedGrapplePoint = false;
             EventInstance beginGrappleInstance = RuntimeManager.CreateInstance(grappleStart);
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
@@ -618,6 +587,8 @@ public class GrapplingGun : MonoBehaviour
         {
             StartGrapplingSettings();
             BatmanGrapple();
+
+            playerRB.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
 
             EventInstance beginGrappleInstance = RuntimeManager.CreateInstance(grappleStart);
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
