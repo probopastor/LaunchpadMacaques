@@ -15,6 +15,9 @@ using UnityEngine.InputSystem;
 
 public class GameplayInputController : MonoBehaviour
 {
+    [SerializeField] private bool holdDownToSwing;
+
+    [Header("Events")]
     private PlayerControlls controls;
     [SerializeField, Tooltip("The Event that is Called when the player attempts to move (Vector 2)")] MoveEvent moveEvent;
     [SerializeField, Tooltip("The Event that is called when player uses mouse scroll wheel or the DPAD (Vector 2 Use Y)")] ScrollEvent scrollEvent;
@@ -30,6 +33,8 @@ public class GameplayInputController : MonoBehaviour
 
 
     [SerializeField, Tooltip("The Event that is Called When player Presses pause Input ")] PauseEvent pauseEvent;
+
+
 
     private void Awake()
     {
@@ -74,7 +79,11 @@ public class GameplayInputController : MonoBehaviour
     {
         controls.GamePlay.StartGrapple.performed += OnStartGrapple;
 
-        controls.GamePlay.StartGrapple.canceled += OnStopGrapple;
+        if (holdDownToSwing)
+        {
+            controls.GamePlay.StartGrapple.canceled += OnStopGrapple;
+        }
+
     }
 
     private void SetBatmanGrapple()
@@ -84,7 +93,11 @@ public class GameplayInputController : MonoBehaviour
 
     private void SetStopGrapple()
     {
-        //controls.GamePlay.StopGrapple.performed += OnStopGrapple;
+        if (!holdDownToSwing)
+        {
+            controls.GamePlay.StopGrapple.performed += OnStopGrapple;
+        }
+
     }
 
     private void SetDropCube()
