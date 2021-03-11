@@ -111,6 +111,9 @@ public class DialogueBuilder : EditorWindow
     /// </summary>
     private void OnGUI()
     {
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+            Close();
+
         //Make sure object is properly updated
         currentObject.Update();
 
