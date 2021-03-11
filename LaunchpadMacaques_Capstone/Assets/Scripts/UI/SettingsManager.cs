@@ -63,6 +63,11 @@ public class SettingsManager : MonoBehaviour
 
     private SetPostProcessing postProcessing;
 
+    private bool masterSet = false;
+    private bool musicSet = false;
+    private bool dialougeSet = false;
+    private bool sfxSet = false;
+
 
     // The Deafult variables the sliders will be set to, upon an ititial launch (Player has never played game before)
     #region Deafult Variables
@@ -111,6 +116,11 @@ public class SettingsManager : MonoBehaviour
         InitialBloom();
 
         yield return new WaitForEndOfFrame();
+
+        while(!masterSet || !dialougeSet || !musicSet || !sfxSet)
+        {
+            yield return null;
+        }
         DisableStuff();
     }
 
@@ -389,6 +399,8 @@ public class SettingsManager : MonoBehaviour
             dialougeVolume.SetValueWithoutNotify(deafultDialouge);
             SetDialougeVolume(deafultDialouge);
         }
+
+        dialougeSet = true;
     }
 
     private void InitialMaster()
@@ -407,6 +419,8 @@ public class SettingsManager : MonoBehaviour
             masterSoundSlider.SetValueWithoutNotify(deafultMaster);
             SetMasterVolume(deafultMaster);
         }
+
+        masterSet = true;
     }
 
     /// <summary>
@@ -429,6 +443,8 @@ public class SettingsManager : MonoBehaviour
             musicVolume.SetValueWithoutNotify(deafultMusic);
             SetMusicVolume(deafultMusic);
         }
+
+        musicSet = true;
     }
 
     /// <summary>
@@ -451,6 +467,8 @@ public class SettingsManager : MonoBehaviour
             soundEffectsVolume.SetValueWithoutNotify(deafultSoundEffects);
             SetSFXVolume(deafultSoundEffects);
         }
+
+        sfxSet = true;
     }
 
     /// <summary>
