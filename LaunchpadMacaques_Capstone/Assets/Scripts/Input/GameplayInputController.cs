@@ -15,7 +15,11 @@ using UnityEngine.InputSystem;
 
 public class GameplayInputController : MonoBehaviour
 {
+    [SerializeField] private bool holdDownToSwing;
+
+
     private PlayerControlls controls;
+    [Header("Events")]
     [SerializeField, Tooltip("The Event that is Called when the player attempts to move (Vector 2)")] MoveEvent moveEvent;
     [SerializeField, Tooltip("The Event that is called when player uses mouse scroll wheel or the DPAD (Vector 2 Use Y)")] ScrollEvent scrollEvent;
     [SerializeField, Tooltip("The Event that is Called When player presses Start Grapple Input")] StartGrappleEvent startGrappleEvent;
@@ -30,6 +34,8 @@ public class GameplayInputController : MonoBehaviour
 
 
     [SerializeField, Tooltip("The Event that is Called When player Presses pause Input ")] PauseEvent pauseEvent;
+
+
 
     private void Awake()
     {
@@ -51,6 +57,8 @@ public class GameplayInputController : MonoBehaviour
         SetCrouchEvent();
         SetBatmanGrapple();
         SetDropCube();
+
+        controls.GamePlay.ChangSwingType.performed += OnChangeSwingEvent;
     }
 
     #region SetInputs
@@ -74,7 +82,11 @@ public class GameplayInputController : MonoBehaviour
     {
         controls.GamePlay.StartGrapple.performed += OnStartGrapple;
 
-        controls.GamePlay.StartGrapple.canceled += OnStopGrapple;
+        if (holdDownToSwing)
+        {
+            controls.GamePlay.StartGrapple.canceled += OnStopGrapple;
+        }
+
     }
 
     private void SetBatmanGrapple()
@@ -84,7 +96,11 @@ public class GameplayInputController : MonoBehaviour
 
     private void SetStopGrapple()
     {
-        //controls.GamePlay.StopGrapple.performed += OnStopGrapple;
+        if (!holdDownToSwing)
+        {
+            controls.GamePlay.StopGrapple.performed += OnStopGrapple;
+        }
+
     }
 
     private void SetDropCube()
@@ -118,6 +134,23 @@ public class GameplayInputController : MonoBehaviour
     #endregion
 
     #region Detect Inputs
+
+    private void OnChangeSwingEvent(InputAction.CallbackContext cxt)
+    {
+        holdDownToSwing = !holdDownToSwing;
+
+        if (holdDownToSwing)
+        {
+            controls.GamePlay.StartGrapple.canceled += OnStopGrapple;
+            controls.GamePlay.StopGrapple.performed -= OnStopGrapple;
+        }
+
+        else if (!holdDownToSwing)
+        {
+            controls.GamePlay.StopGrapple.performed += OnStopGrapple;
+            controls.GamePlay.StartGrapple.canceled -= OnStopGrapple;
+        }
+    }
 
     private void OnCrouchEvent(InputAction.CallbackContext cxt)
     {

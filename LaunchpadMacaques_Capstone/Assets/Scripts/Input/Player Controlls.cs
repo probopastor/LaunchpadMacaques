@@ -129,6 +129,14 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ChangSwingType"",
+                    ""type"": ""Button"",
+                    ""id"": ""cffa8220-d872-42b8-acdc-18f4305cd09f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -213,7 +221,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                     ""name"": """",
                     ""id"": ""dd7497ab-9310-454a-82fe-ab03cdf87807"",
                     ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": ""Press"",
+                    ""interactions"": ""Press(pressPoint=0.2)"",
                     ""processors"": ""Normalize(max=1)"",
                     ""groups"": """",
                     ""action"": ""Start Grapple"",
@@ -368,7 +376,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                     ""id"": ""2a9e52c5-47ca-48c2-8b2c-f1fac02f78fc"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": ""ScaleVector2(x=1.3,y=1.3)"",
+                    ""processors"": ""ScaleVector2(x=2.6,y=2.6)"",
                     ""groups"": """",
                     ""action"": ""Look"",
                     ""isComposite"": false,
@@ -444,7 +452,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                     ""name"": """",
                     ""id"": ""0b413451-918f-4f15-9074-d9c1c3f80777"",
                     ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(pressPoint=0.2)"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""StartBatman Grapple"",
@@ -472,6 +480,28 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                     ""action"": ""Drop Cube"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b51ec18e-1bf0-45fe-b202-f7e2718c13d1"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangSwingType"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""adffff7e-0e2a-4d6b-b524-1d626c5cd0ae"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangSwingType"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -494,6 +524,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
         m_GamePlay_ControllerBack = m_GamePlay.FindAction("Controller Back", throwIfNotFound: true);
         m_GamePlay_StartBatmanGrapple = m_GamePlay.FindAction("StartBatman Grapple", throwIfNotFound: true);
         m_GamePlay_DropCube = m_GamePlay.FindAction("Drop Cube", throwIfNotFound: true);
+        m_GamePlay_ChangSwingType = m_GamePlay.FindAction("ChangSwingType", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -557,6 +588,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
     private readonly InputAction m_GamePlay_ControllerBack;
     private readonly InputAction m_GamePlay_StartBatmanGrapple;
     private readonly InputAction m_GamePlay_DropCube;
+    private readonly InputAction m_GamePlay_ChangSwingType;
     public struct GamePlayActions
     {
         private @PlayerControlls m_Wrapper;
@@ -575,6 +607,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
         public InputAction @ControllerBack => m_Wrapper.m_GamePlay_ControllerBack;
         public InputAction @StartBatmanGrapple => m_Wrapper.m_GamePlay_StartBatmanGrapple;
         public InputAction @DropCube => m_Wrapper.m_GamePlay_DropCube;
+        public InputAction @ChangSwingType => m_Wrapper.m_GamePlay_ChangSwingType;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -626,6 +659,9 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                 @DropCube.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnDropCube;
                 @DropCube.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnDropCube;
                 @DropCube.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnDropCube;
+                @ChangSwingType.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnChangSwingType;
+                @ChangSwingType.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnChangSwingType;
+                @ChangSwingType.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnChangSwingType;
             }
             m_Wrapper.m_GamePlayActionsCallbackInterface = instance;
             if (instance != null)
@@ -672,6 +708,9 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                 @DropCube.started += instance.OnDropCube;
                 @DropCube.performed += instance.OnDropCube;
                 @DropCube.canceled += instance.OnDropCube;
+                @ChangSwingType.started += instance.OnChangSwingType;
+                @ChangSwingType.performed += instance.OnChangSwingType;
+                @ChangSwingType.canceled += instance.OnChangSwingType;
             }
         }
     }
@@ -692,5 +731,6 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
         void OnControllerBack(InputAction.CallbackContext context);
         void OnStartBatmanGrapple(InputAction.CallbackContext context);
         void OnDropCube(InputAction.CallbackContext context);
+        void OnChangSwingType(InputAction.CallbackContext context);
     }
 }

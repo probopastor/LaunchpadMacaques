@@ -116,6 +116,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "ChangSwingType",
+                    "type": "Button",
+                    "id": "cffa8220-d872-42b8-acdc-18f4305cd09f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -200,7 +208,7 @@
                     "name": "",
                     "id": "dd7497ab-9310-454a-82fe-ab03cdf87807",
                     "path": "<Gamepad>/rightTrigger",
-                    "interactions": "Press",
+                    "interactions": "Press(pressPoint=0.2)",
                     "processors": "Normalize(max=1)",
                     "groups": "",
                     "action": "Start Grapple",
@@ -355,7 +363,7 @@
                     "id": "2a9e52c5-47ca-48c2-8b2c-f1fac02f78fc",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
-                    "processors": "ScaleVector2(x=1.3,y=1.3)",
+                    "processors": "ScaleVector2(x=2.6,y=2.6)",
                     "groups": "",
                     "action": "Look",
                     "isComposite": false,
@@ -431,7 +439,7 @@
                     "name": "",
                     "id": "0b413451-918f-4f15-9074-d9c1c3f80777",
                     "path": "<Gamepad>/leftTrigger",
-                    "interactions": "",
+                    "interactions": "Press(pressPoint=0.2)",
                     "processors": "",
                     "groups": "",
                     "action": "StartBatman Grapple",
@@ -457,6 +465,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Drop Cube",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b51ec18e-1bf0-45fe-b202-f7e2718c13d1",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangSwingType",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "adffff7e-0e2a-4d6b-b524-1d626c5cd0ae",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangSwingType",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
