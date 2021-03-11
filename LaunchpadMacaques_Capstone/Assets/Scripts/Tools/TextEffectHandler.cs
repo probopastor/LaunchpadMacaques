@@ -2,7 +2,8 @@
  * Launchpad Macaques - Neon Oblivion
  * Zackary Seiple
  * TextEffectHandler.cs
- * This script contains multiple functions for 
+ * This script contains functionality for parsing strings with HTML-type tags within them (representing effects), removing the tags, and applying
+ * the desired effects to said text
  */
 
 using System;
@@ -17,11 +18,15 @@ public  class TextEffectHandler : MonoBehaviour
 {
     public static TextEffectHandler instance;
 
+    public int RunningEffectCount { get; private set; } = 0;
+
     [Header("Typewriter Settings")]
     [Tooltip("The time (in seconds) it waits between revealing a letter")]
     public float typewriterSpeed = 0.025f;
     [Tooltip("The time (in seconds) the typewriter effects waits to start upon ")]
     public float typewriterDelay = 0.1f;
+    [Tooltip("Whether the typewriter effect should stop rolling out slowly and skip immediately to the end")]
+    private bool skipAhead = false;
 
     [Header("Shaky Settings")]
     public float strength = 1.5f;
@@ -33,10 +38,10 @@ public  class TextEffectHandler : MonoBehaviour
     [Header("Rainbow Settings")]
     public float transitionSpeed = 0.5f;
 
+    //Other private variables
     private delegate IEnumerator TextEffect(TMP_Text textObj, int startIndex, int endIndex);
     private Dictionary<string, TextEffect> effectLibrary;
     private CharTweener tweener;
-    private Sequence currentSequence;
     private Color defaultTextColor;
 
     //Available Text Effects
@@ -108,6 +113,8 @@ public  class TextEffectHandler : MonoBehaviour
     {
         tweener = obj.GetCharTweener();
         defaultTextColor = obj.color;
+        skipAhead = false;
+
         ParseText(obj, textToRun);
     }
 
@@ -116,7 +123,26 @@ public  class TextEffectHandler : MonoBehaviour
     /// </summary>
     public void StopText()
     {
+        skipAhead = false;
         DOTween.KillAll(true);
+        RunningEffectCount = 0;
+    }
+
+    /// <summary>
+    /// Skips any running effects (like typewriter) to their finished state
+    /// </summary>
+    public void SkipToEndOfEffects()
+    {
+        skipAhead = true;
+    }
+
+    /// <summary>
+    /// Checks to see if any effects are running, and if so, how many
+    /// </summary>
+    /// <returns>The number of effects running</returns>
+    public int EffectsRunning()
+    {
+        return RunningEffectCount;
     }
 
     /// <summary>
@@ -317,6 +343,7 @@ public  class TextEffectHandler : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ShakyText(TMP_Text textObject, int startIndex, int endIndex)
     {
+        RunningEffectCount++;
         Tween tween = null;
 
         for(int i = startIndex; i < endIndex; i++)
@@ -328,12 +355,13 @@ public  class TextEffectHandler : MonoBehaviour
                 .SetLoops(-1, LoopType.Restart)
                 .OnComplete(() => {
                     tween.Rewind();
-                } );
+                } )
+                .SetUpdate(true);
         }
 
-//yield return new WaitForSecondsRealtime(1f);
-       // tween.Kill(true);
-
+        //yield return new WaitForSecondsRealtime(1f);
+        // tween.Kill(true);
+        RunningEffectCount--;
         yield break;
     }
 
@@ -346,19 +374,25 @@ public  class TextEffectHandler : MonoBehaviour
     /// <returns></returns>
     private IEnumerator TypewriterText(TMP_Text textObject, int startIndex, int endIndex)
     {
+        RunningEffectCount++;
+
         for (int i = startIndex; i < endIndex; i++)
         {
             tweener.SetAlpha(i, 0);
         }
 
-        yield return new WaitForSecondsRealtime(instance.typewriterSpeed);
+        if(!skipAhead)
+            yield return new WaitForSecondsRealtime(instance.typewriterSpeed);
 
         for (int i = startIndex; i < endIndex; i++)
         {
             tweener.SetAlpha(i, 1);
-            yield return new WaitForSecondsRealtime(typewriterSpeed);
+            if(!skipAhead)
+                yield return new WaitForSecondsRealtime(typewriterSpeed);
         }
 
+        RunningEffectCount--;
+        yield break;
     }
 
     /// <summary>
@@ -370,6 +404,8 @@ public  class TextEffectHandler : MonoBehaviour
     /// <returns></returns>
     private IEnumerator RainbowText(TMP_Text textObject, int startIndex, int endIndex)
     {
+        RunningEffectCount++;
+
         bool[] activated = new bool[endIndex - startIndex];
         for(int i = 0; i < activated.Length; i++)
         {
@@ -388,10 +424,12 @@ public  class TextEffectHandler : MonoBehaviour
                     int temp = i;
                     var tween = tweener.DOColor(i, UnityEngine.Random.ColorHSV(0, 1, 1, 1, 1, 1, tweener.GetAlpha(i), tweener.GetAlpha(i)),
                         0.5f)
-                        .SetLoops(-1, LoopType.Yoyo).OnKill(() =>
+                        .SetLoops(-1, LoopType.Yoyo)
+                        .OnKill(() =>
                         {
                             tweener.SetColor(temp, Color.white);
-                        });
+                        })
+                        .SetUpdate(true);
                     tween.fullPosition = timeOffset;
                 }
                 
@@ -410,6 +448,6 @@ public  class TextEffectHandler : MonoBehaviour
             yield return null;
         }
 
-
+        RunningEffectCount--;
     }
 }
