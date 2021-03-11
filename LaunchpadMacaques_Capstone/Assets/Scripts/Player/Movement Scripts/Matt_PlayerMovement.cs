@@ -145,12 +145,20 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #region Platform Landing Settings
     [Header("Platform Landing Settings")]
-    [SerializeField] private string[] tagsToCancelVelocity;
+    [SerializeField, Tooltip("The tags that should be checked to cancel out player velocity when landing.")] private string[] tagsToCancelVelocity;
     private bool notLandedAfterAirTime = false;
 
-    [SerializeField] private bool disableWalkingOffPlatform = false;
-    [SerializeField] private GameObject[] movementBlockers = new GameObject[4];
+    [SerializeField, Tooltip("If enabled, player will be unable to walk off platforms without jumping, swinging, or slingshotting. ")] private bool disableWalkingOffPlatform = false;
+    [SerializeField, Tooltip("The movement blocker game objects. movementBlockers[0] is forward, movementBlockers[1] is right, movementBlockers[2] is backwards, movementBlockers[3] is left of player. ")] private GameObject[] movementBlockers = new GameObject[4];
 
+    [SerializeField, Tooltip("If enabled, player will be able to walk off of platforms for a short period of time without falling. ")] private bool enableCoyoteTime = false;
+    [SerializeField, Tooltip("The invisible object that will be moved under the player for coyote time. ")] private GameObject coyoteObj;
+    [SerializeField, Tooltip("")] private float coyoteTimeDuration = 1f;
+    private GameObject gameObjectStoodOn;
+    private bool coyoteTimeInProgress = false;
+    private bool coyoteTimeOccured = false;
+    private bool startCoyoteCountdown = false;
+    private bool moveCoyoteObj = false;
     #endregion
 
 
@@ -283,14 +291,6 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         currentMaxFOV = maxFOV;
 
-        //if(HandleSaving.instance != null)
-        //{
-        //    dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
-        //}
-        //else
-        //{
-        //    dashUnlocked = true;
-        //}
         dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
 
     }
@@ -301,12 +301,15 @@ public class Matt_PlayerMovement : MonoBehaviour
         LimitVelocity();
         SetGravityModifier();
 
-
+        if (moveCoyoteObj)
+        {
+            MoveCoyoteObj();
+        }
     }
 
     private void Update()
     {
-        if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) || Time.timeScale > 0)
+        if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && Time.timeScale > 0)
         {
             if (canMove)
             {
@@ -743,9 +746,16 @@ public class Matt_PlayerMovement : MonoBehaviour
                 rb.AddForce(orientation.transform.forward * tempY * moveSpeed * Time.deltaTime * multiplier * multiplierV);
                 rb.AddForce(orientation.transform.right * tempX * moveSpeed * Time.deltaTime * multiplier);
 
-                // If the player cannot walk off of platforms.
-                if (disableWalkingOffPlatform && grounded && !jumping)
+                // If the player cannot walk off of platforms or coyote time is active.
+                if ((disableWalkingOffPlatform || enableCoyoteTime) && grounded && !jumping)
                 {
+                    bool activateCoyoteObj = false;
+
+                    ReenableCoyoteTime();
+
+                    // coyoteTimeDisableCheck will be greater than 1 if coyote time needs to stay enabled. 
+                    int coyoteTimeDisableCheck = 0;
+
                     Vector3 downRight = new Vector3(1, -1, 0);
                     Vector3 downLeft = new Vector3(-1, -1, 0);
 
@@ -753,31 +763,47 @@ public class Matt_PlayerMovement : MonoBehaviour
                     Vector3 downBackwards = new Vector3(0, -1, -1);
 
                     // 4 Raycasts determine whether the player is on the edge of a platform. 
-                    #region Edge Checking
+                    #region Edge Checking & Coyote Time
                     if (!Physics.Raycast(gameObject.transform.position, downRight, 2f, whatIsGround) && grounded && !jumping)
                     {
                         if (rb.velocity.x > 0)
                         {
-                            SetMovementBlockersActivity(true, 1);
-                            SetBlockerLocation(1);
+                            if (disableWalkingOffPlatform)
+                            {
+                                SetMovementBlockersActivity(true, 1);
+                                SetBlockerLocation(1);
+                            }
+                            else if (enableCoyoteTime)
+                            {
+                                activateCoyoteObj = true;
+                            }
                         }
                     }
                     else
                     {
                         SetMovementBlockersActivity(false, 1);
+                        coyoteTimeDisableCheck++;
                     }
 
                     if (!Physics.Raycast(gameObject.transform.position, downLeft, 2f, whatIsGround) && grounded && !jumping)
                     {
                         if (rb.velocity.x < 0)
                         {
-                            SetMovementBlockersActivity(true, 3);
-                            SetBlockerLocation(3);
+                            if (disableWalkingOffPlatform)
+                            {
+                                SetMovementBlockersActivity(true, 3);
+                                SetBlockerLocation(3);
+                            }
+                            else if (enableCoyoteTime)
+                            {
+                                activateCoyoteObj = true;
+                            }
                         }
                     }
                     else
                     {
                         SetMovementBlockersActivity(false, 3);
+                        coyoteTimeDisableCheck++;
                     }
 
 
@@ -785,27 +811,69 @@ public class Matt_PlayerMovement : MonoBehaviour
                     {
                         if (rb.velocity.z > 0)
                         {
-                            SetMovementBlockersActivity(true, 0);
-                            SetBlockerLocation(0);
+                            if (disableWalkingOffPlatform)
+                            {
+                                SetMovementBlockersActivity(true, 0);
+                                SetBlockerLocation(0);
+                            }
+                            else if (enableCoyoteTime)
+                            {
+                                activateCoyoteObj = true;
+                            }
                         }
                     }
                     else
                     {
                         SetMovementBlockersActivity(false, 0);
+                        coyoteTimeDisableCheck++;
                     }
 
                     if (!Physics.Raycast(gameObject.transform.position, downBackwards, 2f, whatIsGround) && grounded && !jumping)
                     {
                         if (rb.velocity.z < 0)
                         {
-                            SetMovementBlockersActivity(true, 2);
-                            SetBlockerLocation(2);
+                            if (disableWalkingOffPlatform)
+                            {
+                                SetMovementBlockersActivity(true, 2);
+                                SetBlockerLocation(2);
+                            }
+                            else if (enableCoyoteTime)
+                            {
+                                activateCoyoteObj = true;
+                            }
                         }
                     }
                     else
                     {
                         SetMovementBlockersActivity(false, 2);
+                        coyoteTimeDisableCheck++;
                     }
+
+                    if (activateCoyoteObj && grounded && !jumping && !coyoteTimeInProgress && !coyoteTimeOccured && gameObjectStoodOn != null)
+                    {
+                        coyoteTimeInProgress = true;
+                        startCoyoteCountdown = true;
+                        EnableInitialCoyoteObj();
+                    }
+                    
+                    //if(!grounded || jumping || gameObjectStoodOn == null)
+                    //{
+                    //    if(coyoteObj.activeSelf)
+                    //    {
+                    //        StopCoroutine(BeginCoyoteTimeObject());
+
+                    //        SetCoyoteObject(false);
+                    //        coyoteTimeInProgress = false;
+                    //        startCoyoteCountdown = false;
+                    //        moveCoyoteObj = false;
+                    //    }
+                    //}
+
+                    if (coyoteTimeDisableCheck == 0)
+                    {
+                        SetCoyoteObject(false);
+                    }
+
                     #endregion
                 }
             }
@@ -832,12 +900,76 @@ public class Matt_PlayerMovement : MonoBehaviour
                 }
             }
         }
-
         else
         {
             rb.velocity = Vector3.zero;
         }
     }
+
+    #region Coyote Time Methods
+
+    private void MoveCoyoteObj()
+    {
+        if (gameObjectStoodOn != null)
+        {
+            coyoteObj.transform.position = new Vector3(orientation.transform.position.x, gameObjectStoodOn.transform.position.y, orientation.transform.position.z);
+        }
+    }
+
+    private void EnableInitialCoyoteObj()
+    {
+        SetCoyoteObject(true);
+        moveCoyoteObj = true;
+        BoxCollider coyoteCollider = coyoteObj.GetComponent<BoxCollider>();
+        //MoveCoyoteObj();
+        coyoteCollider.size = new Vector3(coyoteCollider.size.x, gameObjectStoodOn.GetComponent<BoxCollider>().size.y - 0.5f, coyoteCollider.size.z);
+    }
+
+
+    /// <summary>
+    /// Coyote time coroutine that puts a countdown on the coyote object once the player lands on it.  
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator BeginCoyoteTimeObject()
+    {
+        EnableInitialCoyoteObj();
+
+        yield return new WaitForSeconds(coyoteTimeDuration);
+
+        SetCoyoteObject(false);
+        coyoteTimeInProgress = false;
+        startCoyoteCountdown = false;
+        moveCoyoteObj = false;
+    }
+
+    /// <summary>
+    /// Changes the activity status of the coyote object.
+    /// </summary>
+    /// <param name="active">Whether the coyote object should be true or false. </param>
+    private void SetCoyoteObject(bool active)
+    {
+        if (enableCoyoteTime)
+        {
+            coyoteObj.SetActive(active);
+        }
+    }
+
+    /// <summary>
+    /// Resets coyote time occurred if the player is no longer on the coyote time object when they touch a new object.
+    /// </summary>
+    private void ReenableCoyoteTime()
+    {
+        if (enableCoyoteTime)
+        {
+            if (gameObjectStoodOn != coyoteObj && gameObjectStoodOn != null && coyoteTimeOccured)
+            {
+                coyoteTimeOccured = false;
+            }
+        }
+    }
+
+
+    #endregion
 
     #region Edge Blocker Methods
     /// <summary>
@@ -847,9 +979,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <param name="blockerNumber">The number of the blocker that should be moved. 0 is forward, 1 is right, 2 is back, 3 is left.</param>
     private void SetMovementBlockersActivity(bool active, int blockerNumber)
     {
-        if (movementBlockers[blockerNumber].activeSelf != active)
+        if (disableWalkingOffPlatform)
         {
-            movementBlockers[blockerNumber].SetActive(active);
+            if (movementBlockers[blockerNumber].activeSelf != active)
+            {
+                movementBlockers[blockerNumber].SetActive(active);
+            }
         }
     }
 
@@ -862,16 +997,16 @@ public class Matt_PlayerMovement : MonoBehaviour
         switch (blockerNumber)
         {
             case 0:
-                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z + 0.8f);
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z + 0.6f);
                 break;
             case 1:
-                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x + 0.8f, orientation.transform.position.y, orientation.transform.position.z);
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x + 0.6f, orientation.transform.position.y, orientation.transform.position.z);
                 break;
             case 2:
-                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z - 0.8f);
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z - 0.6f);
                 break;
             case 3:
-                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x - 0.8f, orientation.transform.position.y, orientation.transform.position.z);
+                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x - 0.6f, orientation.transform.position.y, orientation.transform.position.z);
                 break;
         }
     }
@@ -1114,6 +1249,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 timeOffGround = 0;
                 grounded = true;
+                rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
                 cancellingGrounded = false;
                 normalVector = normal;
                 CancelInvoke(nameof(StopGrounded));
@@ -1126,6 +1262,25 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             cancellingGrounded = true;
             Invoke(nameof(StopGrounded), Time.deltaTime * delay);
+        }
+
+        if (other.collider.tag == "Platform" || other.gameObject.layer.Equals("Ground"))
+        {
+            if (gameObjectStoodOn != other.collider.gameObject)
+            {
+                gameObjectStoodOn = other.collider.gameObject;
+            }
+
+            if (enableCoyoteTime)
+            {
+                if (other.collider.gameObject.name == coyoteObj.name)
+                {
+                    if (!coyoteTimeOccured)
+                    {
+                        coyoteTimeOccured = true;
+                    }
+                }
+            }
         }
     }
 
@@ -1143,12 +1298,20 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
 
         // Disable all movement blockers if the player exits the ground. 
-        if(collision.gameObject.layer == whatIsGround && disableWalkingOffPlatform)
+        if (collision.gameObject.layer == whatIsGround)
         {
-           for(int i = 0; i < movementBlockers.Length; i++)
+            if (disableWalkingOffPlatform)
             {
-                SetMovementBlockersActivity(false, i);
+                for (int i = 0; i < movementBlockers.Length; i++)
+                {
+                    SetMovementBlockersActivity(false, i);
+                }
             }
+        }
+
+        if (collision.gameObject == gameObjectStoodOn)
+        {
+            gameObjectStoodOn = null;
         }
     }
 
@@ -1161,10 +1324,14 @@ public class Matt_PlayerMovement : MonoBehaviour
         for (int i = 0; i < other.contactCount; i++)
         {
             Vector3 normal = other.contacts[i].normal;
-            //FLOOR
-            if (IsFloor(normal))
+
+        }
+
+        if (other.collider.tag == "Platform" || other.gameObject.layer.Equals("Ground"))
+        {
+            if (gameObjectStoodOn != other.collider.gameObject)
             {
-                grappleGunReference.ResetGrapples();
+                gameObjectStoodOn = other.collider.gameObject;
             }
         }
 
@@ -1195,6 +1362,22 @@ public class Matt_PlayerMovement : MonoBehaviour
                 }
 
                 other.collider.material = frictionlessMat;
+            }
+
+            if (enableCoyoteTime)
+            {
+                if (other.collider.gameObject.name == coyoteObj.name)
+                {
+                    if (!coyoteTimeOccured)
+                    {
+                        coyoteTimeOccured = true;
+
+                        if (startCoyoteCountdown)
+                        {
+                            StartCoroutine(BeginCoyoteTimeObject());
+                        }
+                    }
+                }
             }
         }
 
