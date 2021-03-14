@@ -148,17 +148,18 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The tags that should be checked to cancel out player velocity when landing.")] private string[] tagsToCancelVelocity;
     private bool notLandedAfterAirTime = false;
 
-    [SerializeField, Tooltip("If enabled, player will be unable to walk off platforms without jumping, swinging, or slingshotting. ")] private bool disableWalkingOffPlatform = false;
-    [SerializeField, Tooltip("The movement blocker game objects. movementBlockers[0] is forward, movementBlockers[1] is right, movementBlockers[2] is backwards, movementBlockers[3] is left of player. ")] private GameObject[] movementBlockers = new GameObject[4];
-
     [SerializeField, Tooltip("If enabled, player will be able to walk off of platforms for a short period of time without falling. ")] private bool enableCoyoteTime = false;
-    [SerializeField, Tooltip("The invisible object that will be moved under the player for coyote time. ")] private GameObject coyoteObj;
-    [SerializeField, Tooltip("")] private float coyoteTimeDuration = 1f;
+    [SerializeField, Tooltip("The duration that Coyote Time should last.")] private float coyoteTimeDuration = 1f;
+
+    // The game object currently on.
     private GameObject gameObjectStoodOn;
-    private bool coyoteTimeInProgress = false;
-    private bool coyoteTimeOccured = false;
-    private bool startCoyoteCountdown = false;
-    private bool moveCoyoteObj = false;
+    [SerializeField, Tooltip("The Coyote Time game objects. ")] private GameObject[] coyoteTimeObjs = new GameObject[4];
+
+    // Determines if the Coyote Time coroutine is running.
+    private bool coyoteTimeStarted = false;
+
+    // Determines if the Coyote Time objects are active.
+    private bool coyoteTimeEnabled = false;
     #endregion
 
 
@@ -313,11 +314,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         Movement();
         LimitVelocity();
         SetGravityModifier();
-
-        if (moveCoyoteObj)
-        {
-            MoveCoyoteObj();
-        }
+        CheckForCoyoteObjects();
     }
 
     private void Update()
@@ -776,6 +773,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         // rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Acceleration);
 
         rb.velocity += gravityVector * Time.fixedDeltaTime;
+
         if (currentGravityText)
         {
             currentGravityText.text = "Gravity In M/S: " + gravityVector.y;
@@ -860,136 +858,7 @@ public class Matt_PlayerMovement : MonoBehaviour
                 rb.AddForce(orientation.transform.forward * tempY * moveSpeed * Time.deltaTime * multiplier * multiplierV);
                 rb.AddForce(orientation.transform.right * tempX * moveSpeed * Time.deltaTime * multiplier);
 
-                // If the player cannot walk off of platforms or coyote time is active.
-                if ((disableWalkingOffPlatform || enableCoyoteTime) && grounded && !jumping)
-                {
-                    bool activateCoyoteObj = false;
 
-                    ReenableCoyoteTime();
-
-                    // coyoteTimeDisableCheck will be greater than 1 if coyote time needs to stay enabled. 
-                    int coyoteTimeDisableCheck = 0;
-
-                    Vector3 downRight = new Vector3(1, -1, 0);
-                    Vector3 downLeft = new Vector3(-1, -1, 0);
-
-                    Vector3 downForward = new Vector3(0, -1, 1);
-                    Vector3 downBackwards = new Vector3(0, -1, -1);
-
-                    // 4 Raycasts determine whether the player is on the edge of a platform. 
-                    #region Edge Checking & Coyote Time
-                    if (!Physics.Raycast(gameObject.transform.position, downRight, 2f, whatIsGround) && grounded && !jumping)
-                    {
-                        if (rb.velocity.x > 0)
-                        {
-                            if (disableWalkingOffPlatform)
-                            {
-                                SetMovementBlockersActivity(true, 1);
-                                SetBlockerLocation(1);
-                            }
-                            else if (enableCoyoteTime)
-                            {
-                                activateCoyoteObj = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        SetMovementBlockersActivity(false, 1);
-                        coyoteTimeDisableCheck++;
-                    }
-
-                    if (!Physics.Raycast(gameObject.transform.position, downLeft, 2f, whatIsGround) && grounded && !jumping)
-                    {
-                        if (rb.velocity.x < 0)
-                        {
-                            if (disableWalkingOffPlatform)
-                            {
-                                SetMovementBlockersActivity(true, 3);
-                                SetBlockerLocation(3);
-                            }
-                            else if (enableCoyoteTime)
-                            {
-                                activateCoyoteObj = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        SetMovementBlockersActivity(false, 3);
-                        coyoteTimeDisableCheck++;
-                    }
-
-
-                    if (!Physics.Raycast(gameObject.transform.position, downForward, 2f, whatIsGround) && grounded && !jumping)
-                    {
-                        if (rb.velocity.z > 0)
-                        {
-                            if (disableWalkingOffPlatform)
-                            {
-                                SetMovementBlockersActivity(true, 0);
-                                SetBlockerLocation(0);
-                            }
-                            else if (enableCoyoteTime)
-                            {
-                                activateCoyoteObj = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        SetMovementBlockersActivity(false, 0);
-                        coyoteTimeDisableCheck++;
-                    }
-
-                    if (!Physics.Raycast(gameObject.transform.position, downBackwards, 2f, whatIsGround) && grounded && !jumping)
-                    {
-                        if (rb.velocity.z < 0)
-                        {
-                            if (disableWalkingOffPlatform)
-                            {
-                                SetMovementBlockersActivity(true, 2);
-                                SetBlockerLocation(2);
-                            }
-                            else if (enableCoyoteTime)
-                            {
-                                activateCoyoteObj = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        SetMovementBlockersActivity(false, 2);
-                        coyoteTimeDisableCheck++;
-                    }
-
-                    if (activateCoyoteObj && grounded && !jumping && !coyoteTimeInProgress && !coyoteTimeOccured && gameObjectStoodOn != null)
-                    {
-                        coyoteTimeInProgress = true;
-                        startCoyoteCountdown = true;
-                        EnableInitialCoyoteObj();
-                    }
-
-                    //if(!grounded || jumping || gameObjectStoodOn == null)
-                    //{
-                    //    if(coyoteObj.activeSelf)
-                    //    {
-                    //        StopCoroutine(BeginCoyoteTimeObject());
-
-                    //        SetCoyoteObject(false);
-                    //        coyoteTimeInProgress = false;
-                    //        startCoyoteCountdown = false;
-                    //        moveCoyoteObj = false;
-                    //    }
-                    //}
-
-                    if (coyoteTimeDisableCheck == 0)
-                    {
-                        SetCoyoteObject(false);
-                    }
-
-                    #endregion
-                }
             }
             // If Swing Lock is not active, and the player is grappling, add a force in the player's orientation
             else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
@@ -1021,110 +890,127 @@ public class Matt_PlayerMovement : MonoBehaviour
     }
 
     #region Coyote Time Methods
+    /// <summary>
+    /// Determines whether or not the Coyote Time objects should be enabled. 
+    /// </summary>
+    private void CheckForCoyoteObjects()
+    {
+        // If the player is on the ground and not grappling, shoot a raycast downward to determine the object they are on.
+        if (grounded && !grappleGunReference.IsGrappling())
+        {
+            Ray downRay = new Ray(gameObject.transform.position, Vector3.down);
+            RaycastHit hit;
+            if (Physics.Raycast(downRay, out hit, 5f, whatIsGround))
+            {
+                if (hit.collider.CompareTag("Platform") || hit.collider.gameObject.layer.Equals("Ground"))
+                {
+                    bool onCoyoteTimeObj = false;
 
-    private void MoveCoyoteObj()
+                    // Check to see if the Coyote Time object is stepped on. 
+                    foreach (GameObject objs in coyoteTimeObjs)
+                    {
+                        if (hit.collider.gameObject.name == objs.name)
+                        {
+                            onCoyoteTimeObj = true;
+                        }
+                    }
+
+                    // If on coyote time object, begin the coyote time countdown.
+                    if (onCoyoteTimeObj)
+                    {
+                        if (!coyoteTimeStarted)
+                        {
+                            coyoteTimeStarted = true;
+                            StartCoroutine(BeginCoyoteTimeCount());
+                        }
+                    }
+                    else if (!coyoteTimeEnabled)
+                    {
+                        EnableCoyoteTime();
+                    }
+
+                    // Update the game object stood on if when player stands on a new object.
+                    if (gameObjectStoodOn != hit.collider.gameObject)
+                    {
+                        gameObjectStoodOn = hit.collider.gameObject;
+
+                        if (!onCoyoteTimeObj)
+                        {
+                            EnableCoyoteTime();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                gameObjectStoodOn = null;
+            }
+        }
+        else if (coyoteTimeEnabled && (!grounded || grappleGunReference.IsGrappling()))
+        {
+            StopCoroutine(BeginCoyoteTimeCount());
+            DisableCoyoteTime();
+        }
+    }
+
+    /// <summary>
+    /// Enables the Coyote Time object.
+    /// </summary>
+    private void EnableCoyoteTime()
     {
         if (gameObjectStoodOn != null)
         {
-            coyoteObj.transform.position = new Vector3(orientation.transform.position.x, gameObjectStoodOn.transform.position.y, orientation.transform.position.z);
+            coyoteTimeEnabled = true;
+
+            Vector3 objectStoodOnCollider = gameObjectStoodOn.GetComponent<BoxCollider>().size;
+            Vector3 objectStoodOnPos = gameObjectStoodOn.transform.position;
+
+            // Set the coyote time scale to be the same as the object stepped on's collider.
+            for (int i = 0; i < coyoteTimeObjs.Length; i++)
+            {
+                coyoteTimeObjs[i].SetActive(true);
+                coyoteTimeObjs[i].transform.localScale = new Vector3(objectStoodOnCollider.x + 30, objectStoodOnCollider.y, objectStoodOnCollider.z + 30);
+            }
+
+            float objectColliderDiffX = objectStoodOnCollider.x / 2;
+            float objectColliderDiffZ = objectStoodOnCollider.z / 2;
+
+            // Aling the coyote time objects to one side of each platform being stepped on.
+            coyoteTimeObjs[0].transform.position = new Vector3(objectStoodOnPos.x, objectStoodOnPos.y, objectStoodOnPos.z + objectColliderDiffZ + (coyoteTimeObjs[0].transform.localScale.z / 2));
+            coyoteTimeObjs[1].transform.position = new Vector3(objectStoodOnPos.x + objectColliderDiffX + (coyoteTimeObjs[1].transform.localScale.x / 2), objectStoodOnPos.y, objectStoodOnPos.z);
+            coyoteTimeObjs[2].transform.position = new Vector3(objectStoodOnPos.x, objectStoodOnPos.y, objectStoodOnPos.z - objectColliderDiffZ - (coyoteTimeObjs[2].transform.localScale.z / 2));
+            coyoteTimeObjs[3].transform.position = new Vector3(objectStoodOnPos.x - objectColliderDiffX - (coyoteTimeObjs[3].transform.localScale.x / 2), objectStoodOnPos.y, objectStoodOnPos.z);
         }
     }
 
-    private void EnableInitialCoyoteObj()
+    /// <summary>
+    /// Disables Coyote Time objects.
+    /// </summary>
+    private void DisableCoyoteTime()
     {
-        SetCoyoteObject(true);
-        moveCoyoteObj = true;
-        BoxCollider coyoteCollider = coyoteObj.GetComponent<BoxCollider>();
-        //MoveCoyoteObj();
-        coyoteCollider.size = new Vector3(coyoteCollider.size.x, gameObjectStoodOn.GetComponent<BoxCollider>().size.y - 0.5f, coyoteCollider.size.z);
+        // Cycles through Coyote Time objects to set them to false.
+        for (int i = 0; i < coyoteTimeObjs.Length; i++)
+        {
+            coyoteTimeObjs[i].SetActive(false);
+        }
+
+        // States that the BeginCoyoteTimeCount is no longer running.
+        coyoteTimeStarted = false;
+
+        // States that the Coyote Time objects are no longer enabled.
+        coyoteTimeEnabled = false;
     }
 
-
     /// <summary>
-    /// Coyote time coroutine that puts a countdown on the coyote object once the player lands on it.  
+    /// Coroutine that starts the Coyote Time object countdown.
     /// </summary>
     /// <returns></returns>
-    private IEnumerator BeginCoyoteTimeObject()
+    private IEnumerator BeginCoyoteTimeCount()
     {
-        EnableInitialCoyoteObj();
-
         yield return new WaitForSeconds(coyoteTimeDuration);
-
-        SetCoyoteObject(false);
-        coyoteTimeInProgress = false;
-        startCoyoteCountdown = false;
-        moveCoyoteObj = false;
+        DisableCoyoteTime();
     }
-
-    /// <summary>
-    /// Changes the activity status of the coyote object.
-    /// </summary>
-    /// <param name="active">Whether the coyote object should be true or false. </param>
-    private void SetCoyoteObject(bool active)
-    {
-        if (enableCoyoteTime)
-        {
-            coyoteObj.SetActive(active);
-        }
-    }
-
-    /// <summary>
-    /// Resets coyote time occurred if the player is no longer on the coyote time object when they touch a new object.
-    /// </summary>
-    private void ReenableCoyoteTime()
-    {
-        if (enableCoyoteTime)
-        {
-            if (gameObjectStoodOn != coyoteObj && gameObjectStoodOn != null && coyoteTimeOccured)
-            {
-                coyoteTimeOccured = false;
-            }
-        }
-    }
-
-
     #endregion
-
-    #region Edge Blocker Methods
-    /// <summary>
-    /// Sets the specified blocker to the specified active state.
-    /// </summary>
-    /// <param name="active">The active status this blocker should be.</param>
-    /// <param name="blockerNumber">The number of the blocker that should be moved. 0 is forward, 1 is right, 2 is back, 3 is left.</param>
-    private void SetMovementBlockersActivity(bool active, int blockerNumber)
-    {
-        if (disableWalkingOffPlatform)
-        {
-            if (movementBlockers[blockerNumber].activeSelf != active)
-            {
-                movementBlockers[blockerNumber].SetActive(active);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Moves blockers to their proper positions following the player
-    /// </summary>
-    /// <param name="blockerNumber">The number of the blocker that should be moved. 0 is forward, 1 is right, 2 is back, 3 is left.</param>
-    private void SetBlockerLocation(int blockerNumber)
-    {
-        switch (blockerNumber)
-        {
-            case 0:
-                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z + 0.6f);
-                break;
-            case 1:
-                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x + 0.6f, orientation.transform.position.y, orientation.transform.position.z);
-                break;
-            case 2:
-                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x, orientation.transform.position.y, orientation.transform.position.z - 0.6f);
-                break;
-            case 3:
-                movementBlockers[blockerNumber].transform.position = new Vector3(orientation.transform.position.x - 0.6f, orientation.transform.position.y, orientation.transform.position.z);
-                break;
-        }
-    }
-    #endregion 
 
     #endregion
 
@@ -1378,24 +1264,14 @@ public class Matt_PlayerMovement : MonoBehaviour
             Invoke(nameof(StopGrounded), Time.deltaTime * delay);
         }
 
-        if (other.collider.tag == "Platform" || other.gameObject.layer.Equals("Ground"))
-        {
-            if (gameObjectStoodOn != other.collider.gameObject)
-            {
-                gameObjectStoodOn = other.collider.gameObject;
-            }
-
-            if (enableCoyoteTime)
-            {
-                if (other.collider.gameObject.name == coyoteObj.name)
-                {
-                    if (!coyoteTimeOccured)
-                    {
-                        coyoteTimeOccured = true;
-                    }
-                }
-            }
-        }
+        //// Update the game object stood on if when player stands on a new object. Occurs here as a percausion in case not set in OnCollisionEnter.
+        //if (other.collider.tag == "Platform" || other.gameObject.layer.Equals("Ground"))
+        //{
+        //    if (gameObjectStoodOn != other.collider.gameObject)
+        //    {
+        //        gameObjectStoodOn = other.collider.gameObject;
+        //    }
+        //}
     }
 
     private void OnCollisionExit(Collision collision)
@@ -1410,23 +1286,6 @@ public class Matt_PlayerMovement : MonoBehaviour
                 collision.collider.material = originalMaterial;
             }
         }
-
-        // Disable all movement blockers if the player exits the ground. 
-        if (collision.gameObject.layer == whatIsGround)
-        {
-            if (disableWalkingOffPlatform)
-            {
-                for (int i = 0; i < movementBlockers.Length; i++)
-                {
-                    SetMovementBlockersActivity(false, i);
-                }
-            }
-        }
-
-        if (collision.gameObject == gameObjectStoodOn)
-        {
-            gameObjectStoodOn = null;
-        }
     }
 
     private void OnCollisionEnter(Collision other)
@@ -1439,14 +1298,6 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             Vector3 normal = other.contacts[i].normal;
 
-        }
-
-        if (other.collider.tag == "Platform" || other.gameObject.layer.Equals("Ground"))
-        {
-            if (gameObjectStoodOn != other.collider.gameObject)
-            {
-                gameObjectStoodOn = other.collider.gameObject;
-            }
         }
 
         // Determines whether or not the point collided with is a surface.
@@ -1476,22 +1327,6 @@ public class Matt_PlayerMovement : MonoBehaviour
                 }
 
                 other.collider.material = frictionlessMat;
-            }
-
-            if (enableCoyoteTime)
-            {
-                if (other.collider.gameObject.name == coyoteObj.name)
-                {
-                    if (!coyoteTimeOccured)
-                    {
-                        coyoteTimeOccured = true;
-
-                        if (startCoyoteCountdown)
-                        {
-                            StartCoroutine(BeginCoyoteTimeObject());
-                        }
-                    }
-                }
             }
         }
 
