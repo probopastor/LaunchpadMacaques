@@ -222,6 +222,17 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private bool canMove = true;
 
+    [Header("Edge Detection")]
+    [SerializeField] private float distanceXZ = 5;
+    [SerializeField] private float distanceToCheckDown = 5;
+    [SerializeField] private float stepIncreaseAmmount = .1f;
+
+    SetPostProcessing postProcessing;
+
+    Vector3 previousPlayerPositon;
+
+    bool foundGround = true;
+
     ParticleSystem system
     {
         get
@@ -293,6 +304,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
 
+        postProcessing = FindObjectOfType<SetPostProcessing>();
+
     }
 
     private void FixedUpdate()
@@ -357,7 +370,108 @@ public class Matt_PlayerMovement : MonoBehaviour
                 notLandedAfterAirTime = true;
             }
         }
+
+        EdgeDetection();
+
+
+
     }
+
+    private void EdgeDetection()
+    {
+        if (grounded)
+        {
+            if ((this.x == 0 && this.y == 0))
+            {
+                return;
+            }
+            if (Physics.Raycast(this.transform.position, (-transform.up), distanceToCheckDown, whatIsGround))
+            {
+                float x = 0;
+                foundGround = true;
+                Vector3 checkPos = this.transform.position;
+                for (x = 0; x < distanceXZ; x += stepIncreaseAmmount)
+                {
+                    checkPos = this.transform.position;
+                    checkPos.x += x;
+
+                    if (EdgeDectionRayCast(checkPos))
+                    {
+                        foundGround = false;
+                        break;
+                    }
+
+                    checkPos = this.transform.position;
+                    checkPos.x -= x;
+
+                    if (EdgeDectionRayCast(checkPos))
+                    {
+                        foundGround = false;
+                        break;
+                    }
+
+
+                    checkPos = this.transform.position;
+                    checkPos.z += x;
+                    if (EdgeDectionRayCast(checkPos))
+                    {
+                        foundGround = false;
+                        break;
+                    }
+
+                    checkPos = this.transform.position;
+                    checkPos.z -= x;
+                    if (EdgeDectionRayCast(checkPos))
+                    {
+                        foundGround = false;
+                        break;
+                    }
+
+
+                }
+
+                if (!foundGround)
+                {
+
+                    postProcessing.SetVignete(true, Mathf.Clamp(((distanceXZ - x) * .1f) + .4f, 0, 1));
+                }
+
+                else
+                {
+                    postProcessing.SetVignete(false);
+                }
+            }
+
+            else
+            {
+                postProcessing.SetVignete(false);
+            }
+        }
+
+        else
+        {
+            postProcessing.SetVignete(false);
+        }
+    }
+
+    private bool EdgeDectionRayCast(Vector3 checkPos)
+    {
+
+        if (!Physics.Raycast(checkPos, (-transform.up), out RaycastHit hit, distanceToCheckDown, whatIsGround))
+        {
+            return true;
+        }
+
+        else
+        {
+            if (hit.collider.gameObject.name == "Coyote Time Object")
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
 
 
     #region Dash Stuff
@@ -855,7 +969,7 @@ public class Matt_PlayerMovement : MonoBehaviour
                         startCoyoteCountdown = true;
                         EnableInitialCoyoteObj();
                     }
-                    
+
                     //if(!grounded || jumping || gameObjectStoodOn == null)
                     //{
                     //    if(coyoteObj.activeSelf)

@@ -40,4 +40,45 @@ public class SetPostProcessing : MonoBehaviour
             bloom.active = (PlayerPrefs.GetInt("Bloom") == 1);
         }
     }
+
+    public void SetVignete(bool turnOn,float intensity = 0)
+    {
+        profile = cameraVolume.profile;
+
+        Vignette vig;
+
+        if (profile.TryGet<Vignette>(out vig))
+        {
+            vig.active = (turnOn);
+        }
+
+        else
+        {
+            if (turnOn)
+            {
+                profile.Add<Vignette>();
+            }
+
+            if (profile.TryGet<Vignette>(out vig))
+            {
+                vig.active = (turnOn);
+            }
+        }
+
+
+        if (turnOn)
+        {
+    
+
+            ClampedFloatParameter p = vig.intensity;
+
+            p.overrideState = true;
+            p.value = intensity;
+            p.max = .6f;
+
+            vig.intensity = p;
+            Debug.Log("Should Be settings Intensity");
+        }
+ 
+    }
 }
