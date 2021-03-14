@@ -24,8 +24,14 @@ public class PauseManager : MonoBehaviour
     [SerializeField, Tooltip("The scene this pause manager is located in. ")] private string thisScene;
     [SerializeField, Tooltip("The main menu scene name. ")] private string mainMenuScene;
     [SerializeField, Tooltip("Options Menu")] GameObject optionsMenu;
+
     [SerializeField, Tooltip("Options Menu")] GameObject gameplaySettings;
+    [SerializeField] GameObject lookSettings;
+    [SerializeField] GameObject miscGamePlaySettings;
+
     [SerializeField, Tooltip("Options Menu")] GameObject videoSettings;
+    [SerializeField] GameObject graphicsSettings;
+    [SerializeField] GameObject postProcessingSettings;
     [SerializeField, Tooltip("Options Menu")] GameObject audioSettings;
     [SerializeField, Tooltip("Resume Button")] GameObject resumeButton;
 
@@ -35,7 +41,6 @@ public class PauseManager : MonoBehaviour
     [SerializeField, Tooltip("The cursor object. ")] private GameObject CursorCanvas;
     [SerializeField, Tooltip("The UI panel. ")] private GameObject UICanvas;
     [SerializeField, Tooltip("The Information Post Text. ")] private GameObject InformationPostText;
-    [SerializeField, Tooltip("The rope length text. ")] private GameObject RopeLengthText;
     private NarrativeTriggerHandler narrative;
     private SettingsManager settings;
     private EventSystem eventSystem;
@@ -59,11 +64,6 @@ public class PauseManager : MonoBehaviour
         if (InformationPostText != null)
         {
             InformationPostText.SetActive(true);
-        }
-
-        if (RopeLengthText != null)
-        {
-            RopeLengthText.SetActive(true);
         }
 
         pausePanel = PauseCanvas.gameObject;
@@ -106,6 +106,18 @@ public class PauseManager : MonoBehaviour
                     videoSettings.SetActive(false);
                 }
 
+                else if (graphicsSettings.activeSelf)
+                {
+                    videoSettings.SetActive(true);
+                    graphicsSettings.SetActive(false);
+                }
+
+                else if (postProcessingSettings.activeSelf)
+                {
+                    videoSettings.SetActive(true);
+                    postProcessingSettings.SetActive(false);
+                }
+
                 else if (audioSettings.activeSelf)
                 {
                     optionsMenu.SetActive(true);
@@ -116,6 +128,18 @@ public class PauseManager : MonoBehaviour
                 {
                     optionsMenu.SetActive(true);
                     gameplaySettings.SetActive(false);
+                }
+
+                else if (lookSettings.activeSelf)
+                {
+                    gameplaySettings.SetActive(true);
+                    lookSettings.SetActive(false);
+                }
+
+                else if (miscGamePlaySettings.activeSelf)
+                {
+                    gameplaySettings.SetActive(true);
+                    miscGamePlaySettings.SetActive(false);
                 }
 
                 FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
@@ -193,11 +217,6 @@ public class PauseManager : MonoBehaviour
                 InformationPostText.SetActive(false);
             }
 
-            if (RopeLengthText != null)
-            {
-                RopeLengthText.SetActive(false);
-            }
-
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
 
@@ -217,10 +236,6 @@ public class PauseManager : MonoBehaviour
                 InformationPostText.SetActive(true);
             }
 
-            if (RopeLengthText != null)
-            {
-                RopeLengthText.SetActive(true);
-            }
 
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
