@@ -33,6 +33,7 @@ public class RespawnSystem : MonoBehaviour
     Matt_PlayerMovement player;
 
     private bool deathParticlesPlaying = false;
+    private bool deathInProgress = false;
     #endregion
 
     #region Start Methods
@@ -66,8 +67,12 @@ public class RespawnSystem : MonoBehaviour
         {
             if (other.gameObject.CompareTag(respawnTags[i]))
             {
-                StopAllCoroutines();
-                StartCoroutine(KillPlayer());
+                if(!deathInProgress)
+                {
+                    deathInProgress = true;
+                    StopAllCoroutines();
+                    StartCoroutine(KillPlayer());
+                }
             }
         }
 
@@ -136,7 +141,10 @@ public class RespawnSystem : MonoBehaviour
         player.SetPlayerCanMove(false);
 
         // Play death particles
-        SetDeathParticleStatus(true);
+        if(!deathParticlesPlaying)
+        {
+            SetDeathParticleStatus(true);
+        }
 
         foreach (GrapplePoint dGP in disappearingGrapplePoints)
         {
@@ -170,6 +178,7 @@ public class RespawnSystem : MonoBehaviour
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
         gg.StopGrapple();
+        deathInProgress = false;
     }
 
     public void PlayerCanMove()
@@ -197,8 +206,8 @@ public class RespawnSystem : MonoBehaviour
             // STOP FIRE VFX HERE
             foreach (ParticleSystem fireDeathParticles in deathParticles)
             {
-                deathParticlesPlaying = false;
                 fireDeathParticles.Stop();
+                deathParticlesPlaying = false;
             }
         }
     }
