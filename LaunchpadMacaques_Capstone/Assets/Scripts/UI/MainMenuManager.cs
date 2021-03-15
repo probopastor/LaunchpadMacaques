@@ -20,28 +20,33 @@ public class MainMenuManager : MonoBehaviour
     private GameObject mainMenu_Panel;
 
     [SerializeField]
-    private GameObject levelSelect_Panel;
-
-    [SerializeField]
     private List<GameObject> menuPanels = new List<GameObject>();
 
     public Animator anim;
+
+    private ButtonTransitionManager transitionManager;
+
+    List<string> useTransitions;
     private void Start()
     {
 
+        useTransitions = new List<string>();
         mainMenu_Panel.SetActive(true);
-        levelSelect_Panel.SetActive(false);
 
         Time.timeScale = 1;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         anim.Play("MainMenuBG");
+
+
+        if (HandleSaving.instance)
+        {
+            Destroy(HandleSaving.instance.gameObject);
+        }
+
+        transitionManager = FindObjectOfType<ButtonTransitionManager>();
     }
 
-    private void Update()
-    {
-        // EscapeKey();
-    }
 
     /// <summary>
     /// Handles the functionality for making the escape key back out of menus.
@@ -49,12 +54,9 @@ public class MainMenuManager : MonoBehaviour
     public void EscapeKey()
     {
         int index = 0;
-
-        EventSystem eventSys = FindObjectOfType<EventSystem>();
         for (index = 0; index <= menuPanels.Count - 1; index++)
 
         {
-      
             switch (menuPanels[index].activeSelf)
             {
 
@@ -63,75 +65,68 @@ public class MainMenuManager : MonoBehaviour
                     switch (menuPanels[index].name)
                     {
                         case "Level Select Page1":
-
-                            menuPanels[index].SetActive(false);
-                            //eventSys.SetSelectedGameObject(null);
-                            mainMenu_Panel.SetActive(true);
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = menuPanels[5];
+                            //transitionManager.StartTransisiton(false);
 
                             break;
 
                         case "Level Select Page2":
-
-                            menuPanels[index].SetActive(false);
-                            //eventSys.SetSelectedGameObject(null);
-                            menuPanels[1].SetActive(true);
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = menuPanels[0];
+                           // transitionManager.StartTransisiton(false);
 
                             break;
 
                         case "HowToPlay Panel":
-
-                            menuPanels[index].SetActive(false);
-                            eventSys.SetSelectedGameObject(null);
-                            mainMenu_Panel.SetActive(true);
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = mainMenu_Panel;
+                            //transitionManager.StartTransisiton();
 
                             break;
 
                         case "Credits Panel":
-
-                            menuPanels[index].SetActive(false);
-                            //eventSys.SetSelectedGameObject(null);
-                            mainMenu_Panel.SetActive(true);
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = mainMenu_Panel;
+                           // transitionManager.StartTransisiton();
 
                             break;
 
                         case "OptionsMenu":
-
-                            menuPanels[index].SetActive(false);
-                            //eventSys.SetSelectedGameObject(null);
-                            mainMenu_Panel.SetActive(true);
-
-                            break;
-
-                        case "GameplayOptionsPanel":
-
-                            menuPanels[index].SetActive(false);
-                            //eventSys.SetSelectedGameObject(null);
-                            menuPanels[5].SetActive(true);
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = mainMenu_Panel;
+                           // transitionManager.StartTransisiton();
 
                             break;
 
-                        case "VideoOptionsPanel":
+                        case "Save File Panel":
 
-                            menuPanels[index].SetActive(false);
-                           // eventSys.SetSelectedGameObject(null);
-                            menuPanels[5].SetActive(true);
-
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = mainMenu_Panel;
+                            //transitionManager.StartTransisiton(false);
                             break;
 
-                        case "AudioOptionsPanel":
+                        case "Start Game Panel":
 
-                            menuPanels[index].SetActive(false);
-                           // eventSys.SetSelectedGameObject(null);
-                            menuPanels[5].SetActive(true);
-
+                            transitionManager.disable = menuPanels[index];
+                            transitionManager.enable = menuPanels[4];
                             break;
 
                     }
 
-                    Debug.Log(eventSys.currentSelectedGameObject);
+                    bool useTransition = false;
+                    for(int i = 0; i < useTransitions.Count; i++)
+                    {
+                        if(menuPanels[index].name == useTransitions[i])
+                        {
+                            useTransition = true;
+                        }
+                    }
+
+                    transitionManager.StartTransisiton(useTransition);
                     break;
 
-                    
+
             }
         }
     }
@@ -160,5 +155,10 @@ public class MainMenuManager : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    public void SetUseEscapeTransition(string panelName)
+    {
+        useTransitions.Add(panelName);
     }
 }

@@ -24,6 +24,9 @@ public class PauseManager : MonoBehaviour
     [SerializeField, Tooltip("The scene this pause manager is located in. ")] private string thisScene;
     [SerializeField, Tooltip("The main menu scene name. ")] private string mainMenuScene;
     [SerializeField, Tooltip("Options Menu")] GameObject optionsMenu;
+    [SerializeField, Tooltip("Options Menu")] GameObject gameplaySettings;
+    [SerializeField, Tooltip("Options Menu")] GameObject videoSettings;
+    [SerializeField, Tooltip("Options Menu")] GameObject audioSettings;
     [SerializeField, Tooltip("Resume Button")] GameObject resumeButton;
 
     [SerializeField, Tooltip("The pause panel that is being used as a menu. ")] private GameObject PauseCanvas;
@@ -37,9 +40,12 @@ public class PauseManager : MonoBehaviour
     private SettingsManager settings;
     private EventSystem eventSystem;
 
+    private Matt_PlayerMovement player;
+
     // Start is called before the first frame update
     void Start()
     {
+        player = FindObjectOfType<Matt_PlayerMovement>();
         Time.timeScale = 1;
         gameLost = false;
 
@@ -47,7 +53,7 @@ public class PauseManager : MonoBehaviour
         gameWon = false;
         PauseCanvas.SetActive(false);
         //LoseCanvas.SetActive(false);
-        WinCanvas.SetActive(false);
+        //WinCanvas.SetActive(false);
         UICanvas.SetActive(true);
 
         if (InformationPostText != null)
@@ -69,33 +75,97 @@ public class PauseManager : MonoBehaviour
     }
 
 
-
     public void PauseInput()
     {
-        if (!gameLost && !gameWon && !HTPMenu.activeSelf && !optionsMenu.activeSelf)
+        if (player.CanPlayerMove())
         {
-            PauseGame();
-        }
+            if (!gameLost && !gameWon && !HTPMenu.activeSelf && !optionsMenu.transform.parent.gameObject.activeSelf)
+            {
+                PauseGame();
+            }
 
-        else if (HTPMenu.activeSelf)
-        {
-            HTPMenu.SetActive(false);
-            pausePanel.SetActive(true);
+            else if (HTPMenu.activeSelf)
+            {
+                eventSystem.SetSelectedGameObject(null);
+                HTPMenu.SetActive(false);
+                pausePanel.SetActive(true);
+            }
+
+            else if (optionsMenu.transform.parent.gameObject.activeSelf)
+            {
+                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+                if (optionsMenu.activeSelf)
+                {
+                    optionsMenu.transform.parent.gameObject.SetActive(false);
+                    pausePanel.SetActive(true);
+                }
+
+                else if (videoSettings.activeSelf)
+                {
+                    optionsMenu.SetActive(true);
+                    videoSettings.SetActive(false);
+                }
+
+                else if (audioSettings.activeSelf)
+                {
+                    optionsMenu.SetActive(true);
+                    audioSettings.SetActive(false);
+                }
+
+                else if (gameplaySettings.activeSelf)
+                {
+                    optionsMenu.SetActive(true);
+                    gameplaySettings.SetActive(false);
+                }
+
+                FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+            }
         }
+     
+
     }
 
     public void BackInput()
     {
-        if (!optionsMenu.activeSelf && !HTPMenu.activeSelf && paused)
+        if (pausePanel.activeSelf)
         {
             PauseGame();
         }
-        
         else if (HTPMenu.activeSelf)
         {
             eventSystem.SetSelectedGameObject(null);
             HTPMenu.SetActive(false);
             pausePanel.SetActive(true);
+        }
+
+        else if (optionsMenu.transform.parent.gameObject.activeSelf)
+        {
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+            if (optionsMenu.activeSelf)
+            {
+                optionsMenu.transform.parent.gameObject.SetActive(false);
+                pausePanel.SetActive(true);
+            }
+
+            else if (videoSettings.activeSelf)
+            {
+                optionsMenu.SetActive(true);
+                videoSettings.SetActive(false);
+            }
+
+            else if (audioSettings.activeSelf)
+            {
+                optionsMenu.SetActive(true);
+                audioSettings.SetActive(false);
+            }
+
+            else if (gameplaySettings.activeSelf)
+            {
+                optionsMenu.SetActive(true);
+                gameplaySettings.SetActive(false);
+            }
+
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
         }
     }
 
@@ -111,6 +181,7 @@ public class PauseManager : MonoBehaviour
             Time.timeScale = 0;
 
             PauseCanvas.SetActive(true);
+          //  eventSystem.SetSelectedGameObject(resumeButton);
             CursorCanvas.SetActive(false);
 
 
@@ -129,6 +200,8 @@ public class PauseManager : MonoBehaviour
 
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+
+      
 
 
         }
@@ -151,6 +224,8 @@ public class PauseManager : MonoBehaviour
 
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+
+
         }
     }
 
@@ -224,4 +299,5 @@ public class PauseManager : MonoBehaviour
     {
         return gameLost;
     }
+    
 }
