@@ -273,7 +273,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         //Cannot dash while on the ground.
         canDash = false;
-        dashUI.SetActive(false);
+        DashFeedback(false);
 
         applyPhysicsMaterial = false;
 
@@ -507,7 +507,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 anim.SetTrigger("Dash");
 
-                dashUI.SetActive(false);
+                DashFeedback(false);
                 canDash = false;
                 StartCoroutine(DashCooldown());
 
@@ -528,6 +528,12 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
         }
 
+    }
+
+
+    private void DashFeedback(bool onOff)
+    {
+        dashUI.SetActive(onOff);
     }
     /// <summary>
     /// The dash that will only change the player's direction does not change their speed
@@ -863,12 +869,12 @@ public class Matt_PlayerMovement : MonoBehaviour
             if (grounded)
             {
                 canDash = false;
-                dashUI.SetActive(false);
+                DashFeedback(false);
             }
             // Dash cooldown is reset if the player grapples again.
             else if (grappleGunReference.IsGrappling() && !canDash)
             {
-                dashUI.SetActive(true);
+                DashFeedback(true);
                 canDash = true;
             }
 
