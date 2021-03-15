@@ -362,7 +362,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             timeOffGround += Time.deltaTime;
 
-            if (!notLandedAfterAirTime)
+            if (!notLandedAfterAirTime && grappleGunReference.IsGrappling())
             {
                 notLandedAfterAirTime = true;
             }
@@ -1330,19 +1330,26 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
         }
 
-        // Sets velocity to 0 when initially grounded to prevent sliding.
+        bool cancelVelocity = false;
+
+        // Sets velocity to 0 when grounded after grappling to prevent sliding.
         foreach (string tag in tagsToCancelVelocity)
         {
             if (other.collider.tag == tag)
             {
-                if (notLandedAfterAirTime)
+                if (notLandedAfterAirTime && !grappleGunReference.IsGrappling())
                 {
                     Debug.Log("Landed - Velocity Cancelled. ");
-                    notLandedAfterAirTime = false;
-                    rb.velocity = Vector3.zero;
-                    rb.angularVelocity = Vector3.zero;
+                    cancelVelocity = true;
                 }
             }
+        }
+
+        if(cancelVelocity)
+        {
+            notLandedAfterAirTime = false;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
     }
 
