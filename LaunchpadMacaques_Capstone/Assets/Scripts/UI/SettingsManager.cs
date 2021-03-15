@@ -40,9 +40,14 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Settings Holder")]
     [SerializeField, Tooltip("Will hold all the settings Menu")] GameObject settingsHolder;
-    [SerializeField] GameObject audioSettings;
-    [SerializeField] GameObject videoSettings;
-    [SerializeField] GameObject gameplaySettings;
+    [SerializeField] GameObject audioSubmenu;
+    [SerializeField] GameObject videoSubMenu;
+    [SerializeField] GameObject gameplaySubMenu;
+    [SerializeField] GameObject lookSettings;
+    [SerializeField] GameObject miscGameplaySettings;
+    [SerializeField] GameObject graphicsSettings;
+    [SerializeField] GameObject postProcessingSettings;
+
     [SerializeField] GameObject optionsMenu;
     [SerializeField] GameObject mainMenu;
 
@@ -124,12 +129,16 @@ public class SettingsManager : MonoBehaviour
         DisableStuff();
     }
 
-    public void UpdateGameplay()
+    public void UpdateLookSettings()
     {
         InitialFOV();
         InitialInvertY();
         InitialMouseSensitivity();
         InitialFullScreen();
+    }
+
+    public void UpdateMiscGameplaySettings()
+    {
         InitialScreenShake();
     }
 
@@ -141,11 +150,15 @@ public class SettingsManager : MonoBehaviour
         InitialSFX();
     }
 
-    public void UpdateVisuals()
+    public void UpdateGraphicSettings()
     {
         SetResolutionsDropDown();
         InitialFullScreen();
         InitialQuality();
+    }
+
+    public void UpdatePostProcessing()
+    {
         InitialColorblindMode();
         InitialBloom();
     }
@@ -153,9 +166,13 @@ public class SettingsManager : MonoBehaviour
     private void DisableStuff()
     {
 
-        audioSettings.SetActive(false);
-        videoSettings.SetActive(false);
-        gameplaySettings.SetActive(false);
+        audioSubmenu.SetActive(false);
+        videoSubMenu.SetActive(false);
+        gameplaySubMenu.SetActive(false);
+        lookSettings.SetActive(false);
+        miscGameplaySettings.SetActive(false);
+        graphicsSettings.SetActive(false);
+        postProcessingSettings.SetActive(false);
         settingsHolder.SetActive(false);
 
         if (SceneManager.GetActiveScene().name == "MainMenu")
@@ -718,22 +735,46 @@ public class SettingsManager : MonoBehaviour
                 transitionManager.disable = settingsHolder;
             }
 
-            else if (videoSettings.activeSelf)
+            else if (videoSubMenu.activeSelf)
             {
                 transitionManager.enable = optionsMenu;
-                transitionManager.disable = videoSettings;
+                transitionManager.disable = videoSubMenu;
             }
 
-            else if (audioSettings.activeSelf)
+            else if (audioSubmenu.activeSelf)
             {
                 transitionManager.enable = optionsMenu;
-                transitionManager.disable = audioSettings;
+                transitionManager.disable = audioSubmenu;
             }
 
-            else if (gameplaySettings.activeSelf)
+            else if (gameplaySubMenu.activeSelf)
             {
                 transitionManager.enable = optionsMenu;
-                transitionManager.disable = gameplaySettings;
+                transitionManager.disable = gameplaySubMenu;
+            }
+
+            else if (lookSettings.activeSelf)
+            {
+                transitionManager.enable = gameplaySubMenu;
+                transitionManager.disable = lookSettings;
+            }
+
+            else if (miscGameplaySettings.activeSelf)
+            {
+                transitionManager.enable = gameplaySubMenu;
+                transitionManager.disable = miscGameplaySettings;
+            }
+
+            else if (graphicsSettings.activeSelf)
+            {
+                transitionManager.enable = videoSubMenu;
+                transitionManager.disable = graphicsSettings;
+            }
+
+            else if (postProcessingSettings.activeSelf)
+            {
+                transitionManager.enable = videoSubMenu;
+                transitionManager.disable = postProcessingSettings;
             }
 
 
@@ -755,7 +796,8 @@ public class SettingsManager : MonoBehaviour
 
     public bool InSubSettings()
     {
-        if (gameplaySettings.activeSelf || videoSettings.activeSelf || audioSettings.activeSelf)
+        if (gameplaySubMenu.activeSelf || videoSubMenu.activeSelf || audioSubmenu.activeSelf || lookSettings.activeSelf
+            || miscGameplaySettings.activeSelf || graphicsSettings.activeSelf || postProcessingSettings.activeSelf)
         {
             return true;
         }

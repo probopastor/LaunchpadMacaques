@@ -15,6 +15,7 @@ public class SetPostProcessing : MonoBehaviour
 
     string volumeName;
 
+
     private void Start()
     {
         volumeName = cameraVolume.profile.name;
@@ -23,7 +24,7 @@ public class SetPostProcessing : MonoBehaviour
 
     private void Update()
     {
-        if(volumeName != cameraVolume.profile.name)
+        if (volumeName != cameraVolume.profile.name)
         {
             volumeName = cameraVolume.profile.name;
             SetBloom();
@@ -39,5 +40,49 @@ public class SetPostProcessing : MonoBehaviour
         {
             bloom.active = (PlayerPrefs.GetInt("Bloom") == 1);
         }
+    }
+
+    public void SetVignete(bool turnOn, Color color ,float intensity = 0)
+    {
+        profile = cameraVolume.profile;
+
+        Vignette vig;
+
+        if (profile.TryGet<Vignette>(out vig))
+        {
+            vig.active = (turnOn);
+        }
+
+        else
+        {
+            if (turnOn)
+            {
+                profile.Add<Vignette>();
+            }
+
+            if (profile.TryGet<Vignette>(out vig))
+            {
+                vig.active = (turnOn);
+            }
+        }
+
+
+        if (turnOn)
+        {
+
+           ColorParameter colorState = vig.color;
+
+            colorState.value = color;
+            colorState.overrideState = true;
+
+            vig.color = colorState;
+            ClampedFloatParameter p = vig.intensity;
+
+            p.overrideState = true;
+            p.value = intensity;
+
+            vig.intensity = p;
+        }
+
     }
 }

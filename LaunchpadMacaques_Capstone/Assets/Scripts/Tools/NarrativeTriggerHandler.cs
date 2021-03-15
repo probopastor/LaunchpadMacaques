@@ -58,6 +58,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
     private TMP_Text[] nameplateText;
     [SerializeField]
     private GameObject clickToContinue;
+    [SerializeField]
+    private GameObject viewLog;
+
+    private bool mouseOverButton = false;
 
 
 
@@ -137,6 +141,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         clickToContinue = transform.Find("DialogueCanvas/Background/ClickToContinue").gameObject;
         clickToContinue.SetActive(false);
+
+        viewLog = transform.Find("DialogueCanvas/Background/ViewLog").gameObject;
 
         canvas.SetActive(false);
     }
@@ -292,11 +298,17 @@ public class NarrativeTriggerHandler : MonoBehaviour
         //Turn on canvas
         canvas.SetActive(true);
 
+        //Get ready to start pushing conversation to the log
+        Log.instance.StartNewConversation();
+
         //Get Every line in the dialogue
         Dialogue.Line currentLine;
         int lastNameplateUsed = -1;
         while ((currentLine = trigger.dialogue.NextLine()) != null)
         {
+            //Start adding lines to the log
+            Log.instance.PushToLog(currentLine);
+
             //Update nameplates
             //No nameplate yet
             if(lastNameplateUsed == -1)
@@ -342,31 +354,39 @@ public class NarrativeTriggerHandler : MonoBehaviour
             //Dialogue type is click to proceed
             if (trigger.dialogue.pauseForDuration)
             {
+                //Freeze time and let the user move their mouse around to hit the log button if desired
                 Time.timeScale = 0;
+                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.visible = true;
+                viewLog.SetActive(true);
 
                 //Wait until effects are done or player has clicked to skip
                 while(TextEffectHandler.instance.RunningEffectCount > 0)
                 {
-                    if(Input.GetButtonDown("Fire1"))
+                    if(Input.GetButtonDown("Fire1") && !Log.instance.IsActive() && !mouseOverButton)
                     {
                         TextEffectHandler.instance.SkipToEndOfEffects();
                     }
                     yield return null;
                 }
 
+                //Text has finished all its effects, prompt the player to click to continue
                 clickToContinue.SetActive(true);
                 StartCoroutine(Flash(clickToContinue));
 
                 //Effects are done, player must click to proceed to the next 
-                while(!Input.GetButtonDown("Fire1"))
+                while(!Input.GetButtonDown("Fire1") || Log.instance.IsActive() || mouseOverButton)
                 {
                     yield return null;
                 }
+
+                //Stop flashing
                 shouldFlash = false;
             }
             //Dialogue type is show for a pre-determined time
             else
             {
+                viewLog.SetActive(false);
                 //Wait until effects are done before starting the timer
                 while(TextEffectHandler.instance.RunningEffectCount > 0)
                 {
@@ -387,6 +407,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         //Resume game
         Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         //Reset Nameplates
         foreach(TMP_Text text in nameplateText)
@@ -401,18 +423,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
         canvas.gameObject.SetActive(false);
 
         trigger.isRunning = false;
-    }
-
-    float flashInterval = 0.5f;
-    bool shouldFlash = false;
-    private IEnumerator Flash(GameObject objectToFlash)
-    {
-        shouldFlash = true;
-        while (shouldFlash)
-        {
-            objectToFlash.SetActive(!objectToFlash.activeSelf);
-            yield return new WaitForSecondsRealtime(flashInterval);
-        }
     }
 
     /// <summary>
@@ -471,6 +481,25 @@ public class NarrativeTriggerHandler : MonoBehaviour
         Time.timeScale = 1;
 
         isPanning = false;
+    }
+
+    float flashInterval = 0.5f;
+    bool shouldFlash = false;
+    private IEnumerator Flash(GameObject objectToFlash)
+    {
+        shouldFlash = true;
+        float currentTime = 0;
+        while (shouldFlash)
+        {
+            if (currentTime >= flashInterval)
+            {
+                objectToFlash.SetActive(!objectToFlash.activeSelf);
+                currentTime = 0;
+            }
+
+            currentTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
     }
 
     #region PlayerHitGround Event
@@ -570,6 +599,16 @@ public class NarrativeTriggerHandler : MonoBehaviour
     public float GetFallTime()
     {
         return fallTime;
+    }
+
+    public bool GetMouseOverButton()
+    {
+        return mouseOverButton;
+    }
+
+    public void SetMouseOverButton(bool mouseOverButton)
+    {
+        this.mouseOverButton = mouseOverButton;
     }
     #endregion
 
