@@ -5,8 +5,7 @@ using UnityEngine;
 public class SetInstancedColor : MonoBehaviour
 {
     public Color color;
-
-    Renderer renderer;
+    new Renderer renderer;
     MaterialPropertyBlock pBlock;
 
     private void OnValidate()
