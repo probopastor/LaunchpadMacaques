@@ -231,10 +231,10 @@ public class HandleSaving : MonoBehaviour
         foreach (string str in levelNames)
         {
             bool found = false;
-            if (sceneName == str)
-            {
-                return false;
-            }
+            //if (sceneName == str)
+            //{
+            //    return false;
+            //}
             foreach (Level l in levels)
             {
                 if (str == l.levelName)
