@@ -8,7 +8,7 @@ public class TempConfigJoint : MonoBehaviour
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
     private Vector3 currentGrapplePosition;
-    public Transform gunTip, m_Camera, player;
+    public Transform gunTip, camera, player;
     private float maxDistance = 100f;
     private ConfigurableJoint joint;
 
@@ -86,7 +86,7 @@ public class TempConfigJoint : MonoBehaviour
     {
         print("Explode");
         RaycastHit hit;
-        if (Physics.Raycast(m_Camera.position, m_Camera.forward, out hit, maxDistance, whatIsGrappleable))
+        if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
         {
             Vector3 explosionPos = transform.position;
             Collider[] colliders = Physics.OverlapSphere(explosionPos, explosionRadius);
@@ -110,7 +110,7 @@ public class TempConfigJoint : MonoBehaviour
     void StartGrapple()
     {
         RaycastHit hit;
-        if (Physics.Raycast(m_Camera.position, m_Camera.forward, out hit, maxDistance, whatIsGrappleable))
+        if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
         {
             grappleRayHit = hit;
 
