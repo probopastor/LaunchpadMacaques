@@ -906,6 +906,18 @@ public class Matt_PlayerMovement : MonoBehaviour
                 {
                     bool onCoyoteTimeObj = false;
 
+                    // Update the game object stood on if when player stands on a new object.
+                    if (gameObjectStoodOn != hit.collider.gameObject)
+                    {
+                        gameObjectStoodOn = hit.collider.gameObject;
+
+                        if (!onCoyoteTimeObj)
+                        {
+                            //DisableCoyoteTime();
+                            EnableCoyoteTime(gameObjectStoodOn);
+                        }
+                    }
+
                     // Check to see if the Coyote Time object is stepped on. 
                     foreach (GameObject objs in coyoteTimeObjs)
                     {
@@ -924,20 +936,10 @@ public class Matt_PlayerMovement : MonoBehaviour
                             StartCoroutine(BeginCoyoteTimeCount());
                         }
                     }
-                    else if (!coyoteTimeEnabled)
+                    else if (!coyoteTimeEnabled && !coyoteTimeStarted)
                     {
-                        EnableCoyoteTime();
-                    }
-
-                    // Update the game object stood on if when player stands on a new object.
-                    if (gameObjectStoodOn != hit.collider.gameObject)
-                    {
-                        gameObjectStoodOn = hit.collider.gameObject;
-
-                        if (!onCoyoteTimeObj)
-                        {
-                            EnableCoyoteTime();
-                        }
+                        //DisableCoyoteTime();
+                        EnableCoyoteTime(gameObjectStoodOn);
                     }
                 }
             }
@@ -946,7 +948,7 @@ public class Matt_PlayerMovement : MonoBehaviour
                 gameObjectStoodOn = null;
             }
         }
-        else if (coyoteTimeEnabled && (!grounded || grappleGunReference.IsGrappling()))
+        else if (coyoteTimeEnabled && ((!readyToJump && !grounded) || grappleGunReference.IsGrappling()))
         {
             StopCoroutine(BeginCoyoteTimeCount());
             DisableCoyoteTime();
@@ -956,20 +958,24 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <summary>
     /// Enables the Coyote Time object.
     /// </summary>
-    private void EnableCoyoteTime()
+    private void EnableCoyoteTime(GameObject objStoodOn)
     {
         if (gameObjectStoodOn != null)
         {
             coyoteTimeEnabled = true;
 
-            Vector3 objectStoodOnCollider = gameObjectStoodOn.GetComponent<BoxCollider>().size;
-            Vector3 objectStoodOnPos = gameObjectStoodOn.transform.position;
+            Vector3 objectStoodOnCollider = objStoodOn.GetComponent<BoxCollider>().size;
+            Vector3 objectStoodOnPos = objStoodOn.transform.position;
 
-            // Set the coyote time scale to be the same as the object stepped on's collider.
+            // Set the coyote time obj scale to be the same as the object stepped on's collider.
             for (int i = 0; i < coyoteTimeObjs.Length; i++)
             {
                 coyoteTimeObjs[i].SetActive(true);
                 coyoteTimeObjs[i].transform.localScale = new Vector3(objectStoodOnCollider.x + 30, objectStoodOnCollider.y, objectStoodOnCollider.z + 30);
+
+                //Vector3 coyoteCollider = coyoteTimeObjs[i].GetComponent<BoxCollider>().size;
+
+                //coyoteTimeObjs[i].GetComponent<BoxCollider>().size = new Vector3(coyoteCollider.x, objectStoodOnCollider.y, coyoteCollider.z);
             }
 
             float objectColliderDiffX = objectStoodOnCollider.x / 2;
@@ -994,9 +1000,6 @@ public class Matt_PlayerMovement : MonoBehaviour
             coyoteTimeObjs[i].SetActive(false);
         }
 
-        // States that the BeginCoyoteTimeCount is no longer running.
-        coyoteTimeStarted = false;
-
         // States that the Coyote Time objects are no longer enabled.
         coyoteTimeEnabled = false;
     }
@@ -1009,6 +1012,9 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(coyoteTimeDuration);
         DisableCoyoteTime();
+
+        // States that the BeginCoyoteTimeCount is no longer running.
+        coyoteTimeStarted = false;
     }
     #endregion
 
