@@ -896,7 +896,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     private void CheckForCoyoteObjects()
     {
         // If the player is on the ground and not grappling, shoot a raycast downward to determine the object they are on.
-        if (grounded && !grappleGunReference.IsGrappling())
+        if (grounded && readyToJump && !grappleGunReference.IsGrappling())
         {
             Ray downRay = new Ray(gameObject.transform.position, Vector3.down);
             RaycastHit hit;
@@ -971,11 +971,14 @@ public class Matt_PlayerMovement : MonoBehaviour
             for (int i = 0; i < coyoteTimeObjs.Length; i++)
             {
                 coyoteTimeObjs[i].SetActive(true);
-                coyoteTimeObjs[i].transform.localScale = new Vector3(objectStoodOnCollider.x + 30, objectStoodOnCollider.y, objectStoodOnCollider.z + 30);
+                //coyoteTimeObjs[i].transform.localScale = new Vector3(objectStoodOnCollider.x + 30, objectStoodOnCollider.y, objectStoodOnCollider.z + 30);
 
                 //Vector3 coyoteCollider = coyoteTimeObjs[i].GetComponent<BoxCollider>().size;
 
                 //coyoteTimeObjs[i].GetComponent<BoxCollider>().size = new Vector3(coyoteCollider.x, objectStoodOnCollider.y, coyoteCollider.z);
+
+                BoxCollider coyoteCollider = coyoteTimeObjs[i].GetComponent<BoxCollider>();
+                coyoteCollider.size = new Vector3(coyoteCollider.size.x, gameObjectStoodOn.GetComponent<BoxCollider>().bounds.size.y - 0.02f, coyoteCollider.size.z);
             }
 
             float objectColliderDiffX = objectStoodOnCollider.x / 2;
