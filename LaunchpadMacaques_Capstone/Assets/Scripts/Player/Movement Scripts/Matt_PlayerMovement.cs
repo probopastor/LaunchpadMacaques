@@ -245,9 +245,6 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     bool foundGround = true;
 
-
-    [SerializeField] ParticleSystem sprintParticles;
-
     ParticleSystem system
     {
         get
@@ -334,7 +331,6 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && Time.timeScale > 0)
         {
             if (canMove)
@@ -384,31 +380,8 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
         }
 
-      //  EdgeDetection();
+        EdgeDetection();
 
-        SprintFeedBack();
-
-    }
-
-    private void SprintFeedBack()
-    {
-        if (!readyToSprint)
-        {
-            if ((x != 0 || y != 0) && !sprintParticles.isPlaying)
-            {
-                sprintParticles.Play();
-            }
-
-            else if (x == 0 && y == 0)
-            {
-                sprintParticles.Stop();
-            }
-        }
-
-        else if (sprintParticles.isPlaying)
-        {
-            sprintParticles.Stop();
-        }
 
 
     }
@@ -421,7 +394,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 return;
             }
-            if (Physics.Raycast(this.transform.position, (-transform.up), out RaycastHit hit, distanceToCheckDown, whatIsGround))
+            if (Physics.Raycast(this.transform.position, (-transform.up), out RaycastHit hit,distanceToCheckDown, whatIsGround))
             {
                 if (coyoteTimeObjs.Contains(hit.collider.gameObject))
                 {
@@ -473,7 +446,7 @@ public class Matt_PlayerMovement : MonoBehaviour
                 if (!foundGround)
                 {
 
-                    postProcessing.SetVignete(true, vigneteColor, Mathf.Clamp(((distanceXZ - x) * vigneteIntensityScaleAmmount)
+                    postProcessing.SetVignete(true, vigneteColor, Mathf.Clamp(((distanceXZ - x) * vigneteIntensityScaleAmmount) 
                         + startingVigneteIntensity, 0, 1));
                 }
 
@@ -682,6 +655,24 @@ public class Matt_PlayerMovement : MonoBehaviour
         mouseX = x;
         mouseY = y;
     }
+    public void CrouchInput()
+    {
+        //if (!grappleGunReference.IsGrappling())
+        //{
+        //    crouching = !crouching;
+
+        //    if (crouching)
+        //    {
+        //        StartCrouch();
+        //    }
+
+        //    else
+        //    {
+        //        StopCrouch();
+        //    }
+        //}
+
+    }
 
     public LayerMask GetGround()
     {
@@ -709,7 +700,6 @@ public class Matt_PlayerMovement : MonoBehaviour
             readyToSprint = false;
             //Apply sprint to player
             maxSpeed = speedStorage * sprintMultiplier;
-
         }
     }
 
@@ -720,12 +710,48 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         maxSpeed = speedStorage;
         readyToSprint = true;
-        sprintParticles.Stop();
     }
 
     #endregion
 
+    #region Crouching Stuff
 
+    /// <summary>
+    /// Starts player crouching.
+    /// </summary>
+    public void StartCrouch()
+    {
+        transform.localScale = crouchScale;
+        transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
+
+        if (rb.velocity.magnitude > 0.5f)
+        {
+            if (grounded)
+            {
+                rb.AddForce(orientation.transform.forward * slideForce);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Stops the player from crouching.
+    /// </summary>
+    public void StopCrouch()
+    {
+        transform.localScale = playerScale;
+        transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+    }
+
+    /// <summary>
+    /// Returns true if the player is crouching.
+    /// </summary>
+    /// <returns></returns>
+    public bool GetCrouchStatus()
+    {
+        return crouching;
+    }
+
+    #endregion
 
     /// <summary>
     /// This function limits the velocity of the player so they can't just increase speed into oblivion.
@@ -1263,8 +1289,6 @@ public class Matt_PlayerMovement : MonoBehaviour
                 normalVector = normal;
                 CancelInvoke(nameof(StopGrounded));
             }
-
-
         }
 
         //Invoke ground/wall cancel, since we can't check normals with CollisionExit
@@ -1301,8 +1325,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        Debug.Log(other.gameObject.name);
-        ScreenShake();
+        ScreenShake(other);
         int layer = other.gameObject.layer;
         if (whatIsGround != (whatIsGround | (1 << layer))) return;
 
@@ -1357,7 +1380,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
         }
 
-        if (cancelVelocity)
+        if(cancelVelocity)
         {
             notLandedAfterAirTime = false;
             rb.velocity = Vector3.zero;
@@ -1365,7 +1388,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
-    private void ScreenShake()
+    private void ScreenShake(Collision other)
     {
         if (!grounded && rb.velocity.magnitude > minVelocityForScreenShake && PlayerPrefs.GetInt("ScreenShake") == 1 && timeOffGround > .5f)
         {
