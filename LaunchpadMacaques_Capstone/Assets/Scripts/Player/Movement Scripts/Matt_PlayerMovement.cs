@@ -127,6 +127,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField] private float sprintMultiplier = 1.75f;
     private bool readyToSprint = true;
     private float speedStorage;
+    [SerializeField] ParticleSystem sprintParticles;
     #endregion
 
     #region Dash Settings
@@ -382,6 +383,28 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         EdgeDetection();
 
+        SprintFeedBack();
+    }
+
+    private void SprintFeedBack()
+    {
+        if (!readyToSprint)
+        {
+            if ((x != 0 || y != 0) && !sprintParticles.isPlaying)
+            {
+                sprintParticles.Play();
+            }
+
+            else if (x == 0 && y == 0)
+            {
+                sprintParticles.Stop();
+            }
+        }
+
+        else if (sprintParticles.isPlaying)
+        {
+            sprintParticles.Stop();
+        }
 
 
     }
