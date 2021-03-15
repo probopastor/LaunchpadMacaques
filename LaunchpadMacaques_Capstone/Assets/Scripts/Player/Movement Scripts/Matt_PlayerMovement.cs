@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
@@ -170,6 +172,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField] float screenShakeLength = .1f;
 
 
+
     [Header("Art Settings")]
     [SerializeField]
     Animator anim;
@@ -225,7 +228,13 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Edge Detection")]
     [SerializeField] private float distanceXZ = 5;
     [SerializeField] private float distanceToCheckDown = 5;
-    [SerializeField] private float stepIncreaseAmmount = .1f;
+    private float stepIncreaseAmmount = .1f;
+
+    [Header("Vignette Settings")]
+    [SerializeField] private Color vigneteColor;
+    [SerializeField] float startingVigneteIntensity = .4f;
+    [SerializeField] float maxVigneteIntensity = .6f;
+    [SerializeField] float vigneteIntensityScaleAmmount = .1f;
 
     SetPostProcessing postProcessing;
 
@@ -433,24 +442,25 @@ public class Matt_PlayerMovement : MonoBehaviour
                 if (!foundGround)
                 {
 
-                    postProcessing.SetVignete(true, Mathf.Clamp(((distanceXZ - x) * .1f) + .4f, 0, 1));
+                    postProcessing.SetVignete(true, vigneteColor, Mathf.Clamp(((distanceXZ - x) * vigneteIntensityScaleAmmount) 
+                        + startingVigneteIntensity, 0, 1));
                 }
 
                 else
                 {
-                    postProcessing.SetVignete(false);
+                    postProcessing.SetVignete(false, vigneteColor);
                 }
             }
 
             else
             {
-                postProcessing.SetVignete(false);
+                postProcessing.SetVignete(false, vigneteColor);
             }
         }
 
         else
         {
-            postProcessing.SetVignete(false);
+            postProcessing.SetVignete(false, vigneteColor);
         }
     }
 

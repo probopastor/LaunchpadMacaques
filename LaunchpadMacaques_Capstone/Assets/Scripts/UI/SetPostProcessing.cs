@@ -15,6 +15,7 @@ public class SetPostProcessing : MonoBehaviour
 
     string volumeName;
 
+
     private void Start()
     {
         volumeName = cameraVolume.profile.name;
@@ -23,7 +24,7 @@ public class SetPostProcessing : MonoBehaviour
 
     private void Update()
     {
-        if(volumeName != cameraVolume.profile.name)
+        if (volumeName != cameraVolume.profile.name)
         {
             volumeName = cameraVolume.profile.name;
             SetBloom();
@@ -41,7 +42,7 @@ public class SetPostProcessing : MonoBehaviour
         }
     }
 
-    public void SetVignete(bool turnOn,float intensity = 0)
+    public void SetVignete(bool turnOn, Color color ,float intensity = 0)
     {
         profile = cameraVolume.profile;
 
@@ -68,17 +69,26 @@ public class SetPostProcessing : MonoBehaviour
 
         if (turnOn)
         {
-    
 
+            if (color != null)
+            {
+                
+            }
+
+           ColorParameter colorState = vig.color;
+
+            colorState.value = color;
+            colorState.overrideState = true;
+
+            vig.color = colorState;
             ClampedFloatParameter p = vig.intensity;
 
             p.overrideState = true;
             p.value = intensity;
-            p.max = .6f;
 
             vig.intensity = p;
             Debug.Log("Should Be settings Intensity");
         }
- 
+
     }
 }
