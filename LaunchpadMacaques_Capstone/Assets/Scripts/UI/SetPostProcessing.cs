@@ -70,11 +70,6 @@ public class SetPostProcessing : MonoBehaviour
         if (turnOn)
         {
 
-            if (color != null)
-            {
-                
-            }
-
            ColorParameter colorState = vig.color;
 
             colorState.value = color;
@@ -87,7 +82,6 @@ public class SetPostProcessing : MonoBehaviour
             p.value = intensity;
 
             vig.intensity = p;
-            Debug.Log("Should Be settings Intensity");
         }
 
     }
