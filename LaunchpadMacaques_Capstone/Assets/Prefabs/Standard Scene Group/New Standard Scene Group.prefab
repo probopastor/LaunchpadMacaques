@@ -1537,6 +1537,9 @@ MonoBehaviour:
   - {fileID: 4742050882919899430}
   - {fileID: 6678727646984834866}
   - {fileID: 6005433648982560350}
+  coyoteTimeTags:
+  - Platform
+  - GroundCoyote
   minVelocityForScreenShake: 5
   startingScreenShakeAmmount: 5
   shakeAmmountVelocityScaling: 0.2
@@ -1545,7 +1548,7 @@ MonoBehaviour:
   anim: {fileID: 7564166262601284636}
   distanceXZ: 5
   distanceToCheckDown: 5
-  vigneteColor: {r: 0.24528301, g: 0.244126, b: 0.244126, a: 1}
+  vigneteColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
   startingVigneteIntensity: 0.4
   maxVigneteIntensity: 0.6
   vigneteIntensityScaleAmmount: 0.1
@@ -18414,13 +18417,13 @@ MonoBehaviour:
   abilities:
   - thisAbility: 1
     levels:
-    - Dash_2
+    - Boxes_2
   - thisAbility: 0
     levels:
-    - Boxes_2
+    - Movement_2
   - thisAbility: 2
     levels:
-    - Movement_2
+    - Dash_2
 --- !u!114 &6501273379721887124
 MonoBehaviour:
   m_ObjectHideFlags: 0
