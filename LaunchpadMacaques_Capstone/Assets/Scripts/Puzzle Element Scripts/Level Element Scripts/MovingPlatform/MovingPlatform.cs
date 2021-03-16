@@ -47,7 +47,7 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField, Tooltip("The prefab for the object that will appear at the endpoints of the moving platform path")]
     private GameObject endpointPrefab;
     [SerializeField, Tooltip("The scale of the endpoint model")]
-    private float endpointScale;
+    private float endpointScale = 0;
 
     //Non-Inspector:
     private int currentPointIndex = 0;
