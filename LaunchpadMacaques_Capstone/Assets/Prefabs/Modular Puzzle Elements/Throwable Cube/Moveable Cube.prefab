@@ -104,8 +104,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.1605518, y: 2.0030823, z: 1.5099201}
+  m_Center: {x: 0.03151834, y: 0.02268982, z: -0.25496006}
 --- !u!54 &2058264478890330555
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -139,7 +139,7 @@ MonoBehaviour:
   gravityScaler: 1.85
   distance: 26
   wheelSensitivity: 0.5
-  changeDistance: 1
+  changeDistance: 0
   minDistance: 2
   maxDistance: 45
   ground:
@@ -296,6 +296,8 @@ MonoBehaviour:
   - KillZone
   respawnPos: {fileID: 0}
   respawnPosModifiers: {x: 0, y: 4, z: 0}
+  respawnAtSpecificHolders: 0
+  cubeHolders: []
 --- !u!114 &3152400784751004010
 MonoBehaviour:
   m_ObjectHideFlags: 0

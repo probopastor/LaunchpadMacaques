@@ -422,6 +422,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 if (!coyoteTimeTags.Contains(hit.collider.gameObject.tag) || coyoteTimeObjs.Contains(hit.collider.gameObject))
                 {
+                    //postProcessing.SetVignete(false, vigneteColor);
                     return;
                 }
                 float x = 0;
@@ -502,7 +503,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         else
         {
-            if (coyoteTimeTags.Contains(hit.collider.gameObject.tag))
+            if (coyoteTimeObjs.Contains(hit.collider.gameObject))
             {
                 return true;
             }
