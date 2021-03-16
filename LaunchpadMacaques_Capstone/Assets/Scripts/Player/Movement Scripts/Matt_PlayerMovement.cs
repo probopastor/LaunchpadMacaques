@@ -389,7 +389,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void SprintFeedBack()
     {
-        if (!readyToSprint)
+        if (!readyToSprint && grounded)
         {
             if ((x != 0 || y != 0) && !sprintParticles.isPlaying)
             {
@@ -720,7 +720,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// </summary>
     public void StartSprint()
     {
-        if (grounded && readyToSprint)
+        if (/*grounded && */readyToSprint)
         {
             readyToSprint = false;
             //Apply sprint to player
