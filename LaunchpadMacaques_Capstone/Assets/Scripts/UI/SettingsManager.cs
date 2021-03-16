@@ -23,6 +23,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The Full Screen Toggle")] Toggle fullScreenToggle;
     [SerializeField, Tooltip("The Graphics Quality Dropdown Box")] TMP_Dropdown graphicsQualityDropdown;
     [SerializeField, Tooltip("The Colorblind Mode Dropdown Box")] TMP_Dropdown colorblindModeDropdown;
+    [SerializeField, Tooltip("The Bloom Toggle")] Toggle bloomToggle;
 
     [Header("Volume Sliders")]
     [SerializeField, Tooltip("The Dialouge Volume Slider")] Slider dialougeVolume;
@@ -39,9 +40,14 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Settings Holder")]
     [SerializeField, Tooltip("Will hold all the settings Menu")] GameObject settingsHolder;
-    [SerializeField] GameObject audioSettings;
-    [SerializeField] GameObject videoSettings;
-    [SerializeField] GameObject gameplaySettings;
+    [SerializeField] GameObject audioSubmenu;
+    [SerializeField] GameObject videoSubMenu;
+    [SerializeField] GameObject gameplaySubMenu;
+    [SerializeField] GameObject lookSettings;
+    [SerializeField] GameObject miscGameplaySettings;
+    [SerializeField] GameObject graphicsSettings;
+    [SerializeField] GameObject postProcessingSettings;
+
     [SerializeField] GameObject optionsMenu;
     [SerializeField] GameObject mainMenu;
 
@@ -60,6 +66,14 @@ public class SettingsManager : MonoBehaviour
 
     List<GameObject> useTransitionObjects;
 
+    private SetPostProcessing postProcessing;
+
+    private bool masterSet = false;
+    private bool musicSet = false;
+    private bool dialougeSet = false;
+    private bool sfxSet = false;
+
+
     // The Deafult variables the sliders will be set to, upon an ititial launch (Player has never played game before)
     #region Deafult Variables
     private int deafultGraphicsQuality = 1;
@@ -76,40 +90,55 @@ public class SettingsManager : MonoBehaviour
     #endregion
     void Start()
     {
+        postProcessing = FindObjectOfType<SetPostProcessing>();
         useTransitionObjects = new List<GameObject>();
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
-            settingsHolder.SetActive(true);
-
-
-            InitialFullScreen();
-            InitialQuality();
-            InitialDialouge();
-            InitialMusic();
-            InitialMaster();
-            InitialSFX();
-            InitialInvertY();
-            InitialMouseSensitivity();
-            SetResolutionsDropDown();
-            InitialFOV();
-            InitialScreenShake();
-            InitialColorblindMode();
-
-            DisableStuff();
-
-
+            StartCoroutine(SetAllMenuElements());
         }
 
         transition = FindObjectOfType<ButtonTransitionManager>().GetComponent<Animator>();
         transitionManager = FindObjectOfType<ButtonTransitionManager>();
     }
 
-    public void UpdateGameplay()
+    IEnumerator SetAllMenuElements()
+    {
+        settingsHolder.SetActive(true);
+        yield return new WaitForEndOfFrame();
+
+        InitialFullScreen();
+        InitialQuality();
+        InitialDialouge();
+        InitialMusic();
+        InitialMaster();
+        InitialSFX();
+        InitialInvertY();
+        InitialMouseSensitivity();
+        SetResolutionsDropDown();
+        InitialFOV();
+        InitialScreenShake();
+        InitialColorblindMode();
+        InitialBloom();
+
+        yield return new WaitForEndOfFrame();
+
+        while(!masterSet || !dialougeSet || !musicSet || !sfxSet)
+        {
+            yield return null;
+        }
+        DisableStuff();
+    }
+
+    public void UpdateLookSettings()
     {
         InitialFOV();
         InitialInvertY();
         InitialMouseSensitivity();
         InitialFullScreen();
+    }
+
+    public void UpdateMiscGameplaySettings()
+    {
         InitialScreenShake();
     }
 
@@ -121,20 +150,29 @@ public class SettingsManager : MonoBehaviour
         InitialSFX();
     }
 
-    public void UpdateVisuals()
+    public void UpdateGraphicSettings()
     {
         SetResolutionsDropDown();
         InitialFullScreen();
         InitialQuality();
+    }
+
+    public void UpdatePostProcessing()
+    {
         InitialColorblindMode();
+        InitialBloom();
     }
 
     private void DisableStuff()
     {
 
-        audioSettings.SetActive(false);
-        videoSettings.SetActive(false);
-        gameplaySettings.SetActive(false);
+        audioSubmenu.SetActive(false);
+        videoSubMenu.SetActive(false);
+        gameplaySubMenu.SetActive(false);
+        lookSettings.SetActive(false);
+        miscGameplaySettings.SetActive(false);
+        graphicsSettings.SetActive(false);
+        postProcessingSettings.SetActive(false);
         settingsHolder.SetActive(false);
 
         if (SceneManager.GetActiveScene().name == "MainMenu")
@@ -225,6 +263,30 @@ public class SettingsManager : MonoBehaviour
         {
             fullScreenToggle.SetIsOnWithoutNotify(true);
             SetFullScreen(true);
+        }
+    }
+
+    private void InitialBloom()
+    {
+        if (PlayerPrefs.HasKey("Bloom"))
+        {
+            if(PlayerPrefs.GetInt("Bloom") == 1)
+            {
+                bloomToggle.SetIsOnWithoutNotify(true);
+                SetBloom(true);
+            }
+
+            else
+            {
+                bloomToggle.SetIsOnWithoutNotify(false);
+                SetBloom(false);
+            }
+        }
+
+        else
+        {
+            bloomToggle.SetIsOnWithoutNotify(true);
+            SetBloom(true);
         }
     }
 
@@ -354,6 +416,8 @@ public class SettingsManager : MonoBehaviour
             dialougeVolume.SetValueWithoutNotify(deafultDialouge);
             SetDialougeVolume(deafultDialouge);
         }
+
+        dialougeSet = true;
     }
 
     private void InitialMaster()
@@ -372,6 +436,8 @@ public class SettingsManager : MonoBehaviour
             masterSoundSlider.SetValueWithoutNotify(deafultMaster);
             SetMasterVolume(deafultMaster);
         }
+
+        masterSet = true;
     }
 
     /// <summary>
@@ -394,6 +460,8 @@ public class SettingsManager : MonoBehaviour
             musicVolume.SetValueWithoutNotify(deafultMusic);
             SetMusicVolume(deafultMusic);
         }
+
+        musicSet = true;
     }
 
     /// <summary>
@@ -416,6 +484,8 @@ public class SettingsManager : MonoBehaviour
             soundEffectsVolume.SetValueWithoutNotify(deafultSoundEffects);
             SetSFXVolume(deafultSoundEffects);
         }
+
+        sfxSet = true;
     }
 
     /// <summary>
@@ -495,6 +565,21 @@ public class SettingsManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("FullScreen", 0);
         }
+    }
+
+    public void SetBloom(bool useBloom)
+    {
+        if (useBloom)
+        {
+            PlayerPrefs.SetInt("Bloom", 1);
+        }
+
+        else
+        {
+            PlayerPrefs.SetInt("Bloom", 0);
+        }
+
+        postProcessing.SetBloom();
     }
 
     public void SetScreenShake(bool useScreenShake)
@@ -650,22 +735,46 @@ public class SettingsManager : MonoBehaviour
                 transitionManager.disable = settingsHolder;
             }
 
-            else if (videoSettings.activeSelf)
+            else if (videoSubMenu.activeSelf)
             {
                 transitionManager.enable = optionsMenu;
-                transitionManager.disable = videoSettings;
+                transitionManager.disable = videoSubMenu;
             }
 
-            else if (audioSettings.activeSelf)
+            else if (audioSubmenu.activeSelf)
             {
                 transitionManager.enable = optionsMenu;
-                transitionManager.disable = audioSettings;
+                transitionManager.disable = audioSubmenu;
             }
 
-            else if (gameplaySettings.activeSelf)
+            else if (gameplaySubMenu.activeSelf)
             {
                 transitionManager.enable = optionsMenu;
-                transitionManager.disable = gameplaySettings;
+                transitionManager.disable = gameplaySubMenu;
+            }
+
+            else if (lookSettings.activeSelf)
+            {
+                transitionManager.enable = gameplaySubMenu;
+                transitionManager.disable = lookSettings;
+            }
+
+            else if (miscGameplaySettings.activeSelf)
+            {
+                transitionManager.enable = gameplaySubMenu;
+                transitionManager.disable = miscGameplaySettings;
+            }
+
+            else if (graphicsSettings.activeSelf)
+            {
+                transitionManager.enable = videoSubMenu;
+                transitionManager.disable = graphicsSettings;
+            }
+
+            else if (postProcessingSettings.activeSelf)
+            {
+                transitionManager.enable = videoSubMenu;
+                transitionManager.disable = postProcessingSettings;
             }
 
 
@@ -687,7 +796,8 @@ public class SettingsManager : MonoBehaviour
 
     public bool InSubSettings()
     {
-        if (gameplaySettings.activeSelf || videoSettings.activeSelf || audioSettings.activeSelf)
+        if (gameplaySubMenu.activeSelf || videoSubMenu.activeSelf || audioSubmenu.activeSelf || lookSettings.activeSelf
+            || miscGameplaySettings.activeSelf || graphicsSettings.activeSelf || postProcessingSettings.activeSelf)
         {
             return true;
         }

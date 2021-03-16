@@ -14,6 +14,7 @@ public class RespawnSystem : MonoBehaviour
     #region Public Variables
     [SerializeField, Tooltip("The tags that will re spawn the player if collided with. ")] private string[] respawnTags;
     [SerializeField] float delayBeforePlayerRespawns = 1;
+    [SerializeField, Tooltip("The particles that will play when the player is respawned. ")] private ParticleSystem[] deathParticles;
     #endregion
 
     #region Private Variables
@@ -31,6 +32,8 @@ public class RespawnSystem : MonoBehaviour
 
     Matt_PlayerMovement player;
 
+    private bool deathParticlesPlaying = false;
+    private bool deathInProgress = false;
     #endregion
 
     #region Start Methods
@@ -64,8 +67,12 @@ public class RespawnSystem : MonoBehaviour
         {
             if (other.gameObject.CompareTag(respawnTags[i]))
             {
-                StopAllCoroutines();
-                StartCoroutine(KillPlayer());
+                if(!deathInProgress)
+                {
+                    deathInProgress = true;
+                    StopAllCoroutines();
+                    StartCoroutine(KillPlayer());
+                }
             }
         }
 
@@ -133,6 +140,12 @@ public class RespawnSystem : MonoBehaviour
     {
         player.SetPlayerCanMove(false);
 
+        // Play death particles
+        if(!deathParticlesPlaying)
+        {
+            SetDeathParticleStatus(true);
+        }
+
         foreach (GrapplePoint dGP in disappearingGrapplePoints)
         {
             dGP.EnablePoint();
@@ -165,11 +178,47 @@ public class RespawnSystem : MonoBehaviour
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
         gg.StopGrapple();
+        deathInProgress = false;
     }
 
     public void PlayerCanMove()
     {
         player.SetPlayerCanMove(true);
+    }
+
+    /// <summary>
+    /// Starts or stops the death particles. 
+    /// </summary>
+    /// <param name="playParticles">If true, death particles play. If false they stop. </param>
+    public void SetDeathParticleStatus(bool playParticles)
+    {
+        if (playParticles)
+        {
+            // PLAY FIRE VFX HERE
+            foreach (ParticleSystem fireDeathParticles in deathParticles)
+            {
+                deathParticlesPlaying = true;
+                fireDeathParticles.Play();
+            }
+        }
+        else if (!playParticles)
+        {
+            // STOP FIRE VFX HERE
+            foreach (ParticleSystem fireDeathParticles in deathParticles)
+            {
+                fireDeathParticles.Stop();
+                deathParticlesPlaying = false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Are the death particles currently playing?
+    /// </summary>
+    /// <returns>Returns true if playing, false otherwise. </returns>
+    public bool GetDeathParticlesStatus()
+    {
+        return deathParticlesPlaying;
     }
 
 }
