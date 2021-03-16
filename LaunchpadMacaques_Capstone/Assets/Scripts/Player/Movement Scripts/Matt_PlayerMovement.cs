@@ -159,6 +159,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     // The game object currently on.
     private GameObject gameObjectStoodOn;
     [SerializeField, Tooltip("The Coyote Time game objects. ")] private List<GameObject> coyoteTimeObjs = new List<GameObject>(4);
+    [SerializeField] List<string> coyoteTimeTags;
 
     // Determines if the Coyote Time coroutine is running.
     private bool coyoteTimeStarted = false;
@@ -419,7 +420,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
             if (Physics.Raycast(this.transform.position, (-transform.up), out RaycastHit hit,distanceToCheckDown, whatIsGround))
             {
-                if (coyoteTimeObjs.Contains(hit.collider.gameObject))
+                if (!coyoteTimeTags.Contains(hit.collider.gameObject.tag) || coyoteTimeObjs.Contains(hit.collider.gameObject))
                 {
                     return;
                 }
@@ -501,7 +502,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         else
         {
-            if (coyoteTimeObjs.Contains(hit.collider.gameObject))
+            if (coyoteTimeTags.Contains(hit.collider.gameObject.tag))
             {
                 return true;
             }
@@ -951,8 +952,9 @@ public class Matt_PlayerMovement : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(downRay, out hit, 5f, whatIsGround))
             {
-                if (hit.collider.CompareTag("Platform") || hit.collider.gameObject.layer.Equals("Ground"))
+                if (coyoteTimeTags.Contains(hit.collider.gameObject.tag))
                 {
+                    Debug.Log("Yeah");
                     bool onCoyoteTimeObj = false;
 
                     // Update the game object stood on if when player stands on a new object.
@@ -990,6 +992,11 @@ public class Matt_PlayerMovement : MonoBehaviour
                         //DisableCoyoteTime();
                         EnableCoyoteTime(gameObjectStoodOn);
                     }
+                }
+
+                else
+                {
+                    Debug.Log(hit.collider.gameObject.tag);
                 }
             }
             else
