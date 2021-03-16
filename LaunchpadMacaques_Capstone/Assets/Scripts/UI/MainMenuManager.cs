@@ -36,7 +36,7 @@ public class MainMenuManager : MonoBehaviour
         Time.timeScale = 1;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        anim.Play("MainMenuBG");
+        anim.Play("MenuBGAnim");
 
 
         if (HandleSaving.instance)
