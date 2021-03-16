@@ -200,7 +200,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Player Input")]
 
     private float x, y;
-    private bool jumping, sprinting, crouching, canDash;
+    private bool jumping = false, sprinting = false, crouching = false, canDash = false;
 
     private PauseManager pauseManager;
 

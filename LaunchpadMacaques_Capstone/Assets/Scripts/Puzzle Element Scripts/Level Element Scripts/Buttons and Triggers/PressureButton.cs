@@ -32,7 +32,7 @@ public class PressureButton : MonoBehaviour
 
 
     [Header("Proximity Settings")]
-    [SerializeField, Tooltip("If true, button can be activated in a proximity. ")] private bool proximityTrigger;
+    [SerializeField, Tooltip("If true, button can be activated in a proximity. ")] private bool proximityTrigger = false;
     [SerializeField, Tooltip("The area around this button that will trigger it. Only active if proximityTrigger is true. ")] private Vector3 proximityTriggerArea;
 
     private int objectsOnButton = 0;

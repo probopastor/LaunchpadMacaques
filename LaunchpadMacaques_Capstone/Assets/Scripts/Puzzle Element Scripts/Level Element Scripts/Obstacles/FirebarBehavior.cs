@@ -14,8 +14,8 @@ public class FirebarBehavior : MonoBehaviour
     [SerializeField, Tooltip("Each fireball that rotates around the axle. ")] GameObject firebar1, firebar2, firebar3, firebar4, firebar5, firebar6, firebar7, firebar8, firebar9, firebar10;
 
     [SerializeField, Tooltip("The speed at which the bar rotates. ")] private float rotationSpeed = 0f;
-    [SerializeField, Tooltip("If enabled, Firebar will move along the path specified by the Moving Platform component. ")] private bool enableMovingPlatform;
-    [SerializeField, Tooltip("Stops Fireball rotation when disabled. ")] private bool turnRotationOn;
+    [SerializeField, Tooltip("If enabled, Firebar will move along the path specified by the Moving Platform component. ")] private bool enableMovingPlatform = false;
+    [SerializeField, Tooltip("Stops Fireball rotation when disabled. ")] private bool turnRotationOn = false;
 
     const int FIREBALLSIZE = 10;
     private GameObject[] FirebarObjs { get; set; }

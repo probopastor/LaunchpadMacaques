@@ -31,7 +31,7 @@ public class PushableObj : MonoBehaviour
     [SerializeField, Tooltip("The Layer that is ground")] LayerMask ground;
 
     [Header("Particle Settings")]
-    [SerializeField, Tooltip("If True particles effects will scale depending on how far away the player is")] bool scaleWithDistance;
+    [SerializeField, Tooltip("If True particles effects will scale depending on how far away the player is")] bool scaleWithDistance = false;
     [SerializeField, Tooltip("The amount the size of the particles will scale with player distance")] float sizeScaleAmount = 0;
     [SerializeField, Tooltip("The amount the speed of the particles will scale with player distance")] float speedScaleAmount = 0;
     [SerializeField, Tooltip("The grappling point layers that should respawn the throwable cube. ")] private LayerMask grapplingPointLayers;

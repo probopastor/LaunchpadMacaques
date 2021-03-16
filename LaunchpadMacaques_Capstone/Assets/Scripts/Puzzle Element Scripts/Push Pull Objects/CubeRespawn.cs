@@ -16,7 +16,7 @@ public class CubeRespawn : MonoBehaviour
     private GameObject originalSpawnPos;
 
     [SerializeField, Tooltip("A modifier to the position the Game Object should be respawned at. ")] private Vector3 respawnPosModifiers = new Vector3(0, 0, 0);
-    [SerializeField, Tooltip("If true, cube will only respawn at the passed in cube holders. ")] private bool respawnAtSpecificHolders;
+    [SerializeField, Tooltip("If true, cube will only respawn at the passed in cube holders. ")] private bool respawnAtSpecificHolders = false;
     [SerializeField, Tooltip("The places this cube can respawn at. Will only respawn at these if respawnAtSpecificHolders is set to true. ")] private GameObject[] cubeHolders;
 
     private Quaternion respawnAngle;

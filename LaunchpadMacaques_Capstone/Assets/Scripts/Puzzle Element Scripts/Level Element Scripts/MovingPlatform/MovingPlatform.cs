@@ -40,7 +40,7 @@ public class MovingPlatform : MonoBehaviour
     private LoopPattern loopPattern = LoopPattern.Reverse;
 
     [SerializeField, Tooltip("Should the platform accelerate or deaccelerate around each point?")]
-    private bool easeInAndOut;
+    private bool easeInAndOut = false;
     [SerializeField, Tooltip("The distance from the start and end positions where the easing will start")]
     private float easeDistance = 2;
 
