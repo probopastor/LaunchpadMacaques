@@ -21,7 +21,7 @@ public class PushPullObjects : MonoBehaviour
 
     [SerializeField, Tooltip("The Position the Cube will go to when Top Middle is Chosen")] GameObject topMiddle;
     [SerializeField, Tooltip("The Position the Cube will go to when Bottom Middle is Chosen")] GameObject bottomMiddle;
-    [SerializeField] [Tooltip("The Max Distance the player can pick up an object")] float maxGrabDistance;
+    [SerializeField] [Tooltip("The Max Distance the player can pick up an object")] float maxGrabDistance = 0;
     [SerializeField] [Tooltip("The Layer for object that can be picked up")] LayerMask canBePickedUp;
 
 

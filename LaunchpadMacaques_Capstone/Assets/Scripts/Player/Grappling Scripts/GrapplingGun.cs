@@ -139,7 +139,7 @@ public class GrapplingGun : MonoBehaviour
 
     // The private instance of the joint
     private SpringJoint joint;
-    private float distanceFromPoint;
+    private float distanceFromPoint = 0;
 
     // The Raycast that will be set to what the player is looking at
     private RaycastHit grappleRayHit;

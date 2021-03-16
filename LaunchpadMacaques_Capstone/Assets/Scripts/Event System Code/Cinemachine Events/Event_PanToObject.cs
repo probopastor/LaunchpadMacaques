@@ -22,7 +22,7 @@ public class Event_PanToObject : MonoBehaviour
     private CinemachineVirtualCamera panningCamera;
 
     [SerializeField] [Tooltip("The time it takes before the camera switches back to the regular view.")]
-    private float panTime;
+    private float panTime = 0;
 
     // The Cinemachine camera priority value. This determines what camera Cinemachine is using/looking through.
     private int initPriority;

@@ -11,11 +11,11 @@ public class FootStepCorruption : MonoBehaviour
 
     [Header("Decal Settings")]
     [SerializeField, Tooltip("The Decal Projector that is used for the Foot prints")] GameObject footDecal;
-    [SerializeField, Tooltip("The size of the Foot Prints")] float decalSize;
-    [SerializeField, Tooltip("The max amount of Foot steps that can be spawned, will remove the oldest ones")] int maxFootSteps;
+    [SerializeField, Tooltip("The size of the Foot Prints")] float decalSize = 0;
+    [SerializeField, Tooltip("The max amount of Foot steps that can be spawned, will remove the oldest ones")] int maxFootSteps = 0;
 
     [Header("Time Settings")]
-    [SerializeField, Tooltip("The base time between foot prints, while the player is moving")] float timeBetweenSteps;
+    [SerializeField, Tooltip("The base time between foot prints, while the player is moving")] float timeBetweenSteps = 0;
     [SerializeField, Tooltip("The amount that is multiplied by the players velocity to scale timeBetweenSteps")] float scaleAmount = .1f;
 
 
