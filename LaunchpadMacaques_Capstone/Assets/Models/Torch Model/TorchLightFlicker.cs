@@ -12,7 +12,7 @@ using UnityEngine;
 
 public class TorchLightFlicker : MonoBehaviour
 {
-    public Light lightTarget;
+    public Light light;
 
     public Color color1;
     public Color color2;
@@ -43,7 +43,7 @@ public class TorchLightFlicker : MonoBehaviour
         smoothing = Random.Range(smoothing - 5, smoothing + 5);
 
         //initialize values
-        intitalIntentisty = lightTarget.intensity;
+        intitalIntentisty = light.intensity;
         minIntensity = intitalIntentisty - intitalIntentisty * .5f;
         maxIntensity = intitalIntentisty + intitalIntentisty * .5f;
 
@@ -58,9 +58,9 @@ public class TorchLightFlicker : MonoBehaviour
 
         smoothQueue = new Queue<float>(smoothing);
         // External or internal light?
-        if (lightTarget == null)
+        if (light == null)
         {
-            lightTarget = GetComponent<Light>();
+            light = GetComponent<Light>();
         }
 
         //light = GetComponent<Light>(); // making a reference to the material so we can enable the emission keyword if you do not want this to affect every object using this
@@ -71,7 +71,7 @@ public class TorchLightFlicker : MonoBehaviour
         //color changes
         float frac = (Mathf.Sin(Time.time - startTime) * speed);
 
-        lightTarget.color = Color.Lerp(color1, color2, frac);
+        light.color = Color.Lerp(color1, color2, frac);
 
         //light.intensity = Mathf.Lerp((intitalIntentisty - intitalIntentisty * .5f), (intitalIntentisty + intitalIntentisty * .5f), frac);
 
@@ -88,7 +88,7 @@ public class TorchLightFlicker : MonoBehaviour
         lastSum += newVal;
 
         // Calculate new smoothed average
-        lightTarget.intensity = lastSum / (float)smoothQueue.Count;
+        light.intensity = lastSum / (float)smoothQueue.Count;
 
     }
 
