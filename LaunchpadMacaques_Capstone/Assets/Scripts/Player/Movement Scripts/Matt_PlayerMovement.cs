@@ -127,6 +127,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField] private float sprintMultiplier = 1.75f;
     private bool readyToSprint = true;
     private float speedStorage;
+    [SerializeField] ParticleSystem sprintParticles;
     #endregion
 
     #region Dash Settings
@@ -143,6 +144,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float impulseDashAmmount = 4000;
     private bool useAddForceDash = false;
     private bool useCourtineDash = true;
+
+    [SerializeField] GameObject dashUI;
     #endregion
 
     #region Platform Landing Settings
@@ -155,7 +158,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     // The game object currently on.
     private GameObject gameObjectStoodOn;
-    [SerializeField, Tooltip("The Coyote Time game objects. ")] private GameObject[] coyoteTimeObjs = new GameObject[4];
+    [SerializeField, Tooltip("The Coyote Time game objects. ")] private List<GameObject> coyoteTimeObjs = new List<GameObject>(4);
 
     // Determines if the Coyote Time coroutine is running.
     private bool coyoteTimeStarted = false;
@@ -271,6 +274,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         //Cannot dash while on the ground.
         canDash = false;
+        DashFeedback(false);
 
         applyPhysicsMaterial = false;
 
@@ -379,6 +383,28 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         EdgeDetection();
 
+        SprintFeedBack();
+    }
+
+    private void SprintFeedBack()
+    {
+        if (!readyToSprint)
+        {
+            if ((x != 0 || y != 0) && !sprintParticles.isPlaying)
+            {
+                sprintParticles.Play();
+            }
+
+            else if (x == 0 && y == 0)
+            {
+                sprintParticles.Stop();
+            }
+        }
+
+        else if (sprintParticles.isPlaying)
+        {
+            sprintParticles.Stop();
+        }
 
 
     }
@@ -391,8 +417,12 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 return;
             }
-            if (Physics.Raycast(this.transform.position, (-transform.up), distanceToCheckDown, whatIsGround))
+            if (Physics.Raycast(this.transform.position, (-transform.up), out RaycastHit hit,distanceToCheckDown, whatIsGround))
             {
+                if (coyoteTimeObjs.Contains(hit.collider.gameObject))
+                {
+                    return;
+                }
                 float x = 0;
                 foundGround = true;
                 Vector3 checkPos = this.transform.position;
@@ -471,7 +501,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         else
         {
-            if (hit.collider.gameObject.name == "Coyote Time Object")
+            if (coyoteTimeObjs.Contains(hit.collider.gameObject))
             {
                 return true;
             }
@@ -500,6 +530,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 anim.SetTrigger("Dash");
 
+                DashFeedback(false);
                 canDash = false;
                 StartCoroutine(DashCooldown());
 
@@ -520,6 +551,12 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
         }
 
+    }
+
+
+    private void DashFeedback(bool onOff)
+    {
+        dashUI.SetActive(onOff);
     }
     /// <summary>
     /// The dash that will only change the player's direction does not change their speed
@@ -855,10 +892,12 @@ public class Matt_PlayerMovement : MonoBehaviour
             if (grounded)
             {
                 canDash = false;
+                DashFeedback(false);
             }
             // Dash cooldown is reset if the player grapples again.
             else if (grappleGunReference.IsGrappling() && !canDash)
             {
+                DashFeedback(true);
                 canDash = true;
             }
 
@@ -978,7 +1017,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             Vector3 objectStoodOnPos = objStoodOn.transform.position;
 
             // Set the coyote time obj scale to be the same as the object stepped on's collider.
-            for (int i = 0; i < coyoteTimeObjs.Length; i++)
+            for (int i = 0; i < coyoteTimeObjs.Count; i++)
             {
                 coyoteTimeObjs[i].SetActive(true);
                 //coyoteTimeObjs[i].transform.localScale = new Vector3(objectStoodOnCollider.x + 30, objectStoodOnCollider.y, objectStoodOnCollider.z + 30);
@@ -1008,7 +1047,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     private void DisableCoyoteTime()
     {
         // Cycles through Coyote Time objects to set them to false.
-        for (int i = 0; i < coyoteTimeObjs.Length; i++)
+        for (int i = 0; i < coyoteTimeObjs.Count; i++)
         {
             coyoteTimeObjs[i].SetActive(false);
         }
@@ -1268,7 +1307,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 timeOffGround = 0;
                 grounded = true;
-                rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+                rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
                 cancellingGrounded = false;
                 normalVector = normal;
                 CancelInvoke(nameof(StopGrounded));

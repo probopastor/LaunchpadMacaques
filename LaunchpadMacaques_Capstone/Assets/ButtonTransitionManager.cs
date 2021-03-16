@@ -1,6 +1,6 @@
 ﻿/*
 * Launchpad Macaques - Neon Oblivion
-* Levi Schoof, Jamey Colleen
+* Levi Schoof, Jamey Colleen, William Nomikos
 * ButtonTransitionManager.cs
 * Handles Screen Transistions
 */
@@ -120,7 +120,7 @@ public class ButtonTransitionManager : MonoBehaviour
                 mainMenu.SetUseEscapeTransition(enable.name);
             }
 
-            if(settings)
+            if (settings)
             {
                 settings.SetTransitionObject(enable);
             }
@@ -132,7 +132,7 @@ public class ButtonTransitionManager : MonoBehaviour
 
     public void BackButton()
     {
-       bool useTransition = false;
+        bool useTransition = false;
         for (int i = 0; i < useTransitionOnBack.Count; i++)
         {
             if (disable == useTransitionOnBack[i])
@@ -340,6 +340,8 @@ public class ButtonTransitionManager : MonoBehaviour
 
     IEnumerator RespawnTransition()
     {
+        RespawnSystem playerRespawnSystem = FindObjectOfType<RespawnSystem>();
+
         // Will Start A transition if one is selected
         if (respawnTransition != RespawnTransitionTypes.none)
         {
@@ -361,10 +363,16 @@ public class ButtonTransitionManager : MonoBehaviour
                 yield return null;
             }
 
+            // If death particles are playing, stop playing the particles.
+            if (playerRespawnSystem.GetDeathParticlesStatus())
+            {
+                playerRespawnSystem.SetDeathParticleStatus(false);
+            }
+
             // Will wait until 75 percent of the animation is done
             yield return new WaitForSecondsRealtime(anim[0].clip.length * (1 / transition.GetCurrentAnimatorStateInfo(0).speed));
 
-            FindObjectOfType<RespawnSystem>().RespawnPlayer();
+            playerRespawnSystem.RespawnPlayer();
             yield return null;
 
             anim = transition.GetCurrentAnimatorClipInfo(0);
@@ -376,14 +384,20 @@ public class ButtonTransitionManager : MonoBehaviour
 
             yield return new WaitForSecondsRealtime((anim[0].clip.length * (1 / transition.GetCurrentAnimatorStateInfo(0).speed)) * .5f);
 
-            FindObjectOfType<RespawnSystem>().PlayerCanMove();
+            playerRespawnSystem.PlayerCanMove();
             inTransisiton = false;
         }
 
         else
         {
-            FindObjectOfType<RespawnSystem>().RespawnPlayer();
-            FindObjectOfType<RespawnSystem>().PlayerCanMove();
+            // If death particles are playing, stop playing the particles.
+            if (playerRespawnSystem.GetDeathParticlesStatus())
+            {
+                playerRespawnSystem.SetDeathParticleStatus(false);
+            }
+
+            playerRespawnSystem.RespawnPlayer();
+            playerRespawnSystem.PlayerCanMove();
         }
     }
 
