@@ -1289,6 +1289,65 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private bool cancellingGrounded;
 
+    public Matt_PlayerMovement(LayerMask whatIsGround)
+    {
+        this.whatIsGround = whatIsGround;
+    }
+
+    public Matt_PlayerMovement(Color vigneteColor)
+    {
+        this.vigneteColor = vigneteColor;
+    }
+
+    public Matt_PlayerMovement(Transform orientation, Transform playerCam)
+    {
+        this.orientation = orientation;
+        this.playerCam = playerCam;
+    }
+
+    public Matt_PlayerMovement(PhysicMaterial frictionlessMat)
+    {
+        this.frictionlessMat = frictionlessMat;
+    }
+
+    public Matt_PlayerMovement(ParticleSystem sprintParticles)
+    {
+        this.sprintParticles = sprintParticles;
+    }
+
+    public Matt_PlayerMovement(GameObject dashUI)
+    {
+        this.dashUI = dashUI;
+    }
+
+    public Matt_PlayerMovement(Animator anim)
+    {
+        this.anim = anim;
+    }
+
+    public Matt_PlayerMovement(string[] tagsToCancelVelocity)
+    {
+        this.tagsToCancelVelocity = tagsToCancelVelocity;
+    }
+
+    public Matt_PlayerMovement(TextMeshProUGUI currentGravityText)
+    {
+        this.currentGravityText = currentGravityText;
+    }
+
+    public Matt_PlayerMovement(bool inMouseAccerlation, bool resetVelocity, bool enableCoyoteTime)
+    {
+        this.inMouseAccerlation = inMouseAccerlation;
+        this.resetVelocity = resetVelocity;
+        this.enableCoyoteTime = enableCoyoteTime;
+    }
+
+    public Matt_PlayerMovement(float maxScreenShakeAmmount, float maxVigneteIntensity)
+    {
+        this.maxScreenShakeAmmount = maxScreenShakeAmmount;
+        this.maxVigneteIntensity = maxVigneteIntensity;
+    }
+
     /// <summary>
     /// Handle ground detection
     /// </summary>
