@@ -200,75 +200,7 @@ public class GrapplingGun : MonoBehaviour
 
     [SerializeField, Tooltip("The object with the grappling shadow line renderer. ")] private GameObject grapplingLrObj;
     private LineRenderer grapplingLr;
-
-    private GrappleTypes TypeOfGrapple { get => typeOfGrapple; set => typeOfGrapple = value; }
-
-    public GrapplingGun(Transform ejectPoint, Transform player)
-    {
-        this.ejectPoint = ejectPoint;
-        this.player = player;
-    }
-
-    public GrapplingGun(LayerMask groundDecalLayer, LayerMask whatIsNotGrappleable, LayerMask whatIsGrappleable)
-    {
-        this.groundDecalLayer = groundDecalLayer;
-        this.whatIsNotGrappleable = whatIsNotGrappleable;
-        this.whatIsGrappleable = whatIsGrappleable;
-    }
-
-    public GrapplingGun(GameObject groundDecal, GameObject postText, GameObject grapplingLrObj, GameObject hitObject)
-    {
-        this.groundDecal = groundDecal;
-        this.postText = postText;
-        this.grapplingLrObj = grapplingLrObj;
-        this.hitObject = hitObject;
-    }
-
-    public GrapplingGun(Vector3[] particlePositions)
-    {
-        this.particlePositions = particlePositions;
-    }
-
-    public GrapplingGun(string grappleEnd, string grappleStart)
-    {
-        this.grappleEnd = grappleEnd;
-        this.grappleStart = grappleStart;
-    }
-
-    public GrapplingGun(Animator anim)
-    {
-        this.anim = anim;
-    }
-
-    public GrapplingGun(LayerMask whatIsGrappleable)
-    {
-        this.whatIsGrappleable = whatIsGrappleable;
-    }
-
-    public GrapplingGun(Quaternion[] particleRotations)
-    {
-        this.particleRotations = particleRotations;
-    }
-
-    public GrapplingGun(ParticleSystem[] grappleParticles)
-    {
-        this.grappleParticles = grappleParticles;
-    }
-
-    public GrapplingGun(bool canHoldDownToGrapple, bool holdingDownGrapple)
-    {
-        this.canHoldDownToGrapple = canHoldDownToGrapple;
-        this.holdingDownGrapple = holdingDownGrapple;
-    }
-
-    public GrapplingGun(float minDistanceFromObject, float explosionRadius, float explosionPower)
-    {
-        this.minDistanceFromObject = minDistanceFromObject;
-        this.explosionRadius = explosionRadius;
-        this.explosionPower = explosionPower;
-    }
-
-    #endregion
+    #endregion 
 
     #region StartFunctions
     void Awake()
