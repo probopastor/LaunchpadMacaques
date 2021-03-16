@@ -6,24 +6,24 @@ public class SetInstancedColor : MonoBehaviour
 {
     public Color color;
 
-    Renderer renderer;
+    Renderer rendererTarget;
     MaterialPropertyBlock pBlock;
 
     private void OnValidate()
     {
-        if (renderer == null)
+        if (rendererTarget == null)
         {
-            renderer = GetComponent<Renderer>();
+            rendererTarget = GetComponent<Renderer>();
         }
         if (pBlock == null)
         {
             pBlock = new MaterialPropertyBlock();
         }
 
-        renderer.GetPropertyBlock(pBlock);
+        rendererTarget.GetPropertyBlock(pBlock);
 
         pBlock.SetColor("AdjustmentColor", color);
 
-        renderer.SetPropertyBlock(pBlock);
+        rendererTarget.SetPropertyBlock(pBlock);
     }
 }
