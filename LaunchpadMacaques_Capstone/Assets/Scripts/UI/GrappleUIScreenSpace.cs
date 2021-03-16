@@ -24,6 +24,22 @@ public class GrappleUIScreenSpace : MonoBehaviour
     private bool objectSet = false;
     private Canvas thisCanvas;
     private Vector3 uiPos;
+
+    public GrappleUIScreenSpace(LayerMask whatIsNotGrappleable, LayerMask whatIsGrappleable)
+    {
+        this.whatIsNotGrappleable = whatIsNotGrappleable;
+        this.whatIsGrappleable = whatIsGrappleable;
+    }
+
+    public GrappleUIScreenSpace(Canvas grappleCanvas)
+    {
+        this.grappleCanvas = grappleCanvas;
+    }
+
+    public GrappleUIScreenSpace(Sprite uiSprite)
+    {
+        this.uiSprite = uiSprite;
+    }
     #endregion
 
 
