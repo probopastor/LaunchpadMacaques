@@ -558,7 +558,16 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void DashFeedback(bool onOff)
     {
-        dashUI.SetActive(onOff);
+        if (canDash)
+        {
+            dashUI.SetActive(onOff);
+        }
+
+        else
+        {
+            dashUI.SetActive(false);
+        }
+      
     }
     /// <summary>
     /// The dash that will only change the player's direction does not change their speed
