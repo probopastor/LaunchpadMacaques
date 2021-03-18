@@ -41,11 +41,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     //Handler Variables
     [SerializeField, Tooltip("The lower end of the interval that a random trigger can be called")]
-    private float randomIntervalMin;
+    private float randomIntervalMin = 0;
     [SerializeField, Tooltip("The upper end of the interval that a random trigger can be called")]
-    private float randomIntervalMax;
+    private float randomIntervalMax = 0;
     [SerializeField, Tooltip("The time (in seconds) that the player must be falling in order for the \"Player Hitting Ground\" event to trigger")]
-    private float fallTime;
+    private float fallTime = 0;
 
     //UI variables
     [SerializeField]

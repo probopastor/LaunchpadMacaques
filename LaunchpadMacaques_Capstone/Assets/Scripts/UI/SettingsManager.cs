@@ -88,6 +88,32 @@ public class SettingsManager : MonoBehaviour
     private int deafultFOV = 60;
     private float deafultMaster = 1;
 
+    public GameObject PostProcessingSettings { get => postProcessingSettings; set => postProcessingSettings = value; }
+    public GameObject MainMenu { get => mainMenu; set => mainMenu = value; }
+    public Slider SoundEffectsVolume { get => soundEffectsVolume; set => soundEffectsVolume = value; }
+    public GameObject MiscGameplaySettings { get => miscGameplaySettings; set => miscGameplaySettings = value; }
+    public GameObject VideoSubMenu { get => videoSubMenu; set => videoSubMenu = value; }
+    public GameObject GraphicsSettings { get => graphicsSettings; set => graphicsSettings = value; }
+    public GameObject GameplaySubMenu { get => gameplaySubMenu; set => gameplaySubMenu = value; }
+    public Slider FovSlider { get => fovSlider; set => fovSlider = value; }
+    public Slider MouseSensitivity { get => mouseSensitivity; set => mouseSensitivity = value; }
+    public Toggle FullScreenToggle { get => fullScreenToggle; set => fullScreenToggle = value; }
+    public TMP_Dropdown ResolutionDropdown { get => resolutionDropdown; set => resolutionDropdown = value; }
+    public Toggle BloomToggle { get => bloomToggle; set => bloomToggle = value; }
+    public Toggle InvertY { get => invertY; set => invertY = value; }
+    public Toggle FovToggle { get => fovToggle; set => fovToggle = value; }
+    public GameObject LookSettings { get => lookSettings; set => lookSettings = value; }
+    public GameObject SettingsHolder { get => settingsHolder; set => settingsHolder = value; }
+    public GameObject AudioSubmenu { get => audioSubmenu; set => audioSubmenu = value; }
+    public Slider DialougeVolume { get => dialougeVolume; set => dialougeVolume = value; }
+    public GameObject OptionsMenu { get => optionsMenu; set => optionsMenu = value; }
+    public TMP_Dropdown GraphicsQualityDropdown { get => graphicsQualityDropdown; set => graphicsQualityDropdown = value; }
+    public TMP_Dropdown ColorblindModeDropdown { get => colorblindModeDropdown; set => colorblindModeDropdown = value; }
+    public Toggle ScreenShake { get => screenShake; set => screenShake = value; }
+    public Slider MusicVolume { get => musicVolume; set => musicVolume = value; }
+    public Button PlayButton { get => playButton; set => playButton = value; }
+    public Slider MasterSoundSlider { get => masterSoundSlider; set => masterSoundSlider = value; }
+
 
     #endregion
     void Start()

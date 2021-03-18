@@ -35,7 +35,65 @@ public class GameplayInputController : MonoBehaviour
 
     [SerializeField, Tooltip("The Event that is Called When player Presses pause Input ")] PauseEvent pauseEvent;
 
+    public GameplayInputController(LookEvent lookEvent)
+    {
+        this.lookEvent = lookEvent;
+    }
 
+    public GameplayInputController(PauseEvent pauseEvent)
+    {
+        this.pauseEvent = pauseEvent;
+    }
+
+    public GameplayInputController(StartGrappleEvent startGrappleEvent)
+    {
+        this.startGrappleEvent = startGrappleEvent;
+    }
+
+    public GameplayInputController(DropCubeEvent dropCubeEvent)
+    {
+        this.dropCubeEvent = dropCubeEvent;
+    }
+
+    public GameplayInputController(MoveEvent moveEvent)
+    {
+        this.moveEvent = moveEvent;
+    }
+
+    public GameplayInputController(JumpEvent jumpEvent)
+    {
+        this.jumpEvent = jumpEvent;
+    }
+
+    public GameplayInputController(ScrollEvent scrollEvent)
+    {
+        this.scrollEvent = scrollEvent;
+    }
+
+    public GameplayInputController(BatmanEvent batmanEvent)
+    {
+        this.batmanEvent = batmanEvent;
+    }
+
+    public GameplayInputController(DashCancel dashCancelEvent)
+    {
+        this.dashCancelEvent = dashCancelEvent;
+    }
+
+    public GameplayInputController(StopGrappleEvent stopGrappleEvent)
+    {
+        this.stopGrappleEvent = stopGrappleEvent;
+    }
+
+    public GameplayInputController(CrouchEvent crouchEvent)
+    {
+        this.crouchEvent = crouchEvent;
+    }
+
+    public GameplayInputController(DashStart dashStartEvent)
+    {
+        this.dashStartEvent = dashStartEvent;
+    }
 
     private void Awake()
     {
