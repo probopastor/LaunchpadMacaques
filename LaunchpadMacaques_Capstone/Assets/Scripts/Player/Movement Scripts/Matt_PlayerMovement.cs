@@ -257,6 +257,23 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
+    public Animator Anim { get => anim; set => anim = value; }
+    public Color VigneteColor { get => vigneteColor; set => vigneteColor = value; }
+    public PhysicMaterial FrictionlessMat { get => frictionlessMat; set => frictionlessMat = value; }
+    public TextMeshProUGUI CurrentGravityText { get => currentGravityText; set => currentGravityText = value; }
+    public LayerMask WhatIsGround { get => whatIsGround; set => whatIsGround = value; }
+    public ParticleSystem SprintParticles { get => sprintParticles; set => sprintParticles = value; }
+    public Transform PlayerCam { get => playerCam; set => playerCam = value; }
+    public Transform Orientation { get => orientation; set => orientation = value; }
+    public GameObject DashUI { get => dashUI; set => dashUI = value; }
+    public string[] TagsToCancelVelocity { get => tagsToCancelVelocity; set => tagsToCancelVelocity = value; }
+    public List<string> CoyoteTimeTags { get => coyoteTimeTags; set => coyoteTimeTags = value; }
+    public bool EnableCoyoteTime1 { get => enableCoyoteTime; set => enableCoyoteTime = value; }
+    public bool ResetVelocity { get => resetVelocity; set => resetVelocity = value; }
+    public bool InMouseAccerlation { get => inMouseAccerlation; set => inMouseAccerlation = value; }
+    public float MaxScreenShakeAmmount { get => maxScreenShakeAmmount; set => maxScreenShakeAmmount = value; }
+    public float MaxVigneteIntensity { get => maxVigneteIntensity; set => maxVigneteIntensity = value; }
+
     [SerializeField, Tooltip("Particle system that is used while dashing.")] private ParticleSystem _CachedSystem;
     [SerializeField, Tooltip("Amount of speedlines emitted after each dash. ")] private int emitParticles = 20;
 
