@@ -29,6 +29,9 @@ public class CubeRespawn : MonoBehaviour
 
     private bool startRespawn;
     private bool keepDefaultPos;
+
+    public string[] TriggerTags { get => triggerTags; set => triggerTags = value; }
+    public GameObject[] CubeHolders { get => cubeHolders; set => cubeHolders = value; }
     #endregion
 
     #region Start Functions
