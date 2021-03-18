@@ -65,20 +65,20 @@ public class InformationPost : A_InputType
 
     private void InteractInput(InputAction.CallbackContext cxt)
     {
-        if (playerInRange)
-        {
-            if (informationText.text.Equals(information))
-            {
-                playerInRange = false;
-            }
+        //if (playerInRange)
+        //{
+        //    if (informationText.text.Equals(information))
+        //    {
+        //        playerInRange = false;
+        //    }
 
-            else
-            {
-                informationText.text = information;
-            }
+        //    else
+        //    {
+        //        informationText.text = information;
+        //    }
 
-            UpdateUI();
-        }
+        //    UpdateUI();
+        //}
     }
 
     private new void OnEnable()
@@ -122,7 +122,7 @@ public class InformationPost : A_InputType
             {
                 ChangeUI();
                 informationText.gameObject.transform.parent.gameObject.SetActive(true);
-                informationText.text = interactText;
+                informationText.text = information;
 
                 playerInRange = true;
                 narrative.TurnOffDialouge();

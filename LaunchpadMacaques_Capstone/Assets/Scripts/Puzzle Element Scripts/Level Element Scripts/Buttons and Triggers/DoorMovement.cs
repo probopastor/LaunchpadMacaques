@@ -22,7 +22,7 @@ public class DoorMovement : MonoBehaviour
 
     #region Door Rotation Variables
     [Header("Door Rotation ")]
-    [SerializeField, Tooltip("If true, the door will rotate instead of move on activation. ")] private bool rotateOnActivation;
+    [SerializeField, Tooltip("If true, the door will rotate instead of move on activation. ")] private bool rotateOnActivation = false;
     [SerializeField] private Vector3[] doorRotationAngles;
     private Vector3 originalDoorRotation;
     private int angleIndex = 0;

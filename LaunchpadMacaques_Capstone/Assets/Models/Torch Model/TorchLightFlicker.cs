@@ -12,7 +12,7 @@ using UnityEngine;
 
 public class TorchLightFlicker : MonoBehaviour
 {
-    public Light light;
+    public new Light light;
 
     public Color color1;
     public Color color2;

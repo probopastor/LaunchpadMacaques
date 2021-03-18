@@ -18,7 +18,7 @@ public class InputTypeChangeSpriteAsset : A_InputType
 
 
 
-    private void Start()
+    private new void Start()
     {
         informationPost = this.gameObject.GetComponent<InformationPost>();
         textBox = informationPost.GetTextBox();

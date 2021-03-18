@@ -40,14 +40,14 @@ public class MovingPlatform : MonoBehaviour
     private LoopPattern loopPattern = LoopPattern.Reverse;
 
     [SerializeField, Tooltip("Should the platform accelerate or deaccelerate around each point?")]
-    private bool easeInAndOut;
+    private bool easeInAndOut = false;
     [SerializeField, Tooltip("The distance from the start and end positions where the easing will start")]
     private float easeDistance = 2;
 
     [SerializeField, Tooltip("The prefab for the object that will appear at the endpoints of the moving platform path")]
     private GameObject endpointPrefab;
     [SerializeField, Tooltip("The scale of the endpoint model")]
-    private float endpointScale;
+    private float endpointScale = 0;
 
     //Non-Inspector:
     private int currentPointIndex = 0;
