@@ -42,6 +42,27 @@ public class PressureButton : MonoBehaviour
 
     private bool gameSetupInProgress;
 
+    public PressureButton(Material inactiveButtonMaterial, Material activeButtonMaterial)
+    {
+        this.inactiveButtonMaterial = inactiveButtonMaterial;
+        this.activeButtonMaterial = activeButtonMaterial;
+    }
+
+    public PressureButton(GameObject[] objectsLinkedToButton)
+    {
+        this.objectsLinkedToButton = objectsLinkedToButton;
+    }
+
+    public PressureButton(Vector3 proximityTriggerArea)
+    {
+        this.proximityTriggerArea = proximityTriggerArea;
+    }
+
+    public PressureButton(string[] triggerTags)
+    {
+        this.triggerTags = triggerTags;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
