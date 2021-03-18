@@ -64,6 +64,16 @@ public class PushPullObjects : MonoBehaviour
 
     HandleSaving handleSaving;
     private bool canPickUpBoxes;
+
+    public LayerMask CanBePickedUp { get => canBePickedUp; set => canBePickedUp = value; }
+    public GameObject TopRight { get => topRight; set => topRight = value; }
+    public GameObject BottomRight { get => bottomRight; set => bottomRight = value; }
+    public GameObject TopLeft { get => topLeft; set => topLeft = value; }
+    public GameObject BottomLeft { get => bottomLeft; set => bottomLeft = value; }
+    public GameObject TopMiddle { get => topMiddle; set => topMiddle = value; }
+    public GameObject BottomMiddle { get => bottomMiddle; set => bottomMiddle = value; }
+    public ObjectFollowPostion ObjectFollowPos { get => objectFollowPos; set => objectFollowPos = value; }
+    public Animator Anim { get => anim; set => anim = value; }
     #endregion
 
     private void Awake()
