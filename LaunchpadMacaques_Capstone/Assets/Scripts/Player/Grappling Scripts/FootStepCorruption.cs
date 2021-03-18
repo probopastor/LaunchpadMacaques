@@ -37,6 +37,18 @@ public class FootStepCorruption : MonoBehaviour
     private GameObject decal;
     RaycastHit spotPos;
     List<GameObject> decals;
+
+    public FootStepCorruption(GameObject rightFootPos, GameObject leftFootPos, GameObject footDecal)
+    {
+        this.rightFootPos = rightFootPos;
+        this.leftFootPos = leftFootPos;
+        this.footDecal = footDecal;
+    }
+
+    public FootStepCorruption(LayerMask ground)
+    {
+        this.ground = ground;
+    }
     #endregion]
 
 
