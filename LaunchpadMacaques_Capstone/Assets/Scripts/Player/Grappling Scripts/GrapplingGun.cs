@@ -200,7 +200,29 @@ public class GrapplingGun : MonoBehaviour
 
     [SerializeField, Tooltip("The object with the grappling shadow line renderer. ")] private GameObject grapplingLrObj;
     private LineRenderer grapplingLr;
-    #endregion 
+
+    public GameObject GroundDecal { get => groundDecal; set => groundDecal = value; }
+    public Transform EjectPoint { get => ejectPoint; set => ejectPoint = value; }
+    public Quaternion[] ParticleRotations { get => particleRotations; set => particleRotations = value; }
+    public string GrappleStart { get => grappleStart; set => grappleStart = value; }
+    private GrappleTypes TypeOfGrapple { get => typeOfGrapple; set => typeOfGrapple = value; }
+    public Vector3[] ParticlePositions { get => particlePositions; set => particlePositions = value; }
+    public LayerMask WhatIsGrappleable { get => whatIsGrappleable; set => whatIsGrappleable = value; }
+    public Animator Anim { get => anim; set => anim = value; }
+    public ParticleSystem[] GrappleParticles { get => grappleParticles; set => grappleParticles = value; }
+    public GameObject HitObject { get => hitObject; set => hitObject = value; }
+    public GameObject PostText { get => postText; set => postText = value; }
+    public string GrappleEnd { get => grappleEnd; set => grappleEnd = value; }
+    public LayerMask WhatIsGrappleable1 { get => whatIsGrappleable; set => whatIsGrappleable = value; }
+    public LayerMask GroundDecalLayer { get => groundDecalLayer; set => groundDecalLayer = value; }
+    public Transform Player { get => player; set => player = value; }
+    public GameObject GrapplingLrObj { get => grapplingLrObj; set => grapplingLrObj = value; }
+    public bool HoldingDownGrapple { get => holdingDownGrapple; set => holdingDownGrapple = value; }
+    public bool CanHoldDownToGrapple { get => canHoldDownToGrapple; set => canHoldDownToGrapple = value; }
+    public float ExplosionPower { get => explosionPower; set => explosionPower = value; }
+    public float MinDistanceFromObject { get => minDistanceFromObject; set => minDistanceFromObject = value; }
+    public float ExplosionRadius { get => explosionRadius; set => explosionRadius = value; }
+    #endregion
 
     #region StartFunctions
     void Awake()
