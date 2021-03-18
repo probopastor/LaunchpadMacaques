@@ -72,11 +72,18 @@ public class Dialogue : ScriptableObject
     [System.Serializable]
     public class Line
     {
-        [Tooltip("The character saying the line"), SerializeField]
+        public enum Type { CharacterLine, NarrationLine, Break }
+        [SerializeField, Tooltip("The type of line this is:\n" +
+            "CharacterLine: Spoken by a character.\n" +
+            "NarrationLine: Not spoken by a character.\n" +
+            "Break: Acts as if a new conversation is starting")]
+        private Type lineType = Type.CharacterLine;
+
+        [SerializeField, Tooltip("The character saying the line")]
         public Character character;
-        [Tooltip("The text the character is saying"), SerializeField]
+        [SerializeField, Tooltip("The text to be displayed")]
         public string text;
-        [Tooltip("The audio to be said along with the line"), FMODUnity.EventRef, SerializeField]
+        [SerializeField, FMODUnity.EventRef, Tooltip("The audio to be said along with the line")]
         public string audioToPlay;
 
         public Line()
@@ -84,7 +91,11 @@ public class Dialogue : ScriptableObject
             this.character = null;
             this.text = "";
             this.audioToPlay = "";
+            this.lineType = Type.CharacterLine;
         }
+
+        public void SetLineType(Type newType) { lineType = newType; }
+        public Type GetLineType() { return lineType; }
 
     }
 
