@@ -27,7 +27,8 @@ public class RespawnSystem : MonoBehaviour
 
     private GrapplePoint[] disappearingGrapplePoints;
     private DisappearingPlatform[] disappearingPlatforms;
-
+    private FallingObject[] fallingPlatforms;
+    
     ButtonTransitionManager transitionManger;
 
     Matt_PlayerMovement player;
@@ -54,6 +55,7 @@ public class RespawnSystem : MonoBehaviour
         gg = FindObjectOfType<GrapplingGun>();
         pushPullObjectsRef = FindObjectOfType<PushPullObjects>();
         disappearingGrapplePoints = FindObjectsOfType<GrapplePoint>();
+        fallingPlatforms = FindObjectsOfType<FallingObject>();
 
         disappearingPlatforms = FindObjectsOfType<DisappearingPlatform>();
     }
@@ -155,6 +157,11 @@ public class RespawnSystem : MonoBehaviour
         foreach (DisappearingPlatform platform in disappearingPlatforms)
         {
             platform.EnablePlatform();
+        }
+
+        foreach(FallingObject p in fallingPlatforms)
+        {
+            p.RespawnObject();
         }
 
         // If the player is holding an object, stop holding the object. 

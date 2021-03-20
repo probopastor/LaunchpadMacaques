@@ -981,7 +981,6 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 if (coyoteTimeTags.Contains(hit.collider.gameObject.tag))
                 {
-                    Debug.Log("Yeah");
                     bool onCoyoteTimeObj = false;
 
                     // Update the game object stood on if when player stands on a new object.
