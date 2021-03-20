@@ -15,6 +15,9 @@ public class FallingObject : MonoBehaviour
     [SerializeField] float fallSpeed;
     [SerializeField] float delayBeforeFalling;
 
+    [Header("Death Settings")]
+    [SerializeField] List<string> deathTags;
+
     [Header("Shake Settings")]
     [SerializeField] float shakeSpeed = 40;
     [SerializeField] float shakeAmmount = 5;
@@ -128,7 +131,7 @@ public class FallingObject : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.gameObject.tag);
-        if (other.gameObject.CompareTag("KillZone"))
+        if (deathTags.Contains(other.gameObject.tag))
         {
             StopAllCoroutines();
             KillThisObject();
@@ -137,14 +140,8 @@ public class FallingObject : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.tag);
-        if (collision.gameObject.CompareTag("KillZone"))
-        {
-            StopAllCoroutines();
-            KillThisObject();
-        }
 
-        else if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
             objectsOnPlatform.Add(collision.gameObject);
         }
