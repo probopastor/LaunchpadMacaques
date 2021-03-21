@@ -13,6 +13,13 @@ public class RespawnSystem : MonoBehaviour
 {
     #region Public Variables
     [SerializeField, Tooltip("The tags that will re spawn the player if collided with. ")] private string[] respawnTags;
+
+    [SerializeField, Tooltip("If true, will disable past respawn zones when a new one is activated. ")] private bool disableRespawnZonesWhenActive;
+    [SerializeField, Tooltip("All respawn zones in the scene. Must be in order that the player will activate them. ")] private GameObject[] respawnZones;
+
+    // The amount of respawn zones currently active. Used to track which respawn zones should be enabled / disabled.
+    private int zonesActive = 0;
+
     [SerializeField] float delayBeforePlayerRespawns = 1;
     [SerializeField, Tooltip("The particles that will play when the player is respawned. ")] private ParticleSystem[] deathParticles;
     #endregion
@@ -43,6 +50,16 @@ public class RespawnSystem : MonoBehaviour
         currentRespawnPosition = transform.position;
         player = FindObjectOfType<Matt_PlayerMovement>();
         transitionManger = FindObjectOfType<ButtonTransitionManager>();
+
+        // Enables all respawn zones if they are capable of being disabled. 
+        if (disableRespawnZonesWhenActive)
+        {
+            foreach (GameObject zone in respawnZones)
+            {
+                zone.SetActive(true);
+                zonesActive = 0;
+            }
+        }
     }
 
 
@@ -67,7 +84,7 @@ public class RespawnSystem : MonoBehaviour
         {
             if (other.gameObject.CompareTag(respawnTags[i]))
             {
-                if(!deathInProgress)
+                if (!deathInProgress)
                 {
                     deathInProgress = true;
                     StopAllCoroutines();
@@ -82,8 +99,20 @@ public class RespawnSystem : MonoBehaviour
         {
             currentRespawnObject = other.gameObject;
             currentRespawnPosition = transform.position;
+
+            // Disables past respawn zones when a new one is activated.
+            if (disableRespawnZonesWhenActive)
+            {
+                zonesActive++;
+
+                for (int i = 0; i < zonesActive - 1; i++)
+                {
+                    respawnZones[i].SetActive(false);
+                }
+            }
         }
     }
+
     /// <summary>
     /// If player collides with a checkpoint object that is not already the newest checkpoint
     /// Will set the re-spawn position for the player
@@ -141,7 +170,7 @@ public class RespawnSystem : MonoBehaviour
         player.SetPlayerCanMove(false);
 
         // Play death particles
-        if(!deathParticlesPlaying)
+        if (!deathParticlesPlaying)
         {
             SetDeathParticleStatus(true);
         }
