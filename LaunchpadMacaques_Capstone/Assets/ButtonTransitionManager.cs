@@ -51,6 +51,26 @@ public class ButtonTransitionManager : MonoBehaviour
     SettingsManager settings;
 
     List<GameObject> useTransitionOnBack;
+
+    public ButtonTransitionManager(IntroTransitionTypes introTransition)
+    {
+        this.introTransition = introTransition;
+    }
+
+    public ButtonTransitionManager(PanelTransitionTypes mainMenuPanelsTransitions)
+    {
+        this.mainMenuPanelsTransitions = mainMenuPanelsTransitions;
+    }
+
+    public ButtonTransitionManager(RespawnTransitionTypes respawnTransition)
+    {
+        this.respawnTransition = respawnTransition;
+    }
+
+    public ButtonTransitionManager(OutroTransistionTypes outroTransition)
+    {
+        this.outroTransition = outroTransition;
+    }
     #endregion
 
 

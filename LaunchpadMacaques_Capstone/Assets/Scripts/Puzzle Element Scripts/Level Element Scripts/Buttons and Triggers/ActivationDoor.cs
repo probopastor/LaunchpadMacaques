@@ -20,12 +20,12 @@ public class ActivationDoor : MonoBehaviour
 
     [SerializeField, Tooltip("If true, items handled by this button will be enabled (from a disabled state) when the button is pressed. Otherwise, " +
      "items handled by this button will be disabled when the button is activated. ")]
-    private bool enableOnActivation;
+    private bool enableOnActivation = false;
 
-    [SerializeField, Tooltip("If set to true, this activated object will never be deactivated once it is activated. ")] private bool stayDeactivated;
+    [SerializeField, Tooltip("If set to true, this activated object will never be deactivated once it is activated. ")] private bool stayDeactivated = false;
 
     private int currentButtonsPressed = 0;
-    private bool doorsDeactivated;
+    private bool doorsDeactivated = false;
     private GrapplingGun grapplingGunReference;
     private DoorAudio doorAudio;
 

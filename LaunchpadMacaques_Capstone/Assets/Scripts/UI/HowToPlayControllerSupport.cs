@@ -17,6 +17,9 @@ public class HowToPlayControllerSupport : A_InputType
 
 
     HandleSaving handleSaving;
+
+    public HTPSprites[] HowToPlaySprites { get => howToPlaySprites; set => howToPlaySprites = value; }
+
     public override void ChangeUI()
     {
         if (controllerDetected)
