@@ -12,19 +12,23 @@ using UnityEngine;
 public class RespawnSystem : MonoBehaviour
 {
     #region Public Variables
+
+    [Header("Respawn Zone Variables")]
     [SerializeField, Tooltip("The tags that will re spawn the player if collided with. ")] private string[] respawnTags;
 
     [SerializeField, Tooltip("If true, will disable past respawn zones when a new one is activated. ")] private bool disableRespawnZonesWhenActive;
     [SerializeField, Tooltip("All respawn zones in the scene. Must be in order that the player will activate them. ")] private GameObject[] respawnZones;
 
-    // The amount of respawn zones currently active. Used to track which respawn zones should be enabled / disabled.
-    private int zonesActive = 0;
-
+    [Header("Death Effects")]
     [SerializeField] float delayBeforePlayerRespawns = 1;
     [SerializeField, Tooltip("The particles that will play when the player is respawned. ")] private ParticleSystem[] deathParticles;
     #endregion
 
     #region Private Variables
+
+    // The amount of respawn zones currently active. Used to track which respawn zones should be enabled / disabled.
+    private int zonesActive = 0;
+
     Vector3 currentRespawnPosition;
 
     GameObject currentRespawnObject;
