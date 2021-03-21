@@ -1019,11 +1019,6 @@ public class Matt_PlayerMovement : MonoBehaviour
                         EnableCoyoteTime(gameObjectStoodOn);
                     }
                 }
-
-                else
-                {
-                    Debug.Log(hit.collider.gameObject.tag);
-                }
             }
             else
             {
