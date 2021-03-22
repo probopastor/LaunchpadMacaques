@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class MainMenuKeyRebinding : MonoBehaviour
 {
-    public enum InputTypes { startGrapple, stopGrapple, batmanGrapple ,dropCube, move, jump ,look, interact, back, dash, pause}
+    public enum InputTypes { startGrapple, stopGrapple, batmanGrapple ,dropCube, up, down, left, right, jump ,look, interact, back, dash, pause}
 
     PlayerControlls controlls;
 
@@ -39,9 +39,21 @@ public class MainMenuKeyRebinding : MonoBehaviour
                 action = controlls.GamePlay.DropCube;
                 currentPlayerPref = "DropCube";
                 break;
-            case InputTypes.move:
+            case InputTypes.up:
                 action = controlls.GamePlay.Move;
-                currentPlayerPref = "Move";
+                currentPlayerPref = "Up";
+                break;
+            case InputTypes.down:
+                action = controlls.GamePlay.Move;
+                currentPlayerPref = "Down";
+                break;
+            case InputTypes.left:
+                action = controlls.GamePlay.Move;
+                currentPlayerPref = "Left";
+                break;
+            case InputTypes.right:
+                action = controlls.GamePlay.Move;
+                currentPlayerPref = "Right";
                 break;
             case InputTypes.jump:
                 action = controlls.GamePlay.Jump;
@@ -73,6 +85,50 @@ public class MainMenuKeyRebinding : MonoBehaviour
         return action;
     }
 
+    #region Rebind Movement
+    public void RebindKeyboardUp()
+    {
+        RemapKeyboard(ReturnInputActionType(InputTypes.up), 1);
+    }
+
+    public void RebindKeyboardDown()
+    {
+        RemapKeyboard(ReturnInputActionType(InputTypes.down), 2);
+    }
+
+    public void RebindKeyboardLeft()
+    {
+        RemapKeyboard(ReturnInputActionType(InputTypes.left), 3);
+    }
+
+    public void RebindKeyboardRight()
+    {
+        RemapKeyboard(ReturnInputActionType(InputTypes.right), 4);
+    }
+
+
+    public void RebindControllerUp()
+    {
+        RemapController(ReturnInputActionType(InputTypes.up), 6);
+    }
+
+    public void RebindControllerDown()
+    {
+        RemapController(ReturnInputActionType(InputTypes.down), 7);
+    }
+
+    public void RebindControllerLeft()
+    {
+        RemapController(ReturnInputActionType(InputTypes.left), 8);
+    }
+
+    public void RebindControllerRight()
+    {
+        RemapController(ReturnInputActionType(InputTypes.right), 9);
+    }
+    # endregion
+
+
     public void RebindController(string input)
     {
         var enumState = (InputTypes) System.Enum.Parse(typeof(InputTypes), input);
@@ -85,39 +141,63 @@ public class MainMenuKeyRebinding : MonoBehaviour
         RemapKeyboard(ReturnInputActionType(enumState));
     }
 
-    void RemapKeyboard(InputAction actionToRebind)
+    void RemapKeyboard(InputAction actionToRebind, int binding = 0)
     {
         controlls.GamePlay.Disable();
         StopAllCoroutines();
 
         var rebindOperation = actionToRebind
-            .PerformInteractiveRebinding().WithTargetBinding(0).WithControlsExcluding("<Gamepad>").Start();
+            .PerformInteractiveRebinding(binding).WithTargetBinding(binding).WithControlsExcluding("<Gamepad>").Start();
 
         currentPlayerPref += "K";
-        StartCoroutine(CloseBinding(rebindOperation, actionToRebind));
+        StartCoroutine(CloseBinding(rebindOperation, actionToRebind, binding));
 
     }
 
-    void RemapController(InputAction actionToRebind)
+    void RemapController(InputAction actionToRebind, int binding = 1)
     {
         controlls.GamePlay.Disable();
         var rebindOperation = actionToRebind
-            .PerformInteractiveRebinding().WithTargetBinding(0).WithControlsExcluding("<Keyboard>").WithControlsExcluding("<Mouse>").Start();
+            .PerformInteractiveRebinding(binding).WithTargetBinding(binding).WithControlsExcluding("<Keyboard>").WithControlsExcluding("<Mouse>").Start();
 
         currentPlayerPref += "Controller";
-        StartCoroutine(CloseBinding(rebindOperation, actionToRebind));
+        StartCoroutine(CloseBinding(rebindOperation, actionToRebind, binding));
 
 
     }
 
-    IEnumerator CloseBinding(InputActionRebindingExtensions.RebindingOperation op, InputAction action)
+    IEnumerator CloseBinding(InputActionRebindingExtensions.RebindingOperation op, InputAction action, int bindingNum)
     {
         yield return new WaitForSeconds(.5f);
 
-        Debug.Log(action.bindings[0].effectivePath);
+        Debug.Log(action.bindings[bindingNum].effectivePath);
         op.Dispose();
-        PlayerPrefs.SetString(currentPlayerPref, action.bindings[0].effectivePath);
+        PlayerPrefs.SetString(currentPlayerPref, action.bindings[bindingNum].effectivePath);
 
         controlls.GamePlay.Enable();
+    }
+
+
+    public void ResetBindings()
+    {
+        ResetBindingHelper("StartGrapple");
+        ResetBindingHelper("StopGrapple");
+        ResetBindingHelper("StartBatman");
+        ResetBindingHelper("DropCube");
+        ResetBindingHelper("Up");
+        ResetBindingHelper("Down");
+        ResetBindingHelper("Left");
+        ResetBindingHelper("Right");
+        ResetBindingHelper("Jump");
+        ResetBindingHelper("Interact");
+        ResetBindingHelper("Pause");
+        ResetBindingHelper("Dash");
+        ResetBindingHelper("Look");
+    }
+
+    private void ResetBindingHelper(string pref)
+    {
+        PlayerPrefs.DeleteKey(pref += "K");
+        PlayerPrefs.DeleteKey(pref += "Controller");
     }
 }

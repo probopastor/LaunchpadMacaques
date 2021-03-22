@@ -142,6 +142,21 @@ public class GameplayInputController : MonoBehaviour
         ApplyOveride("DashK", controls.GamePlay.Dash, 0);
         ApplyOveride("DashController", controls.GamePlay.Dash, 1);
 
+        ApplyOveride("UpK", controls.GamePlay.Move, 1);
+        ApplyOveride("UpController", controls.GamePlay.Move, 6);
+
+
+        ApplyOveride("DownK", controls.GamePlay.Move, 2);
+        ApplyOveride("DownController", controls.GamePlay.Move, 7);
+
+
+        ApplyOveride("LeftK", controls.GamePlay.Dash, 3);
+        ApplyOveride("LeftController", controls.GamePlay.Move, 8);
+
+
+        ApplyOveride("RightK", controls.GamePlay.Move, 4);
+        ApplyOveride("RightController", controls.GamePlay.Move, 9);
+
 
 
     }
