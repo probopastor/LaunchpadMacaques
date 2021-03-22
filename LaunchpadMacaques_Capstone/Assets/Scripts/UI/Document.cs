@@ -22,8 +22,15 @@ public class Document : MonoBehaviour
 
     private void Start()
     {
+        if (textDocument == null)
+        {
+            textDocument = GameObject.FindGameObjectWithTag("Document");
+        }
         player = FindObjectOfType<Matt_PlayerMovement>();
-        text = textDocument.GetComponentInChildren<TextMeshProUGUI>(); 
+        text = textDocument.GetComponentInChildren<TextMeshProUGUI>();
+
+
+
 
     }
 
@@ -48,6 +55,7 @@ public class Document : MonoBehaviour
     /// </summary>
     public void OpenDocument()
     {
+        Time.timeScale = 0;
         player.SetPlayerCanMove(false);
 
         textDocument.SetActive(true);
@@ -61,6 +69,7 @@ public class Document : MonoBehaviour
     /// </summary>
     public void CloseDocument()
     {
+        Time.timeScale = 1;
         player.SetPlayerCanMove(true);
         textDocument.SetActive(false);
     }
