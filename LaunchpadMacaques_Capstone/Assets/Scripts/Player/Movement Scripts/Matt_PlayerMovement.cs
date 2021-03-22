@@ -9,9 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.InputSystem;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
@@ -348,8 +346,18 @@ public class Matt_PlayerMovement : MonoBehaviour
         CheckForCoyoteObjects();
     }
 
+    void RemapButtonClicked(InputAction actionToRebind)
+    {
+        var rebindOperation = actionToRebind
+            .PerformInteractiveRebinding().Start();
+    }
+
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+
+        }
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && Time.timeScale > 0)
         {
             if (canMove)
@@ -724,6 +732,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         //}
 
     }
+
+   
 
     public LayerMask GetGround()
     {
