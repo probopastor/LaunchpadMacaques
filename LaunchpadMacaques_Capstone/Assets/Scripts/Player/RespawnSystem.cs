@@ -14,14 +14,14 @@ public class RespawnSystem : MonoBehaviour
     #region Public Variables
 
     [Header("Respawn Zone Variables")]
-    [SerializeField, Tooltip("The tags that will re spawn the player if collided with. ")] private string[] respawnTags;
+    [SerializeField, Tooltip("The tags that will re spawn the player if collided with. ")] private string[] respawnTags = null;
 
-    [SerializeField, Tooltip("If true, will disable past respawn zones when a new one is activated. ")] private bool disableRespawnZonesWhenActive;
-    [SerializeField, Tooltip("All respawn zones in the scene. Must be in order that the player will activate them. ")] private GameObject[] respawnZones;
+    [SerializeField, Tooltip("If true, will disable past respawn zones when a new one is activated. ")] private bool disableRespawnZonesWhenActive = false;
+    [SerializeField, Tooltip("All respawn zones in the scene. Must be in order that the player will activate them. ")] private GameObject[] respawnZones = null;
 
     [Header("Death Effects")]
     [SerializeField] float delayBeforePlayerRespawns = 1;
-    [SerializeField, Tooltip("The particles that will play when the player is respawned. ")] private ParticleSystem[] deathParticles;
+    [SerializeField, Tooltip("The particles that will play when the player is respawned. ")] private ParticleSystem[] deathParticles = null;
     #endregion
 
     #region Private Variables
