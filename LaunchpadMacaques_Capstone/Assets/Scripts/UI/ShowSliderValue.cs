@@ -14,6 +14,9 @@ public class ShowSliderValue : MonoBehaviour
 {
     Slider thisSlider;
     [SerializeField] TextMeshProUGUI sliderValueText;
+
+    public TextMeshProUGUI SliderValueText { get => sliderValueText; set => sliderValueText = value; }
+
     // Start is called before the first frame update
     void Start()
     {
