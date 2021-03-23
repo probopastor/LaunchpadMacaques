@@ -13,6 +13,9 @@ using TMPro;
 public class ExampleInputType : A_InputType
 {
     [SerializeField] TextMeshProUGUI exampleText;
+
+    public TextMeshProUGUI ExampleText { get => exampleText; set => exampleText = value; }
+
     /// <summary>
     /// Method called when controller status changes
     /// </summary>

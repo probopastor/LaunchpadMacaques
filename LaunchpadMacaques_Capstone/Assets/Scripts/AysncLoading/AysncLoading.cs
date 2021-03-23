@@ -15,6 +15,9 @@ public class AysncLoading : MonoBehaviour
     [SerializeField, Tooltip("The Name of the Next Scene ")] string nextSceneName;
 
     private bool allowLoading;
+
+    public string NextSceneName { get => nextSceneName; set => nextSceneName = value; }
+
     private void Start()
     {
         allowLoading = false;
