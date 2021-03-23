@@ -195,11 +195,11 @@ public class GrapplingGun : MonoBehaviour
     [Header("Grappling Shadow Settings")]
 
     [SerializeField] [Tooltip("The Decal that will appear on the ground while the player is grappling. ")] GameObject groundDecal;
-    private GameObject thisDecal;
-    private bool displayShadow = false;
+    public GameObject thisDecal;
+    public bool displayShadow = false;
 
-    [SerializeField, Tooltip("The object with the grappling shadow line renderer. ")] private GameObject grapplingLrObj;
-    private LineRenderer grapplingLr;
+    [SerializeField, Tooltip("The object with the grappling shadow line renderer. ")] public GameObject grapplingLrObj;
+    public LineRenderer grapplingLr;
 
     public GameObject GroundDecal { get => groundDecal; set => groundDecal = value; }
     public Transform EjectPoint { get => ejectPoint; set => ejectPoint = value; }
@@ -300,7 +300,11 @@ public class GrapplingGun : MonoBehaviour
         GrappleUpdateChanges();
         CheckForGrapplingThroughWall();
 
-        HoverShadow();
+    
+        if(PlayerPrefs.GetInt("HoverLine") == 1)
+        {
+            HoverShadow();
+        }
 
         if (pauseManager.GetPaused() || !IsGrappling()) grapplingEmitter.Stop();
         else if (!grapplingEmitter.IsPlaying()) grapplingEmitter.Play();
