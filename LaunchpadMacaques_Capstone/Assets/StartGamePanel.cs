@@ -13,11 +13,6 @@ public class StartGamePanel : MonoBehaviour
 
     private bool playedTutorial;
 
-    public StartGamePanel(string tutorialLevelName, string hubLevelName)
-    {
-        this.tutorialLevelName = tutorialLevelName;
-        this.hubLevelName = hubLevelName;
-    }
 
     private void Start()
     {

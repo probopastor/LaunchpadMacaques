@@ -44,22 +44,6 @@ public class PushPull : MonoBehaviour
     [SerializeField]
     private float pushCamFov = 90;
 
-    public PushPull(CinemachineVirtualCamera playerCam)
-    {
-        this.playerCam = playerCam;
-    }
-
-    public PushPull(GameObject pushParticle, GameObject pullPos)
-    {
-        this.pushParticle = pushParticle;
-        this.pullPos = pullPos;
-    }
-
-    public PushPull(Image crossHairUI)
-    {
-        this.crossHairUI = crossHairUI;
-    }
-
     // Start is called before the first frame update
     void Start()
     {

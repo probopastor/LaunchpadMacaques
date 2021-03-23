@@ -603,17 +603,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
     #region TimeInLevel Event
     float timeInLevel = 0;
     Coroutine currentCount;
-
-    public NarrativeTriggerHandler(string[] triggerNames)
-    {
-        this.triggerNames = triggerNames;
-    }
-
-    public NarrativeTriggerHandler(bool isPanning)
-    {
-        this.isPanning = isPanning;
-    }
-
     /// <summary>
     /// Starts counting on scene load and restarts it on changing scenes, used for triggers that activate a set amount of time after the player is in the scene
     /// </summary>

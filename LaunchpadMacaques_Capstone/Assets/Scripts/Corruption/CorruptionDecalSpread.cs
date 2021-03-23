@@ -12,9 +12,6 @@ public class CorruptionDecalSpread : MonoBehaviour
     float progress;
     Material tempMat;
 
-    public Material FinishedMaterial { get => finishedMaterial; set => finishedMaterial = value; }
-    public Material SpreadMaterial { get => spreadMaterial; set => spreadMaterial = value; }
-
     // Start is called before the first frame update
     void Start()
     {

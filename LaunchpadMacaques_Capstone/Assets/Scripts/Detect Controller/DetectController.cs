@@ -28,8 +28,6 @@ public class DetectController : MonoBehaviour
 
     EventSystem even;
 
-    public bool FoundController { get => foundController; set => foundController = value; }
-
     private void Awake()
     {
         InputSystem.onDeviceChange += ControllerStatusChanged;

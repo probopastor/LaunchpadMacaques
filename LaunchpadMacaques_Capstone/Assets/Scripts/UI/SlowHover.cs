@@ -15,8 +15,6 @@ public class SlowHover : MonoBehaviour
     private GameObject _childMesh;
     private float offset;
 
-    public GameObject ChildMesh { get => _childMesh; set => _childMesh = value; }
-
     // Start is called before the first frame update
     void Start()
     {

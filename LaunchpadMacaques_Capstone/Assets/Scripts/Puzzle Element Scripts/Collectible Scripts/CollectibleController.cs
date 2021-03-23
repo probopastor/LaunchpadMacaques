@@ -48,8 +48,6 @@ public class CollectibleController : MonoBehaviour
     private float newPlayerGravity = -4.4f;
 
     private bool effectTimerRunning;
-
-    public bool GravityIsCollected { get => gravityIsCollected; set => gravityIsCollected = value; }
     #endregion
 
     private void Awake()

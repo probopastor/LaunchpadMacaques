@@ -23,12 +23,7 @@ public class GrappleDecal_Swing : MonoBehaviour
     private GameObject grappleDecalObj;
     private GameObject player;
 
-    public GrappleDecal_Swing(GameObject grappleAimingDecal)
-    {
-        this.grappleAimingDecal = grappleAimingDecal;
-    }
-
-    #endregion
+    #endregion 
 
     // Start is called before the first frame update
     void Start()

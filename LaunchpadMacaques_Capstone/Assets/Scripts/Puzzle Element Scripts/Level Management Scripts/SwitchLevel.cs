@@ -13,11 +13,6 @@ public class SwitchLevel : MonoBehaviour
 
     Matt_PlayerMovement player;
 
-    public SwitchLevel(string nextLevelName)
-    {
-        this.nextLevelName = nextLevelName;
-    }
-
     private void Start()
     {
         player = FindObjectOfType<Matt_PlayerMovement>();
