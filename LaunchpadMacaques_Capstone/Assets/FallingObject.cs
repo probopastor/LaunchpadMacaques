@@ -11,16 +11,19 @@ using UnityEngine;
 public class FallingObject : MonoBehaviour
 {
     [Header("Falling Settings")]
-    [SerializeField] float distanceToStartFalling;
-    [SerializeField] float fallSpeed;
-    [SerializeField] float delayBeforeFalling;
+    [SerializeField, Tooltip("The Distance the player has to be within for this object to begin falling")] float distanceToStartFalling;
+    [SerializeField, Tooltip("The speed at which this object falls")] float fallSpeed;
+    [SerializeField, Tooltip("The Delay time before this object actually begins to fall")] float delayBeforeFalling;
 
     [Header("Death Settings")]
-    [SerializeField] List<string> deathTags;
+    [SerializeField, Tooltip("The Tags that will kill this object")] List<string> deathTags;
 
     [Header("Shake Settings")]
     [SerializeField] float shakeSpeed = 40;
     [SerializeField] float shakeAmmount = 5;
+
+    [Header("Other Settings")]
+    [SerializeField] bool playerCanStandOn = true;
 
     private Vector3 orgPos;
     private bool falling = false;
@@ -141,7 +144,7 @@ public class FallingObject : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
 
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && playerCanStandOn)
         {
             objectsOnPlatform.Add(collision.gameObject);
         }
