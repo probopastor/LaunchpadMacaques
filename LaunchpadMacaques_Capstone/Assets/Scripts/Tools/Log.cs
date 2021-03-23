@@ -93,7 +93,7 @@ public class Log : MonoBehaviour
 
             for (int i = 0; i < details.line.character.characterName.Length; i++)
             {
-                tween.SetColor(i, characterNameColor);
+                tween.SetColor(i, details.line.character.textColor);
             }
 
             for (int i = details.line.character.characterName.Length; i < details.textToColor.text.Length; i++)

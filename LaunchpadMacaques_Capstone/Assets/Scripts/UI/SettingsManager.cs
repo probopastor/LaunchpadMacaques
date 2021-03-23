@@ -24,6 +24,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The Graphics Quality Dropdown Box")] TMP_Dropdown graphicsQualityDropdown;
     [SerializeField, Tooltip("The Colorblind Mode Dropdown Box")] TMP_Dropdown colorblindModeDropdown;
     [SerializeField, Tooltip("The Bloom Toggle")] Toggle bloomToggle;
+    [SerializeField] Toggle vsyncToggle;
 
     [Header("Volume Sliders")]
     [SerializeField, Tooltip("The Dialouge Volume Slider")] Slider dialougeVolume;
@@ -36,6 +37,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The Mouse Sensitivity Slider")] Slider mouseSensitivity;
     [SerializeField, Tooltip("The Field of View Slider")] Toggle fovToggle;
     [SerializeField, Tooltip("The Slider to set Starting FOV Value")] Slider fovSlider;
+    [SerializeField] Toggle hoverLineToggle;
     [SerializeField] Toggle screenShake;
 
     [Header("Settings Holder")]
@@ -86,6 +88,32 @@ public class SettingsManager : MonoBehaviour
     private int deafultFOV = 60;
     private float deafultMaster = 1;
 
+    public GameObject PostProcessingSettings { get => postProcessingSettings; set => postProcessingSettings = value; }
+    public GameObject MainMenu { get => mainMenu; set => mainMenu = value; }
+    public Slider SoundEffectsVolume { get => soundEffectsVolume; set => soundEffectsVolume = value; }
+    public GameObject MiscGameplaySettings { get => miscGameplaySettings; set => miscGameplaySettings = value; }
+    public GameObject VideoSubMenu { get => videoSubMenu; set => videoSubMenu = value; }
+    public GameObject GraphicsSettings { get => graphicsSettings; set => graphicsSettings = value; }
+    public GameObject GameplaySubMenu { get => gameplaySubMenu; set => gameplaySubMenu = value; }
+    public Slider FovSlider { get => fovSlider; set => fovSlider = value; }
+    public Slider MouseSensitivity { get => mouseSensitivity; set => mouseSensitivity = value; }
+    public Toggle FullScreenToggle { get => fullScreenToggle; set => fullScreenToggle = value; }
+    public TMP_Dropdown ResolutionDropdown { get => resolutionDropdown; set => resolutionDropdown = value; }
+    public Toggle BloomToggle { get => bloomToggle; set => bloomToggle = value; }
+    public Toggle InvertY { get => invertY; set => invertY = value; }
+    public Toggle FovToggle { get => fovToggle; set => fovToggle = value; }
+    public GameObject LookSettings { get => lookSettings; set => lookSettings = value; }
+    public GameObject SettingsHolder { get => settingsHolder; set => settingsHolder = value; }
+    public GameObject AudioSubmenu { get => audioSubmenu; set => audioSubmenu = value; }
+    public Slider DialougeVolume { get => dialougeVolume; set => dialougeVolume = value; }
+    public GameObject OptionsMenu { get => optionsMenu; set => optionsMenu = value; }
+    public TMP_Dropdown GraphicsQualityDropdown { get => graphicsQualityDropdown; set => graphicsQualityDropdown = value; }
+    public TMP_Dropdown ColorblindModeDropdown { get => colorblindModeDropdown; set => colorblindModeDropdown = value; }
+    public Toggle ScreenShake { get => screenShake; set => screenShake = value; }
+    public Slider MusicVolume { get => musicVolume; set => musicVolume = value; }
+    public Button PlayButton { get => playButton; set => playButton = value; }
+    public Slider MasterSoundSlider { get => masterSoundSlider; set => masterSoundSlider = value; }
+
 
     #endregion
     void Start()
@@ -109,6 +137,7 @@ public class SettingsManager : MonoBehaviour
         InitialFullScreen();
         InitialQuality();
         InitialDialouge();
+        InitialHoverLine();
         InitialMusic();
         InitialMaster();
         InitialSFX();
@@ -119,10 +148,11 @@ public class SettingsManager : MonoBehaviour
         InitialScreenShake();
         InitialColorblindMode();
         InitialBloom();
+        InitialVysnc();
 
         yield return new WaitForEndOfFrame();
 
-        while(!masterSet || !dialougeSet || !musicSet || !sfxSet)
+        while (!masterSet || !dialougeSet || !musicSet || !sfxSet)
         {
             yield return null;
         }
@@ -140,6 +170,7 @@ public class SettingsManager : MonoBehaviour
     public void UpdateMiscGameplaySettings()
     {
         InitialScreenShake();
+        InitialHoverLine();
     }
 
     public void UpdateSound()
@@ -152,9 +183,10 @@ public class SettingsManager : MonoBehaviour
 
     public void UpdateGraphicSettings()
     {
+        InitialQuality();
         SetResolutionsDropDown();
         InitialFullScreen();
-        InitialQuality();
+        InitialVysnc();
     }
 
     public void UpdatePostProcessing()
@@ -270,7 +302,7 @@ public class SettingsManager : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("Bloom"))
         {
-            if(PlayerPrefs.GetInt("Bloom") == 1)
+            if (PlayerPrefs.GetInt("Bloom") == 1)
             {
                 bloomToggle.SetIsOnWithoutNotify(true);
                 SetBloom(true);
@@ -287,6 +319,30 @@ public class SettingsManager : MonoBehaviour
         {
             bloomToggle.SetIsOnWithoutNotify(true);
             SetBloom(true);
+        }
+    }
+
+    private void InitialHoverLine()
+    {
+        if (PlayerPrefs.HasKey("HoverLine"))
+        {
+            if (PlayerPrefs.GetInt("HoverLine") == 1)
+            {
+                hoverLineToggle.SetIsOnWithoutNotify(true);
+                SetHoverLine(true);
+            }
+
+            else
+            {
+                hoverLineToggle.SetIsOnWithoutNotify(false);
+                SetHoverLine(false);
+            }
+        }
+
+        else
+        {
+            hoverLineToggle.SetIsOnWithoutNotify(true);
+            SetHoverLine(true);
         }
     }
 
@@ -326,11 +382,13 @@ public class SettingsManager : MonoBehaviour
             if (PlayerPrefs.GetInt("InvertY") == 1)
             {
                 invertY.SetIsOnWithoutNotify(true);
+                SetInvertY(true);
             }
 
             else
             {
                 invertY.SetIsOnWithoutNotify(false);
+                SetInvertY(false);
             }
         }
 
@@ -338,6 +396,30 @@ public class SettingsManager : MonoBehaviour
         {
             invertY.SetIsOnWithoutNotify(false);
             SetInvertY(false);
+        }
+    }
+
+    private void InitialVysnc()
+    {
+        if (PlayerPrefs.HasKey("VSync"))
+        {
+            if (PlayerPrefs.GetInt("VSync") == 1)
+            {
+                vsyncToggle.SetIsOnWithoutNotify(true);
+                SetVSync(true);
+            }
+
+            else
+            {
+                vsyncToggle.SetIsOnWithoutNotify(false);
+                SetVSync(false);
+            }
+        }
+
+        else
+        {
+            vsyncToggle.SetIsOnWithoutNotify(false);
+            SetVSync(false);
         }
     }
 
@@ -567,6 +649,19 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    public void SetHoverLine(bool useHoverLine)
+    {
+        if (useHoverLine)
+        {
+            PlayerPrefs.SetInt("HoverLine", 1);
+        }
+
+        else
+        {
+            PlayerPrefs.SetInt("HoverLine", 0);
+        }
+    }
+
     public void SetBloom(bool useBloom)
     {
         if (useBloom)
@@ -649,6 +744,21 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    public void SetVSync(bool vsync)
+    {
+        if (vsync)
+        {
+            PlayerPrefs.SetInt("VSync", 1);
+            QualitySettings.vSyncCount = 1;
+        }
+
+        else
+        {
+            PlayerPrefs.SetInt("VSync", 0);
+            QualitySettings.vSyncCount = 0;
+        }
+    }
+
     /// <summary>
     /// Will be called when the player choices a new Graphics Quality
     /// Will apply the relevant choice in the built in Unity Quality Settings
@@ -660,6 +770,11 @@ public class SettingsManager : MonoBehaviour
         QualitySettings.SetQualityLevel(qualityLevel);
 
         PlayerPrefs.SetInt("QualityLevel", qualityLevel);
+
+
+        vsyncToggle.SetIsOnWithoutNotify(QualitySettings.vSyncCount > 0);
+        SetVSync(QualitySettings.vSyncCount > 0);
+
     }
 
     public void SetColorblindMode(int colorblindMode)
@@ -780,9 +895,9 @@ public class SettingsManager : MonoBehaviour
 
             bool useTransition = false;
 
-            for(int i = 0; i < useTransitionObjects.Count; i++)
+            for (int i = 0; i < useTransitionObjects.Count; i++)
             {
-                if(transitionManager.disable == useTransitionObjects[i])
+                if (transitionManager.disable == useTransitionObjects[i])
                 {
                     useTransition = true;
                 }

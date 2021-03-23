@@ -13,7 +13,7 @@ public class DisappearingPlatform : MonoBehaviour
 {
     #region Variables
     [SerializeField, Tooltip("The triggers that the button should read. Other triggers are ignored. ")] private string[] triggerTags;
-    [SerializeField, Tooltip("The time it takes before the platform destroys itself after triggered. ")] private float timeUntilDisappear;
+    [SerializeField, Tooltip("The time it takes before the platform destroys itself after triggered. ")] private float timeUntilDisappear = 0;
     [SerializeField, Tooltip("The distance the raycast will travel to check if the player is on top of a disappearing platform. ")] private float groundCheckDistance = 5f;
 
     private GrapplingGun grapplingGunRef;
