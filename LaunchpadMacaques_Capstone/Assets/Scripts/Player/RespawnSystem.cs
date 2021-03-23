@@ -34,6 +34,9 @@ public class RespawnSystem : MonoBehaviour
 
     private bool deathParticlesPlaying = false;
     private bool deathInProgress = false;
+
+    public ParticleSystem[] DeathParticles { get => deathParticles; set => deathParticles = value; }
+    public string[] RespawnTags { get => respawnTags; set => respawnTags = value; }
     #endregion
 
     #region Start Methods
