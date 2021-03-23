@@ -21,6 +21,14 @@ public class PassTriggerEnabler : MonoBehaviour
     [SerializeField, Tooltip("Material of active object. ")] private Material active;
     [SerializeField, Tooltip("Material of inactive object. ")] private Material inactive;
 
+    public PassTriggerEnabler(Material inactive, Material active)
+    {
+        this.inactive = inactive;
+        this.active = active;
+    }
+
+    public GameObject[] Targets { get => targets; set => targets = value; }
+
     // Start is called before the first frame update
     void Start()
     {
