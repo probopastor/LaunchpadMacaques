@@ -20,6 +20,9 @@ public class HandleSaving : MonoBehaviour
     private Vector3 playerPos;
     private string levelName;
 
+    public Ability[] Abilities { get => abilities; set => abilities = value; }
+    public Level[] Levels { get => levels; set => levels = value; }
+
     private void Awake()
     {
         Singleton();

@@ -18,6 +18,16 @@ public class HandleBackButton : MonoBehaviour
     [SerializeField] ControllerBackEvent controllerBack;
     PlayerControlls controls;
 
+    public HandleBackButton(BackEvent backEvent)
+    {
+        this.backEvent = backEvent;
+    }
+
+    public HandleBackButton(ControllerBackEvent controllerBack)
+    {
+        this.controllerBack = controllerBack;
+    }
+
     private void Awake()
     {
         controls = new PlayerControlls();
