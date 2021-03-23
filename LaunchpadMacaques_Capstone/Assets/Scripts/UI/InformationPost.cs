@@ -28,13 +28,6 @@ public class InformationPost : A_InputType
 
     private PlayerControlls controls;
 
-    public InformationPost(string interactText)
-    {
-        this.interactText = interactText;
-    }
-
-    public TextMeshProUGUI InformationText { get => informationText; set => informationText = value; }
-
     #endregion
 
     private void Awake()

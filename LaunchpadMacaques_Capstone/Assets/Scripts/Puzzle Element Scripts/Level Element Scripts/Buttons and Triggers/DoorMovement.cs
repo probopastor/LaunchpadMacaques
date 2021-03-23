@@ -35,9 +35,7 @@ public class DoorMovement : MonoBehaviour
     float timeElapsed;
 
     bool doOnce;
-
-    public Vector3[] DoorRotationAngles { get => doorRotationAngles; set => doorRotationAngles = value; }
-    #endregion
+    #endregion 
 
     private void Start()
     {

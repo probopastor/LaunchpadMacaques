@@ -73,12 +73,6 @@ public class PushableObj : MonoBehaviour
 
     PlayerControlls controls;
     float wheelInput;
-
-    public LayerMask GrapplingPointLayers { get => grapplingPointLayers; set => grapplingPointLayers = value; }
-    public GameObject ThrowDecal { get => throwDecal; set => throwDecal = value; }
-    public LayerMask Ground { get => ground; set => ground = value; }
-    public float GravityScaler { get => gravityScaler; set => gravityScaler = value; }
-
     private void Awake()
     {
         controls = new PlayerControlls();

@@ -35,7 +35,6 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
 
     public Canvas GrappleCanvas { get => grappleCanvas; set => grappleCanvas = value; }
     public LayerMask WhatIsNotGrappleable { get => whatIsNotGrappleable; set => whatIsNotGrappleable = value; }
-    public Sprite UiSprite { get => uiSprite; set => uiSprite = value; }
     #endregion
 
 

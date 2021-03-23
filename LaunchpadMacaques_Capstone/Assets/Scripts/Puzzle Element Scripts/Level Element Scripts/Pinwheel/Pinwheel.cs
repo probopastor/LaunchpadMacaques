@@ -51,10 +51,6 @@ public class Pinwheel : MonoBehaviour
 
     bool clockwise;
     bool lastGrappleTop = false;
-
-    public bool LastGrappleTop { get => lastGrappleTop; set => lastGrappleTop = value; }
-    public float CurrentTime { get => currentTime; set => currentTime = value; }
-
     /// <summary>
     /// Function that handles the rotation of the pinwheel
     /// </summary>

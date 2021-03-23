@@ -1,8 +1,8 @@
 ﻿/* 
-* (Launchpad Macaques - [Game Name Here]) 
-* (Contributors/Author(s)) 
-* (File Name) 
-* (Describe, in general, the code contained.) 
+* (Launchpad Macaques - [Neon Oblivion]) 
+* (CJ Green) 
+* (QuitConfirmation.cs) 
+* (This script contains the logic and functionality of confriming if that player wanted to quit that application or not.) 
 */
 
 using System.Collections;
@@ -14,23 +14,20 @@ using UnityEngine.UI;
 
 public class QuitConfirmation : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField, Tooltip("Reference to the Unity EvenSystem.")]
     private EventSystem eventSystem_Ref;
 
-    [SerializeField]
+    [SerializeField, Tooltip("Keeps track of the last selected UI element.")]
     private GameObject lastSelectedObject;
 
-    [SerializeField]
+    [SerializeField, Tooltip("Button to swtich to when the confrim quit panel is activated.")]
     private GameObject confirmButtonObject;
 
-    [SerializeField]
+    [SerializeField, Tooltip("List of all the UI buttons active in the scene.")]
     private Button[] uiButtons;
 
-    [SerializeField]
+    [SerializeField, Tooltip("Panel that contains all the elements for cofrim quit.")]
     private GameObject confirm_panel;
-
-    public GameObject ConfirmButtonObject { get => confirmButtonObject; set => confirmButtonObject = value; }
-    public EventSystem EventSystem_Ref { get => eventSystem_Ref; set => eventSystem_Ref = value; }
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +45,9 @@ public class QuitConfirmation : MonoBehaviour
         CheckLastSelected();
     }
 
+    /// <summary>
+    /// Function that 
+    /// </summary>
     public void QuitGame()
     {
 
@@ -70,6 +70,11 @@ public class QuitConfirmation : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// This function handles the functionality of what happens when the player interacts with the Confirm Quit UI. 
+    /// Whether it Quits the application or Exits Play Mode is also determined in this function.
+    /// </summary>
+    /// <param name="choice"></param>
     public void ConfirmOrDeny(string choice)
     {
 #if UNITY_EDITOR
@@ -96,17 +101,19 @@ public class QuitConfirmation : MonoBehaviour
         }
         else if(choice == "Deny")
         {
-            confirm_panel.SetActive(false);
+            confirmQuit_Panel.SetActive(false);
         }
 
 #endif
 
     }
 
-
+    /// <summary>
+    /// Keeps track of the last selected UI button.
+    /// </summary>
     private void CheckLastSelected()
     {
-        
+
         if (eventSystem_Ref != null)
         {
             if (eventSystem_Ref.currentSelectedGameObject != null)

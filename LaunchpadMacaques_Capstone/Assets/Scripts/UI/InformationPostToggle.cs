@@ -14,11 +14,6 @@ public class InformationPostToggle : MonoBehaviour
     #region Variables
     [SerializeField, Tooltip("The GameObject that holds all the information posts. ")] private GameObject postHolder;
     private bool toggle;
-
-    public InformationPostToggle(GameObject postHolder)
-    {
-        this.postHolder = postHolder;
-    }
     #endregion
 
     // Start is called before the first frame update

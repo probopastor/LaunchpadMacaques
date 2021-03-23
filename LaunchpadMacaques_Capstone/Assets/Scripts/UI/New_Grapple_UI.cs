@@ -17,24 +17,7 @@ public class New_Grapple_UI : MonoBehaviour
 
     [Header("Audio Setting")]
     [SerializeField, EventRef] string targetSoundEffect;
-
-    public New_Grapple_UI(string targetSoundEffect)
-    {
-        this.targetSoundEffect = targetSoundEffect;
-    }
-
-    public New_Grapple_UI(Sprite deafultReticle)
-    {
-        this.deafultReticle = deafultReticle;
-    }
-
-    public New_Grapple_UI(Image retiicle)
-    {
-        this.retiicle = retiicle;
-    }
-
-    public Animator Anim { get => anim; set => anim = value; }
-
+    
     // Start is called before the first frame update
     void Start()
     {

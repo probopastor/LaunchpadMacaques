@@ -24,8 +24,6 @@ public class VanishingManager : MonoBehaviour
 
     [SerializeField, Tooltip("Groups of vanishing objects. Enabled objects will cycle through these groups. ")] private List<PlatformTracks> vanishingGroups;
 
-    public List<PlatformTracks> VanishingGroups { get => vanishingGroups; set => vanishingGroups = value; }
-
     /// <summary>
     /// Returns a list of PlatformTracks structures. 
     /// </summary>
