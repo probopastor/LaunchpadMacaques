@@ -14,7 +14,7 @@ public class GrappleDecal_Swing : MonoBehaviour
 {
     #region Inspector Variables 
     [Header("Decal Settings")]
-    [Tooltip("The Prefab to be used as an aiming decal.")] [SerializeField] private GameObject grappleAimingDecal;
+    [Tooltip("The Prefab to be used as an aiming decal.")] [SerializeField] private GameObject grappleAimingDecal = null;
     [Tooltip("The layers the aiming decal should be enabled on.")] [SerializeField] private LayerMask whatIsGrappleable;
     #endregion
 

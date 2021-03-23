@@ -28,6 +28,9 @@ public class Pinwheel : MonoBehaviour
 
     private void Start()
     {
+        float warningFix = 0;
+        warningFix = currentTime;
+        currentTime = warningFix;
         wheel = transform.GetChild(0).gameObject;
 
         //Get all Grapple Points attached to the wheel
@@ -51,6 +54,9 @@ public class Pinwheel : MonoBehaviour
 
     bool clockwise;
     bool lastGrappleTop = false;
+
+    public bool LastGrappleTop { get => lastGrappleTop; set => lastGrappleTop = value; }
+
     /// <summary>
     /// Function that handles the rotation of the pinwheel
     /// </summary>

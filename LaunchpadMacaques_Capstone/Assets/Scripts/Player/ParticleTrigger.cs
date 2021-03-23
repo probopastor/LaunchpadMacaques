@@ -10,8 +10,8 @@ using UnityEngine;
 
 public class ParticleTrigger : MonoBehaviour
 {
-    [SerializeField, Tooltip("The particle system used for the script. ")] private ParticleSystem LandingEffect;
-    [SerializeField, Tooltip("Modifier to location particles spawn from. ")] private Vector3 particleLocation;
+    [SerializeField, Tooltip("The particle system used for the script. ")] private ParticleSystem LandingEffect = null;
+    [SerializeField, Tooltip("Modifier to location particles spawn from. ")] private Vector3 particleLocation = new Vector3();
     [SerializeField, Tooltip("How long particles last. ")] private float landingParticlesDuration = 0;
     //[SerializeField] private LayerMask particleMask;
     [SerializeField, Tooltip("Modifies speed of particles. ")] private float speedMultiplier = 0;

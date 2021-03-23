@@ -27,7 +27,7 @@ public class GrapplingGun : MonoBehaviour
 
     [Header("Layer Settings")]
     [SerializeField] LayerMask whatIsGrappleable;
-    [SerializeField] private LayerMask whatIsNotGrappleable;
+    [SerializeField] private LayerMask whatIsNotGrappleable = new LayerMask();
 
     [Header("Grapple Settings")]
     [SerializeField] [Tooltip("The Max distance the player can grapple form")] private float maxGrappleDistance = 100f;

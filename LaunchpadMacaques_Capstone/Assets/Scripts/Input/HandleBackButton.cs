@@ -14,8 +14,8 @@ using UnityEngine.Events;
 
 public class HandleBackButton : MonoBehaviour
 {
-    [SerializeField] BackEvent backEvent;
-    [SerializeField] ControllerBackEvent controllerBack;
+    [SerializeField] BackEvent backEvent = null;
+    [SerializeField] ControllerBackEvent controllerBack = null;
     PlayerControlls controls;
 
     private void Awake()

@@ -6,11 +6,11 @@ using UnityEngine.UI;
 public class GrappleUIScreenSpace : MonoBehaviour
 {
     #region Inspector Variables 
-    [Header("UI Settings")] [SerializeField] Sprite uiSprite;
+    [Header("UI Settings")] [SerializeField] Sprite uiSprite = null;
     Image uiImageHolder;
-    [Tooltip("The layers the aiming decal should be enabled on.")] [SerializeField] private LayerMask whatIsGrappleable;
+    [Tooltip("The layers the aiming decal should be enabled on.")] [SerializeField] private LayerMask whatIsGrappleable = new LayerMask();
     [SerializeField] private LayerMask whatIsNotGrappleable = new LayerMask();
-    [SerializeField] private Canvas grappleCanvas;
+    [SerializeField] private Canvas grappleCanvas = null;
     [SerializeField] private float distanceVariable = .01f;
     [SerializeField] private float minScale = .5f;
     [SerializeField] private float maxScale = .5f;

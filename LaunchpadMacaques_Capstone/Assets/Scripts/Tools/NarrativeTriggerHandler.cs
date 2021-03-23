@@ -37,7 +37,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
     [SerializeField]
     private bool[] triggerSubFoldout;
     [SerializeField]
-    private string[] triggerNames;
+    private string[] triggerNames = null;
 
     //Handler Variables
     [SerializeField, Tooltip("The lower end of the interval that a random trigger can be called")]
@@ -603,6 +603,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
     #region TimeInLevel Event
     float timeInLevel = 0;
     Coroutine currentCount;
+
+    public bool IsPanning { get => isPanning; set => isPanning = value; }
+
     /// <summary>
     /// Starts counting on scene load and restarts it on changing scenes, used for triggers that activate a set amount of time after the player is in the scene
     /// </summary>

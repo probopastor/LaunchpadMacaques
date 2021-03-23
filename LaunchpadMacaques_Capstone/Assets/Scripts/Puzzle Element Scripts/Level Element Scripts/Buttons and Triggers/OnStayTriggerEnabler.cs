@@ -18,8 +18,10 @@ public class OnStayTriggerEnabler : MonoBehaviour
     private int triggers = 0;
     [SerializeField, Tooltip("The amount of triggers required for objects to be enabled. ")] private int triggerEnableGoal = 2;
     [SerializeField, Tooltip("The amount of triggers required for objects to be disabled. ")] private int triggerDisableGoal = 1;
-    [SerializeField, Tooltip("Material of active object. ")] private Material active;
-    [SerializeField, Tooltip("Material of inactive object. ")] private Material inactive;
+    [SerializeField, Tooltip("Material of active object. ")] private Material active = null;
+    [SerializeField, Tooltip("Material of inactive object. ")] private Material inactive = null;
+
+    public int TriggerDisableGoal { get => triggerDisableGoal; set => triggerDisableGoal = value; }
 
     // Start is called before the first frame update
     void Start()

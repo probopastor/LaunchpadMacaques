@@ -7,7 +7,7 @@ using UnityEngine.Rendering.HighDefinition;
 
 public class SetPostProcessing : MonoBehaviour
 {
-    [SerializeField] Volume cameraVolume;
+    [SerializeField] Volume cameraVolume = null;
 
     string cameraVolumeName;
 

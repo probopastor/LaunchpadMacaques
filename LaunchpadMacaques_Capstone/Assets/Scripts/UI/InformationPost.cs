@@ -14,7 +14,7 @@ public class InformationPost : A_InputType
 {
     #region Variables
 
-    [SerializeField] private TextMeshProUGUI informationText;
+    [SerializeField] private TextMeshProUGUI informationText = null;
     [SerializeField, TextArea, Tooltip("The information that will be displayed when player is in the information post's radius. ")] private string information;
 
 
@@ -27,6 +27,8 @@ public class InformationPost : A_InputType
     private string interactText = "Press E";
 
     private PlayerControlls controls;
+
+    public string InteractText { get => interactText; set => interactText = value; }
 
     #endregion
 

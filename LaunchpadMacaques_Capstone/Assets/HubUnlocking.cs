@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HubUnlocking : MonoBehaviour
 {
-    [SerializeField] ActivationDoor area5Door;
+    [SerializeField] ActivationDoor area5Door = null;
     private void Start()
     {
         if (HandleSaving.instance.IsLevelComplete("SlingShot_2"))
