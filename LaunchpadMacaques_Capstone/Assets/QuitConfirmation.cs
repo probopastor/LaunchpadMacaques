@@ -29,6 +29,9 @@ public class QuitConfirmation : MonoBehaviour
     [SerializeField]
     private GameObject confirm_panel;
 
+    public GameObject ConfirmButtonObject { get => confirmButtonObject; set => confirmButtonObject = value; }
+    public EventSystem EventSystem_Ref { get => eventSystem_Ref; set => eventSystem_Ref = value; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -93,7 +96,7 @@ public class QuitConfirmation : MonoBehaviour
         }
         else if(choice == "Deny")
         {
-            confirmQuit_Panel.SetActive(false);
+            confirm_Panel.SetActive(false);
         }
 
 #endif

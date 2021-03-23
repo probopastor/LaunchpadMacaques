@@ -16,7 +16,7 @@ public class RespawnSystem : MonoBehaviour
     [Header("Respawn Zone Variables")]
     [SerializeField, Tooltip("The tags that will re spawn the player if collided with. ")] private string[] respawnTags;
 
-    [SerializeField, Tooltip("If true, will disable past respawn zones when a new one is activated. ")] private bool disableRespawnZonesWhenActive;
+    [SerializeField, Tooltip("If true, will disable past respawn zones when a new one is activated. ")] private bool disableRespawnZonesWhenActive = false;
     [SerializeField, Tooltip("All respawn zones in the scene. Must be in order that the player will activate them. ")] private GameObject[] respawnZones;
 
     [Header("Death Effects")]
@@ -48,6 +48,7 @@ public class RespawnSystem : MonoBehaviour
 
     public ParticleSystem[] DeathParticles { get => deathParticles; set => deathParticles = value; }
     public string[] RespawnTags { get => respawnTags; set => respawnTags = value; }
+    public GameObject[] RespawnZones { get => respawnZones; set => respawnZones = value; }
     #endregion
 
     #region Start Methods

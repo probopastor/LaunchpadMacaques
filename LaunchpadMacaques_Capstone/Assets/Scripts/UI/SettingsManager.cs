@@ -113,6 +113,8 @@ public class SettingsManager : MonoBehaviour
     public Slider MusicVolume { get => musicVolume; set => musicVolume = value; }
     public Button PlayButton { get => playButton; set => playButton = value; }
     public Slider MasterSoundSlider { get => masterSoundSlider; set => masterSoundSlider = value; }
+    public Toggle HoverLineToggle { get => hoverLineToggle; set => hoverLineToggle = value; }
+    public Toggle VsyncToggle { get => vsyncToggle; set => vsyncToggle = value; }
 
 
     #endregion
