@@ -48,6 +48,8 @@ public class RespawnSystem : MonoBehaviour
 
     public ParticleSystem[] DeathParticles { get => deathParticles; set => deathParticles = value; }
     public string[] RespawnTags { get => respawnTags; set => respawnTags = value; }
+    public GameObject[] RespawnZones { get => respawnZones; set => respawnZones = value; }
+    public bool DisableRespawnZonesWhenActive { get => disableRespawnZonesWhenActive; set => disableRespawnZonesWhenActive = value; }
     #endregion
 
     #region Start Methods
