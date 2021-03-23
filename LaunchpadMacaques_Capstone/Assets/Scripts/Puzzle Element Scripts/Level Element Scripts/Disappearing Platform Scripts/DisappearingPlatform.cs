@@ -18,6 +18,8 @@ public class DisappearingPlatform : MonoBehaviour
 
     private GrapplingGun grapplingGunRef;
     private bool platformBroken;
+
+    public string[] TriggerTags { get => triggerTags; set => triggerTags = value; }
     #endregion
 
     #region Methods

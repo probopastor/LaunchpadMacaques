@@ -23,6 +23,9 @@ public class ParticleTrigger : MonoBehaviour
     private float absoluteVelocity;
     private bool ready = false;
 
+    public ParticleSystem LandingEffect1 { get => LandingEffect; set => LandingEffect = value; }
+    public Vector3 ParticleLocation { get => particleLocation; set => particleLocation = value; }
+
     // Start is called before the first frame update
     void Start()
     {

@@ -222,6 +222,7 @@ public class GrapplingGun : MonoBehaviour
     public float ExplosionPower { get => explosionPower; set => explosionPower = value; }
     public float MinDistanceFromObject { get => minDistanceFromObject; set => minDistanceFromObject = value; }
     public float ExplosionRadius { get => explosionRadius; set => explosionRadius = value; }
+    public LayerMask WhatIsNotGrappleable { get => whatIsNotGrappleable; set => whatIsNotGrappleable = value; }
     #endregion
 
     #region StartFunctions

@@ -16,7 +16,7 @@ public class InputTypeChangeSpriteAsset : A_InputType
 
     [SerializeField] SpriteHandler[] sprites;
 
-
+    public SpriteHandler[] Sprites { get => sprites; set => sprites = value; }
 
     private new void Start()
     {

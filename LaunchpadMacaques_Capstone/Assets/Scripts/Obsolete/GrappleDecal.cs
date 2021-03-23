@@ -19,7 +19,17 @@ public class GrappleDecal : MonoBehaviour
     #region Private Variables 
     private ConfigJoint configJoint;
     private GameObject grappleDecalObj;
-    #endregion 
+
+    public GrappleDecal(GameObject grappleAimingDecal)
+    {
+        this.grappleAimingDecal = grappleAimingDecal;
+    }
+
+    public GrappleDecal(LayerMask whatIsGrappleable)
+    {
+        this.whatIsGrappleable = whatIsGrappleable;
+    }
+    #endregion
 
     // Start is called before the first frame update
     void Start()

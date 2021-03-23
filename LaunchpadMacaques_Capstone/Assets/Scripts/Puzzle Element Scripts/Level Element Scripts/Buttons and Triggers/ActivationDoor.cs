@@ -31,6 +31,8 @@ public class ActivationDoor : MonoBehaviour
 
     private bool startInProgress;
 
+    public GameObject[] Doors { get => doors; set => doors = value; }
+
     private void Awake()
     {
         currentButtonsPressed = 0;

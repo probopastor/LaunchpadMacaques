@@ -15,6 +15,7 @@ public class SetPostProcessing : MonoBehaviour
 
     string volumeName;
 
+    public Volume CameraVolume { get => cameraVolume; set => cameraVolume = value; }
 
     private void Start()
     {

@@ -29,6 +29,13 @@ public class QuitConfirmation : MonoBehaviour
     [SerializeField]
     private GameObject confirm_panel;
 
+    public EventSystem EventSystem_Ref { get => eventSystem_Ref; set => eventSystem_Ref = value; }
+
+    public QuitConfirmation(GameObject confirmButtonObject)
+    {
+        this.confirmButtonObject = confirmButtonObject;
+    }
+
     // Start is called before the first frame update
     void Start()
     {

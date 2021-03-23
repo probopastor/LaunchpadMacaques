@@ -95,6 +95,15 @@ public class ConfigJoint : MonoBehaviour
     private bool canApplyForce;
 
     JointDrive ydrive;
+
+    public GameObject PushParticle { get => pushParticle; set => pushParticle = value; }
+    public GameObject HitObject { get => hitObject; set => hitObject = value; }
+    public LayerMask WhatIsNotGrappleable { get => whatIsNotGrappleable; set => whatIsNotGrappleable = value; }
+    public SoftJointLimit JointLimit { get => jointLimit; set => jointLimit = value; }
+    public float MinTimeForLaunch { get => minTimeForLaunch; set => minTimeForLaunch = value; }
+    public float GhostTime { get => ghostTime; set => ghostTime = value; }
+    public float MinDistanceFromObjForLaunch { get => minDistanceFromObjForLaunch; set => minDistanceFromObjForLaunch = value; }
+
     void Awake()
     {
 

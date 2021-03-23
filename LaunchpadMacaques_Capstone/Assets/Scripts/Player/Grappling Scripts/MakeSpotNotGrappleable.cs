@@ -35,6 +35,8 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     public List<GameObject> CorruptedSpots { get => corruptedSpots; set => corruptedSpots = value; }
     public List<GameObject> CorruptedDecals { get => corruptedDecals; set => corruptedDecals = value; }
     public List<GameObject> CorruptedObjects { get => corruptedObjects; set => corruptedObjects = value; }
+    public GameObject Decal { get => decal; set => decal = value; }
+    public GameObject InvisibleCorruptionSpot { get => invisibleCorruptionSpot; set => invisibleCorruptionSpot = value; }
     #endregion
 
     #region Corrupt Objects

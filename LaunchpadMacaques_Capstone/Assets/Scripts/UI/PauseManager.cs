@@ -47,6 +47,29 @@ public class PauseManager : MonoBehaviour
 
     private Matt_PlayerMovement player;
 
+    public GameObject AudioSettings { get => audioSettings; set => audioSettings = value; }
+
+    public PauseManager(GameObject pauseCanvas, GameObject postProcessingSettings, GameObject lookSettings, GameObject winCanvas, GameObject gameplaySettings, GameObject miscGamePlaySettings, GameObject graphicsSettings, GameObject informationPostText, GameObject uICanvas, GameObject videoSettings, GameObject cursorCanvas, GameObject optionsMenu)
+    {
+        PauseCanvas = pauseCanvas;
+        this.postProcessingSettings = postProcessingSettings;
+        this.lookSettings = lookSettings;
+        WinCanvas = winCanvas;
+        this.gameplaySettings = gameplaySettings;
+        this.miscGamePlaySettings = miscGamePlaySettings;
+        this.graphicsSettings = graphicsSettings;
+        InformationPostText = informationPostText;
+        UICanvas = uICanvas;
+        this.videoSettings = videoSettings;
+        CursorCanvas = cursorCanvas;
+        this.optionsMenu = optionsMenu;
+    }
+
+    public PauseManager(string mainMenuScene)
+    {
+        this.mainMenuScene = mainMenuScene;
+    }
+
     // Start is called before the first frame update
     void Start()
     {

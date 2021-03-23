@@ -41,6 +41,8 @@ public class TempConfigJoint : MonoBehaviour
     [Tooltip("The Max amount of time a joint will be connected for")]
     [SerializeField] float maxJointTime = 2;
 
+    public SoftJointLimitSpring SpringLimit { get => springLimit; set => springLimit = value; }
+
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
