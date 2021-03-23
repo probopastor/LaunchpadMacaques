@@ -21,6 +21,19 @@ public class OnStayTriggerEnabler : MonoBehaviour
     [SerializeField, Tooltip("Material of active object. ")] private Material active;
     [SerializeField, Tooltip("Material of inactive object. ")] private Material inactive;
 
+    public OnStayTriggerEnabler(Material inactive, Material active)
+    {
+        this.inactive = inactive;
+        this.active = active;
+    }
+
+    public OnStayTriggerEnabler(int triggerDisableGoal)
+    {
+        this.triggerDisableGoal = triggerDisableGoal;
+    }
+
+    public GameObject[] Targets { get => targets; set => targets = value; }
+
     // Start is called before the first frame update
     void Start()
     {

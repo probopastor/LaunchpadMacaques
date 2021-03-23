@@ -12,6 +12,12 @@ public class CorruptionDecalSpread : MonoBehaviour
     float progress;
     Material tempMat;
 
+    public CorruptionDecalSpread(Material spreadMaterial, Material finishedMaterial)
+    {
+        this.spreadMaterial = spreadMaterial;
+        this.finishedMaterial = finishedMaterial;
+    }
+
     // Start is called before the first frame update
     void Start()
     {

@@ -32,6 +32,12 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     private List<GameObject> corruptedDecals = new List<GameObject>();
     private List<GameObject> corruptedObjects = new List<GameObject>();
 
+    public MakeSpotNotGrappleable(GameObject decal, GameObject invisibleCorruptionSpot)
+    {
+        this.decal = decal;
+        this.invisibleCorruptionSpot = invisibleCorruptionSpot;
+    }
+
     public List<GameObject> CorruptedSpots { get => corruptedSpots; set => corruptedSpots = value; }
     public List<GameObject> CorruptedDecals { get => corruptedDecals; set => corruptedDecals = value; }
     public List<GameObject> CorruptedObjects { get => corruptedObjects; set => corruptedObjects = value; }
