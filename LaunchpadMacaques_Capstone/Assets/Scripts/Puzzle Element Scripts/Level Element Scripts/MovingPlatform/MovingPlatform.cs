@@ -58,13 +58,6 @@ public class MovingPlatform : MonoBehaviour
     [Tooltip("A set that actively contains the Transforms of the objects currently on this platform")]
     private HashSet<Transform> objectsOnPlatform;
 
-    public Vector3[] Points { get => points; set => points = value; }
-
-    public MovingPlatform(GameObject endpointPrefab)
-    {
-        this.endpointPrefab = endpointPrefab;
-    }
-
     private void Start()
     {
         InitializeLineRenderer();

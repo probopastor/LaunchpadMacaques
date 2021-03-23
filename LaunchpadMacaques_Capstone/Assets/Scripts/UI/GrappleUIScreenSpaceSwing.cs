@@ -33,11 +33,6 @@ public class GrappleUIScreenSpaceSwing : MonoBehaviour
     private Vector3 uiPos;
     private PushPullObjects pushPull;
 
-    public GrappleUIScreenSpaceSwing(Sprite uiSprite)
-    {
-        this.uiSprite = uiSprite;
-    }
-
     public Canvas GrappleCanvas { get => grappleCanvas; set => grappleCanvas = value; }
     public LayerMask WhatIsNotGrappleable { get => whatIsNotGrappleable; set => whatIsNotGrappleable = value; }
     #endregion
