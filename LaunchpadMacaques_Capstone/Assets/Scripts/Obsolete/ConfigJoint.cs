@@ -14,7 +14,7 @@ public class ConfigJoint : MonoBehaviour
     public LayerMask whatIsGrappleable;
     [SerializeField] LayerMask whatIsNotGrappleable;
     private Vector3 currentGrapplePosition;
-    public Transform gunTip, camera, player;
+    public Transform gunTip, camera1, player;
     private float maxPullDistance = 100f;
     private ConfigurableJoint joint;
     private RaycastHit grappleRayHit;
@@ -219,11 +219,11 @@ public class ConfigJoint : MonoBehaviour
         startTime = Time.time;
 
         //If pushing and there is a surface in front of the player for them to push off of
-        if (grappleType == GrappleType.Push && Physics.Raycast(camera.position, camera.forward, out hit, maxPushDistance, ~LayerMask.GetMask("CantPush"))
+        if (grappleType == GrappleType.Push && Physics.Raycast(camera1.position, camera1.forward, out hit, maxPushDistance, ~LayerMask.GetMask("CantPush"))
             && CanPush())
         {
             isGrappling = true;
-            Instantiate(pushParticle, hit.point, Quaternion.LookRotation((camera.position - hit.point).normalized));
+            Instantiate(pushParticle, hit.point, Quaternion.LookRotation((camera1.position - hit.point).normalized));
             lr.positionCount = 0;
             //GetComponent<FMODUnity.StudioEventEmitter>().Play();
             m_audio.m_push.Play();
@@ -231,7 +231,7 @@ public class ConfigJoint : MonoBehaviour
 
         }
         //If pulling and there is a surface in front of the player in which they can grapple to
-        else if (grappleType == GrappleType.Pull && Physics.Raycast(camera.position, camera.forward, out hit, maxPullDistance, whatIsGrappleable) && !pushPull.IsGrabbing())
+        else if (grappleType == GrappleType.Pull && Physics.Raycast(camera1.position, camera1.forward, out hit, maxPullDistance, whatIsGrappleable) && !pushPull.IsGrabbing())
         {
             float distance = Vector3.Distance(transform.position, hit.point);
             Vector3 dir = (hit.point - transform.position).normalized;
@@ -274,7 +274,7 @@ public class ConfigJoint : MonoBehaviour
                 Pinwheel pinwheel = null;
                 if (pinwheel = hitObjectClone.GetComponentInParent<Pinwheel>())
                 {
-                    pinwheel.TriggerRotation(hitObjectClone.transform, camera.forward);
+                    pinwheel.TriggerRotation(hitObjectClone.transform, camera1.forward);
                 }
             }
         }
@@ -313,14 +313,14 @@ public class ConfigJoint : MonoBehaviour
         while (isGrappling)
         {
             //Pushing
-            if (grappleType == GrappleType.Push && Physics.Raycast(camera.position, camera.forward, out hit, maxPushDistance, ~LayerMask.GetMask("CantPush"))
+            if (grappleType == GrappleType.Push && Physics.Raycast(camera1.position, camera1.forward, out hit, maxPushDistance, ~LayerMask.GetMask("CantPush"))
                 && CanPush())
             {
                 //Update grapple point to arbitrary point behind player
-                grapplePoint = hit.point + -(camera.forward * maxPushDistance);
+                grapplePoint = hit.point + -(camera1.forward * maxPushDistance);
                 //Spawn a particle every 10th frame
                 if(Time.frameCount % 10 == 0)
-                    Instantiate(pushParticle, hit.point, Quaternion.LookRotation((camera.position - hit.point).normalized));
+                    Instantiate(pushParticle, hit.point, Quaternion.LookRotation((camera1.position - hit.point).normalized));
                 currentPushTime += Time.deltaTime;
             }
             else if (grappleType == GrappleType.Push)

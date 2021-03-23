@@ -32,7 +32,7 @@ public class PressureButton : MonoBehaviour
 
 
     [Header("Proximity Settings")]
-    [SerializeField, Tooltip("If true, button can be activated in a proximity. ")] private bool proximityTrigger;
+    [SerializeField, Tooltip("If true, button can be activated in a proximity. ")] private bool proximityTrigger = false;
     [SerializeField, Tooltip("The area around this button that will trigger it. Only active if proximityTrigger is true. ")] private Vector3 proximityTriggerArea;
 
     private int objectsOnButton = 0;
@@ -41,6 +41,27 @@ public class PressureButton : MonoBehaviour
     private StudioEventEmitter soundEmitter;
 
     private bool gameSetupInProgress;
+
+    public PressureButton(Material inactiveButtonMaterial, Material activeButtonMaterial)
+    {
+        this.inactiveButtonMaterial = inactiveButtonMaterial;
+        this.activeButtonMaterial = activeButtonMaterial;
+    }
+
+    public PressureButton(GameObject[] objectsLinkedToButton)
+    {
+        this.objectsLinkedToButton = objectsLinkedToButton;
+    }
+
+    public PressureButton(Vector3 proximityTriggerArea)
+    {
+        this.proximityTriggerArea = proximityTriggerArea;
+    }
+
+    public PressureButton(string[] triggerTags)
+    {
+        this.triggerTags = triggerTags;
+    }
 
     // Start is called before the first frame update
     void Start()

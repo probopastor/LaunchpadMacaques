@@ -26,7 +26,12 @@ public class SaveFileButtonHandler : MonoBehaviour
 
     Save_System saveSystem;
 
-
+    public Button DeleteSave3 { get => deleteSave3; set => deleteSave3 = value; }
+    public Button DeleteSave1 { get => deleteSave1; set => deleteSave1 = value; }
+    public Button Save1 { get => save1; set => save1 = value; }
+    public Button Save3 { get => save3; set => save3 = value; }
+    public Button Save2 { get => save2; set => save2 = value; }
+    public Button DeleteSave2 { get => deleteSave2; set => deleteSave2 = value; }
 
     private void Start()
     {
