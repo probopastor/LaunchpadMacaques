@@ -3,7 +3,7 @@ using UnityEngine.Rendering.HighDefinition;
 
 public class CorruptionDecalSpread : MonoBehaviour
 {
-    [SerializeField] Material spreadMaterial;
+    [SerializeField] Material spreadMaterial = null;
     [SerializeField] Material finishedMaterial;
 
     [SerializeField] float spreadSpeed = 1;

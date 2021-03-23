@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class OnStayTriggerEnabler : MonoBehaviour
 {
-    [SerializeField, Tooltip("An array of targets to be altered by the Pass-By Trigger. ")] private GameObject[] targets;
+    [SerializeField, Tooltip("An array of targets to be altered by the Pass-By Trigger. ")] private GameObject[] targets = null;
     public bool activated = false;
     public bool targetEnabled = false;
     public bool reverse = false;

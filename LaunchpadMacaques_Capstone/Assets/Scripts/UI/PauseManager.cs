@@ -22,7 +22,7 @@ public class PauseManager : MonoBehaviour
     public GameObject pausePanel;
 
     [SerializeField, Tooltip("The scene this pause manager is located in. ")] private string thisScene;
-    [SerializeField, Tooltip("The main menu scene name. ")] private string mainMenuScene;
+    [SerializeField, Tooltip("The main menu scene name. ")] private string mainMenuScene = null;
     [SerializeField, Tooltip("Options Menu")] GameObject optionsMenu;
 
     [SerializeField, Tooltip("Options Menu")] GameObject gameplaySettings;
@@ -38,7 +38,7 @@ public class PauseManager : MonoBehaviour
     [SerializeField, Tooltip("The pause panel that is being used as a menu. ")] private GameObject PauseCanvas;
     //[SerializeField] private GameObject LoseCanvas;
     [SerializeField, Tooltip("The win panel that is being used as a win state. ")] private GameObject WinCanvas;
-    [SerializeField, Tooltip("The cursor object. ")] private GameObject CursorCanvas;
+    [SerializeField, Tooltip("The cursor object. ")] private GameObject CursorCanvas = null;
     [SerializeField, Tooltip("The UI panel. ")] private GameObject UICanvas;
     [SerializeField, Tooltip("The Information Post Text. ")] private GameObject InformationPostText;
     private NarrativeTriggerHandler narrative;

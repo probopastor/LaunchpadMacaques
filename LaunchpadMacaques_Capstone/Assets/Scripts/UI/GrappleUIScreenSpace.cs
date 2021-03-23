@@ -9,7 +9,7 @@ public class GrappleUIScreenSpace : MonoBehaviour
     [Header("UI Settings")] [SerializeField] Sprite uiSprite;
     Image uiImageHolder;
     [Tooltip("The layers the aiming decal should be enabled on.")] [SerializeField] private LayerMask whatIsGrappleable;
-    [SerializeField] private LayerMask whatIsNotGrappleable;
+    [SerializeField] private LayerMask whatIsNotGrappleable = new LayerMask();
     [SerializeField] private Canvas grappleCanvas;
     [SerializeField] private float distanceVariable = .01f;
     [SerializeField] private float minScale = .5f;
