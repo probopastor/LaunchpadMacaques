@@ -27,6 +27,9 @@ public class MainMenuManager : MonoBehaviour
     private ButtonTransitionManager transitionManager;
 
     List<string> useTransitions;
+
+    public GameObject MainMenu_Panel { get => mainMenu_Panel; set => mainMenu_Panel = value; }
+
     private void Start()
     {
 
