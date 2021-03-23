@@ -14,7 +14,7 @@ public class PushableObj : MonoBehaviour
 {
     #region Inspector Vars
     [Header("Visual Settings")]
-    [SerializeField] [Tooltip("The Decal that will be placed to make part of object look Corrupted")] GameObject throwDecal;
+    [SerializeField] [Tooltip("The Decal that will be placed to make part of object look Corrupted")] GameObject throwDecal = null;
 
     [Header("Movement Settings")]
     [SerializeField] [Tooltip("The Variable that will be multiplyed by deafult grabity to apply gravity to this object")] float gravityScaler = 1.75f;
@@ -28,13 +28,13 @@ public class PushableObj : MonoBehaviour
     [SerializeField] [Tooltip("The Min Fly Distance for the Object")] float minDistance = 5;
     [SerializeField] [Tooltip("The Max Fly Distance for the Object")] float maxDistance = 40;
 
-    [SerializeField, Tooltip("The Layer that is ground")] LayerMask ground;
+    [SerializeField, Tooltip("The Layer that is ground")] LayerMask ground = new LayerMask();
 
     [Header("Particle Settings")]
     [SerializeField, Tooltip("If True particles effects will scale depending on how far away the player is")] bool scaleWithDistance = false;
     [SerializeField, Tooltip("The amount the size of the particles will scale with player distance")] float sizeScaleAmount = 0;
     [SerializeField, Tooltip("The amount the speed of the particles will scale with player distance")] float speedScaleAmount = 0;
-    [SerializeField, Tooltip("The grappling point layers that should respawn the throwable cube. ")] private LayerMask grapplingPointLayers;
+    [SerializeField, Tooltip("The grappling point layers that should respawn the throwable cube. ")] private LayerMask grapplingPointLayers = new LayerMask();
     #endregion
 
     #region Private Vars
@@ -73,6 +73,9 @@ public class PushableObj : MonoBehaviour
 
     PlayerControlls controls;
     float wheelInput;
+
+    public float GravityScaler { get => gravityScaler; set => gravityScaler = value; }
+
     private void Awake()
     {
         controls = new PlayerControlls();
