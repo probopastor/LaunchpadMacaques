@@ -189,6 +189,8 @@ public class GrapplingGun : MonoBehaviour
 
     private bool passedGrapplePoint = false;
 
+    private RespawnSystem respawnSystem;
+
     #endregion
 
     #region Shadow & Downwards Line Renferer
@@ -235,6 +237,7 @@ public class GrapplingGun : MonoBehaviour
 
         SetObject();
 
+        respawnSystem = player.GetComponent<RespawnSystem>();
 
         currentSwingSpeed = swingSpeed;
 
@@ -767,6 +770,8 @@ public class GrapplingGun : MonoBehaviour
         if (currentGrappledObj.GetComponent<GrapplePoint>() != null)
         {
             GrapplePoint point = currentGrappledObj.GetComponent<GrapplePoint>();
+
+            respawnSystem.SetCurrentGrapplePoint(point);
 
             if (!point.isBreaking())
             {
