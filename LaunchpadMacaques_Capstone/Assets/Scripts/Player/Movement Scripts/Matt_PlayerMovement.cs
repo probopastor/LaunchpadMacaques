@@ -17,7 +17,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The text element that displays the current gravity. ")] TextMeshProUGUI currentGravityText;
     private GrapplingGun grappleGunReference;
     private CollectibleController collectibleController;
-    private NarrativeTriggerHandler narrativeTriggerReference;
+    private List<NarrativeTriggerHandler> narrativeTriggerReferences;
     #endregion
 
     #region Player Camera Variables
@@ -284,7 +284,11 @@ public class Matt_PlayerMovement : MonoBehaviour
         pauseManager = FindObjectOfType<PauseManager>();
         collectibleController = FindObjectOfType<CollectibleController>();
         grappleGunReference = FindObjectOfType<GrapplingGun>();
-        narrativeTriggerReference = FindObjectOfType<NarrativeTriggerHandler>();
+        narrativeTriggerReferences = new List<NarrativeTriggerHandler>();
+        foreach(NarrativeTriggerHandler handler in FindObjectsOfType<NarrativeTriggerHandler>())
+        {
+            narrativeTriggerReferences.Add(handler);
+        }
 
         config = FindObjectOfType<ConfigJoint>();
 
@@ -1152,7 +1156,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <returns></returns>
     IEnumerator FallCheck()
     {
-        if (narrativeTriggerReference == null)
+        if (narrativeTriggerReferences == null || narrativeTriggerReferences.Count <= 0)
             yield break;
 
         fallCheckRunning = true;
@@ -1167,9 +1171,12 @@ public class Matt_PlayerMovement : MonoBehaviour
             yield return null;
         }
 
-        if (airTime > narrativeTriggerReference.GetFallTime())
+        foreach (NarrativeTriggerHandler handler in narrativeTriggerReferences)
         {
-            GameEventManager.TriggerEvent("onPlayerHitGround");
+            if (airTime > handler.GetFallTime())
+            {
+                GameEventManager.TriggerEvent("onPlayerHitGround");
+            }
         }
 
         fallCheckRunning = false;
@@ -1228,10 +1235,13 @@ public class Matt_PlayerMovement : MonoBehaviour
         orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
 
         //Narrative/Dialogue Trigger LookAtObject Event
-
-        if (GetGameObjectInLineOfSight() != null)
+        foreach (NarrativeTriggerHandler handler in narrativeTriggerReferences)
         {
-            narrativeTriggerReference.ObjectInSightCheck(GetGameObjectInLineOfSight());
+            GameObject currentObj;
+            if ((currentObj = GetGameObjectInLineOfSight(handler)) != null)
+            {
+                handler.ObjectInSightCheck(currentObj);
+            }
         }
 
     }
@@ -1240,10 +1250,10 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// Helper function for use in the Narrative/Dialogue Trigger LookAtObject Event
     /// </summary>
     /// <returns>The first Gameobject found in the player's line of sight</returns>
-    GameObject GetGameObjectInLineOfSight()
+    private GameObject GetGameObjectInLineOfSight(NarrativeTriggerHandler handler)
     {
         RaycastHit hit;
-        Physics.Raycast(playerCam.position, playerCam.transform.forward, out hit, Mathf.Infinity, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore);
+        Physics.Raycast(playerCam.position, playerCam.transform.forward, out hit, handler.GetLookAtObjectCheckDistance(), ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore);
         if (hit.collider != null)
         {
             return hit.collider.gameObject;

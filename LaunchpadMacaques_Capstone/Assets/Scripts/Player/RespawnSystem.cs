@@ -206,6 +206,9 @@ public class RespawnSystem : MonoBehaviour
         // Stops the player from grappling
         gg.StopGrapple();
 
+        //Trigger Narrative Event for player dying
+        GameEventManager.TriggerEvent("onPlayerDeath");
+
         yield return new WaitForSeconds(delayBeforePlayerRespawns);
 
         transitionManger.RespawnPlayerTranstion();
