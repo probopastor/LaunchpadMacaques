@@ -239,9 +239,9 @@ public class DialogueBuilder : EditorWindow
 
             currentLine = dialogueSubObject.FindProperty("lines").GetArrayElementAtIndex(i);
 
-            //Line Tital and Delete Line Option
+            //Line Title and Delete Line Option
             GUILayout.BeginHorizontal();
-            GUILayout.Label(string.Format("Line {0}", i + 1));
+            GUILayout.Label(string.Format("{0} {1}", DetermineLineNameFromLine(currentLine), i + 1));
             if (GUILayout.Button("Delete Line"))
             {
                 dialogueSubObject.Update();
@@ -252,28 +252,39 @@ public class DialogueBuilder : EditorWindow
             }
             GUILayout.EndHorizontal();
 
+            //If line is a break, make a divider line and move on to the next, because all breaks need are the ability to be deleted
+            if (currentLine.FindPropertyRelative("lineType").enumValueIndex == 2 /*Break*/)
+            {
+                GUILayout.Space(5f);
+                EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+                continue;
+            }
+
             GUILayout.Space(10f);
 
             //Character Section
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("Character", "The character speaking this line"));
-            //Generate possible character options from character pool
-            List<string> options = new List<string>();
-            characterPool.ForEach((character) => { options.Add(character.characterName); });
+            if (currentLine.FindPropertyRelative("lineType").enumValueIndex == 0 /*CharacterLine*/)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(new GUIContent("Character", "The character speaking this line"));
+                //Generate possible character options from character pool
+                List<string> options = new List<string>();
+                characterPool.ForEach((character) => { options.Add(character.characterName); });
 
-            selectedCharacterIndexes[i] = EditorGUILayout.Popup(selectedCharacterIndexes[i], options.ToArray());
+                selectedCharacterIndexes[i] = EditorGUILayout.Popup(selectedCharacterIndexes[i], options.ToArray());
 
-            //Find character object in character pool from selection in dropdown menu
-            Dialogue.Character characterFound = GetCharacterFromIndex(selectedCharacterIndexes[i]);
-            if (characterFound == null)
-                characterFound = characterPool[0];
+                //Find character object in character pool from selection in dropdown menu
+                Dialogue.Character characterFound = GetCharacterFromIndex(selectedCharacterIndexes[i]);
+                if (characterFound == null)
+                    characterFound = characterPool[0];
 
-            //Assign the character in character pool back to the dialogue object on the narrative trigger handler
-            currentLine.FindPropertyRelative("character").FindPropertyRelative("characterName").stringValue = characterFound.characterName;
-            currentLine.FindPropertyRelative("character").FindPropertyRelative("imgPath").stringValue = characterFound.imgPath;
-            currentLine.FindPropertyRelative("character").FindPropertyRelative("textColor").colorValue = characterFound.textColor;
-            dialogueSubObject.ApplyModifiedProperties();
-            GUILayout.EndHorizontal();
+                //Assign the character in character pool back to the dialogue object on the narrative trigger handler
+                currentLine.FindPropertyRelative("character").FindPropertyRelative("characterName").stringValue = characterFound.characterName;
+                currentLine.FindPropertyRelative("character").FindPropertyRelative("imgPath").stringValue = characterFound.imgPath;
+                currentLine.FindPropertyRelative("character").FindPropertyRelative("textColor").colorValue = characterFound.textColor;
+                dialogueSubObject.ApplyModifiedProperties();
+                GUILayout.EndHorizontal();
+            }
 
             //Text to say in this line
             GUILayout.BeginHorizontal();
@@ -288,12 +299,62 @@ public class DialogueBuilder : EditorWindow
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         }
 
-        if (GUILayout.Button("Add New Line"))
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button(new GUIContent("Add New Character Line", "Adds a new line where a character will be speaking")))
         {
             selectedCharacterIndexes.Add(0);
             dialogueSubObject.Update();
             dialogueSubObject.FindProperty("lines").InsertArrayElementAtIndex(dialogueSubObject.FindProperty("lines").arraySize);
+            currentLine = dialogueSubObject.FindProperty("lines").GetArrayElementAtIndex(dialogueSubObject.FindProperty("lines").arraySize - 1);
+            currentLine.FindPropertyRelative("lineType").enumValueIndex = 0; //CharacterLine
+            currentLine.FindPropertyRelative("text").stringValue = "";
             dialogueSubObject.ApplyModifiedProperties();
+        }
+
+        if(GUILayout.Button(new GUIContent("Add New Narration Line", "Adds a new line where no characters are speaking (being narrated)")))
+        {
+            selectedCharacterIndexes.Add(0);
+            dialogueSubObject.Update();
+            dialogueSubObject.FindProperty("lines").InsertArrayElementAtIndex(dialogueSubObject.FindProperty("lines").arraySize);
+            currentLine = dialogueSubObject.FindProperty("lines").GetArrayElementAtIndex(dialogueSubObject.FindProperty("lines").arraySize - 1);
+            currentLine.FindPropertyRelative("lineType").enumValueIndex = 1; //NarrationLine
+            currentLine.FindPropertyRelative("text").stringValue = "";
+            dialogueSubObject.ApplyModifiedProperties();
+        }
+
+        if(GUILayout.Button(new GUIContent("Add New Dialogue Break", "Adds a dialogue break, which removes all nameplates and acts as if an entirely" +
+            " new conversation is starting")))
+        {
+            selectedCharacterIndexes.Add(0);
+            dialogueSubObject.Update();
+            dialogueSubObject.FindProperty("lines").InsertArrayElementAtIndex(dialogueSubObject.FindProperty("lines").arraySize);
+            currentLine = dialogueSubObject.FindProperty("lines").GetArrayElementAtIndex(dialogueSubObject.FindProperty("lines").arraySize - 1);
+            currentLine.FindPropertyRelative("lineType").enumValueIndex = 2; //Break
+            currentLine.FindPropertyRelative("text").stringValue = "";
+            dialogueSubObject.ApplyModifiedProperties();
+        }
+
+        GUILayout.EndHorizontal();
+    }
+
+    /// <summary>
+    /// Determines the name of a Line from the SerializedProperty representing a Dialogue.Line Object
+    /// </summary>
+    /// <param name="line">SerializedProperty representing a Dialogue.Line</param>
+    /// <returns>The name based on the lineType</returns>
+    private string DetermineLineNameFromLine(SerializedProperty line)
+    {
+        switch(line.FindPropertyRelative("lineType").enumValueIndex)
+        {
+            //Character Line
+            case 0:
+                return "Line";
+            //Narration Line
+            case 1:
+                return "Narration";
+            //Break
+            default /*2*/:
+                return "Break";
         }
     }
 }

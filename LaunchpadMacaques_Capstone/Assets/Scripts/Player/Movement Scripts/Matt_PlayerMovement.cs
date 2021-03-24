@@ -9,9 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.InputSystem;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
@@ -352,8 +350,18 @@ public class Matt_PlayerMovement : MonoBehaviour
         CheckForCoyoteObjects();
     }
 
+    void RemapButtonClicked(InputAction actionToRebind)
+    {
+        var rebindOperation = actionToRebind
+            .PerformInteractiveRebinding().Start();
+    }
+
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+
+        }
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && Time.timeScale > 0)
         {
             if (canMove)
@@ -579,7 +587,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void DashFeedback(bool onOff)
     {
-        if (canDash)
+        if (dashUnlocked)
         {
             dashUI.SetActive(onOff);
         }
@@ -588,7 +596,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             dashUI.SetActive(false);
         }
-      
+
     }
     /// <summary>
     /// The dash that will only change the player's direction does not change their speed
@@ -728,6 +736,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         //}
 
     }
+
+   
 
     public LayerMask GetGround()
     {
@@ -985,7 +995,6 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 if (coyoteTimeTags.Contains(hit.collider.gameObject.tag))
                 {
-                    Debug.Log("Yeah");
                     bool onCoyoteTimeObj = false;
 
                     // Update the game object stood on if when player stands on a new object.
@@ -1023,11 +1032,6 @@ public class Matt_PlayerMovement : MonoBehaviour
                         //DisableCoyoteTime();
                         EnableCoyoteTime(gameObjectStoodOn);
                     }
-                }
-
-                else
-                {
-                    Debug.Log(hit.collider.gameObject.tag);
                 }
             }
             else
