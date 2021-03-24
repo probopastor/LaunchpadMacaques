@@ -24,7 +24,12 @@ public class NarrativeTriggerHandler : MonoBehaviour
     public enum TriggerType { Area, Random, OnEvent };
 
     #region Events
-    public enum EventType { PlayerHitGround , TimeInLevel, LookAtObject, PlayerDeath, LevelCompleted}
+    //Unless otherwise stated, all functionality is included in this script
+    public enum EventType { PlayerHitGround /*Trigger in Matt_PlayerMovement.cs*/,
+                            TimeInLevel, 
+                            LookAtObject /*Functionality in Matt_PlayerMovement.cs*/, 
+                            PlayerDeath /*Trigger in RespawnSystem.cs*/, 
+                            LevelCompleted}
 
     UnityAction onPlayerHitGround;
     UnityAction onPlayerDeath;
@@ -49,6 +54,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
     private float randomCancelChance = 0.25f;
     [SerializeField, Tooltip("The time (in seconds) that the player must be falling in order for the \"Player Hitting Ground\" event to trigger")]
     private float fallTime = 0;
+    [SerializeField, Tooltip("The distance that the raycast will go in front of the player to check what object they're looking at")]
+    private float lookAtObjectCheckDistance = 25f;
 
     //UI variables
     [SerializeField]
@@ -173,12 +180,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
     {
         //On Start of current scene, see if there was a last level that has been completed
         int lastLevel = PlayerPrefs.GetInt(LAST_COMPLETED_SCENE_KEY, -1);
-        Debug.Log("last level: " + lastLevel);
+
         //If there was a previous level and it hasn't been marked as completed, run level completed event
         if (lastLevel >= 0
             && HandleSaving.instance.IsLevelComplete(System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(lastLevel))))
         {
-            Debug.Log("Really About to run level completed event");
             LevelCompletedActivation(lastLevel);
         }
         else
@@ -279,6 +285,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
         if (obj == null)
             return;
 
+        Debug.Log(obj.name);
+
         Trigger currentTrigger;
         for(int i = 0; i < triggers.Length; i++)
         {
@@ -289,10 +297,13 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 {
                     if(currentTrigger.triggeringObjects[j] == obj && currentTrigger.isRunning == false)
                     {
+                        Debug.Log("Activating Trigger");
                         ActivateTrigger(currentTrigger);
                     }
+                    Debug.Log("Missed Inner If: " + (currentTrigger.triggeringObjects[j] == obj) + " | " + (currentTrigger.isRunning == false));
                 }
             }
+            Debug.Log("Missed First If: " + (currentTrigger.eventType == EventType.LookAtObject) + " | " + (currentTrigger.triggeringObjects.Length > 0));
         }
     }
 
@@ -488,6 +499,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
 
     bool isPanning = false;
+    /// <summary>
+    /// Controls the panning of the camera based on a trigger with camera options
+    /// </summary>
+    /// <param name="triggerWithCamInfo">The Trigger instance with camera options</param>
+    /// <returns></returns>
     private IEnumerator PanCamera(Trigger triggerWithCamInfo)
     {
         isPanning = true;
@@ -507,6 +523,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     float flashInterval = 0.5f;
     bool shouldFlash = false;
+    //Controls the flashing of a GameObject
     private IEnumerator Flash(GameObject objectToFlash)
     {
         shouldFlash = true;
@@ -524,6 +541,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Activates a random Trigger out of all the triggers of TriggerType type
+    /// </summary>
+    /// <param name="type">The TriggerType to filter for</param>
     private void ActivateRandomTriggerOfType(TriggerType type)
     {
         //Filter triggers to locate only those that are of the specified type
@@ -547,6 +568,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
         ActivateTrigger(currentTrigger);
     }
 
+    /// <summary>
+    /// Activates a random Trigger out of all the triggers of TriggerType.OnEvent and EventType eventType 
+    /// </summary>
+    /// <param name="eventType">The type of event to filter for</param>
     private void ActivateRandomTriggerOfType(EventType eventType)
     {
         //Filter triggers to locate only those that are OnEvent Triggers and are the type of event
@@ -574,13 +599,20 @@ public class NarrativeTriggerHandler : MonoBehaviour
     private delegate void LevelCompletedDelegate();
     private event LevelCompletedDelegate LevelCompletedEventHasBeenCompleted;
     
+    /// <summary>
+    /// Calls the Coroutine to activate a Level Completed Trigger
+    /// </summary>
+    /// <param name="buildIndex"></param>
     private void LevelCompletedActivation(int buildIndex)
     {
-        Debug.Log("Running Transition code!!!");
-
         StartCoroutine(PauseBeforeLevelCompletedRun(buildIndex));
     }
 
+    /// <summary>
+    /// Waits a specified amount of time before activating a random trigger that matches the LevelComplete of the given levelIndex
+    /// </summary>
+    /// <param name="levelIndex">The build index of the previous level that was just completed</param>
+    /// <returns></returns>
     private IEnumerator PauseBeforeLevelCompletedRun(int levelIndex)
     {
         yield return new WaitForSecondsRealtime(2f);
@@ -588,6 +620,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
         ActivateRandomLevelCompleteTrigger(levelIndex);
     }
 
+    /// <summary>
+    /// Activates a random Trigger with EventType.LevelCompleted that matches the given build index levelIndex
+    /// </summary>
+    /// <param name="levelIndex">The build index of the previous level that was just completed</param>
     private void ActivateRandomLevelCompleteTrigger(int levelIndex)
     {
         //Filter triggers to locate only those that are OnEvent Triggers and are the type of event
@@ -596,7 +632,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
         for (int i = 0; i < triggers.Length; i++)
         {
             currentTrigger = triggers[i];
-            Debug.Log(string.Format("Level Num: {0} | Passed Num {1}", currentTrigger.levelNum, levelIndex));
             if (currentTrigger.type == TriggerType.OnEvent && currentTrigger.eventType == EventType.LevelCompleted && currentTrigger.levelNum == levelIndex)
             {
                 filteredList.Add(currentTrigger);
@@ -609,13 +644,15 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         //Pick a random one out of the list to activate
         currentTrigger = filteredList[Random.Range(0, filteredList.Count)];
-        Debug.Log("Activating trigger " + currentTrigger.levelNum);
         ActivateTrigger(currentTrigger);
 
         //Run event to update playerprefs with new current scene
         LevelCompletedEventHasBeenCompleted?.Invoke();
     }
 
+    /// <summary>
+    /// Updates the PlayerPrefs with the build index of the current scene for the next check on the next level load
+    /// </summary>
     private void UpdateLastLevelPlayerPref()
     {
         PlayerPrefs.SetInt(LAST_COMPLETED_SCENE_KEY, UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
@@ -710,15 +747,25 @@ public class NarrativeTriggerHandler : MonoBehaviour
         return fallTime;
     }
 
+    /// <summary>
+    /// Getter function for whether the mouse is over the "View Log" button of the Dialogue
+    /// </summary>
+    /// <returns></returns>
     public bool GetMouseOverButton()
     {
         return mouseOverButton;
     }
 
+    /// <summary>
+    /// Is called by a button to reflect whether the mouse is actually over a button
+    /// </summary>
+    /// <param name="mouseOverButton">The new state of whether the mouse is over a button</param>
     public void SetMouseOverButton(bool mouseOverButton)
     {
         this.mouseOverButton = mouseOverButton;
     }
-    #endregion
 
+    public float GetLookAtObjectCheckDistance() { return lookAtObjectCheckDistance; }
+    public void SetLookAtObjectCheckDistance(float newDistance) { lookAtObjectCheckDistance = newDistance; }
+    #endregion
 }

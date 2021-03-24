@@ -35,8 +35,11 @@ public class NarrativeTriggerEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("randomIntervalMin"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("randomIntervalMax"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("randomCancelChance"));
+        //Player Hitting Ground Event Settings (Universal)
         EditorGUILayout.LabelField("Player Hitting Ground Settings",EditorStyles.miniBoldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("fallTime"));
+        EditorGUILayout.LabelField("Look At Object Event Settings", EditorStyles.miniBoldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("lookAtObjectCheckDistance"));
         if (serializedObject.FindProperty("randomIntervalMin").floatValue > serializedObject.FindProperty("randomIntervalMax").floatValue)
         {
             EditorGUILayout.HelpBox("randomIntervalMax must be bigger than or equal to randomIntervalMin", MessageType.Warning);
