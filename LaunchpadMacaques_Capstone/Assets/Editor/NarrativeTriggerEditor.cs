@@ -34,6 +34,7 @@ public class NarrativeTriggerEditor : Editor
         EditorGUILayout.LabelField("Random Trigger Settings", EditorStyles.miniBoldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("randomIntervalMin"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("randomIntervalMax"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("randomCancelChance"));
         EditorGUILayout.LabelField("Player Hitting Ground Settings",EditorStyles.miniBoldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("fallTime"));
         if (serializedObject.FindProperty("randomIntervalMin").floatValue > serializedObject.FindProperty("randomIntervalMax").floatValue)
@@ -228,14 +229,29 @@ public class NarrativeTriggerEditor : Editor
                         SerializedProperty eventType = element.FindPropertyRelative("eventType");
                         EditorGUILayout.PropertyField(eventType);
                         //Time in Level
-                        if (eventType.enumValueIndex == 1)
+                        if (eventType.enumValueIndex == (int) NarrativeTriggerHandler.EventType.TimeInLevel)
                         {
                             EditorGUILayout.PropertyField(element.FindPropertyRelative("timeInLevelBeforeTrigger"));
                         }
                         //LookAtObject
-                        else if(eventType.enumValueIndex == 2)
+                        else if(eventType.enumValueIndex == (int) NarrativeTriggerHandler.EventType.LookAtObject)
                         {
                             EditorGUILayout.PropertyField(element.FindPropertyRelative("triggeringObjects"));
+                        }
+                        //LevelCompleted
+                        else if(eventType.enumValueIndex == (int) NarrativeTriggerHandler.EventType.LevelCompleted)
+                        {
+                            string[] levelNames = new string[UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings];
+                            for(int j = 0; j < UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings; j++)
+                            {
+                                levelNames[j] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(j));
+                            }
+
+                            EditorGUILayout.BeginHorizontal();
+                            EditorGUILayout.LabelField(new GUIContent("Level", "The level which, upon completion, will activate this trigger"));
+                            element.FindPropertyRelative("levelNum").intValue = EditorGUILayout.Popup(element.FindPropertyRelative("levelNum").intValue, levelNames);
+                            Debug.Log("New value of level num is " + element.FindPropertyRelative("levelNum").intValue);
+                            EditorGUILayout.EndHorizontal();
                         }
                     }
 

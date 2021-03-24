@@ -24,9 +24,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
     public enum TriggerType { Area, Random, OnEvent };
 
     #region Events
-    public enum EventType { PlayerHitGround , TimeInLevel, LookAtObject}
+    public enum EventType { PlayerHitGround , TimeInLevel, LookAtObject, PlayerDeath, LevelCompleted}
 
     UnityAction onPlayerHitGround;
+    UnityAction onPlayerDeath;
     #endregion
 
     [SerializeField, Tooltip("Contains all triggers in the scene. Each array element is a separate trigger with it's own type, " +
@@ -44,6 +45,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
     private float randomIntervalMin = 0;
     [SerializeField, Tooltip("The upper end of the interval that a random trigger can be called")]
     private float randomIntervalMax = 0;
+    [SerializeField, Range(0, 1), Tooltip("The percent chance to not trigger a random event when it otherwise would trigger")]
+    private float randomCancelChance = 0.25f;
     [SerializeField, Tooltip("The time (in seconds) that the player must be falling in order for the \"Player Hitting Ground\" event to trigger")]
     private float fallTime = 0;
 
@@ -63,6 +66,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private bool mouseOverButton = false;
 
+    private const string LAST_COMPLETED_SCENE_KEY = "NarrativeLastCompletedScene";
 
 
     [System.Serializable]
@@ -102,10 +106,15 @@ public class NarrativeTriggerHandler : MonoBehaviour
         //Only appear on TriggerType.OnEvent
         [Tooltip("The type of event for this trigger")]
         public EventType eventType;
+        //Time in Level Event
         [Tooltip("The amount of time (in seconds) the player has to be in the level for this to trigger")]
         public float timeInLevelBeforeTrigger = 0;
+        //Look at Object Event
         [Tooltip("The array of objects that, when looked at, will activate this trigger")]
         public GameObject[] triggeringObjects;
+        //Level Completed Event
+        [Tooltip("The level number, which when completed will activate this trigger")]
+        public int levelNum;
         
     }
 
@@ -113,14 +122,27 @@ public class NarrativeTriggerHandler : MonoBehaviour
     {
         onPlayerHitGround += PlayerHitGroundActivation;
         GameEventManager.StartListening("onPlayerHitGround", onPlayerHitGround);
+
+        onPlayerDeath += PlayerDeathActivation;
+        GameEventManager.StartListening("onPlayerDeath", onPlayerDeath);
+
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += TimeInLevelCountStart;
+
+        LevelCompletedEventHasBeenCompleted += UpdateLastLevelPlayerPref;
     }
 
     private void OnDisable()
     {
         GameEventManager.StopListening("onPlayerHitGround", onPlayerHitGround);
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= TimeInLevelCountStart;
         onPlayerHitGround -= PlayerHitGroundActivation;
+
+        GameEventManager.StopListening("onPlayerDeath", onPlayerDeath);
+        onPlayerDeath -= PlayerDeathActivation;
+
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= TimeInLevelCountStart;
+
+        LevelCompletedEventHasBeenCompleted -= UpdateLastLevelPlayerPref;
+        
     }
 
     private void Awake()
@@ -149,8 +171,27 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private void Start()
     {
+        //On Start of current scene, see if there was a last level that has been completed
+        int lastLevel = PlayerPrefs.GetInt(LAST_COMPLETED_SCENE_KEY, -1);
+        Debug.Log("last level: " + lastLevel);
+        //If there was a previous level and it hasn't been marked as completed, run level completed event
+        if (lastLevel >= 0
+            && HandleSaving.instance.IsLevelComplete(System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(lastLevel))))
+        {
+            Debug.Log("Really About to run level completed event");
+            LevelCompletedActivation(lastLevel);
+        }
+        else
+        {
+            UpdateLastLevelPlayerPref();
+        }
 
         StartCoroutine(CheckForTriggerActivations());
+    }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.DeleteKey(LAST_COMPLETED_SCENE_KEY);
     }
 
     /// <summary>
@@ -177,31 +218,12 @@ public class NarrativeTriggerHandler : MonoBehaviour
             //Pick one of the triggers labeled random, at random, and trigger it when the count reaches target number
             if(RandomCheck(ref randomCount, randomTarget))
             {
-
                 randomCount = 0;
                 randomTarget = Random.Range(randomIntervalMin, randomIntervalMax);
 
-                //Find random triggers in triggers array and put them into their own list
-                List<Trigger> randomTriggers = new List<Trigger>();
-                foreach (Trigger x in triggers)
-                {
-                    if (x.type == TriggerType.Random)
-                    {
-                        randomTriggers.Add(x);
-                    }
-                }
-
-                //No random triggers found
-                if(randomTriggers.Count == 0)
-                {
-                    yield return null;
-                    continue;
-                }
-
-                int triggerToActivate = Random.Range(0, (int)randomTriggers.Count);
-
-                ActivateTrigger(randomTriggers[triggerToActivate]);
-
+                //Run chance to not say anything
+                if(Random.Range(0f, 1f) > randomCancelChance)
+                    ActivateRandomTriggerOfType(TriggerType.Random);
             }
 
 
@@ -502,32 +524,119 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
+    private void ActivateRandomTriggerOfType(TriggerType type)
+    {
+        //Filter triggers to locate only those that are of the specified type
+        List<Trigger> filteredList = new List<Trigger>();
+        Trigger currentTrigger;
+        for (int i = 0; i < triggers.Length; i++)
+        {
+            currentTrigger = triggers[i];
+            if (currentTrigger.type == type)
+            {
+                filteredList.Add(currentTrigger);
+            }
+        }
+
+        //No Matching Triggers found :(
+        if (filteredList.Count <= 0)
+            return;
+
+        //Pick a random one out of the list to activate
+        currentTrigger = filteredList[Random.Range(0, filteredList.Count)];
+        ActivateTrigger(currentTrigger);
+    }
+
+    private void ActivateRandomTriggerOfType(EventType eventType)
+    {
+        //Filter triggers to locate only those that are OnEvent Triggers and are the type of event
+        List<Trigger> filteredList = new List<Trigger>();
+        Trigger currentTrigger;
+        for (int i = 0; i < triggers.Length; i++)
+        {
+            currentTrigger = triggers[i];
+            if (currentTrigger.type == TriggerType.OnEvent && currentTrigger.eventType == eventType )
+            {
+                filteredList.Add(currentTrigger);
+            }
+        }
+
+        //No Matching Triggers found :(
+        if (filteredList.Count <= 0)
+            return;
+
+        //Pick a random one out of the list to activate
+        currentTrigger = filteredList[Random.Range(0, filteredList.Count)];
+        ActivateTrigger(currentTrigger);
+    }
+
+    #region LevelCompleted Event
+    private delegate void LevelCompletedDelegate();
+    private event LevelCompletedDelegate LevelCompletedEventHasBeenCompleted;
+    
+    private void LevelCompletedActivation(int buildIndex)
+    {
+        Debug.Log("Running Transition code!!!");
+
+        StartCoroutine(PauseBeforeLevelCompletedRun(buildIndex));
+    }
+
+    private IEnumerator PauseBeforeLevelCompletedRun(int levelIndex)
+    {
+        yield return new WaitForSecondsRealtime(2f);
+
+        ActivateRandomLevelCompleteTrigger(levelIndex);
+    }
+
+    private void ActivateRandomLevelCompleteTrigger(int levelIndex)
+    {
+        //Filter triggers to locate only those that are OnEvent Triggers and are the type of event
+        List<Trigger> filteredList = new List<Trigger>();
+        Trigger currentTrigger;
+        for (int i = 0; i < triggers.Length; i++)
+        {
+            currentTrigger = triggers[i];
+            Debug.Log(string.Format("Level Num: {0} | Passed Num {1}", currentTrigger.levelNum, levelIndex));
+            if (currentTrigger.type == TriggerType.OnEvent && currentTrigger.eventType == EventType.LevelCompleted && currentTrigger.levelNum == levelIndex)
+            {
+                filteredList.Add(currentTrigger);
+            }
+        }
+
+        //No Matching Triggers found :(
+        if (filteredList.Count <= 0)
+            return;
+
+        //Pick a random one out of the list to activate
+        currentTrigger = filteredList[Random.Range(0, filteredList.Count)];
+        Debug.Log("Activating trigger " + currentTrigger.levelNum);
+        ActivateTrigger(currentTrigger);
+
+        //Run event to update playerprefs with new current scene
+        LevelCompletedEventHasBeenCompleted?.Invoke();
+    }
+
+    private void UpdateLastLevelPlayerPref()
+    {
+        PlayerPrefs.SetInt(LAST_COMPLETED_SCENE_KEY, UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+    }
+
+    #endregion
+
+    #region PlayerDeath Event
+    private void PlayerDeathActivation()
+    {
+        ActivateRandomTriggerOfType(EventType.PlayerDeath);
+    }
+    #endregion
+
     #region PlayerHitGround Event
     /// <summary>
     /// The function that will be called when the player hits the ground, picks one random trigger out of all the PlayerHitGround Triggers and activates it
     /// </summary>
     private void PlayerHitGroundActivation()
     {
-        //Filter triggers to locate only those that are OnEvent Triggers and are the type of event that activates when the player hits the ground
-        List<Trigger> filteredList = new List<Trigger>();
-        Trigger currentTrigger;
-        for(int i = 0; i < triggers.Length; i++)
-        {
-            currentTrigger = triggers[i];
-            if(currentTrigger.type == TriggerType.OnEvent && currentTrigger.eventType == EventType.PlayerHitGround)
-            {
-                filteredList.Add(currentTrigger);
-            }
-        }
-
-        //No PlayerHitGround Triggers found :(
-        if(filteredList.Count <= 0)
-            return;
-
-        //Pick a random one out of the list to activate
-        currentTrigger = filteredList[Random.Range(0, filteredList.Count)];
-        ActivateTrigger(currentTrigger);
-
+        ActivateRandomTriggerOfType(EventType.PlayerHitGround);
     }
     #endregion
 
