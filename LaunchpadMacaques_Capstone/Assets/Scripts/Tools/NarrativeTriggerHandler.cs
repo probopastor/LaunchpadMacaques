@@ -285,8 +285,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
         if (obj == null)
             return;
 
-        Debug.Log(obj.name);
-
         Trigger currentTrigger;
         for(int i = 0; i < triggers.Length; i++)
         {
@@ -297,13 +295,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 {
                     if(currentTrigger.triggeringObjects[j] == obj && currentTrigger.isRunning == false)
                     {
-                        Debug.Log("Activating Trigger");
                         ActivateTrigger(currentTrigger);
                     }
-                    Debug.Log("Missed Inner If: " + (currentTrigger.triggeringObjects[j] == obj) + " | " + (currentTrigger.isRunning == false));
                 }
             }
-            Debug.Log("Missed First If: " + (currentTrigger.eventType == EventType.LookAtObject) + " | " + (currentTrigger.triggeringObjects.Length > 0));
         }
     }
 
