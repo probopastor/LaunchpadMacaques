@@ -46,6 +46,10 @@ public class RespawnSystem : MonoBehaviour
 
     private bool deathParticlesPlaying = false;
     private bool deathInProgress = false;
+
+    [SerializeField]
+    private GrapplePoint currentGrapplePoint;
+
     #endregion
 
     #region Start Methods
@@ -66,6 +70,14 @@ public class RespawnSystem : MonoBehaviour
             }
         }
     }
+
+    //private void Update()
+    //{
+    //    if(currentGrapplePoint != null)
+    //    {
+    //        currentGrapplePoint = gg.GetCurrentGrappledObject().GetComponent<GrapplePoint>();
+    //    }
+    //}
 
 
     /// <summary>
@@ -93,6 +105,16 @@ public class RespawnSystem : MonoBehaviour
                 if (!deathInProgress)
                 {
                     deathInProgress = true;
+
+                    if (currentGrapplePoint != null)
+                    {
+                        if (deathInProgress && currentGrapplePoint.isBreaking())
+                        {
+                            currentGrapplePoint.StopBreaking();
+                            Debug.Log("This is where you would stop the grapple point...");
+                        }
+                    }
+
                     StopAllCoroutines();
                     StartCoroutine(KillPlayer());
                 }
@@ -259,6 +281,21 @@ public class RespawnSystem : MonoBehaviour
     public bool GetDeathParticlesStatus()
     {
         return deathParticlesPlaying;
+    }
+
+    public void SetDeathInProgress(bool value)
+    {
+        deathInProgress = value;
+    }
+
+    public bool GetDeathInProgress()
+    {
+        return deathInProgress;
+    }
+
+    public void SetCurrentGrapplePoint(GrapplePoint grapplePoint)
+    {
+        currentGrapplePoint = grapplePoint;
     }
 
 }

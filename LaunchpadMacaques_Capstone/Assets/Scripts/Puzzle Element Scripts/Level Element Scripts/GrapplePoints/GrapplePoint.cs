@@ -74,6 +74,12 @@ public class GrapplePoint : MonoBehaviour
         StartCoroutine(StartBreak());
     }
 
+    public void StopBreaking()
+    {
+        breaking = false;
+        StopCoroutine(StartBreak());
+    }
+
     /// <summary>
     /// Coroutine breaks the breakable grapple point after a set period of time. 
     /// </summary>
