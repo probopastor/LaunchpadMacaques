@@ -83,7 +83,6 @@ public class GrapplePoint : MonoBehaviour
     /// </summary>
     public void StopBreaking()
     {
-        Debug.Log("StopBreaking was called...");
         StopCoroutine(lastCoroutine); // StopAllCoroutines() can work too but earlier in testing it wasn't, however, it did start to work after a project restart.
         breaking = false;
         breakingNotStarted = true;

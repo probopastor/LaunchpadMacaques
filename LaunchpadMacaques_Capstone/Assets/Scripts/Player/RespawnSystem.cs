@@ -111,7 +111,6 @@ public class RespawnSystem : MonoBehaviour
                         if (deathInProgress && currentGrapplePoint.isBreaking())
                         {
                             currentGrapplePoint.StopBreaking();
-                            Debug.Log("This is where you would stop the grapple point...");
                         }
                     }
 
