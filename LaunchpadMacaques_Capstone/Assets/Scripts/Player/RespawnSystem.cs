@@ -233,7 +233,9 @@ public class RespawnSystem : MonoBehaviour
         transitionManger.RespawnPlayerTranstion();
     }
 
-
+    /// <summary>
+    /// Respawns the player at the last availible respawn position and stops nay grapples that might have been occuring.
+    /// </summary>
     public void RespawnPlayer()
     {
         this.transform.position = currentRespawnPosition;
@@ -243,6 +245,9 @@ public class RespawnSystem : MonoBehaviour
         deathInProgress = false;
     }
 
+    /// <summary>
+    /// Sets the player's ability to move to true.
+    /// </summary>
     public void PlayerCanMove()
     {
         player.SetPlayerCanMove(true);
@@ -282,17 +287,28 @@ public class RespawnSystem : MonoBehaviour
     {
         return deathParticlesPlaying;
     }
-
+/// <summary>
+/// Setter for the deathInProgress bool in case it ever needs to be changed outside of this script.
+/// </summary>
+/// <param name="value"></param>
     public void SetDeathInProgress(bool value)
     {
         deathInProgress = value;
     }
 
+    /// <summary>
+    /// Getter for the deathInProgress bool for when it needs to be referenced outside of this script.
+    /// </summary>
+    /// <returns></returns>
     public bool GetDeathInProgress()
     {
         return deathInProgress;
     }
 
+    /// <summary>
+    /// Setter function that sets currentGrapplePoint equal to whatever grapple point was last swung on.
+    /// </summary>
+    /// <param name="grapplePoint"></param>
     public void SetCurrentGrapplePoint(GrapplePoint grapplePoint)
     {
         currentGrapplePoint = grapplePoint;
