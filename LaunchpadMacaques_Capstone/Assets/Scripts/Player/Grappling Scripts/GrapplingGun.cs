@@ -187,6 +187,8 @@ public class GrapplingGun : MonoBehaviour
 
     private bool canBatman;
 
+    private bool batmanInProgress = false;
+
     private bool passedGrapplePoint = false;
 
     private RespawnSystem respawnSystem;
@@ -303,8 +305,8 @@ public class GrapplingGun : MonoBehaviour
         GrappleUpdateChanges();
         CheckForGrapplingThroughWall();
 
-    
-        if(PlayerPrefs.GetInt("HoverLine") == 1)
+
+        if (PlayerPrefs.GetInt("HoverLine") == 1)
         {
             HoverShadow();
         }
@@ -419,7 +421,7 @@ public class GrapplingGun : MonoBehaviour
     #endregion
 
     #region UserInput
-   
+
 
 
     #region Handle Trigger Input
@@ -596,7 +598,7 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     public void StartGrapple()
     {
-        if (CanFindGrappleLocation())
+        if (CanFindGrappleLocation() && !batmanInProgress)
         {
             StartGrapplingSettings();
             CreateGrapplePoint();
@@ -612,8 +614,9 @@ public class GrapplingGun : MonoBehaviour
 
     public void StartBatManGrapple()
     {
-        if (CanFindGrappleLocation() && canBatman)
+        if (CanFindGrappleLocation() && canBatman && !batmanInProgress)
         {
+            batmanInProgress = true;
             StartGrapplingSettings();
             BatmanGrapple();
 
@@ -623,7 +626,6 @@ public class GrapplingGun : MonoBehaviour
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
             beginGrappleInstance.release();
-
         }
     }
 
@@ -764,7 +766,6 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     private void CreateGrapplePoint()
     {
-
         currentGrappledObj = grappleRayHit.collider.gameObject;
 
         if (currentGrappledObj.GetComponent<GrapplePoint>() != null)
@@ -812,8 +813,6 @@ public class GrapplingGun : MonoBehaviour
         joint.massScale = springMass;
 
         currentGrapplePosition = hitObjectClone.transform.position;
-
-
 
         //Pinwheel
         Pinwheel pinwheel = null;
@@ -897,6 +896,7 @@ public class GrapplingGun : MonoBehaviour
             endGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             endGrappleInstance.start();
             endGrappleInstance.release();
+            batmanInProgress = false;
         }
 
     }
