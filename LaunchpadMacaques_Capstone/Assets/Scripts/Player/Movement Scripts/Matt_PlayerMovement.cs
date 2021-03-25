@@ -9,7 +9,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
@@ -17,7 +19,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The text element that displays the current gravity. ")] TextMeshProUGUI currentGravityText;
     private GrapplingGun grappleGunReference;
     private CollectibleController collectibleController;
-    private List<NarrativeTriggerHandler> narrativeTriggerReferences;
+    private NarrativeTriggerHandler narrativeTriggerReference;
     #endregion
 
     #region Player Camera Variables
@@ -284,11 +286,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         pauseManager = FindObjectOfType<PauseManager>();
         collectibleController = FindObjectOfType<CollectibleController>();
         grappleGunReference = FindObjectOfType<GrapplingGun>();
-        narrativeTriggerReferences = new List<NarrativeTriggerHandler>();
-        foreach(NarrativeTriggerHandler handler in FindObjectsOfType<NarrativeTriggerHandler>())
-        {
-            narrativeTriggerReferences.Add(handler);
-        }
+        narrativeTriggerReference = FindObjectOfType<NarrativeTriggerHandler>();
 
         config = FindObjectOfType<ConfigJoint>();
 
@@ -350,18 +348,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         CheckForCoyoteObjects();
     }
 
-    void RemapButtonClicked(InputAction actionToRebind)
-    {
-        var rebindOperation = actionToRebind
-            .PerformInteractiveRebinding().Start();
-    }
-
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-
-        }
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && Time.timeScale > 0)
         {
             if (canMove)
@@ -587,7 +575,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void DashFeedback(bool onOff)
     {
-        if (dashUnlocked)
+        if (canDash)
         {
             dashUI.SetActive(onOff);
         }
@@ -596,7 +584,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             dashUI.SetActive(false);
         }
-
+      
     }
     /// <summary>
     /// The dash that will only change the player's direction does not change their speed
@@ -736,8 +724,6 @@ public class Matt_PlayerMovement : MonoBehaviour
         //}
 
     }
-
-   
 
     public LayerMask GetGround()
     {
@@ -995,6 +981,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 if (coyoteTimeTags.Contains(hit.collider.gameObject.tag))
                 {
+                    Debug.Log("Yeah");
                     bool onCoyoteTimeObj = false;
 
                     // Update the game object stood on if when player stands on a new object.
@@ -1032,6 +1019,11 @@ public class Matt_PlayerMovement : MonoBehaviour
                         //DisableCoyoteTime();
                         EnableCoyoteTime(gameObjectStoodOn);
                     }
+                }
+
+                else
+                {
+                    Debug.Log(hit.collider.gameObject.tag);
                 }
             }
             else
@@ -1156,7 +1148,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <returns></returns>
     IEnumerator FallCheck()
     {
-        if (narrativeTriggerReferences == null || narrativeTriggerReferences.Count <= 0)
+        if (narrativeTriggerReference == null)
             yield break;
 
         fallCheckRunning = true;
@@ -1171,12 +1163,9 @@ public class Matt_PlayerMovement : MonoBehaviour
             yield return null;
         }
 
-        foreach (NarrativeTriggerHandler handler in narrativeTriggerReferences)
+        if (airTime > narrativeTriggerReference.GetFallTime())
         {
-            if (airTime > handler.GetFallTime())
-            {
-                GameEventManager.TriggerEvent("onPlayerHitGround");
-            }
+            GameEventManager.TriggerEvent("onPlayerHitGround");
         }
 
         fallCheckRunning = false;
@@ -1235,13 +1224,10 @@ public class Matt_PlayerMovement : MonoBehaviour
         orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
 
         //Narrative/Dialogue Trigger LookAtObject Event
-        foreach (NarrativeTriggerHandler handler in narrativeTriggerReferences)
+
+        if (GetGameObjectInLineOfSight() != null)
         {
-            GameObject currentObj;
-            if ((currentObj = GetGameObjectInLineOfSight(handler)) != null)
-            {
-                handler.ObjectInSightCheck(currentObj);
-            }
+            narrativeTriggerReference.ObjectInSightCheck(GetGameObjectInLineOfSight());
         }
 
     }
@@ -1250,10 +1236,10 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// Helper function for use in the Narrative/Dialogue Trigger LookAtObject Event
     /// </summary>
     /// <returns>The first Gameobject found in the player's line of sight</returns>
-    private GameObject GetGameObjectInLineOfSight(NarrativeTriggerHandler handler)
+    GameObject GetGameObjectInLineOfSight()
     {
         RaycastHit hit;
-        Physics.Raycast(playerCam.position, playerCam.transform.forward, out hit, handler.GetLookAtObjectCheckDistance(), ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore);
+        Physics.Raycast(playerCam.position, playerCam.transform.forward, out hit, Mathf.Infinity, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore);
         if (hit.collider != null)
         {
             return hit.collider.gameObject;

@@ -41,7 +41,7 @@ public class DoorMovement : MonoBehaviour
     {
         originalDoorPos = gameObject.transform.position;
         newDoorPos = new Vector3(originalDoorPos.x + doorMovementDirection.x, originalDoorPos.y + doorMovementDirection.y, originalDoorPos.z + doorMovementDirection.z);
-        originalDoorRotation = transform.localRotation.eulerAngles;
+        originalDoorRotation = transform.rotation.eulerAngles;
         lerpDoor = false;
         activateDoor = false;
         doOnce = false;
@@ -86,7 +86,6 @@ public class DoorMovement : MonoBehaviour
                 // If the door is going to be activated, move it towards its starting position. 
                 else if (activateDoor)
                 {
-        
                     gameObject.transform.position = Vector3.Lerp(gameObject.transform.position,
                         new Vector3(newDoorPos.x - doorMovementDirection.x, newDoorPos.y - doorMovementDirection.y, newDoorPos.z - doorMovementDirection.z), 1 * doorMoveSpeed);
                 }
@@ -100,13 +99,12 @@ public class DoorMovement : MonoBehaviour
                     // If the door is being deactivated, move the door towards its end rotation.
                     if (!activateDoor)
                     {
-                        Debug.Log("Here?");
-                        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(doorRotationAngles[angleIndex]), 1 * doorMoveSpeed);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(doorRotationAngles[angleIndex]), 1 * doorMoveSpeed);
                     }
                     // If the door is being activated, move the door towards its start rotation. 
                     else if (activateDoor)
                     {
-                        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(originalDoorRotation), 1 * doorMoveSpeed);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(originalDoorRotation), 1 * doorMoveSpeed);
                     }
                 }
                 // If the door starts as disabled, the door is starting at its end rotation and must rotate towards its start rotation.
@@ -115,13 +113,12 @@ public class DoorMovement : MonoBehaviour
                     // If the door is being deactivated, move the door towards its start rotation.
                     if (!activateDoor)
                     {
-                        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(originalDoorRotation), 1 * doorMoveSpeed);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(originalDoorRotation), 1 * doorMoveSpeed);
                     }
                     // If the door is being activated, move the door towards its end rotation.
                     else if (activateDoor)
                     {
-
-                        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(new Vector3(-doorRotationAngles[angleIndex].x, -doorRotationAngles[angleIndex].y, -doorRotationAngles[angleIndex].z)), 
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(-doorRotationAngles[angleIndex].x, -doorRotationAngles[angleIndex].y, -doorRotationAngles[angleIndex].z)), 
                             1 * doorMoveSpeed);
                     }
                 }

@@ -37,7 +37,7 @@ public class GrappleDecal_Swing : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //DisplayDecal();
+        DisplayDecal();
     }
 
     /// <summary>

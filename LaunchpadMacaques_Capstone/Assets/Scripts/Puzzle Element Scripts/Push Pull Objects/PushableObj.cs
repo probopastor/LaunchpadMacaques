@@ -19,7 +19,6 @@ public class PushableObj : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] [Tooltip("The Variable that will be multiplyed by deafult grabity to apply gravity to this object")] float gravityScaler = 1.75f;
     [SerializeField] [Tooltip("The distance an object will fly, when thrown")] float distance;
-    [SerializeField] LayerMask layersThisCanLandOn;
 
 
 
@@ -70,8 +69,6 @@ public class PushableObj : MonoBehaviour
 
     private bool objectHovered;
     private CubeRespawn respawnRef;
-
-    Matt_PlayerMovement player;
     #endregion
 
     PlayerControlls controls;
@@ -110,8 +107,6 @@ public class PushableObj : MonoBehaviour
         cubeRadius = this.gameObject.GetComponent<MeshRenderer>().bounds.size.x / 2;
 
         objectHovered = false;
-
-        player = FindObjectOfType<Matt_PlayerMovement>();
     }
 
     private void Start()
@@ -246,7 +241,7 @@ public class PushableObj : MonoBehaviour
             RaycastHit hit;
             Ray ray = new Ray(point1, point2 - point1);
 
-            if (Physics.Raycast(ray, out hit, (point2 - point1).magnitude, layersThisCanLandOn))
+            if (Physics.Raycast(ray, out hit, (point2 - point1).magnitude))
             {
                 if (!hit.collider.isTrigger)
                 {
@@ -288,7 +283,7 @@ public class PushableObj : MonoBehaviour
 
             /// If the thing predicts that it will run into a non trigger object it will stop the line there, and place a decal there.
             /// It if is an object the cube can affect the  line will turn green
-            if (Physics.SphereCast(ray, cubeRadius, out hit, (point2 - point1).magnitude, layersThisCanLandOn))
+            if (Physics.SphereCast(ray, cubeRadius, out hit, (point2 - point1).magnitude))
             {
                 if (hit.collider.gameObject.CompareTag("Collectible") || hit.collider.gameObject.CompareTag("PassBy"))
                 {
@@ -369,7 +364,7 @@ public class PushableObj : MonoBehaviour
 
         RaycastHit hit;
 
-        if (Physics.Raycast(posLocation, Vector3.down, out hit, 20, layersThisCanLandOn))
+        if (Physics.Raycast(posLocation, Vector3.down, out hit, 20, ground))
         {
             return true;
         }
