@@ -14,6 +14,7 @@ public class New_Grapple_UI : MonoBehaviour
 
     GrapplingGun gg;
     PushPullObjects pushPull;
+    OpenDocument openDocs;
 
     [Header("Audio Setting")]
     [SerializeField, EventRef] string targetSoundEffect = null;
@@ -25,6 +26,7 @@ public class New_Grapple_UI : MonoBehaviour
     {
         gg = FindObjectOfType<GrapplingGun>();
         pushPull = FindObjectOfType<PushPullObjects>();
+        openDocs = FindObjectOfType<OpenDocument>();
         retiicle.sprite = deafultReticle;
     }
 
@@ -40,7 +42,7 @@ public class New_Grapple_UI : MonoBehaviour
 
    void DisplayUI()
     {
-        if (gg.CanFindGrappleLocation() || (pushPull.CanSeeBox().collider != null && pushPull.CanPickUpObjects()))
+        if (openDocs.CanSeeDocument().collider != null || gg.CanFindGrappleLocation() || (pushPull.CanSeeBox().collider != null && pushPull.CanPickUpObjects()))
         {
             //retiicle.sprite = activeReticle;
             if (anim.GetBool("isHighlighted") == false)

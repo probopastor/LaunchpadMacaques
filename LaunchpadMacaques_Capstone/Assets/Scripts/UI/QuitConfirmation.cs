@@ -101,7 +101,7 @@ public class QuitConfirmation : MonoBehaviour
         }
         else if(choice == "Deny")
         {
-            confirmQuit_Panel.SetActive(false);
+            confirm_panel.SetActive(false);
         }
 
 #endif

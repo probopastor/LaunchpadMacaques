@@ -187,7 +187,11 @@ public class GrapplingGun : MonoBehaviour
 
     private bool canBatman;
 
+    private bool batmanInProgress = false;
+
     private bool passedGrapplePoint = false;
+
+    private RespawnSystem respawnSystem;
 
     #endregion
 
@@ -195,11 +199,11 @@ public class GrapplingGun : MonoBehaviour
     [Header("Grappling Shadow Settings")]
 
     [SerializeField] [Tooltip("The Decal that will appear on the ground while the player is grappling. ")] GameObject groundDecal;
-    private GameObject thisDecal;
-    private bool displayShadow = false;
+    public GameObject thisDecal;
+    public bool displayShadow = false;
 
-    [SerializeField, Tooltip("The object with the grappling shadow line renderer. ")] private GameObject grapplingLrObj;
-    private LineRenderer grapplingLr;
+    [SerializeField, Tooltip("The object with the grappling shadow line renderer. ")] public GameObject grapplingLrObj;
+    public LineRenderer grapplingLr;
 
     public GameObject GroundDecal { get => groundDecal; set => groundDecal = value; }
     public Transform EjectPoint { get => ejectPoint; set => ejectPoint = value; }
@@ -235,6 +239,7 @@ public class GrapplingGun : MonoBehaviour
 
         SetObject();
 
+        respawnSystem = player.GetComponent<RespawnSystem>();
 
         currentSwingSpeed = swingSpeed;
 
@@ -300,7 +305,11 @@ public class GrapplingGun : MonoBehaviour
         GrappleUpdateChanges();
         CheckForGrapplingThroughWall();
 
-        HoverShadow();
+
+        if (PlayerPrefs.GetInt("HoverLine") == 1)
+        {
+            HoverShadow();
+        }
 
         if (pauseManager.GetPaused() || !IsGrappling()) grapplingEmitter.Stop();
         else if (!grapplingEmitter.IsPlaying()) grapplingEmitter.Play();
@@ -412,7 +421,7 @@ public class GrapplingGun : MonoBehaviour
     #endregion
 
     #region UserInput
-   
+
 
 
     #region Handle Trigger Input
@@ -589,7 +598,7 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     public void StartGrapple()
     {
-        if (CanFindGrappleLocation())
+        if (CanFindGrappleLocation() && !batmanInProgress && !pulling)
         {
             StartGrapplingSettings();
             CreateGrapplePoint();
@@ -605,8 +614,9 @@ public class GrapplingGun : MonoBehaviour
 
     public void StartBatManGrapple()
     {
-        if (CanFindGrappleLocation() && canBatman)
+        if (CanFindGrappleLocation() && canBatman && !batmanInProgress && !pulling)
         {
+            batmanInProgress = true;
             StartGrapplingSettings();
             BatmanGrapple();
 
@@ -616,7 +626,6 @@ public class GrapplingGun : MonoBehaviour
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
             beginGrappleInstance.release();
-
         }
     }
 
@@ -757,12 +766,13 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     private void CreateGrapplePoint()
     {
-
         currentGrappledObj = grappleRayHit.collider.gameObject;
 
         if (currentGrappledObj.GetComponent<GrapplePoint>() != null)
         {
             GrapplePoint point = currentGrappledObj.GetComponent<GrapplePoint>();
+
+            respawnSystem.SetCurrentGrapplePoint(point);
 
             if (!point.isBreaking())
             {
@@ -803,8 +813,6 @@ public class GrapplingGun : MonoBehaviour
         joint.massScale = springMass;
 
         currentGrapplePosition = hitObjectClone.transform.position;
-
-
 
         //Pinwheel
         Pinwheel pinwheel = null;
@@ -888,8 +896,24 @@ public class GrapplingGun : MonoBehaviour
             endGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             endGrappleInstance.start();
             endGrappleInstance.release();
-        }
 
+            if(batmanInProgress)
+            {
+                StartCoroutine(BatmanInputDelay(0.25f));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Sets batmanInProgress to be false after a period of time, to prevent player from cancelling batman with
+    /// regular swinging input. 
+    /// </summary>
+    /// <param name="delay">The time before batmanInProgress should be set to false.</param>
+    /// <returns></returns>
+    private IEnumerator BatmanInputDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        batmanInProgress = false;
     }
 
     /// <summary>

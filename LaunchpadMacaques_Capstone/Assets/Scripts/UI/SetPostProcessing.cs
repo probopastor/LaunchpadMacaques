@@ -34,7 +34,6 @@ public class SetPostProcessing : MonoBehaviour
     public void SetBloom()
     {
         profile = cameraVolume.profile;
-        Debug.Log(profile.components.Count);
 
         if (profile.TryGet<Bloom>(out var bloom))
         {
