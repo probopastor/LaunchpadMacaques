@@ -598,7 +598,7 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     public void StartGrapple()
     {
-        if (CanFindGrappleLocation() && !batmanInProgress)
+        if (CanFindGrappleLocation() && !batmanInProgress && !pulling)
         {
             StartGrapplingSettings();
             CreateGrapplePoint();
@@ -614,7 +614,7 @@ public class GrapplingGun : MonoBehaviour
 
     public void StartBatManGrapple()
     {
-        if (CanFindGrappleLocation() && canBatman && !batmanInProgress)
+        if (CanFindGrappleLocation() && canBatman && !batmanInProgress && !pulling)
         {
             batmanInProgress = true;
             StartGrapplingSettings();
@@ -896,9 +896,24 @@ public class GrapplingGun : MonoBehaviour
             endGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             endGrappleInstance.start();
             endGrappleInstance.release();
-            batmanInProgress = false;
-        }
 
+            if(batmanInProgress)
+            {
+                StartCoroutine(BatmanInputDelay(0.25f));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Sets batmanInProgress to be false after a period of time, to prevent player from cancelling batman with
+    /// regular swinging input. 
+    /// </summary>
+    /// <param name="delay">The time before batmanInProgress should be set to false.</param>
+    /// <returns></returns>
+    private IEnumerator BatmanInputDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        batmanInProgress = false;
     }
 
     /// <summary>
