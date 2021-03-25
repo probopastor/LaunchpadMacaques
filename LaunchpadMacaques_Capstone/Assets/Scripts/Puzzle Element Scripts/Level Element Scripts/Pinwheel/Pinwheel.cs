@@ -15,9 +15,9 @@ using UnityEngine.EventSystems;
 
 public class Pinwheel : MonoBehaviour
 {
-    private GameObject wheel;
+    private GameObject wheel = null;
     private Dictionary<Transform, int> grapplePoints;
-    private float currentRotationAmount;
+    private float currentRotationAmount = 0;
     private int numGrapplePoints = 4;
 
     [SerializeField, Tooltip("Amount the wheel will rotate when the player grapples onto a grapple point (in degrees)")]

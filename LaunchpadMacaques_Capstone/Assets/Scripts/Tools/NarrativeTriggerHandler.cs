@@ -35,7 +35,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
     
     //Editor variables
     [SerializeField]
-    private bool[] triggerSubFoldout;
+    private bool[] triggerSubFoldout = null;
     [SerializeField]
     private string[] triggerNames = null;
 
@@ -49,17 +49,17 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     //UI variables
     [SerializeField]
-    private GameObject canvas;
+    private GameObject canvas = null;
     [SerializeField]
-    private TMP_Text dialogueText;
+    private TMP_Text dialogueText = null;
     [SerializeField]
-    private GameObject[] nameplate;
+    private GameObject[] nameplate = null;
     [SerializeField]
-    private TMP_Text[] nameplateText;
+    private TMP_Text[] nameplateText = null;
     [SerializeField]
-    private GameObject clickToContinue;
+    private GameObject clickToContinue = null;
     [SerializeField]
-    private GameObject viewLog;
+    private GameObject viewLog = null;
 
     private bool mouseOverButton = false;
 
@@ -76,43 +76,43 @@ public class NarrativeTriggerHandler : MonoBehaviour
     public class Trigger
     {
         [Tooltip("The type of activation used for this Trigger")]
-        public TriggerType type;
+        public TriggerType type = new TriggerType();
 
         //Text
         [SerializeField]
-        public Dialogue dialogue;
+        public Dialogue dialogue = null;
 
         [Tooltip("Whether this Trigger can be activated multiple times (true) or only once (false)")]
-        public bool repeatable;
+        public bool repeatable = false;
 
         [Tooltip("Whether a camera movement should be associated with this trigger activation or not")]
-        public bool hasCameraMovement;
+        public bool hasCameraMovement = false;
         [Tooltip("The time (in seconds) the camera will be at the destination")]
-        public float cameraTime;
+        public float cameraTime = 0;
         [Tooltip("The point the camera will move to")]
-        public GameObject cameraPoint;
+        public GameObject cameraPoint = null;
         [Tooltip("The GameObject for the camera to look at")]
-        public GameObject cameraTarget;
+        public GameObject cameraTarget = null;
 
         public bool hasRan = false;
         public bool isRunning = false;
 
         //Only appear on TriggerType.Area
         [Tooltip("The tag of objects that will activate the Trigger when it enters the trigger area")]
-        public string triggeringTag;
-        public GameObject areaTrigger;
+        public string triggeringTag = null;
+        public GameObject areaTrigger = null;
         [Tooltip("The center of the trigger zone")]
-        public Vector3 areaCenter;
+        public Vector3 areaCenter = new Vector3();
         [Tooltip("The size of the trigger zone relative to the center")]
-        public Vector3 boxSize;
+        public Vector3 boxSize = new Vector3();
 
         //Only appear on TriggerType.OnEvent
         [Tooltip("The type of event for this trigger")]
-        public EventType eventType;
+        public EventType eventType = new EventType();
         [Tooltip("The amount of time (in seconds) the player has to be in the level for this to trigger")]
         public float timeInLevelBeforeTrigger = 0;
         [Tooltip("The array of objects that, when looked at, will activate this trigger")]
-        public GameObject[] triggeringObjects;
+        public GameObject[] triggeringObjects = null;
         
     }
 
@@ -605,6 +605,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
     Coroutine currentCount;
 
     public bool IsPanning { get => isPanning; set => isPanning = value; }
+    public bool[] TriggerSubFoldout { get => triggerSubFoldout; set => triggerSubFoldout = value; }
 
     /// <summary>
     /// Starts counting on scene load and restarts it on changing scenes, used for triggers that activate a set amount of time after the player is in the scene

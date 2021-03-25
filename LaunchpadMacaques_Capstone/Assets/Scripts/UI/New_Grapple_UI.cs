@@ -12,8 +12,8 @@ public class New_Grapple_UI : MonoBehaviour
     [SerializeField] Image retiicle = null;
     [SerializeField] Animator anim = null;
 
-    GrapplingGun gg;
-    PushPullObjects pushPull;
+    GrapplingGun gg = null;
+    PushPullObjects pushPull = null;
 
     [Header("Audio Setting")]
     [SerializeField, EventRef] string targetSoundEffect = null;

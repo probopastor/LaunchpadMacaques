@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class TempConfigJoint : MonoBehaviour
 {
-    private LineRenderer lr;
-    private Vector3 grapplePoint;
-    public LayerMask whatIsGrappleable;
-    private Vector3 currentGrapplePosition;
-    public Transform gunTip, m_Camera, player;
+    private LineRenderer lr = null;
+    private Vector3 grapplePoint = new Vector3();
+    public LayerMask whatIsGrappleable = new LayerMask();
+    private Vector3 currentGrapplePosition = new Vector3();
+    public Transform gunTip = null, m_Camera = null, player = null;
     private float maxDistance = 100f;
-    private ConfigurableJoint joint;
+    private ConfigurableJoint joint = null;
 
 
     [Header("Explosion Settings")]
@@ -21,16 +21,16 @@ public class TempConfigJoint : MonoBehaviour
 
     //values that affect how the spring joint grapple behaves
 
-    SoftJointLimit jointLimit;
-    SoftJointLimitSpring springLimit;
-    JointDrive jointDrive;
+    SoftJointLimit jointLimit = new SoftJointLimit();
+    SoftJointLimitSpring springLimit = new SoftJointLimitSpring();
+    JointDrive jointDrive = new JointDrive();
 
     [Header("Spring Settings")]
     [SerializeField] float positionSpringForce = 350;
     [SerializeField] float positionSpringDamper = 300;
 
-    private GameObject objectFixedTo;
-    private RaycastHit grappleRayHit;
+    private GameObject objectFixedTo = null;
+    private RaycastHit grappleRayHit = new RaycastHit();
 
     [Header("Grapple Settings")]
     [Tooltip("The Min amount of time a joint has to connected before it can be discontented")]

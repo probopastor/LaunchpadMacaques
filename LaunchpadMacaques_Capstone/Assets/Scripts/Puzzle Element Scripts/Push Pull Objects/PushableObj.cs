@@ -18,7 +18,7 @@ public class PushableObj : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] [Tooltip("The Variable that will be multiplyed by deafult grabity to apply gravity to this object")] float gravityScaler = 1.75f;
-    [SerializeField] [Tooltip("The distance an object will fly, when thrown")] float distance;
+    [SerializeField] [Tooltip("The distance an object will fly, when thrown")] float distance = 0;
 
 
 

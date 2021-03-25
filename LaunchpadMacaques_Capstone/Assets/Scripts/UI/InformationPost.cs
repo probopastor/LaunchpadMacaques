@@ -18,15 +18,15 @@ public class InformationPost : A_InputType
     [SerializeField, TextArea, Tooltip("The information that will be displayed when player is in the information post's radius. ")] private string information;
 
 
-    private bool isActive;
+    private bool isActive = false;
 
-    private bool playerInRange;
+    private bool playerInRange = false;
 
-    private NarrativeTriggerHandler narrative;
+    private NarrativeTriggerHandler narrative = null;
 
     private string interactText = "Press E";
 
-    private PlayerControlls controls;
+    private PlayerControlls controls = null;
 
     public string InteractText { get => interactText; set => interactText = value; }
 

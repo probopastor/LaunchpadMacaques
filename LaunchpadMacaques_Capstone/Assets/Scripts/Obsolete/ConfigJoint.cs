@@ -9,15 +9,15 @@ public class ConfigJoint : MonoBehaviour
     [SerializeField] private GameObject hitObject = null;
     private GameObject hitObjectClone;
 
-    private LineRenderer lr;
-    private Vector3 grapplePoint;
-    public LayerMask whatIsGrappleable;
+    private LineRenderer lr = null;
+    private Vector3 grapplePoint = new Vector3();
+    public LayerMask whatIsGrappleable = new LayerMask();
     [SerializeField] LayerMask whatIsNotGrappleable = new LayerMask();
-    private Vector3 currentGrapplePosition;
-    public Transform gunTip, camera1, player;
+    private Vector3 currentGrapplePosition = new Vector3();
+    public Transform gunTip = null, camera1 = null, player = null;
     private float maxPullDistance = 100f;
-    private ConfigurableJoint joint;
-    private RaycastHit grappleRayHit;
+    private ConfigurableJoint joint = null;
+    private RaycastHit grappleRayHit = new RaycastHit();
 
     [SerializeField] private Transform orientation;
 
