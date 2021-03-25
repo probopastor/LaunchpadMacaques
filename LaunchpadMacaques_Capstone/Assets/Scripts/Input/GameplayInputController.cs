@@ -150,7 +150,7 @@ public class GameplayInputController : MonoBehaviour
         ApplyOveride("DownController", controls.GamePlay.Move, 7);
 
 
-        ApplyOveride("LeftK", controls.GamePlay.Dash, 3);
+        ApplyOveride("LeftK", controls.GamePlay.Move, 3);
         ApplyOveride("LeftController", controls.GamePlay.Move, 8);
 
 
