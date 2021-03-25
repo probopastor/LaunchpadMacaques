@@ -16,7 +16,7 @@ using UnityEngine.Rendering.HighDefinition;
 public class Matt_PlayerMovement : MonoBehaviour
 {
     #region References
-    [SerializeField, Tooltip("The text element that displays the current gravity. ")] TextMeshProUGUI currentGravityText;
+    [SerializeField, Tooltip("The text element that displays the current gravity. ")] TextMeshProUGUI currentGravityText = null;
     private GrapplingGun grappleGunReference;
     private CollectibleController collectibleController;
     private NarrativeTriggerHandler narrativeTriggerReference;
@@ -24,13 +24,13 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #region Player Camera Variables
     [Header("Player Transform Assignables")]
-    [SerializeField, Tooltip("The transform of the player's camera. ")] private Transform playerCam;
-    [SerializeField, Tooltip("The transform of the player's orientation ")] private Transform orientation;
+    [SerializeField, Tooltip("The transform of the player's camera. ")] private Transform playerCam = null;
+    [SerializeField, Tooltip("The transform of the player's orientation ")] private Transform orientation = null;
     float m_fieldOfView = 60.0f;
     #endregion
 
     //Other
-    private Rigidbody rb;
+    private Rigidbody rb = null;
 
 
     #region Player Sensitivity
@@ -53,11 +53,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #endregion
 
-    [HideInInspector] public bool grounded;
-    [SerializeField, Tooltip("The layer for the ground. Anything on this layer will be considered ground. ")] private LayerMask whatIsGround;
-    [SerializeField, Tooltip("The physics material that platforms should obtain if they are collided with from the side")] private PhysicMaterial frictionlessMat;
-    private PhysicMaterial originalMaterial;
-    private bool applyPhysicsMaterial;
+    [HideInInspector] public bool grounded = false;
+    [SerializeField, Tooltip("The layer for the ground. Anything on this layer will be considered ground. ")] private LayerMask whatIsGround = new LayerMask();
+    [SerializeField, Tooltip("The physics material that platforms should obtain if they are collided with from the side")] private PhysicMaterial frictionlessMat = null;
+    private PhysicMaterial originalMaterial = null;
+    private bool applyPhysicsMaterial = false;
 
     [SerializeField, Tooltip("This is the max speed that the player can achieve when swinging. ")]
     private float maxVelocity = 50f;
@@ -127,7 +127,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField] private float sprintMultiplier = 1.75f;
     private bool readyToSprint = true;
     private float speedStorage;
-    [SerializeField] ParticleSystem sprintParticles;
+    [SerializeField] ParticleSystem sprintParticles = null;
     #endregion
 
     #region Dash Settings
@@ -145,12 +145,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     private bool useAddForceDash = false;
     private bool useCourtineDash = true;
 
-    [SerializeField] GameObject dashUI;
+    [SerializeField] GameObject dashUI = null;
     #endregion
 
     #region Platform Landing Settings
     [Header("Platform Landing Settings")]
-    [SerializeField, Tooltip("The tags that should be checked to cancel out player velocity when landing.")] private string[] tagsToCancelVelocity;
+    [SerializeField, Tooltip("The tags that should be checked to cancel out player velocity when landing.")] private string[] tagsToCancelVelocity = null;
     private bool notLandedAfterAirTime = false;
 
     [SerializeField, Tooltip("If enabled, player will be able to walk off of platforms for a short period of time without falling. ")] private bool enableCoyoteTime = false;
@@ -159,7 +159,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     // The game object currently on.
     private GameObject gameObjectStoodOn;
     [SerializeField, Tooltip("The Coyote Time game objects. ")] private List<GameObject> coyoteTimeObjs = new List<GameObject>(4);
-    [SerializeField] List<string> coyoteTimeTags;
+    [SerializeField] List<string> coyoteTimeTags = null;
 
     // Determines if the Coyote Time coroutine is running.
     private bool coyoteTimeStarted = false;
@@ -180,7 +180,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     [Header("Art Settings")]
     [SerializeField]
-    Animator anim;
+    Animator anim = null;
 
     private float minFOV = 60;
 
@@ -203,28 +203,28 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float x, y;
     private bool jumping = false, sprinting = false, crouching = false, canDash = false;
 
-    private PauseManager pauseManager;
+    private PauseManager pauseManager = null;
 
     ConfigJoint config;
 
-    private Vector3 latestOrientation;
+    private Vector3 latestOrientation = new Vector3();
 
-    private float deafultVelocity;
+    private float deafultVelocity = 0;
 
-    private float currentMaxFOV;
+    private float currentMaxFOV = 0;
 
     private float lastVelocity = 0;
 
-    private int lastMaxFOV;
+    private int lastMaxFOV = 0;
 
-    private float mouseX;
-    private float mouseY;
+    private float mouseX = 0;
+    private float mouseY = 0;
 
-    private MoveCamera cam;
+    private MoveCamera cam = null;
 
     private bool resetVelocity = false;
 
-    private float timeOffGround;
+    private float timeOffGround = 0;
 
     private bool dashUnlocked = false;
 
@@ -236,14 +236,14 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float stepIncreaseAmmount = .1f;
 
     [Header("Vignette Settings")]
-    [SerializeField] private Color vigneteColor;
+    [SerializeField] private Color vigneteColor = new Color();
     [SerializeField] float startingVigneteIntensity = .4f;
     [SerializeField] float maxVigneteIntensity = .6f;
     [SerializeField] float vigneteIntensityScaleAmmount = .1f;
 
-    SetPostProcessing postProcessing;
+    SetPostProcessing postProcessing = null;
 
-    Vector3 previousPlayerPositon;
+    Vector3 previousPlayerPositon = new Vector3();
 
     bool foundGround = true;
 
@@ -257,22 +257,12 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
-    public Animator Anim { get => anim; set => anim = value; }
-    public Color VigneteColor { get => vigneteColor; set => vigneteColor = value; }
-    public PhysicMaterial FrictionlessMat { get => frictionlessMat; set => frictionlessMat = value; }
-    public TextMeshProUGUI CurrentGravityText { get => currentGravityText; set => currentGravityText = value; }
-    public LayerMask WhatIsGround { get => whatIsGround; set => whatIsGround = value; }
-    public ParticleSystem SprintParticles { get => sprintParticles; set => sprintParticles = value; }
-    public Transform PlayerCam { get => playerCam; set => playerCam = value; }
-    public Transform Orientation { get => orientation; set => orientation = value; }
-    public GameObject DashUI { get => dashUI; set => dashUI = value; }
-    public string[] TagsToCancelVelocity { get => tagsToCancelVelocity; set => tagsToCancelVelocity = value; }
-    public List<string> CoyoteTimeTags { get => coyoteTimeTags; set => coyoteTimeTags = value; }
     public bool EnableCoyoteTime1 { get => enableCoyoteTime; set => enableCoyoteTime = value; }
-    public bool ResetVelocity { get => resetVelocity; set => resetVelocity = value; }
     public bool InMouseAccerlation { get => inMouseAccerlation; set => inMouseAccerlation = value; }
     public float MaxScreenShakeAmmount { get => maxScreenShakeAmmount; set => maxScreenShakeAmmount = value; }
     public float MaxVigneteIntensity { get => maxVigneteIntensity; set => maxVigneteIntensity = value; }
+    public Vector3 PreviousPlayerPositon { get => previousPlayerPositon; set => previousPlayerPositon = value; }
+    public bool ResetVelocity { get => resetVelocity; set => resetVelocity = value; }
 
     [SerializeField, Tooltip("Particle system that is used while dashing.")] private ParticleSystem _CachedSystem;
     [SerializeField, Tooltip("Amount of speedlines emitted after each dash. ")] private int emitParticles = 20;

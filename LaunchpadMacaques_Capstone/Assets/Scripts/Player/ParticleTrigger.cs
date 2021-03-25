@@ -17,10 +17,10 @@ public class ParticleTrigger : MonoBehaviour
     [SerializeField, Tooltip("Modifies speed of particles. ")] private float speedMultiplier = 0;
     [SerializeField, Tooltip("Velocity at which particles are increased to compensate for particle speed. ")] private float velocityThreshold = 0;
     [SerializeField, Tooltip("Min velocity needed for particles to appear. ")] private float minVelocityForParticles = 1f;
-    private Vector3 currentVelocity;
-    private GameObject landingParticlesObject;
+    private Vector3 currentVelocity = new Vector3();
+    private GameObject landingParticlesObject = null;
     private bool onGround = false;
-    private float absoluteVelocity;
+    private float absoluteVelocity = 0;
     private bool ready = false;
 
     // Start is called before the first frame update
