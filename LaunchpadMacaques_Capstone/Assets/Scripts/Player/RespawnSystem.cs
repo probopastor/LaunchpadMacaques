@@ -8,6 +8,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class RespawnSystem : MonoBehaviour
 {
@@ -22,6 +23,10 @@ public class RespawnSystem : MonoBehaviour
     [Header("Death Effects")]
     [SerializeField] float delayBeforePlayerRespawns = 1;
     [SerializeField, Tooltip("The particles that will play when the player is respawned. ")] private ParticleSystem[] deathParticles = null;
+    [EventRef, Tooltip("Player Death Rattle events from FMOD")]
+    public string[] deathRattles;
+    [EventRef, Tooltip("Corruption sassy lines after death from FMOD")]
+    public string[] corruptionQuips;
     #endregion
 
     #region Private Variables
@@ -173,6 +178,8 @@ public class RespawnSystem : MonoBehaviour
     {
         player.SetPlayerCanMove(false);
 
+        PlayRandom(deathRattles);
+
         // Play death particles
         if (!deathParticlesPlaying)
         {
@@ -212,6 +219,8 @@ public class RespawnSystem : MonoBehaviour
 
         gg.StopGrapple();
         deathInProgress = false;
+
+        PlayRandom(corruptionQuips);
     }
 
     public void PlayerCanMove()
@@ -252,6 +261,14 @@ public class RespawnSystem : MonoBehaviour
     public bool GetDeathParticlesStatus()
     {
         return deathParticlesPlaying;
+    }
+
+    public void PlayRandom(string[] vs)
+    {
+        string randEvent = vs[Random.Range(0, vs.Length)];
+        FMOD.Studio.EventInstance randInstance = RuntimeManager.CreateInstance(randEvent);
+        randInstance.start();
+        randInstance.release();
     }
 
 }

@@ -40,9 +40,7 @@ public class GrapplingGun : MonoBehaviour
     {
         JustConstantVelocit, Just_Non_Constant_Velocity
     }
-
-
-
+    
     [Header("Rope Settings")]
     [SerializeField, Tooltip("The grapple length on regrapple. ")] private float ropeLength = 10;
 
@@ -101,6 +99,7 @@ public class GrapplingGun : MonoBehaviour
     [Header("Audio Clips")]
     [EventRef, SerializeField, Tooltip("Audio clip that plays when grapple is initiated.")]
     private string grappleStart;
+    [EventRef] public string[] grappleGrunts;
     [EventRef, SerializeField, Tooltip("Audio clip that plays when grapple is active.")]
     private string grappleActive;
     [EventRef, SerializeField, Tooltip("Audio clip that plays when grapple is ended.")]
@@ -108,7 +107,6 @@ public class GrapplingGun : MonoBehaviour
 
     public StudioEventEmitter grapplingEmitter;
     private PauseManager pauseManager;
-
 
     [SerializeField] LayerMask groundDecalLayer;
 
@@ -449,7 +447,6 @@ public class GrapplingGun : MonoBehaviour
 
     #endregion
 
-
     #region Look For Grapple Location
     /// <summary>
     /// Will return a bool for if a grapple location be be found
@@ -599,6 +596,7 @@ public class GrapplingGun : MonoBehaviour
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
             beginGrappleInstance.release();
+            PlayRandom(grappleGrunts);
         }
 
     }
@@ -1068,6 +1066,14 @@ public class GrapplingGun : MonoBehaviour
     public float SetRopeLength(float value)
     {
         return ropeLength = value;
+    }
+
+    public void PlayRandom(string[] vs)
+    {
+        string randEvent = vs[Random.Range(0, vs.Length)];
+        EventInstance randInstance = RuntimeManager.CreateInstance(randEvent);
+        randInstance.start();
+        randInstance.release();
     }
 
     #endregion

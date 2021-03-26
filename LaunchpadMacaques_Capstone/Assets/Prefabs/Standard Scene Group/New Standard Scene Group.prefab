@@ -1573,6 +1573,12 @@ MonoBehaviour:
   landing: event:/Landing
   jumping: event:/Jump Start
   footsteps: event:/Footsteps
+  painGrunts:
+  - event:/Pain/Pain 1
+  - event:/Pain/Pain 2
+  - event:/Pain/Pain 3
+  - event:/Pain/Pain 4
+  - event:/Empty Event
   swingingEmitter: {fileID: 1790872067108165595}
 --- !u!114 &1790872067108165595
 MonoBehaviour:
@@ -1611,10 +1617,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnTags:
   - KillZone
+  disableRespawnZonesWhenActive: 0
+  respawnZones: []
   delayBeforePlayerRespawns: 0.25
   deathParticles:
   - {fileID: 3174322086810235630}
   - {fileID: 4104758063410203579}
+  deathRattles:
+  - event:/Death Rattles/Death Rattle 1
+  - event:/Death Rattles/Death Rattle 2
+  - event:/Death Rattles/Death Rattle 3
+  corruptionQuips:
+  - event:/Corruption Death Quips/Death Quip 1
+  - event:/Corruption Death Quips/Death Quip 2
+  - event:/Corruption Death Quips/Death Quip 3
+  - event:/Empty Event
 --- !u!114 &2268425337875407786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7094,7 +7111,12 @@ MonoBehaviour:
   useVerticalMovementWhileGrappling: 1
   roundingRange: 0.15
   anim: {fileID: 7564166262601284636}
-  grappleStart: event:/Grapple
+  grappleStart: event:/Grapple - FX Only
+  grappleGrunts:
+  - event:/Effort Grunts/Effort Grunt 1
+  - event:/Effort Grunts/Effort Grunt 2
+  - event:/Effort Grunts/Effort Grunt 3
+  - event:/Empty Event
   grappleActive: event:/Grappling
   grappleEnd: event:/Grapple Break
   grapplingEmitter: {fileID: 5891670857620050173}
@@ -7488,7 +7510,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1947822024967688996}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -184.4465, y: 73.72479, z: 69.33336}
+  m_LocalPosition: {x: -68.43872, y: 1.5, z: -15.972523}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3805259656656701553}
@@ -9606,7 +9628,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 15.488281, y: -21.299988}
+  m_AnchoredPosition: {x: 15.488281, y: -21.300049}
   m_SizeDelta: {x: -113.93286, y: -283.8086}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5532545269448383727
@@ -20570,7 +20592,8 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -115
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3963679039123073750, guid: 05636b887903cda4c8620310557feabf, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 05636b887903cda4c8620310557feabf, type: 3}
 --- !u!1 &8907390840374234158 stripped
 GameObject:
