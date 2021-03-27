@@ -43,6 +43,7 @@ public class SettingsManager : MonoBehaviour
     [Header("Settings Holder")]
     [SerializeField, Tooltip("Will hold all the settings Menu")] GameObject settingsHolder;
     [SerializeField] GameObject audioSubmenu;
+    [SerializeField] GameObject controlBindingsSubmenu;
     [SerializeField] GameObject videoSubMenu;
     [SerializeField] GameObject gameplaySubMenu;
     [SerializeField] GameObject lookSettings;
@@ -108,6 +109,7 @@ public class SettingsManager : MonoBehaviour
     public GameObject LookSettings { get => lookSettings; set => lookSettings = value; }
     public GameObject SettingsHolder { get => settingsHolder; set => settingsHolder = value; }
     public GameObject AudioSubmenu { get => audioSubmenu; set => audioSubmenu = value; }
+    public GameObject ControlBindingsSubmenu { get => controlBindingsSubmenu; set => controlBindingsSubmenu = value; }
     public Slider DialougeVolume { get => dialougeVolume; set => dialougeVolume = value; }
     public GameObject OptionsMenu { get => optionsMenu; set => optionsMenu = value; }
     public TMP_Dropdown GraphicsQualityDropdown { get => graphicsQualityDropdown; set => graphicsQualityDropdown = value; }
@@ -202,6 +204,7 @@ public class SettingsManager : MonoBehaviour
     {
 
         audioSubmenu.SetActive(false);
+        controlBindingsSubmenu.SetActive(false);
         videoSubMenu.SetActive(false);
         gameplaySubMenu.SetActive(false);
         lookSettings.SetActive(false);
@@ -870,6 +873,11 @@ public class SettingsManager : MonoBehaviour
             {
                 transitionManager.enable = optionsMenu;
                 transitionManager.disable = audioSubmenu;
+            }
+            else if(controlBindingsSubmenu.activeSelf)
+            {
+                transitionManager.enable = optionsMenu;
+                transitionManager.disable = controlBindingsSubmenu;
             }
 
             else if (gameplaySubMenu.activeSelf)

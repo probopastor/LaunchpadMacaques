@@ -134,7 +134,7 @@ public class MainMenuKeyRebinding : MonoBehaviour
         var enumState = (InputTypes) System.Enum.Parse(typeof(InputTypes), input);
         RemapController(ReturnInputActionType(enumState));
     }
-    
+
     public void RebindKeyboard(string input)
     {
         var enumState = (InputTypes)System.Enum.Parse(typeof(InputTypes), input);

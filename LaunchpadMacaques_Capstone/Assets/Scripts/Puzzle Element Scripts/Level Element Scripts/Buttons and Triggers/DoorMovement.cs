@@ -23,7 +23,7 @@ public class DoorMovement : MonoBehaviour
     #region Door Rotation Variables
     [Header("Door Rotation ")]
     [SerializeField, Tooltip("If true, the door will rotate instead of move on activation. ")] private bool rotateOnActivation = false;
-    [SerializeField] private Vector3[] doorRotationAngles;
+    [SerializeField] private Vector3[] doorRotAngles;
     private Vector3 originalDoorRotation;
     private int angleIndex = 0;
     #endregion
@@ -101,7 +101,7 @@ public class DoorMovement : MonoBehaviour
                     if (!activateDoor)
                     {
                         Debug.Log("Here?");
-                        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(doorRotationAngles[angleIndex]), 1 * doorMoveSpeed);
+                        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(doorRotAngles[angleIndex]), 1 * doorMoveSpeed);
                     }
                     // If the door is being activated, move the door towards its start rotation. 
                     else if (activateDoor)
@@ -121,7 +121,7 @@ public class DoorMovement : MonoBehaviour
                     else if (activateDoor)
                     {
 
-                        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(new Vector3(-doorRotationAngles[angleIndex].x, -doorRotationAngles[angleIndex].y, -doorRotationAngles[angleIndex].z)), 
+                        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(new Vector3(-doorRotAngles[angleIndex].x, -doorRotAngles[angleIndex].y, -doorRotAngles[angleIndex].z)), 
                             1 * doorMoveSpeed);
                     }
                 }
