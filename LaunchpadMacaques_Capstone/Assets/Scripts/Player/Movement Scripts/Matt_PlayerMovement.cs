@@ -441,7 +441,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void EdgeDetection()
     {
-        if (grounded)
+        if (Physics.Raycast(this.transform.position, (-transform.up), distanceToCheckDown, whatIsGround))
         {
             if ((this.x == 0 && this.y == 0))
             {
@@ -449,7 +449,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
             if (Physics.Raycast(this.transform.position, (-transform.up), out RaycastHit hit,distanceToCheckDown, whatIsGround))
             {
-                if (!coyoteTimeTags.Contains(hit.collider.gameObject.tag) || coyoteTimeObjs.Contains(hit.collider.gameObject))
+                if (!grounded)
                 {
                     //postProcessing.SetVignete(false, vigneteColor);
                     return;
