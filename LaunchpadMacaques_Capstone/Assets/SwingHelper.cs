@@ -19,6 +19,9 @@ public class SwingHelper : MonoBehaviour
 
    [SerializeField, Tooltip("The Ammount of time without having a good loop before game will try to fix it")] private float timeBeforeFixing = 5;
 
+    [Range(0, 1)]
+    [SerializeField, Tooltip("The intensity at which the direction change will happen")] float directionChangeIntensity = .5f;
+
 
     private bool inNegative = false;
 
@@ -190,5 +193,10 @@ public class SwingHelper : MonoBehaviour
     public Vector3 GetDirectionToTarget()
     {
         return dirToTargert;
+    }
+
+    public float GetDirectionChangeIntensity()
+    {
+        return directionChangeIntensity;
     }
 }
