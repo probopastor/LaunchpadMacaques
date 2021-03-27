@@ -64,7 +64,6 @@ public class SwingHelper : MonoBehaviour
                 {
                     hitAngle = true;
                     correctAngleInt++;
-   
                 }
             }
 
@@ -111,7 +110,6 @@ public class SwingHelper : MonoBehaviour
         if (correctAngleInt >= 2 && hitAngle)
         {
             // Resets Coroutines and variables
-            Debug.Log("Good Loop");
             dirToTargert = Vector3.zero;
 
             StopAllCoroutines();
@@ -119,10 +117,6 @@ public class SwingHelper : MonoBehaviour
             checking = false;
         }
 
-        else
-        {
-            Debug.Log("Bad Loop:");
-        }
 
         // Reset information about the loop
         correctAngleInt = 0;
@@ -144,14 +138,33 @@ public class SwingHelper : MonoBehaviour
         {
             if (grapplingGun.GetCurrentGrappledObject() != null)
             {
-                dirToTargert = (grapplingGun.GetCurrentGrappledObject().transform.position - orientation.transform.position).normalized;
+                var temp = (grapplingGun.GetCurrentGrappledObject().transform.position - orientation.transform.position);
+                temp.y = 0;
+                dirToTargert = temp;
+
+      
             }
 
-            Debug.Log("FIXING DIRECTION");
 
             yield return null;
         }
 
+
+    }
+
+    /// <summary>
+    /// Will check if the changed direction will put player in correct swing angle
+    /// </summary>
+    public void UsedDirectionChange()
+    {
+        float angle = DegreesBetweenObjects(orientation.gameObject, grapplingGun.GetCurrentGrappledObject());
+        if((angle > 0) && Mathf.Abs(angle) > (minCheckAngle - 5) && Mathf.Abs(angle) < (maxCheckAngle + 5))
+        {
+            StopAllCoroutines();
+            dirToTargert = Vector3.zero;
+            isFixing = false;
+            checking = false;
+        }
 
     }
 
