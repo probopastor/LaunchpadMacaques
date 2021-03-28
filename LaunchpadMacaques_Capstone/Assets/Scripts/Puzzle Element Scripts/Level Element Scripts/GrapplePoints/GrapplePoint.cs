@@ -23,14 +23,10 @@ public class GrapplePoint : MonoBehaviour
     [Tooltip("Determines if On Enable enabled condition has already been checked. ")] private bool checkEnableConditionsOnce;
     [Tooltip("Grappling gun reference. ")] private GrapplingGun grapplingGun;
     [Tooltip("MakeSpotNotGrappleable reference. Used to uncorrupt grapple points on player respawn. ")] private MakeSpotNotGrappleable notGrappleableReference;
-
-    private Coroutine lastCoroutine;
-
     #endregion 
 
     private void Awake()
     {
-        lastCoroutine = null;
         breakingNotStarted = true;
         checkEnableConditionsOnce = false;
         grapplingGun = FindObjectOfType<GrapplingGun>();
@@ -75,19 +71,7 @@ public class GrapplePoint : MonoBehaviour
     /// </summary>
     public void Break()
     {
-        lastCoroutine = StartCoroutine(StartBreak());
-    }
-
-    /// <summary>
-    /// This function should stop the breaking process of a breakable grapple point.
-    /// </summary>
-    public void StopBreaking()
-    {
-        StopCoroutine(lastCoroutine); // StopAllCoroutines() can work too but earlier in testing it wasn't, however, it did start to work after a project restart.
-        breaking = false;
-        breakingNotStarted = true;
-        checkEnableConditionsOnce = false;
-        breakTimeRef = breakTime;
+        StartCoroutine(StartBreak());
     }
 
     /// <summary>

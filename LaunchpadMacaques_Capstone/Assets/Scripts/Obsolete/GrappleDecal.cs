@@ -12,8 +12,8 @@ public class GrappleDecal : MonoBehaviour
 {
     #region Inspector Variables 
     [Header("Decal Settings")]
-    [Tooltip("The Prefab to be used as an aiming decal.")] [SerializeField] private GameObject grappleAimingDecal;
-    [Tooltip("The layers the aiming decal should be enabled on.")] [SerializeField] private LayerMask whatIsGrappleable;
+    [Tooltip("The Prefab to be used as an aiming decal.")] [SerializeField] private GameObject grappleAimingDecal = null;
+    [Tooltip("The layers the aiming decal should be enabled on.")] [SerializeField] private LayerMask whatIsGrappleable = new LayerMask();
     #endregion
 
     #region Private Variables 

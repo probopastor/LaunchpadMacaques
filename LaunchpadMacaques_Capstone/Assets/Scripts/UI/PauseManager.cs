@@ -22,25 +22,25 @@ public class PauseManager : MonoBehaviour
     public GameObject pausePanel;
 
     [SerializeField, Tooltip("The scene this pause manager is located in. ")] private string thisScene;
-    [SerializeField, Tooltip("The main menu scene name. ")] private string mainMenuScene;
-    [SerializeField, Tooltip("Options Menu")] GameObject optionsMenu;
+    [SerializeField, Tooltip("The main menu scene name. ")] private string mainMenuScene = null;
+    [SerializeField, Tooltip("Options Menu")] GameObject optionsMenu = null;
 
-    [SerializeField, Tooltip("Options Menu")] GameObject gameplaySettings;
-    [SerializeField] GameObject lookSettings;
-    [SerializeField] GameObject miscGamePlaySettings;
+    [SerializeField, Tooltip("Options Menu")] GameObject gameplaySettings = null;
+    [SerializeField] GameObject lookSettings = null;
+    [SerializeField] GameObject miscGamePlaySettings = null;
 
-    [SerializeField, Tooltip("Options Menu")] GameObject videoSettings;
-    [SerializeField] GameObject graphicsSettings;
-    [SerializeField] GameObject postProcessingSettings;
-    [SerializeField, Tooltip("Options Menu")] GameObject audioSettings;
+    [SerializeField, Tooltip("Options Menu")] GameObject videoSettings = null;
+    [SerializeField] GameObject graphicsSettings = null;
+    [SerializeField] GameObject postProcessingSettings = null;
+    [SerializeField, Tooltip("Options Menu")] GameObject audioSettings = null;
     [SerializeField, Tooltip("Resume Button")] GameObject resumeButton;
 
-    [SerializeField, Tooltip("The pause panel that is being used as a menu. ")] private GameObject PauseCanvas;
+    [SerializeField, Tooltip("The pause panel that is being used as a menu. ")] private GameObject PauseCanvas = null;
     //[SerializeField] private GameObject LoseCanvas;
-    [SerializeField, Tooltip("The win panel that is being used as a win state. ")] private GameObject WinCanvas;
-    [SerializeField, Tooltip("The cursor object. ")] private GameObject CursorCanvas;
-    [SerializeField, Tooltip("The UI panel. ")] private GameObject UICanvas;
-    [SerializeField, Tooltip("The Information Post Text. ")] private GameObject InformationPostText;
+    [SerializeField, Tooltip("The win panel that is being used as a win state. ")] private GameObject WinCanvas = null;
+    [SerializeField, Tooltip("The cursor object. ")] private GameObject CursorCanvas = null;
+    [SerializeField, Tooltip("The UI panel. ")] private GameObject UICanvas = null;
+    [SerializeField, Tooltip("The Information Post Text. ")] private GameObject InformationPostText = null;
     private NarrativeTriggerHandler narrative;
     private SettingsManager settings;
     private EventSystem eventSystem;

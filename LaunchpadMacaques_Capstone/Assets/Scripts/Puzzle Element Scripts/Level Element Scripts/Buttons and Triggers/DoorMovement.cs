@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 * Launchpad Macaques - Neon Oblivion
 * William Nomikos, Jamey Colleen, Jake Buri
 * DoorMovement.cs
@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class DoorMovement : MonoBehaviour
 {
-    #region Variables 
+    #region Variables
     #region Door Movement Variables
     [Header("Door Movement ")]
     [SerializeField, Tooltip("The position relative to the door's current position to move it to on activation. ")] private Vector3 doorMovementDirection = new Vector3(0, 0, 0);
@@ -35,13 +35,13 @@ public class DoorMovement : MonoBehaviour
     float timeElapsed;
 
     bool doOnce;
-    #endregion 
+    #endregion
 
     private void Start()
     {
         originalDoorPos = gameObject.transform.position;
         newDoorPos = new Vector3(originalDoorPos.x + doorMovementDirection.x, originalDoorPos.y + doorMovementDirection.y, originalDoorPos.z + doorMovementDirection.z);
-        originalDoorRotation = transform.localRotation.eulerAngles;
+        originalDoorRotation = transform.rotation.eulerAngles;
         lerpDoor = false;
         activateDoor = false;
         doOnce = false;
@@ -67,7 +67,7 @@ public class DoorMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Lerps or Slerps the door in the direction it should move in. 
+    /// Lerps or Slerps the door in the direction it should move in.
     /// </summary>
     private void DoorLerp()
     {
@@ -77,16 +77,15 @@ public class DoorMovement : MonoBehaviour
             // If the door should not be rotated, move it linearly
             if (!rotateOnActivation)
             {
-                // If the door is going to be deactivated, move it towards its ending position. 
+                // If the door is going to be deactivated, move it towards its ending position.
                 if (!activateDoor)
                 {
                     gameObject.transform.position = Vector3.Lerp(gameObject.transform.position,
                         new Vector3(originalDoorPos.x + doorMovementDirection.x, originalDoorPos.y + doorMovementDirection.y, originalDoorPos.z + doorMovementDirection.z), 1 * doorMoveSpeed);
                 }
-                // If the door is going to be activated, move it towards its starting position. 
+                // If the door is going to be activated, move it towards its starting position.
                 else if (activateDoor)
                 {
-        
                     gameObject.transform.position = Vector3.Lerp(gameObject.transform.position,
                         new Vector3(newDoorPos.x - doorMovementDirection.x, newDoorPos.y - doorMovementDirection.y, newDoorPos.z - doorMovementDirection.z), 1 * doorMoveSpeed);
                 }
@@ -94,7 +93,7 @@ public class DoorMovement : MonoBehaviour
             // If the door should be rotated, rotate it.
             else if (rotateOnActivation)
             {
-                // If the door starts as enabled, the door is starting at its start rotation and must rotate towards its end rotation. 
+                // If the door starts as enabled, the door is starting at its start rotation and must rotate towards its end rotation.
                 if (!transform.parent.GetComponent<ActivationDoor>().GetEnableOnActivationStatus())
                 {
                     // If the door is being deactivated, move the door towards its end rotation.
@@ -103,10 +102,10 @@ public class DoorMovement : MonoBehaviour
                         Debug.Log("Here?");
                         transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(doorRotAngles[angleIndex]), 1 * doorMoveSpeed);
                     }
-                    // If the door is being activated, move the door towards its start rotation. 
+                    // If the door is being activated, move the door towards its start rotation.
                     else if (activateDoor)
                     {
-                        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(originalDoorRotation), 1 * doorMoveSpeed);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(originalDoorRotation), 1 * doorMoveSpeed);
                     }
                 }
                 // If the door starts as disabled, the door is starting at its end rotation and must rotate towards its start rotation.
@@ -115,13 +114,13 @@ public class DoorMovement : MonoBehaviour
                     // If the door is being deactivated, move the door towards its start rotation.
                     if (!activateDoor)
                     {
-                        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(originalDoorRotation), 1 * doorMoveSpeed);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(originalDoorRotation), 1 * doorMoveSpeed);
                     }
                     // If the door is being activated, move the door towards its end rotation.
                     else if (activateDoor)
                     {
 
-                        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(new Vector3(-doorRotAngles[angleIndex].x, -doorRotAngles[angleIndex].y, -doorRotAngles[angleIndex].z)), 
+                        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(new Vector3(-doorRotAngles[angleIndex].x, -doorRotAngles[angleIndex].y, -doorRotAngles[angleIndex].z)),
                             1 * doorMoveSpeed);
                     }
                 }
@@ -134,7 +133,7 @@ public class DoorMovement : MonoBehaviour
             lerpDoor = false;
             ActivationDoor thisDoor = GetComponentInParent<ActivationDoor>();
 
-            // Play proper door audio. 
+            // Play proper door audio.
             if (thisDoor.GetComponent<DoorAudio>() != null)
             {
                 if (gameObject.GetComponent<DoorAudio>() != null)
@@ -146,7 +145,7 @@ public class DoorMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Tells DoorMovement to move the door to its set position over the course of moveTime before deactivating it. 
+    /// Tells DoorMovement to move the door to its set position over the course of moveTime before deactivating it.
     /// </summary>
     /// <param name="moveTime"></param>
     public void MoveDoorOnDeactivation(float moveTime)
@@ -158,7 +157,7 @@ public class DoorMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Tells DoorMovement to activate the door and then move it to its set position over the course of moveTime. 
+    /// Tells DoorMovement to activate the door and then move it to its set position over the course of moveTime.
     /// </summary>
     /// <param name="moveTime"></param>
     public void MoveDoorOnActivation(float moveTime)
@@ -169,5 +168,5 @@ public class DoorMovement : MonoBehaviour
         activateDoor = true;
     }
 
-    #endregion 
+    #endregion
 }

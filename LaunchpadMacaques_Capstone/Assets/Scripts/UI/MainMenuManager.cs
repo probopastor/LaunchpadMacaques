@@ -17,7 +17,7 @@ public class MainMenuManager : MonoBehaviour
     //[SerializeField] private string swingScene;
 
     [SerializeField]
-    private GameObject mainMenu_Panel;
+    private GameObject mainMenu_Panel = null;
 
     [SerializeField]
     private List<GameObject> menuPanels = new List<GameObject>();
