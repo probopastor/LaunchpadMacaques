@@ -199,6 +199,25 @@ public class HandleSaving : MonoBehaviour
         JustSaveLevels();
     }
 
+    public string GetNextLevel()
+    {
+        string name = "ERORR";
+        if(levels[levels.Length - 1].completed == 1)
+        {
+            return levels[levels.Length - 1].levelName;
+        }
+
+        for(int i = levels.Length - 1; i >= 0; i--)
+        {
+            if(levels[i].completed == 1)
+            {
+                return levels[i + 1].levelName;
+            }
+        }
+
+        return name;
+    }
+
     /// <summary>
     /// Returns whether the given level has been completed
     /// </summary>
