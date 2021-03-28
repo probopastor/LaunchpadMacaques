@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class PassTriggerEnabler : MonoBehaviour
 {
-    [SerializeField, Tooltip("An array of targets to be altered by the Pass-By Trigger. ")] private GameObject[] targets = null;
+    [SerializeField, Tooltip("An array of targets to be altered by the Pass-By Trigger. ")] private GameObject[] targets;
     public bool activated = false;
     public bool targetEnabled = false;
     [SerializeField, Tooltip("If enabled, disables all targets after a period of time. ")] private bool timer = false;
@@ -18,8 +18,8 @@ public class PassTriggerEnabler : MonoBehaviour
     private int triggers = 0;
     [SerializeField, Tooltip("The amount of triggers required for objects to be enabled. ")] private int triggerEnableGoal = 2;
     [SerializeField, Tooltip("The amount of triggers required for objects to be disabled. ")] private int triggerDisableGoal = 1;
-    [SerializeField, Tooltip("Material of active object. ")] private Material active = null;
-    [SerializeField, Tooltip("Material of inactive object. ")] private Material inactive = null;
+    [SerializeField, Tooltip("Material of active object. ")] private Material active;
+    [SerializeField, Tooltip("Material of inactive object. ")] private Material inactive;
 
     // Start is called before the first frame update
     void Start()

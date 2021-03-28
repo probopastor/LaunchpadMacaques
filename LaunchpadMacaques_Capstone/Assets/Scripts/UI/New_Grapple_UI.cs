@@ -7,24 +7,24 @@ using FMODUnity;
 public class New_Grapple_UI : MonoBehaviour
 {
     [Header("UI Settings")] 
-    [SerializeField] Sprite deafultReticle = null;
-    [SerializeField] Sprite activeReticle = null;
-    [SerializeField] Image retiicle = null;
-    [SerializeField] Animator anim = null;
+    [SerializeField] Sprite deafultReticle;
+    [SerializeField] Sprite activeReticle;
+    [SerializeField] Image retiicle;
+    [SerializeField] Animator anim;
 
-    GrapplingGun gg = null;
-    PushPullObjects pushPull = null;
+    GrapplingGun gg;
+    PushPullObjects pushPull;
+    OpenDocument openDocs;
 
     [Header("Audio Setting")]
-    [SerializeField, EventRef] string targetSoundEffect = null;
-
-    public Sprite ActiveReticle { get => activeReticle; set => activeReticle = value; }
-
+    [SerializeField, EventRef] string targetSoundEffect;
+    
     // Start is called before the first frame update
     void Start()
     {
         gg = FindObjectOfType<GrapplingGun>();
         pushPull = FindObjectOfType<PushPullObjects>();
+        openDocs = FindObjectOfType<OpenDocument>();
         retiicle.sprite = deafultReticle;
     }
 
@@ -40,7 +40,7 @@ public class New_Grapple_UI : MonoBehaviour
 
    void DisplayUI()
     {
-        if (gg.CanFindGrappleLocation() || (pushPull.CanSeeBox().collider != null && pushPull.CanPickUpObjects()))
+        if (openDocs.CanSeeDocument().collider != null || gg.CanFindGrappleLocation() || (pushPull.CanSeeBox().collider != null && pushPull.CanPickUpObjects()))
         {
             //retiicle.sprite = activeReticle;
             if (anim.GetBool("isHighlighted") == false)

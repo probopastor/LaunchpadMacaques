@@ -15,13 +15,13 @@ using UnityEngine.UI;
 public class QuitConfirmation : MonoBehaviour
 {
     [SerializeField, Tooltip("Reference to the Unity EvenSystem.")]
-    private EventSystem eventSystem_Ref = null;
+    private EventSystem eventSystem_Ref;
 
     [SerializeField, Tooltip("Keeps track of the last selected UI element.")]
     private GameObject lastSelectedObject;
 
     [SerializeField, Tooltip("Button to swtich to when the confrim quit panel is activated.")]
-    private GameObject confirmButtonObject = null;
+    private GameObject confirmButtonObject;
 
     [SerializeField, Tooltip("List of all the UI buttons active in the scene.")]
     private Button[] uiButtons;
@@ -101,7 +101,7 @@ public class QuitConfirmation : MonoBehaviour
         }
         else if(choice == "Deny")
         {
-            confirmQuit_Panel.SetActive(false);
+            confirm_panel.SetActive(false);
         }
 
 #endif

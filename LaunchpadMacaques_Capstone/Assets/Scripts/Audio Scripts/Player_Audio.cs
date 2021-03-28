@@ -18,7 +18,6 @@ public class Player_Audio : MonoBehaviour
     [EventRef] public string landing;
     [EventRef] public string jumping;
     [EventRef] public string footsteps;
-    [EventRef] public string[] painGrunts;
     public StudioEventEmitter swingingEmitter;
 
     private EventInstance swingInstance;
@@ -59,7 +58,6 @@ public class Player_Audio : MonoBehaviour
             landInstance.set3DAttributes(RuntimeUtils.To3DAttributes(transform.position));
             landInstance.setParameterByName("parameter:/Player Magnitude", GetMagnitude());
             landInstance.start();
-            PlayRandom(painGrunts);
         }
 
         landed = grounded;
@@ -69,14 +67,15 @@ public class Player_Audio : MonoBehaviour
         if (grounded && landed && footState == PLAYBACK_STATE.STOPPED && magnitude > 0.1f)
         {
             footstepInstance.start();
-            //Debug.Log("Starting footsteps");
+            Debug.Log("Starting footsteps");
         }
 
         if ((footState == PLAYBACK_STATE.PLAYING && (!grounded || magnitude < 0.1f)) || pauseManager.GetPaused())
         {
             footstepInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            //Debug.Log("stop footsteps");
+            Debug.Log("stop footsteps");
         }
+
     }
 
     private void LateUpdate()
@@ -89,13 +88,5 @@ public class Player_Audio : MonoBehaviour
     public static float GetMagnitude()
     {
         return magnitude;
-    }
-
-    public void PlayRandom(string[] vs)
-    {
-        string randEvent = vs[Random.Range(0, vs.Length)];
-        EventInstance randInstance = RuntimeManager.CreateInstance(randEvent);
-        randInstance.start();
-        randInstance.release();
     }
 }

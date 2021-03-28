@@ -13,7 +13,7 @@ using UnityEngine.UI;
 public class GrappleUIScreenSpaceSwing : MonoBehaviour
 {
     #region Inspector Variables
-    [Header("UI Settings")] [SerializeField] Sprite uiSprite = null;
+    [Header("UI Settings")] [SerializeField] Sprite uiSprite;
     Image uiImageHolder;
     [Tooltip("The layers the aiming decal should be enabled on.")] [SerializeField] private LayerMask whatIsGrappleable;
     [SerializeField] private Canvas grappleCanvas;

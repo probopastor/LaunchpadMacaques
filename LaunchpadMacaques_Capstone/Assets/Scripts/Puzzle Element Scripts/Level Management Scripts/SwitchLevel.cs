@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class SwitchLevel : MonoBehaviour
 {
-    [SerializeField, Tooltip("The name of the scene this object should load when triggered. ")] private string nextLevelName = null;
+    [SerializeField, Tooltip("The name of the scene this object should load when triggered. ")] private string nextLevelName;
 
     Matt_PlayerMovement player;
 

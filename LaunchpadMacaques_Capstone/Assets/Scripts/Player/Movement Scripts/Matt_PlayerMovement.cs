@@ -9,28 +9,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.InputSystem;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
     #region References
-    [SerializeField, Tooltip("The text element that displays the current gravity. ")] TextMeshProUGUI currentGravityText = null;
+    [SerializeField, Tooltip("The text element that displays the current gravity. ")] TextMeshProUGUI currentGravityText;
     private GrapplingGun grappleGunReference;
     private CollectibleController collectibleController;
-    private NarrativeTriggerHandler narrativeTriggerReference;
+    private List<NarrativeTriggerHandler> narrativeTriggerReferences;
     #endregion
 
     #region Player Camera Variables
     [Header("Player Transform Assignables")]
-    [SerializeField, Tooltip("The transform of the player's camera. ")] private Transform playerCam = null;
-    [SerializeField, Tooltip("The transform of the player's orientation ")] private Transform orientation = null;
+    [SerializeField, Tooltip("The transform of the player's camera. ")] private Transform playerCam;
+    [SerializeField, Tooltip("The transform of the player's orientation ")] private Transform orientation;
     float m_fieldOfView = 60.0f;
     #endregion
 
     //Other
-    private Rigidbody rb = null;
+    private Rigidbody rb;
 
 
     #region Player Sensitivity
@@ -53,11 +51,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #endregion
 
-    [HideInInspector] public bool grounded = false;
-    [SerializeField, Tooltip("The layer for the ground. Anything on this layer will be considered ground. ")] private LayerMask whatIsGround = new LayerMask();
-    [SerializeField, Tooltip("The physics material that platforms should obtain if they are collided with from the side")] private PhysicMaterial frictionlessMat = null;
-    private PhysicMaterial originalMaterial = null;
-    private bool applyPhysicsMaterial = false;
+    [HideInInspector] public bool grounded;
+    [SerializeField, Tooltip("The layer for the ground. Anything on this layer will be considered ground. ")] private LayerMask whatIsGround;
+    [SerializeField, Tooltip("The physics material that platforms should obtain if they are collided with from the side")] private PhysicMaterial frictionlessMat;
+    private PhysicMaterial originalMaterial;
+    private bool applyPhysicsMaterial;
 
     [SerializeField, Tooltip("This is the max speed that the player can achieve when swinging. ")]
     private float maxVelocity = 50f;
@@ -127,7 +125,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField] private float sprintMultiplier = 1.75f;
     private bool readyToSprint = true;
     private float speedStorage;
-    [SerializeField] ParticleSystem sprintParticles = null;
+    [SerializeField] ParticleSystem sprintParticles;
     #endregion
 
     #region Dash Settings
@@ -145,12 +143,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     private bool useAddForceDash = false;
     private bool useCourtineDash = true;
 
-    [SerializeField] GameObject dashUI = null;
+    [SerializeField] GameObject dashUI;
     #endregion
 
     #region Platform Landing Settings
     [Header("Platform Landing Settings")]
-    [SerializeField, Tooltip("The tags that should be checked to cancel out player velocity when landing.")] private string[] tagsToCancelVelocity = null;
+    [SerializeField, Tooltip("The tags that should be checked to cancel out player velocity when landing.")] private string[] tagsToCancelVelocity;
     private bool notLandedAfterAirTime = false;
 
     [SerializeField, Tooltip("If enabled, player will be able to walk off of platforms for a short period of time without falling. ")] private bool enableCoyoteTime = false;
@@ -159,7 +157,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     // The game object currently on.
     private GameObject gameObjectStoodOn;
     [SerializeField, Tooltip("The Coyote Time game objects. ")] private List<GameObject> coyoteTimeObjs = new List<GameObject>(4);
-    [SerializeField] List<string> coyoteTimeTags = null;
+    [SerializeField] List<string> coyoteTimeTags;
 
     // Determines if the Coyote Time coroutine is running.
     private bool coyoteTimeStarted = false;
@@ -180,7 +178,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     [Header("Art Settings")]
     [SerializeField]
-    Animator anim = null;
+    Animator anim;
 
     private float minFOV = 60;
 
@@ -203,28 +201,28 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float x, y;
     private bool jumping = false, sprinting = false, crouching = false, canDash = false;
 
-    private PauseManager pauseManager = null;
+    private PauseManager pauseManager;
 
     ConfigJoint config;
 
-    private Vector3 latestOrientation = new Vector3();
+    private Vector3 latestOrientation;
 
-    private float deafultVelocity = 0;
+    private float deafultVelocity;
 
-    private float currentMaxFOV = 0;
+    private float currentMaxFOV;
 
     private float lastVelocity = 0;
 
-    private int lastMaxFOV = 0;
+    private int lastMaxFOV;
 
-    private float mouseX = 0;
-    private float mouseY = 0;
+    private float mouseX;
+    private float mouseY;
 
-    private MoveCamera cam = null;
+    private MoveCamera cam;
 
     private bool resetVelocity = false;
 
-    private float timeOffGround = 0;
+    private float timeOffGround;
 
     private bool dashUnlocked = false;
 
@@ -236,14 +234,14 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float stepIncreaseAmmount = .1f;
 
     [Header("Vignette Settings")]
-    [SerializeField] private Color vigneteColor = new Color();
+    [SerializeField] private Color vigneteColor;
     [SerializeField] float startingVigneteIntensity = .4f;
     [SerializeField] float maxVigneteIntensity = .6f;
     [SerializeField] float vigneteIntensityScaleAmmount = .1f;
 
-    SetPostProcessing postProcessing = null;
+    SetPostProcessing postProcessing;
 
-    Vector3 previousPlayerPositon = new Vector3();
+    Vector3 previousPlayerPositon;
 
     bool foundGround = true;
 
@@ -257,12 +255,22 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
+    public Animator Anim { get => anim; set => anim = value; }
+    public Color VigneteColor { get => vigneteColor; set => vigneteColor = value; }
+    public PhysicMaterial FrictionlessMat { get => frictionlessMat; set => frictionlessMat = value; }
+    public TextMeshProUGUI CurrentGravityText { get => currentGravityText; set => currentGravityText = value; }
+    public LayerMask WhatIsGround { get => whatIsGround; set => whatIsGround = value; }
+    public ParticleSystem SprintParticles { get => sprintParticles; set => sprintParticles = value; }
+    public Transform PlayerCam { get => playerCam; set => playerCam = value; }
+    public Transform Orientation { get => orientation; set => orientation = value; }
+    public GameObject DashUI { get => dashUI; set => dashUI = value; }
+    public string[] TagsToCancelVelocity { get => tagsToCancelVelocity; set => tagsToCancelVelocity = value; }
+    public List<string> CoyoteTimeTags { get => coyoteTimeTags; set => coyoteTimeTags = value; }
     public bool EnableCoyoteTime1 { get => enableCoyoteTime; set => enableCoyoteTime = value; }
+    public bool ResetVelocity { get => resetVelocity; set => resetVelocity = value; }
     public bool InMouseAccerlation { get => inMouseAccerlation; set => inMouseAccerlation = value; }
     public float MaxScreenShakeAmmount { get => maxScreenShakeAmmount; set => maxScreenShakeAmmount = value; }
     public float MaxVigneteIntensity { get => maxVigneteIntensity; set => maxVigneteIntensity = value; }
-    public Vector3 PreviousPlayerPositon { get => previousPlayerPositon; set => previousPlayerPositon = value; }
-    public bool ResetVelocity { get => resetVelocity; set => resetVelocity = value; }
 
     [SerializeField, Tooltip("Particle system that is used while dashing.")] private ParticleSystem _CachedSystem;
     [SerializeField, Tooltip("Amount of speedlines emitted after each dash. ")] private int emitParticles = 20;
@@ -276,7 +284,11 @@ public class Matt_PlayerMovement : MonoBehaviour
         pauseManager = FindObjectOfType<PauseManager>();
         collectibleController = FindObjectOfType<CollectibleController>();
         grappleGunReference = FindObjectOfType<GrapplingGun>();
-        narrativeTriggerReference = FindObjectOfType<NarrativeTriggerHandler>();
+        narrativeTriggerReferences = new List<NarrativeTriggerHandler>();
+        foreach(NarrativeTriggerHandler handler in FindObjectsOfType<NarrativeTriggerHandler>())
+        {
+            narrativeTriggerReferences.Add(handler);
+        }
 
         config = FindObjectOfType<ConfigJoint>();
 
@@ -338,8 +350,18 @@ public class Matt_PlayerMovement : MonoBehaviour
         CheckForCoyoteObjects();
     }
 
+    void RemapButtonClicked(InputAction actionToRebind)
+    {
+        var rebindOperation = actionToRebind
+            .PerformInteractiveRebinding().Start();
+    }
+
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+
+        }
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && Time.timeScale > 0)
         {
             if (canMove)
@@ -565,7 +587,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void DashFeedback(bool onOff)
     {
-        if (canDash)
+        if (dashUnlocked)
         {
             dashUI.SetActive(onOff);
         }
@@ -574,7 +596,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             dashUI.SetActive(false);
         }
-      
+
     }
     /// <summary>
     /// The dash that will only change the player's direction does not change their speed
@@ -714,6 +736,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         //}
 
     }
+
+   
 
     public LayerMask GetGround()
     {
@@ -971,7 +995,6 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 if (coyoteTimeTags.Contains(hit.collider.gameObject.tag))
                 {
-                    Debug.Log("Yeah");
                     bool onCoyoteTimeObj = false;
 
                     // Update the game object stood on if when player stands on a new object.
@@ -1009,11 +1032,6 @@ public class Matt_PlayerMovement : MonoBehaviour
                         //DisableCoyoteTime();
                         EnableCoyoteTime(gameObjectStoodOn);
                     }
-                }
-
-                else
-                {
-                    Debug.Log(hit.collider.gameObject.tag);
                 }
             }
             else
@@ -1138,7 +1156,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <returns></returns>
     IEnumerator FallCheck()
     {
-        if (narrativeTriggerReference == null)
+        if (narrativeTriggerReferences == null || narrativeTriggerReferences.Count <= 0)
             yield break;
 
         fallCheckRunning = true;
@@ -1153,9 +1171,12 @@ public class Matt_PlayerMovement : MonoBehaviour
             yield return null;
         }
 
-        if (airTime > narrativeTriggerReference.GetFallTime())
+        foreach (NarrativeTriggerHandler handler in narrativeTriggerReferences)
         {
-            GameEventManager.TriggerEvent("onPlayerHitGround");
+            if (airTime > handler.GetFallTime())
+            {
+                GameEventManager.TriggerEvent("onPlayerHitGround");
+            }
         }
 
         fallCheckRunning = false;
@@ -1214,10 +1235,13 @@ public class Matt_PlayerMovement : MonoBehaviour
         orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
 
         //Narrative/Dialogue Trigger LookAtObject Event
-
-        if (GetGameObjectInLineOfSight() != null)
+        foreach (NarrativeTriggerHandler handler in narrativeTriggerReferences)
         {
-            narrativeTriggerReference.ObjectInSightCheck(GetGameObjectInLineOfSight());
+            GameObject currentObj;
+            if ((currentObj = GetGameObjectInLineOfSight(handler)) != null)
+            {
+                handler.ObjectInSightCheck(currentObj);
+            }
         }
 
     }
@@ -1226,10 +1250,10 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// Helper function for use in the Narrative/Dialogue Trigger LookAtObject Event
     /// </summary>
     /// <returns>The first Gameobject found in the player's line of sight</returns>
-    GameObject GetGameObjectInLineOfSight()
+    private GameObject GetGameObjectInLineOfSight(NarrativeTriggerHandler handler)
     {
         RaycastHit hit;
-        Physics.Raycast(playerCam.position, playerCam.transform.forward, out hit, Mathf.Infinity, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore);
+        Physics.Raycast(playerCam.position, playerCam.transform.forward, out hit, handler.GetLookAtObjectCheckDistance(), ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore);
         if (hit.collider != null)
         {
             return hit.collider.gameObject;

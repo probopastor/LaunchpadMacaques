@@ -10,17 +10,17 @@ using UnityEngine;
 
 public class ParticleTrigger : MonoBehaviour
 {
-    [SerializeField, Tooltip("The particle system used for the script. ")] private ParticleSystem LandingEffect = null;
-    [SerializeField, Tooltip("Modifier to location particles spawn from. ")] private Vector3 particleLocation = new Vector3();
+    [SerializeField, Tooltip("The particle system used for the script. ")] private ParticleSystem LandingEffect;
+    [SerializeField, Tooltip("Modifier to location particles spawn from. ")] private Vector3 particleLocation;
     [SerializeField, Tooltip("How long particles last. ")] private float landingParticlesDuration = 0;
     //[SerializeField] private LayerMask particleMask;
     [SerializeField, Tooltip("Modifies speed of particles. ")] private float speedMultiplier = 0;
     [SerializeField, Tooltip("Velocity at which particles are increased to compensate for particle speed. ")] private float velocityThreshold = 0;
     [SerializeField, Tooltip("Min velocity needed for particles to appear. ")] private float minVelocityForParticles = 1f;
-    private Vector3 currentVelocity = new Vector3();
-    private GameObject landingParticlesObject = null;
+    private Vector3 currentVelocity;
+    private GameObject landingParticlesObject;
     private bool onGround = false;
-    private float absoluteVelocity = 0;
+    private float absoluteVelocity;
     private bool ready = false;
 
     // Start is called before the first frame update

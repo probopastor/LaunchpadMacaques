@@ -3,15 +3,12 @@ using FMODUnity;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-using UnityEngine.SceneManagement;
-using System;
-using UnityEngine.Events;
 
 public class MusicManager : MonoBehaviour
 {
     public static MusicManager instance;
 
-    public bool randomTracks;
+    public bool autoplay;
 
     private ScriptableEmitter curEmitter;
 
@@ -22,7 +19,6 @@ public class MusicManager : MonoBehaviour
 
     private void Awake()
     {
-        SceneManager.sceneLoaded += SwitchScene;
         this.gameObject.transform.parent = null;
         if (instance == null)
         {
@@ -30,34 +26,14 @@ public class MusicManager : MonoBehaviour
             instance = this;
             volumeFrom = 1;
             volumeTo = 0;
+
+            if (autoplay)
+            {
+                SwitchTrack("Castles");
+            }
         } else
         {
             Destroy(gameObject);
-        }
-
-        //SwitchTrack("Main");
-    }
-
-    private void SwitchScene(Scene scene, LoadSceneMode mode)
-    {
-        int buildIndex = scene.buildIndex;
-        switch (buildIndex) //These will likely change when scenes get removed.
-        {
-            case 0:
-                SwitchTrack("Main");
-                break;
-            case 1:
-                SwitchTrack("Tutorial");
-                break;
-            case 2:
-                SwitchTrack("Dungeon"); //TEMP
-                break;
-            case 3:
-                SwitchTrack("Castles"); //TEMP
-                break;
-            case 4:
-                SwitchTrack("Lab");
-                break;
         }
     }
 
@@ -99,5 +75,19 @@ public class MusicManager : MonoBehaviour
         }
 
         volumeTo = 0;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        {
+            SwitchTrack("Cursed");
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightBracket))
+        {
+            SwitchTrack("Castles");
+        }
+
     }
 }

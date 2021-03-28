@@ -24,7 +24,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The Graphics Quality Dropdown Box")] TMP_Dropdown graphicsQualityDropdown;
     [SerializeField, Tooltip("The Colorblind Mode Dropdown Box")] TMP_Dropdown colorblindModeDropdown;
     [SerializeField, Tooltip("The Bloom Toggle")] Toggle bloomToggle;
-    [SerializeField] Toggle vsyncToggle = null;
+    [SerializeField] Toggle vsyncToggle;
 
     [Header("Volume Sliders")]
     [SerializeField, Tooltip("The Dialouge Volume Slider")] Slider dialougeVolume;
@@ -37,7 +37,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Tooltip("The Mouse Sensitivity Slider")] Slider mouseSensitivity;
     [SerializeField, Tooltip("The Field of View Slider")] Toggle fovToggle;
     [SerializeField, Tooltip("The Slider to set Starting FOV Value")] Slider fovSlider;
-    [SerializeField] Toggle hoverLineToggle = null;
+    [SerializeField] Toggle hoverLineToggle;
     [SerializeField] Toggle screenShake;
 
     [Header("Settings Holder")]
@@ -70,6 +70,9 @@ public class SettingsManager : MonoBehaviour
     List<GameObject> useTransitionObjects;
 
     private SetPostProcessing postProcessing;
+    private GrapplingGun grplGun;
+
+
 
     private bool masterSet = false;
     private bool musicSet = false;
@@ -327,18 +330,21 @@ public class SettingsManager : MonoBehaviour
 
     private void InitialHoverLine()
     {
+        
         if (PlayerPrefs.HasKey("HoverLine"))
         {
             if (PlayerPrefs.GetInt("HoverLine") == 1)
             {
                 hoverLineToggle.SetIsOnWithoutNotify(true);
                 SetHoverLine(true);
+                
             }
 
             else
             {
                 hoverLineToggle.SetIsOnWithoutNotify(false);
                 SetHoverLine(false);
+                
             }
         }
 
@@ -651,17 +657,21 @@ public class SettingsManager : MonoBehaviour
             PlayerPrefs.SetInt("FullScreen", 0);
         }
     }
-
+   
     public void SetHoverLine(bool useHoverLine)
     {
+        
+
         if (useHoverLine)
-        {
+        {  
             PlayerPrefs.SetInt("HoverLine", 1);
+            
         }
 
         else
         {
             PlayerPrefs.SetInt("HoverLine", 0);
+           
         }
     }
 

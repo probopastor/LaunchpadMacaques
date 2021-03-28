@@ -14,7 +14,7 @@ public class InputTypeChangeSpriteAsset : A_InputType
     TextMeshProUGUI textBox;
     InformationPost informationPost;
 
-    [SerializeField] SpriteHandler[] sprites = null;
+    [SerializeField] SpriteHandler[] sprites;
 
 
 

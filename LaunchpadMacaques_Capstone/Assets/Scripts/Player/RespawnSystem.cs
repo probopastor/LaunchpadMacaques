@@ -8,25 +8,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FMODUnity;
 
 public class RespawnSystem : MonoBehaviour
 {
     #region Public Variables
 
     [Header("Respawn Zone Variables")]
-    [SerializeField, Tooltip("The tags that will re spawn the player if collided with. ")] private string[] respawnTags = null;
+    [SerializeField, Tooltip("The tags that will re spawn the player if collided with. ")] private string[] respawnTags;
 
-    [SerializeField, Tooltip("If true, will disable past respawn zones when a new one is activated. ")] private bool disableRespawnZonesWhenActive = false;
-    [SerializeField, Tooltip("All respawn zones in the scene. Must be in order that the player will activate them. ")] private GameObject[] respawnZones = null;
+    [SerializeField, Tooltip("If true, will disable past respawn zones when a new one is activated. ")] private bool disableRespawnZonesWhenActive;
+    [SerializeField, Tooltip("All respawn zones in the scene. Must be in order that the player will activate them. ")] private GameObject[] respawnZones;
 
     [Header("Death Effects")]
     [SerializeField] float delayBeforePlayerRespawns = 1;
-    [SerializeField, Tooltip("The particles that will play when the player is respawned. ")] private ParticleSystem[] deathParticles = null;
-    [EventRef, Tooltip("Player Death Rattle events from FMOD")]
-    public string[] deathRattles;
-    [EventRef, Tooltip("Corruption sassy lines after death from FMOD")]
-    public string[] corruptionQuips;
+    [SerializeField, Tooltip("The particles that will play when the player is respawned. ")] private ParticleSystem[] deathParticles;
     #endregion
 
     #region Private Variables
@@ -43,13 +38,18 @@ public class RespawnSystem : MonoBehaviour
 
     private GrapplePoint[] disappearingGrapplePoints;
     private DisappearingPlatform[] disappearingPlatforms;
-
+    private FallingObject[] fallingPlatforms;
+    
     ButtonTransitionManager transitionManger;
 
     Matt_PlayerMovement player;
 
     private bool deathParticlesPlaying = false;
     private bool deathInProgress = false;
+
+    [SerializeField]
+    private GrapplePoint currentGrapplePoint;
+
     #endregion
 
     #region Start Methods
@@ -71,6 +71,14 @@ public class RespawnSystem : MonoBehaviour
         }
     }
 
+    //private void Update()
+    //{
+    //    if(currentGrapplePoint != null)
+    //    {
+    //        currentGrapplePoint = gg.GetCurrentGrappledObject().GetComponent<GrapplePoint>();
+    //    }
+    //}
+
 
     /// <summary>
     /// Will find and Set this scripts private object references
@@ -80,6 +88,7 @@ public class RespawnSystem : MonoBehaviour
         gg = FindObjectOfType<GrapplingGun>();
         pushPullObjectsRef = FindObjectOfType<PushPullObjects>();
         disappearingGrapplePoints = FindObjectsOfType<GrapplePoint>();
+        fallingPlatforms = FindObjectsOfType<FallingObject>();
 
         disappearingPlatforms = FindObjectsOfType<DisappearingPlatform>();
     }
@@ -96,6 +105,15 @@ public class RespawnSystem : MonoBehaviour
                 if (!deathInProgress)
                 {
                     deathInProgress = true;
+
+                    if (currentGrapplePoint != null)
+                    {
+                        if (deathInProgress && currentGrapplePoint.isBreaking())
+                        {
+                            currentGrapplePoint.StopBreaking();
+                        }
+                    }
+
                     StopAllCoroutines();
                     StartCoroutine(KillPlayer());
                 }
@@ -178,8 +196,6 @@ public class RespawnSystem : MonoBehaviour
     {
         player.SetPlayerCanMove(false);
 
-        PlayRandom(deathRattles);
-
         // Play death particles
         if (!deathParticlesPlaying)
         {
@@ -197,6 +213,11 @@ public class RespawnSystem : MonoBehaviour
             platform.EnablePlatform();
         }
 
+        foreach(FallingObject p in fallingPlatforms)
+        {
+            p.RespawnObject();
+        }
+
         // If the player is holding an object, stop holding the object. 
         if (pushPullObjectsRef.IsGrabbing())
         {
@@ -206,12 +227,17 @@ public class RespawnSystem : MonoBehaviour
         // Stops the player from grappling
         gg.StopGrapple();
 
+        //Trigger Narrative Event for player dying
+        GameEventManager.TriggerEvent("onPlayerDeath");
+
         yield return new WaitForSeconds(delayBeforePlayerRespawns);
 
         transitionManger.RespawnPlayerTranstion();
     }
 
-
+    /// <summary>
+    /// Respawns the player at the last availible respawn position and stops nay grapples that might have been occuring.
+    /// </summary>
     public void RespawnPlayer()
     {
         this.transform.position = currentRespawnPosition;
@@ -219,10 +245,11 @@ public class RespawnSystem : MonoBehaviour
 
         gg.StopGrapple();
         deathInProgress = false;
-
-        PlayRandom(corruptionQuips);
     }
 
+    /// <summary>
+    /// Sets the player's ability to move to true.
+    /// </summary>
     public void PlayerCanMove()
     {
         player.SetPlayerCanMove(true);
@@ -262,13 +289,31 @@ public class RespawnSystem : MonoBehaviour
     {
         return deathParticlesPlaying;
     }
-
-    public void PlayRandom(string[] vs)
+/// <summary>
+/// Setter for the deathInProgress bool in case it ever needs to be changed outside of this script.
+/// </summary>
+/// <param name="value"></param>
+    public void SetDeathInProgress(bool value)
     {
-        string randEvent = vs[Random.Range(0, vs.Length)];
-        FMOD.Studio.EventInstance randInstance = RuntimeManager.CreateInstance(randEvent);
-        randInstance.start();
-        randInstance.release();
+        deathInProgress = value;
+    }
+
+    /// <summary>
+    /// Getter for the deathInProgress bool for when it needs to be referenced outside of this script.
+    /// </summary>
+    /// <returns></returns>
+    public bool GetDeathInProgress()
+    {
+        return deathInProgress;
+    }
+
+    /// <summary>
+    /// Setter function that sets currentGrapplePoint equal to whatever grapple point was last swung on.
+    /// </summary>
+    /// <param name="grapplePoint"></param>
+    public void SetCurrentGrapplePoint(GrapplePoint grapplePoint)
+    {
+        currentGrapplePoint = grapplePoint;
     }
 
 }

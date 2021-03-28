@@ -13,7 +13,7 @@ using FMODUnity;
 
 public class ActivationDoor : MonoBehaviour
 {
-    [SerializeField, Tooltip("All of the doors handled by this activation door. ")] private GameObject[] doors = null;
+    [SerializeField, Tooltip("All of the doors handled by this activation door. ")] private GameObject[] doors;
 
     [SerializeField, Tooltip("The amount of buttons that need to be triggered to activate these doors. ")] private int buttonsToActivate = 0;
     [SerializeField, Tooltip("The amount of time waited after doors are activated / deactivated before their activity status is actually set. ")] private float activationBuffer = 0f;

@@ -24,9 +24,15 @@ public class NarrativeTriggerHandler : MonoBehaviour
     public enum TriggerType { Area, Random, OnEvent };
 
     #region Events
-    public enum EventType { PlayerHitGround , TimeInLevel, LookAtObject}
+    //Unless otherwise stated, all functionality is included in this script
+    public enum EventType { PlayerHitGround /*Trigger in Matt_PlayerMovement.cs*/,
+                            TimeInLevel, 
+                            LookAtObject /*Functionality in Matt_PlayerMovement.cs*/, 
+                            PlayerDeath /*Trigger in RespawnSystem.cs*/, 
+                            LevelCompleted}
 
     UnityAction onPlayerHitGround;
+    UnityAction onPlayerDeath;
     #endregion
 
     [SerializeField, Tooltip("Contains all triggers in the scene. Each array element is a separate trigger with it's own type, " +
@@ -35,84 +41,87 @@ public class NarrativeTriggerHandler : MonoBehaviour
     
     //Editor variables
     [SerializeField]
-    private bool[] triggerSubFoldout = null;
+    private bool[] triggerSubFoldout;
     [SerializeField]
-    private string[] triggerNames = null;
+    private string[] triggerNames;
 
     //Handler Variables
     [SerializeField, Tooltip("The lower end of the interval that a random trigger can be called")]
     private float randomIntervalMin = 0;
     [SerializeField, Tooltip("The upper end of the interval that a random trigger can be called")]
     private float randomIntervalMax = 0;
+    [SerializeField, Range(0, 1), Tooltip("The percent chance to not trigger a random event when it otherwise would trigger")]
+    private float randomCancelChance = 0.25f;
     [SerializeField, Tooltip("The time (in seconds) that the player must be falling in order for the \"Player Hitting Ground\" event to trigger")]
     private float fallTime = 0;
+    [SerializeField, Tooltip("The distance that the raycast will go in front of the player to check what object they're looking at")]
+    private float lookAtObjectCheckDistance = 25f;
 
     //UI variables
     [SerializeField]
-    private GameObject canvas = null;
+    private GameObject canvas;
     [SerializeField]
-    private TMP_Text dialogueText = null;
+    private TMP_Text dialogueText;
     [SerializeField]
-    private GameObject[] nameplate = null;
+    private GameObject[] nameplate;
     [SerializeField]
-    private TMP_Text[] nameplateText = null;
+    private TMP_Text[] nameplateText;
     [SerializeField]
-    private GameObject clickToContinue = null;
+    private GameObject clickToContinue;
     [SerializeField]
-    private GameObject viewLog = null;
+    private GameObject viewLog;
 
     private bool mouseOverButton = false;
 
-    //Dialogue Options
-    [SerializeField, Range(0, 1), Tooltip("The percentage of opacity the nameplates will be when not talking")]
-    private float nameplateFadedOpacity = 0.5f;
-    [SerializeField, Tooltip("The time (in seconds) nameplates will take to change opacity")]
-    private float nameplateTransitionTime = 0.25f;
-    [SerializeField, Tooltip("The time (in seconds) between the flashing of the \"Click to continue\" prompt")]
-    float flashInterval = 0.5f;
+    private const string LAST_COMPLETED_SCENE_KEY = "NarrativeLastCompletedScene";
 
 
     [System.Serializable]
     public class Trigger
     {
         [Tooltip("The type of activation used for this Trigger")]
-        public TriggerType type = new TriggerType();
+        public TriggerType type;
 
         //Text
         [SerializeField]
-        public Dialogue dialogue = null;
+        public Dialogue dialogue;
 
         [Tooltip("Whether this Trigger can be activated multiple times (true) or only once (false)")]
-        public bool repeatable = false;
+        public bool repeatable;
 
         [Tooltip("Whether a camera movement should be associated with this trigger activation or not")]
-        public bool hasCameraMovement = false;
+        public bool hasCameraMovement;
         [Tooltip("The time (in seconds) the camera will be at the destination")]
-        public float cameraTime = 0;
+        public float cameraTime;
         [Tooltip("The point the camera will move to")]
-        public GameObject cameraPoint = null;
+        public GameObject cameraPoint;
         [Tooltip("The GameObject for the camera to look at")]
-        public GameObject cameraTarget = null;
+        public GameObject cameraTarget;
 
         public bool hasRan = false;
         public bool isRunning = false;
 
         //Only appear on TriggerType.Area
         [Tooltip("The tag of objects that will activate the Trigger when it enters the trigger area")]
-        public string triggeringTag = null;
-        public GameObject areaTrigger = null;
+        public string triggeringTag;
+        public GameObject areaTrigger;
         [Tooltip("The center of the trigger zone")]
-        public Vector3 areaCenter = new Vector3();
+        public Vector3 areaCenter;
         [Tooltip("The size of the trigger zone relative to the center")]
-        public Vector3 boxSize = new Vector3();
+        public Vector3 boxSize;
 
         //Only appear on TriggerType.OnEvent
         [Tooltip("The type of event for this trigger")]
-        public EventType eventType = new EventType();
+        public EventType eventType;
+        //Time in Level Event
         [Tooltip("The amount of time (in seconds) the player has to be in the level for this to trigger")]
         public float timeInLevelBeforeTrigger = 0;
+        //Look at Object Event
         [Tooltip("The array of objects that, when looked at, will activate this trigger")]
-        public GameObject[] triggeringObjects = null;
+        public GameObject[] triggeringObjects;
+        //Level Completed Event
+        [Tooltip("The level number, which when completed will activate this trigger")]
+        public int levelNum;
         
     }
 
@@ -120,14 +129,27 @@ public class NarrativeTriggerHandler : MonoBehaviour
     {
         onPlayerHitGround += PlayerHitGroundActivation;
         GameEventManager.StartListening("onPlayerHitGround", onPlayerHitGround);
+
+        onPlayerDeath += PlayerDeathActivation;
+        GameEventManager.StartListening("onPlayerDeath", onPlayerDeath);
+
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += TimeInLevelCountStart;
+
+        LevelCompletedEventHasBeenCompleted += UpdateLastLevelPlayerPref;
     }
 
     private void OnDisable()
     {
         GameEventManager.StopListening("onPlayerHitGround", onPlayerHitGround);
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= TimeInLevelCountStart;
         onPlayerHitGround -= PlayerHitGroundActivation;
+
+        GameEventManager.StopListening("onPlayerDeath", onPlayerDeath);
+        onPlayerDeath -= PlayerDeathActivation;
+
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= TimeInLevelCountStart;
+
+        LevelCompletedEventHasBeenCompleted -= UpdateLastLevelPlayerPref;
+        
     }
 
     private void Awake()
@@ -156,8 +178,26 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private void Start()
     {
+        //On Start of current scene, see if there was a last level that has been completed
+        int lastLevel = PlayerPrefs.GetInt(LAST_COMPLETED_SCENE_KEY, -1);
+
+        //If there was a previous level and it hasn't been marked as completed, run level completed event
+        if (lastLevel >= 0
+            && HandleSaving.instance.IsLevelComplete(System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(lastLevel))))
+        {
+            LevelCompletedActivation(lastLevel);
+        }
+        else
+        {
+            UpdateLastLevelPlayerPref();
+        }
 
         StartCoroutine(CheckForTriggerActivations());
+    }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.DeleteKey(LAST_COMPLETED_SCENE_KEY);
     }
 
     /// <summary>
@@ -184,31 +224,12 @@ public class NarrativeTriggerHandler : MonoBehaviour
             //Pick one of the triggers labeled random, at random, and trigger it when the count reaches target number
             if(RandomCheck(ref randomCount, randomTarget))
             {
-
                 randomCount = 0;
                 randomTarget = Random.Range(randomIntervalMin, randomIntervalMax);
 
-                //Find random triggers in triggers array and put them into their own list
-                List<Trigger> randomTriggers = new List<Trigger>();
-                foreach (Trigger x in triggers)
-                {
-                    if (x.type == TriggerType.Random)
-                    {
-                        randomTriggers.Add(x);
-                    }
-                }
-
-                //No random triggers found
-                if(randomTriggers.Count == 0)
-                {
-                    yield return null;
-                    continue;
-                }
-
-                int triggerToActivate = Random.Range(0, (int)randomTriggers.Count);
-
-                ActivateTrigger(randomTriggers[triggerToActivate]);
-
+                //Run chance to not say anything
+                if(Random.Range(0f, 1f) > randomCancelChance)
+                    ActivateRandomTriggerOfType(TriggerType.Random);
             }
 
 
@@ -313,99 +334,36 @@ public class NarrativeTriggerHandler : MonoBehaviour
         int lastNameplateUsed = -1;
         while ((currentLine = trigger.dialogue.NextLine()) != null)
         {
-            //If break, turn nameplates off
-            if(currentLine.GetLineType() == Dialogue.Line.Type.Break)
-            {
-                nameplate[0].SetActive(false);
-                nameplate[1].SetActive(false);
-                lastNameplateUsed = -1;
-                continue;
-            }
-            //If character line, push character line to log
-            else if(currentLine.GetLineType() == Dialogue.Line.Type.CharacterLine)
-            {
-                Log.instance.PushToLog(currentLine);
-            }
-            //If narration line, push text to log as action text
-            else if(currentLine.GetLineType() == Dialogue.Line.Type.NarrationLine)
-            {
-                Log.instance.PushToLog(currentLine.text);
-            }
-
             //Start adding lines to the log
+            Log.instance.PushToLog(currentLine);
 
-
-                //Update nameplates
-                //No nameplate yet, activate the first one
-                if (currentLine.GetLineType() == Dialogue.Line.Type.CharacterLine &&
-                lastNameplateUsed == -1)
+            //Update nameplates
+            //No nameplate yet
+            if(lastNameplateUsed == -1)
             {
                 nameplate[0].SetActive(true);
                 nameplateText[0].text = currentLine.character.characterName;
-                nameplateText[0].color = currentLine.character.textColor;
-                //Initialize to transparent
-                nameplate[0].GetComponent<CanvasRenderer>().SetAlpha(0);
-                nameplateText[0].GetComponent<CanvasRenderer>().SetAlpha(0);
-                yield return null;
-                //Transition to opaque
-                nameplate[0].GetComponent<Image>().CrossFadeAlpha(1, nameplateTransitionTime, true);
-                nameplateText[0].CrossFadeAlpha(1, nameplateTransitionTime, true);
-                
                 lastNameplateUsed = 0;
             }
-            //New character talking, switch which nameplate is highlighted
-            else if(currentLine.GetLineType() == Dialogue.Line.Type.CharacterLine && 
-                currentLine.character.characterName != nameplateText[lastNameplateUsed].text)
+            //New character introduced
+            else if(currentLine.character.characterName != nameplateText[lastNameplateUsed].text)
             {
-                //New nameplate is either 0 or 1, opposite of whatever the last nameplate was
                 int newNameplate = (lastNameplateUsed == 0 ? 1 : 0);
 
-                //Activate and set new nameplate to 0 opacity
+                //Fade new nameplate in
                 if (!nameplate[newNameplate].activeSelf)
-                {
                     nameplate[newNameplate].SetActive(true);
-                    //Initialize to 0 opacity
-                    nameplate[newNameplate].GetComponent<CanvasRenderer>().SetAlpha(0);
-                    nameplateText[newNameplate].GetComponent<CanvasRenderer>().SetAlpha(0);
-                    nameplateText[newNameplate].color = currentLine.character.textColor;
-                    yield return null;
-                }
                 nameplateText[newNameplate].text = currentLine.character.characterName;
 
-                //Fade new in
-                nameplate[newNameplate].GetComponent<Image>().CrossFadeAlpha(1, nameplateTransitionTime, true);
-                nameplateText[newNameplate].CrossFadeAlpha(1, nameplateTransitionTime, true);
+                nameplate[newNameplate].GetComponent<Image>().CrossFadeAlpha(1, 0.25f, true);
+                nameplateText[newNameplate].CrossFadeAlpha(1, 0.25f, true);
 
                 //Fade old out
-                nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
-                nameplateText[lastNameplateUsed].CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
+                nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeAlpha(0.5f, 0.25f, true);
+                nameplateText[lastNameplateUsed].CrossFadeAlpha(0.5f, 0.25f, true);
 
                 lastNameplateUsed = newNameplate;
 
-            }
-            //Narration Line
-            else if(currentLine.GetLineType() == Dialogue.Line.Type.NarrationLine)
-            {
-                if (nameplate[0].activeSelf)
-                {
-                    nameplate[0].GetComponent<Image>().CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
-                    nameplateText[0].CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
-                }
-                if (nameplate[1].activeSelf)
-                {
-                    nameplate[1].GetComponent<Image>().CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
-                    nameplateText[1].CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
-                }
-            }
-            //Line being said by a character, make sure nameplate is there where it should be
-            else
-            {
-                if (nameplate[lastNameplateUsed].activeSelf == false)
-                {
-                    nameplate[lastNameplateUsed].SetActive(true);
-                }
-                    nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeAlpha(1f, nameplateTransitionTime, true);
-                    nameplateText[lastNameplateUsed].CrossFadeAlpha(1f, nameplateTransitionTime, true);
             }
 
             //Run text effects and apply them to the dialogue window
@@ -536,6 +494,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
 
     bool isPanning = false;
+    /// <summary>
+    /// Controls the panning of the camera based on a trigger with camera options
+    /// </summary>
+    /// <param name="triggerWithCamInfo">The Trigger instance with camera options</param>
+    /// <returns></returns>
     private IEnumerator PanCamera(Trigger triggerWithCamInfo)
     {
         isPanning = true;
@@ -553,7 +516,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
         isPanning = false;
     }
 
+    float flashInterval = 0.5f;
     bool shouldFlash = false;
+    //Controls the flashing of a GameObject
     private IEnumerator Flash(GameObject objectToFlash)
     {
         shouldFlash = true;
@@ -571,42 +536,145 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
-    #region PlayerHitGround Event
     /// <summary>
-    /// The function that will be called when the player hits the ground, picks one random trigger out of all the PlayerHitGround Triggers and activates it
+    /// Activates a random Trigger out of all the triggers of TriggerType type
     /// </summary>
-    private void PlayerHitGroundActivation()
+    /// <param name="type">The TriggerType to filter for</param>
+    private void ActivateRandomTriggerOfType(TriggerType type)
     {
-        //Filter triggers to locate only those that are OnEvent Triggers and are the type of event that activates when the player hits the ground
+        //Filter triggers to locate only those that are of the specified type
         List<Trigger> filteredList = new List<Trigger>();
         Trigger currentTrigger;
-        for(int i = 0; i < triggers.Length; i++)
+        for (int i = 0; i < triggers.Length; i++)
         {
             currentTrigger = triggers[i];
-            if(currentTrigger.type == TriggerType.OnEvent && currentTrigger.eventType == EventType.PlayerHitGround)
+            if (currentTrigger.type == type)
             {
                 filteredList.Add(currentTrigger);
             }
         }
 
-        //No PlayerHitGround Triggers found :(
-        if(filteredList.Count <= 0)
+        //No Matching Triggers found :(
+        if (filteredList.Count <= 0)
+            return;
+
+        //Pick a random one out of the list to activate
+        currentTrigger = filteredList[Random.Range(0, filteredList.Count)];
+        ActivateTrigger(currentTrigger);
+    }
+
+    /// <summary>
+    /// Activates a random Trigger out of all the triggers of TriggerType.OnEvent and EventType eventType 
+    /// </summary>
+    /// <param name="eventType">The type of event to filter for</param>
+    private void ActivateRandomTriggerOfType(EventType eventType)
+    {
+        //Filter triggers to locate only those that are OnEvent Triggers and are the type of event
+        List<Trigger> filteredList = new List<Trigger>();
+        Trigger currentTrigger;
+        for (int i = 0; i < triggers.Length; i++)
+        {
+            currentTrigger = triggers[i];
+            if (currentTrigger.type == TriggerType.OnEvent && currentTrigger.eventType == eventType )
+            {
+                filteredList.Add(currentTrigger);
+            }
+        }
+
+        //No Matching Triggers found :(
+        if (filteredList.Count <= 0)
+            return;
+
+        //Pick a random one out of the list to activate
+        currentTrigger = filteredList[Random.Range(0, filteredList.Count)];
+        ActivateTrigger(currentTrigger);
+    }
+
+    #region LevelCompleted Event
+    private delegate void LevelCompletedDelegate();
+    private event LevelCompletedDelegate LevelCompletedEventHasBeenCompleted;
+    
+    /// <summary>
+    /// Calls the Coroutine to activate a Level Completed Trigger
+    /// </summary>
+    /// <param name="buildIndex"></param>
+    private void LevelCompletedActivation(int buildIndex)
+    {
+        StartCoroutine(PauseBeforeLevelCompletedRun(buildIndex));
+    }
+
+    /// <summary>
+    /// Waits a specified amount of time before activating a random trigger that matches the LevelComplete of the given levelIndex
+    /// </summary>
+    /// <param name="levelIndex">The build index of the previous level that was just completed</param>
+    /// <returns></returns>
+    private IEnumerator PauseBeforeLevelCompletedRun(int levelIndex)
+    {
+        yield return new WaitForSecondsRealtime(2f);
+
+        ActivateRandomLevelCompleteTrigger(levelIndex);
+    }
+
+    /// <summary>
+    /// Activates a random Trigger with EventType.LevelCompleted that matches the given build index levelIndex
+    /// </summary>
+    /// <param name="levelIndex">The build index of the previous level that was just completed</param>
+    private void ActivateRandomLevelCompleteTrigger(int levelIndex)
+    {
+        //Filter triggers to locate only those that are OnEvent Triggers and are the type of event
+        List<Trigger> filteredList = new List<Trigger>();
+        Trigger currentTrigger;
+        for (int i = 0; i < triggers.Length; i++)
+        {
+            currentTrigger = triggers[i];
+            if (currentTrigger.type == TriggerType.OnEvent && currentTrigger.eventType == EventType.LevelCompleted && currentTrigger.levelNum == levelIndex)
+            {
+                filteredList.Add(currentTrigger);
+            }
+        }
+
+        //No Matching Triggers found :(
+        if (filteredList.Count <= 0)
             return;
 
         //Pick a random one out of the list to activate
         currentTrigger = filteredList[Random.Range(0, filteredList.Count)];
         ActivateTrigger(currentTrigger);
 
+        //Run event to update playerprefs with new current scene
+        LevelCompletedEventHasBeenCompleted?.Invoke();
+    }
+
+    /// <summary>
+    /// Updates the PlayerPrefs with the build index of the current scene for the next check on the next level load
+    /// </summary>
+    private void UpdateLastLevelPlayerPref()
+    {
+        PlayerPrefs.SetInt(LAST_COMPLETED_SCENE_KEY, UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+    }
+
+    #endregion
+
+    #region PlayerDeath Event
+    private void PlayerDeathActivation()
+    {
+        ActivateRandomTriggerOfType(EventType.PlayerDeath);
+    }
+    #endregion
+
+    #region PlayerHitGround Event
+    /// <summary>
+    /// The function that will be called when the player hits the ground, picks one random trigger out of all the PlayerHitGround Triggers and activates it
+    /// </summary>
+    private void PlayerHitGroundActivation()
+    {
+        ActivateRandomTriggerOfType(EventType.PlayerHitGround);
     }
     #endregion
 
     #region TimeInLevel Event
     float timeInLevel = 0;
     Coroutine currentCount;
-
-    public bool IsPanning { get => isPanning; set => isPanning = value; }
-    public bool[] TriggerSubFoldout { get => triggerSubFoldout; set => triggerSubFoldout = value; }
-
     /// <summary>
     /// Starts counting on scene load and restarts it on changing scenes, used for triggers that activate a set amount of time after the player is in the scene
     /// </summary>
@@ -675,22 +743,24 @@ public class NarrativeTriggerHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns if the mouse is over the "View Log" button. Used to make sure text doesn't proceed when player is clicking the log button
+    /// Getter function for whether the mouse is over the "View Log" button of the Dialogue
     /// </summary>
-    /// <returns>True if mouse is over button, false if not</returns>
+    /// <returns></returns>
     public bool GetMouseOverButton()
     {
         return mouseOverButton;
     }
 
     /// <summary>
-    /// Marks whether the mouse is over the "View Log" button is moused over or not
+    /// Is called by a button to reflect whether the mouse is actually over a button
     /// </summary>
-    /// <param name="mouseOverButton">Whether its true or false</param>
+    /// <param name="mouseOverButton">The new state of whether the mouse is over a button</param>
     public void SetMouseOverButton(bool mouseOverButton)
     {
         this.mouseOverButton = mouseOverButton;
     }
-    #endregion
 
+    public float GetLookAtObjectCheckDistance() { return lookAtObjectCheckDistance; }
+    public void SetLookAtObjectCheckDistance(float newDistance) { lookAtObjectCheckDistance = newDistance; }
+    #endregion
 }

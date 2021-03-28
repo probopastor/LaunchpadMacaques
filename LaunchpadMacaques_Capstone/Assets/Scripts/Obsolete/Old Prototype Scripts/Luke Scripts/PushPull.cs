@@ -13,10 +13,10 @@ public class PushPull : MonoBehaviour
     private Camera _camera;
     
     [SerializeField]
-    private GameObject pullPos = null;
+    private GameObject pullPos;
     
     [SerializeField]
-    private GameObject pushParticle = null;
+    private GameObject pushParticle;
     private ParticleSystem _pullParticle;
     [SerializeField]
     private float startPullParticleSpeed = 5;
@@ -32,12 +32,12 @@ public class PushPull : MonoBehaviour
     private float pushMaxDistance = 5f;
 
     [SerializeField]
-    private Image crossHairUI = null;
+    private Image crossHairUI;
     [SerializeField]
     private List<Sprite> crossHairSprites = new List<Sprite>();
 
     [SerializeField]
-    private CinemachineVirtualCamera playerCam = null;
+    private CinemachineVirtualCamera playerCam;
     private float _startCamFOV = 60;
     [SerializeField]
     private float pullCamFov = 90;
