@@ -61,7 +61,9 @@ public class MusicManager : MonoBehaviour
             case 4:
                 SwitchTrack("Lab");
                 break;
+
         }
+        if (buildIndex > 4) SwitchTrack("Main");
     }
 
     public void SwitchTrack(string trackName)
