@@ -22,7 +22,7 @@ public class MusicManager : MonoBehaviour
 
     private void Awake()
     {
-        SceneManager.sceneLoaded += SwitchScene;
+        
         this.gameObject.transform.parent = null;
         if (instance == null)
         {
@@ -30,11 +30,14 @@ public class MusicManager : MonoBehaviour
             instance = this;
             volumeFrom = 1;
             volumeTo = 0;
-        } else
-        {
-            Destroy(gameObject);
-        }
+            SceneManager.sceneLoaded += SwitchScene;
 
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+        
         //SwitchTrack("Main");
     }
 
@@ -63,7 +66,7 @@ public class MusicManager : MonoBehaviour
 
     public void SwitchTrack(string trackName)
     {
-        StopAllCoroutines();
+        instance.StopAllCoroutines();
 
         if (curEmitter != null)
         {
@@ -81,11 +84,12 @@ public class MusicManager : MonoBehaviour
         {
             emitter.emitter.SetParameter("Volume", volumeFrom);
             yield return new WaitForFixedUpdate();
-            volumeFrom -= 0.01f;
+            volumeFrom -= 0.1f;
         }
 
         emitter.emitter.Stop();
         volumeFrom = 1;
+        yield return new WaitForFixedUpdate();
     }
 
     public IEnumerator FadeIn(ScriptableEmitter emitter)
@@ -95,9 +99,10 @@ public class MusicManager : MonoBehaviour
         {
             emitter.emitter.SetParameter("Volume", volumeTo);
             yield return new WaitForFixedUpdate();
-            volumeTo += 0.01f;
+            volumeTo += 0.05f;
         }
 
         volumeTo = 0;
+        yield return new WaitForFixedUpdate();
     }
 }

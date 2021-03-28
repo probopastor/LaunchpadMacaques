@@ -5812,15 +5812,28 @@ MonoBehaviour:
   grapplingGravity: -9.81
   grapplingResetGravity: -78.48
   sprintMultiplier: 1.75
+  sprintParticles: {fileID: 0}
   courtineDashAmmount: 1000
   dashLength: 0.05
   dashCooldown: 1.5
+  dashUI: {fileID: 0}
+  tagsToCancelVelocity: []
+  enableCoyoteTime: 0
+  coyoteTimeDuration: 1
+  coyoteTimeObjs: []
+  coyoteTimeTags: []
   minVelocityForScreenShake: 5
   startingScreenShakeAmmount: 5
   shakeAmmountVelocityScaling: 0.2
   maxScreenShakeAmmount: 80
   screenShakeLength: 0.1
   anim: {fileID: 2125406432066585191}
+  distanceXZ: 5
+  distanceToCheckDown: 5
+  vigneteColor: {r: 0, g: 0, b: 0, a: 0}
+  startingVigneteIntensity: 0.4
+  maxVigneteIntensity: 0.6
+  vigneteIntensityScaleAmmount: 0.1
   _CachedSystem: {fileID: 4904157833975051812}
   emitParticles: 30
 --- !u!114 &7880684068815890855
@@ -5842,6 +5855,11 @@ MonoBehaviour:
   landing: event:/Landing
   jumping: event:/Jump Start
   footsteps: event:/Footsteps
+  painGrunts:
+  - event:/Pain/Pain 1
+  - event:/Pain/Pain 2
+  - event:/Pain/Pain 3
+  - event:/Empty Event
   swingingEmitter: {fileID: 7880684068815890848}
 --- !u!114 &7880684068815890848
 MonoBehaviour:
@@ -5880,6 +5898,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnTags:
   - KillZone
+  disableRespawnZonesWhenActive: 0
+  respawnZones: []
+  delayBeforePlayerRespawns: 1
+  deathParticles: []
+  deathRattles: []
+  corruptionQuips: []
 --- !u!114 &7709234657013800401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6223,11 +6247,6 @@ MonoBehaviour:
   maxPullVelocity: 80
   pullLength: 0.5
   minDistanceFromObject: 5
-  increaseAmmount: 5
-  minStartingVelocity: 25
-  mouseWheelSensitivity: 1
-  maxGrapples: 10
-  useMaxGrapples: 1
   sphereRadius: 4
   neededVelocityForAutoAim: 4
   groundCheckDistance: 5
@@ -6238,6 +6257,7 @@ MonoBehaviour:
   roundingRange: 0.15
   anim: {fileID: 2125406432066585191}
   grappleStart: event:/Grapple
+  grappleGrunts: []
   grappleActive: event:/Grappling
   grappleEnd: event:/Grapple Break
   grapplingEmitter: {fileID: 2613442028990230150}
@@ -6443,6 +6463,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4369990813942071747}
     m_Modifications:
+    - target: {fileID: 660604817067750048, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000061035156
+      objectReference: {fileID: 0}
     - target: {fileID: 1211353055739609895, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: m_Name
