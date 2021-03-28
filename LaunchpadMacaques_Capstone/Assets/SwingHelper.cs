@@ -155,21 +155,7 @@ public class SwingHelper : MonoBehaviour
 
     }
 
-    /// <summary>
-    /// Will check if the changed direction will put player in correct swing angle
-    /// </summary>
-    public void UsedDirectionChange()
-    {
-        float angle = DegreesBetweenObjects(orientation.gameObject, grapplingGun.GetCurrentGrappledObject());
-        if((angle > 0) && Mathf.Abs(angle) > (minCheckAngle - 5) && Mathf.Abs(angle) < (maxCheckAngle + 5))
-        {
-            StopAllCoroutines();
-            dirToTargert = Vector3.zero;
-            isFixing = false;
-            checking = false;
-        }
 
-    }
 
 
     /// <summary>
@@ -190,13 +176,40 @@ public class SwingHelper : MonoBehaviour
         return angleRad * Mathf.Rad2Deg;
     }
 
+
+    #region Public Methods
+    /// <summary>
+    /// Returns the direction towards the target on the X and Z
+    /// </summary>
+    /// <returns></returns>
     public Vector3 GetDirectionToTarget()
     {
         return dirToTargert;
     }
 
+    /// <summary>
+    /// Get the intensity at which the players grapple should be fixed
+    /// </summary>
+    /// <returns></returns>
     public float GetDirectionChangeIntensity()
     {
         return directionChangeIntensity;
     }
+
+    /// <summary>
+    /// Will check if the changed direction will put player in correct swing angle
+    /// </summary>
+    public void UsedDirectionChange()
+    {
+        float angle = DegreesBetweenObjects(orientation.gameObject, grapplingGun.GetCurrentGrappledObject());
+        if ((angle > 0) && Mathf.Abs(angle) > (minCheckAngle - 5) && Mathf.Abs(angle) < (maxCheckAngle + 5))
+        {
+            StopAllCoroutines();
+            dirToTargert = Vector3.zero;
+            isFixing = false;
+            checking = false;
+        }
+
+    }
+    #endregion
 }
