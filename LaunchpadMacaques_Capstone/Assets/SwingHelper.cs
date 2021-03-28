@@ -148,7 +148,7 @@ public class SwingHelper : MonoBehaviour
       
             }
 
-
+            Debug.Log("Fixing");
             yield return null;
         }
 
@@ -202,7 +202,7 @@ public class SwingHelper : MonoBehaviour
     public void UsedDirectionChange()
     {
         float angle = DegreesBetweenObjects(orientation.gameObject, grapplingGun.GetCurrentGrappledObject());
-        if ((angle > 0) && Mathf.Abs(angle) > (minCheckAngle - 5) && Mathf.Abs(angle) < (maxCheckAngle + 5))
+        if ((angle > 0) && Mathf.Abs(angle) > (minCheckAngle - 10) && Mathf.Abs(angle) < (maxCheckAngle + 10))
         {
             StopAllCoroutines();
             dirToTargert = Vector3.zero;
