@@ -960,26 +960,23 @@ public class Matt_PlayerMovement : MonoBehaviour
                 // If the force can be applied, add a force in the direction of the player's orientation.
                 if (grappleGunReference.GetCanApplyForce())
                 {
-                    rb.AddForce(((orientation.transform.forward * 2 *grappleGunReference.GetSwingSpeed()) + 
-                        (swingHelper.GetDirectionToTarget() * (swingHelper.GetDirectionChangeIntensity() * grappleGunReference.GetSwingSpeed())))  * Time.deltaTime);
-                    if(swingHelper.GetDirectionToTarget() != Vector3.zero)
+                    if (!swingHelper.StuckHorizontal())
                     {
+                        rb.AddForce(((orientation.transform.forward * 2 * grappleGunReference.GetSwingSpeed()) +
+                             (swingHelper.GetDirectionToTarget() * (swingHelper.GetDirectionChangeIntensity() * grappleGunReference.GetSwingSpeed()))) * Time.deltaTime);
+                        if (swingHelper.GetDirectionToTarget() != Vector3.zero)
+                        {
+                            swingHelper.UsedDirectionChange();
+                        }
+                    }
+
+                    else
+                    {
+                        rb.AddForce(swingHelper.GetDirectionToTarget() * (swingHelper.GetDirectionChangeIntensity() * grappleGunReference.GetSwingSpeed()) * Time.deltaTime);
                         swingHelper.UsedDirectionChange();
                     }
-                    latestOrientation = orientation.transform.forward;
                 }
-            }
-            // If the swing lock is enabled and the player is grappling, apply force to the player in the most recent orientation they were facing.
-            else if (grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
-            {
-                if (grappleGunReference.GetCanApplyForce())
-                {
-                    if (latestOrientation != null)
-                    {
-                        rb.velocity = Vector3.zero;
-                        rb.AddForce(latestOrientation * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
-                    }
-                }
+
             }
         }
         else

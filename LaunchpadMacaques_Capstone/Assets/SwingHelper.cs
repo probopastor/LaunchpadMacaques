@@ -34,6 +34,10 @@ public class SwingHelper : MonoBehaviour
     private bool isFixing = false;
 
     private Vector3 dirToTargert = Vector3.zero;
+
+    private bool stuckHorizontal = false;
+
+    private float tempIntesnity;
     // Start is called before the first frame update
 
     private void Awake()
@@ -94,13 +98,16 @@ public class SwingHelper : MonoBehaviour
     /// </summary>
     public void ResetVariables()
     {
+        StopAllCoroutines();
+        tempIntesnity = directionChangeIntensity;
         checking = false;
         correctAngleInt = 2;
         hitAngle = false;
         loop = 0;
         dirToTargert = Vector3.zero;
         isFixing = false;
-        StopAllCoroutines();
+        stuckHorizontal = false;
+
     }
 
 
@@ -132,27 +139,90 @@ public class SwingHelper : MonoBehaviour
         checking = true;
         yield return new WaitForSeconds(timeBeforeFixing);
         StartCoroutine(FixDirection());
+        StartCoroutine(CheckForStuckHorizontal());
         checking = false;
     }
 
     IEnumerator FixDirection()
     {
+        float currentTime = 0;
         while (true)
         {
             if (grapplingGun.GetCurrentGrappledObject() != null)
             {
                 var temp = (grapplingGun.GetCurrentGrappledObject().transform.position - orientation.transform.position);
                 temp.y = 0;
+
+                var x = orientation.transform.forward.x;
+                var z = orientation.transform.forward.z;
+
+
+                if(!stuckHorizontal)
+                {
+                    if (Mathf.Abs(x) > Mathf.Abs(z))
+                    {
+                        temp.x = 0;
+                    }
+
+                    else
+                    {
+                        temp.z = 0;
+                    }
+                }
+
+                else
+                {
+                    tempIntesnity = 1;
+
+                    if (Mathf.Abs(x) > Mathf.Abs(z))
+                    {
+                        temp.z = 0;
+                    }
+
+                    else
+                    {
+                        temp.x = 0;
+                    }
+
+
+                }
+
+
+                if(currentTime > 5)
+                {
+                    stuckHorizontal = true;
+                }
+
                 dirToTargert = temp;
 
       
             }
 
+            currentTime += Time.deltaTime;
             Debug.Log("Fixing");
             yield return null;
         }
 
 
+    }
+
+    IEnumerator CheckForStuckHorizontal()
+    {
+        Vector3 playerPos = orientation.transform.position;
+        while (true)
+        {
+
+            yield return new WaitForSeconds(1);
+
+            if (Mathf.Abs((playerPos.y - orientation.transform.position.y)) < 1)
+            {
+                Debug.Log(playerPos.y - orientation.transform.position.y);
+                Debug.Log("Stuck Horizontal");
+                stuckHorizontal = true;
+            }
+
+            playerPos = orientation.transform.position;
+        }
     }
 
 
@@ -193,7 +263,7 @@ public class SwingHelper : MonoBehaviour
     /// <returns></returns>
     public float GetDirectionChangeIntensity()
     {
-        return directionChangeIntensity;
+        return tempIntesnity;
     }
 
     /// <summary>
@@ -208,8 +278,15 @@ public class SwingHelper : MonoBehaviour
             dirToTargert = Vector3.zero;
             isFixing = false;
             checking = false;
+            tempIntesnity = directionChangeIntensity;
+            stuckHorizontal = false;
         }
 
+    }
+
+    public bool StuckHorizontal()
+    {
+        return stuckHorizontal;
     }
     #endregion
 }
