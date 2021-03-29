@@ -14,13 +14,17 @@ public class SwingHelper : MonoBehaviour
     private Transform orientation;
 
 
-   [SerializeField, Tooltip("The Minimun angle the players swinging needs to hit to be considered a good loop")]  private float minCheckAngle = 80;
-   [SerializeField, Tooltip("The Maximum angle the players swingings needs to hit to be considerd a good loop")] private float maxCheckAngle = 100;
+    [Header("Angle Settings")]
+    [SerializeField, Tooltip("The Minimun angle the players swinging needs to hit to be considered a good loop")] private float minCheckAngle = 80;
+    [SerializeField, Tooltip("The Maximum angle the players swingings needs to hit to be considerd a good loop")] private float maxCheckAngle = 100;
 
-   [SerializeField, Tooltip("The Ammount of time without having a good loop before game will try to fix it")] private float timeBeforeFixing = 5;
+    [SerializeField, Tooltip("The Ammount of time without having a good loop before game will try to fix it")] private float timeBeforeFixing = 5;
 
     [Range(0, 1)]
     [SerializeField, Tooltip("The intensity at which the direction change will happen")] float directionChangeIntensity = .5f;
+
+    [Min(1)]
+    [SerializeField] private int neededAmmountOfBadLoops = 3;
 
 
     private bool inNegative = false;
@@ -38,12 +42,20 @@ public class SwingHelper : MonoBehaviour
     private bool stuckHorizontal = false;
 
     private float tempIntesnity;
+
+    private Rigidbody playerRb;
+
+
+
+    private int currentAmmountOfBadLoops = 0;
     // Start is called before the first frame update
 
     private void Awake()
     {
+        Matt_PlayerMovement temp = FindObjectOfType<Matt_PlayerMovement>();
         grapplingGun = FindObjectOfType<GrapplingGun>();
-        orientation = FindObjectOfType<Matt_PlayerMovement>().GetOrientaion();
+        orientation = temp.GetOrientaion();
+        playerRb = temp.gameObject.GetComponent<Rigidbody>();
         hitAngle = false;
 
     }
@@ -55,7 +67,7 @@ public class SwingHelper : MonoBehaviour
 
         if (grapplingGun.IsGrappling())
         {
-            if (!checking &!isFixing)
+            if (!checking & !isFixing)
             {
                 StartCoroutine(NeedFixed());
             }
@@ -107,6 +119,7 @@ public class SwingHelper : MonoBehaviour
         dirToTargert = Vector3.zero;
         isFixing = false;
         stuckHorizontal = false;
+        currentAmmountOfBadLoops = 0;
 
     }
 
@@ -125,6 +138,23 @@ public class SwingHelper : MonoBehaviour
             StopAllCoroutines();
             isFixing = false;
             checking = false;
+
+            currentAmmountOfBadLoops = 0;
+        }
+
+        else
+        {
+            currentAmmountOfBadLoops += 1;
+
+            if (currentAmmountOfBadLoops >= neededAmmountOfBadLoops)
+            {
+                StopAllCoroutines();
+                isFixing = false;
+                checking = false;
+
+                StartCoroutine(FixDirection());
+                StartCoroutine(CheckForStuckHorizontal());
+            }
         }
 
 
@@ -157,45 +187,34 @@ public class SwingHelper : MonoBehaviour
                 var z = orientation.transform.forward.z;
 
 
-                if(!stuckHorizontal)
+                if (!stuckHorizontal)
                 {
-                    if (Mathf.Abs(x) > Mathf.Abs(z))
-                    {
-                        temp.x = 0;
-                    }
+                    //if (Mathf.Abs(x) > Mathf.Abs(z))
+                    //{
+                    //    temp.x = 0;
+                    //}
 
-                    else
-                    {
-                        temp.z = 0;
-                    }
+                    //else
+                    //{
+                    //    temp.z = 0;
+                    //}
                 }
 
                 else
                 {
                     tempIntesnity = 1;
 
-                    if (Mathf.Abs(x) > Mathf.Abs(z))
-                    {
-                        temp.z = 0;
-                    }
-
-                    else
-                    {
-                        temp.x = 0;
-                    }
-
-
                 }
 
 
-                if(currentTime > 5)
+                if (currentTime > 5)
                 {
                     stuckHorizontal = true;
                 }
 
                 dirToTargert = temp;
 
-      
+
             }
 
             currentTime += Time.deltaTime;
@@ -212,12 +231,10 @@ public class SwingHelper : MonoBehaviour
         while (true)
         {
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForFixedUpdate();
 
-            if (Mathf.Abs((playerPos.y - orientation.transform.position.y)) < 1)
+            if (Mathf.Abs(playerRb.velocity.y) < 5)
             {
-                Debug.Log(playerPos.y - orientation.transform.position.y);
-                Debug.Log("Stuck Horizontal");
                 stuckHorizontal = true;
             }
 
@@ -236,7 +253,7 @@ public class SwingHelper : MonoBehaviour
     /// <returns></returns>
     float DegreesBetweenObjects(GameObject thisObject, GameObject target)
     {
-        if(target == null)
+        if (target == null)
         {
             return -1;
         }
@@ -266,22 +283,31 @@ public class SwingHelper : MonoBehaviour
         return tempIntesnity;
     }
 
+
     /// <summary>
     /// Will check if the changed direction will put player in correct swing angle
     /// </summary>
     public void UsedDirectionChange()
     {
         float angle = DegreesBetweenObjects(orientation.gameObject, grapplingGun.GetCurrentGrappledObject());
+
         if ((angle > 0) && Mathf.Abs(angle) > (minCheckAngle - 10) && Mathf.Abs(angle) < (maxCheckAngle + 10))
         {
-            StopAllCoroutines();
-            dirToTargert = Vector3.zero;
-            isFixing = false;
-            checking = false;
-            tempIntesnity = directionChangeIntensity;
-            stuckHorizontal = false;
+
+            StopDirectionChange();
         }
 
+    }
+
+    private void StopDirectionChange()
+    {
+        StopAllCoroutines();
+        dirToTargert = Vector3.zero;
+        isFixing = false;
+        checking = false;
+        tempIntesnity = directionChangeIntensity;
+        stuckHorizontal = false;
+        currentAmmountOfBadLoops = neededAmmountOfBadLoops - 1;
     }
 
     public bool StuckHorizontal()
