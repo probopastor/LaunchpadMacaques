@@ -209,7 +209,9 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private float deafultVelocity;
 
-    private float currentMaxFOV;
+    private float currentMaxFOV = 0;
+    [SerializeField, Tooltip("Sets the initial max field of view for the camera")] float maxFovInitial = 0;
+    private float maxFovOnDash = 0;
 
     private float lastVelocity = 0;
 
@@ -306,6 +308,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        //Initial FOV so when player finishes dashing they go back to initial FOV set.
+        maxFovInitial = maxFOV - 10;
+        //FOV during the dash.
+        maxFovOnDash = maxFOV + 10;
+
         if (PlayerPrefs.HasKey("FovValue"))
         {
             maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
@@ -1538,6 +1545,20 @@ public class Matt_PlayerMovement : MonoBehaviour
                 //   m_fieldOfView = (int)m_fieldOfView;
             }
 
+            
+            if (canDash)
+            {
+
+                m_fieldOfView += (fovChangeRate * Time.deltaTime);
+                maxFOV = maxFovOnDash;
+            }
+            else
+            {
+
+                m_fieldOfView -= (fovChangeRate * Time.deltaTime);
+                maxFOV = maxFovInitial;
+
+            }
 
             lastVelocity = rb.velocity.magnitude;
 
