@@ -169,7 +169,8 @@ public class GrapplingGun : MonoBehaviour
     private bool drawlingLine = false;
 
 
-    private float dist;
+    private float dist = 0f;
+    private float distRef = 0f;
 
     private float maxStuckTime = 5;
     private float stuckStatusTime;
@@ -230,6 +231,15 @@ public class GrapplingGun : MonoBehaviour
     public float ExplosionPower { get => explosionPower; set => explosionPower = value; }
     public float MinDistanceFromObject { get => minDistanceFromObject; set => minDistanceFromObject = value; }
     public float ExplosionRadius { get => explosionRadius; set => explosionRadius = value; }
+    #endregion
+
+    [Header("Grapple Lock Variables")]
+    #region Grapple Lock Variables
+    [SerializeField, Tooltip("The distance object reference for grappling lock. ")] private GameObject grappleLockDistanceReference = null;
+    [SerializeField, Tooltip("The distance away from a grappling point the player will remain locked to it. ")] private float grappleLockDistance = 10f;
+    private GameObject currentGrappleLockedObject = null;
+    private bool grappleLocked = false;
+    private RaycastHit grappleLockRaycastHitRef;
     #endregion
 
     #region StartFunctions
@@ -309,7 +319,7 @@ public class GrapplingGun : MonoBehaviour
     {
         GrappleUpdateChanges();
         CheckForGrapplingThroughWall();
-
+        UpdateGrappleLockPos(currentGrappleLockedObject, distRef);
 
         if (PlayerPrefs.GetInt("HoverLine") == 1)
         {
@@ -489,25 +499,76 @@ public class GrapplingGun : MonoBehaviour
             hit = CheckSphereCast();
         }
 
-
+        // If the hit.collider is not null
         if (hit.collider != null)
         {
+            // Find the distance between the camera and the point that was hit.
             dist = Vector3.Distance(cam.position, hit.point);
 
+            // Check to make sure that there are no walls between the player and the grappling point. 
             if (!(Physics.Raycast(cam.position, cam.forward, dist, whatIsNotGrappleable)) && !pushPull.IsGrabbing())
             {
+                // If the player is not aiming at the object they are currently grappled to
                 if (grappledObj != hit.collider.gameObject)
                 {
-                    grappleRayHit = hit;
-                    return true;
-                }
+                    // If the current grapple locked object is different from the grappling point aimed at, update the current grapple locked object
+                    if(currentGrappleLockedObject != hit.collider.gameObject)
+                    {
+                        currentGrappleLockedObject = hit.collider.gameObject;
+                        grappleLocked = false;
+                    }
 
+                    // If the grapple locked status is false, set the grapple locked distance and raycast hit reference
+                    if (!grappleLocked)
+                    {
+                        grappleLocked = true;
+                        distRef = dist;
+                        grappleLockRaycastHitRef = hit;
+                    }
+                }
             }
+        }
+
+        // If grapple locked, set the grappleRayHit (which determines which object will be grappled to) to the proper object
+        if(grappleLocked)
+        {
+            grappleRayHit = grappleLockRaycastHitRef;
+            return true;
+        }
+        else
+        {
+            currentGrappleLockedObject = null;
         }
 
         return false;
     }
 
+    /// <summary>
+    /// Updates the grappling lock position.
+    /// </summary>
+    /// <param name="grappledPoint">The Game Object that the lock position should be set to. </param>
+    /// <param name="distance">The distance away the grappling point will remain locked at. </param>
+    private void UpdateGrappleLockPos(GameObject grappledPoint, float distance)
+    {
+        // Check if the grapple should actually lock
+        if (grappleLocked)
+        {
+            // Sets the grapple lock distance reference object to the position the grappling point was detected at. 
+            Ray ray = new Ray(cam.position, cam.forward);
+            grappleLockDistanceReference.transform.position = ray.GetPoint(distance);
+
+            // If the current grapple locked object isn't null
+            if (currentGrappleLockedObject != null)
+            {
+                // Check the distance between the grapple lock object and the locked grapple point.
+                if (Vector3.Distance(grappleLockDistanceReference.transform.position, currentGrappleLockedObject.transform.position) > grappleLockDistance)
+                {
+                    // If the distance is greater than the minimum grapple lock distance, set the grapple lock to false. 
+                    grappleLocked = false;
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// Will run a Ray Cast from player to max grapple distance
@@ -903,7 +964,7 @@ public class GrapplingGun : MonoBehaviour
             endGrappleInstance.start();
             endGrappleInstance.release();
 
-            if(batmanInProgress)
+            if (batmanInProgress)
             {
                 StartCoroutine(BatmanInputDelay(0.25f));
             }
