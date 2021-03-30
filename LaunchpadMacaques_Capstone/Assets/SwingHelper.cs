@@ -206,7 +206,7 @@ public class SwingHelper : MonoBehaviour
 
                 else
                 {
-                    tempIntesnity = 1;
+                   tempIntesnity = 1;
 
                 }
 
@@ -215,7 +215,6 @@ public class SwingHelper : MonoBehaviour
                 {
                     currentTime = 0;
                     playerRb.velocity = Vector3.zero;
-                    stuckHorizontal = true;
                 }
 
                 dirToTargert = temp;

@@ -970,11 +970,11 @@ public class Matt_PlayerMovement : MonoBehaviour
                         }
                     }
 
-                    else
-                    {
-                        rb.AddForce(swingHelper.GetDirectionToTarget() * (swingHelper.GetDirectionChangeIntensity() * grappleGunReference.GetSwingSpeed()) * Time.deltaTime);
-                        swingHelper.UsedDirectionChange();
-                    }
+                    //else
+                    //{
+                    //    rb.AddForce(swingHelper.GetDirectionToTarget() * (swingHelper.GetDirectionChangeIntensity() * grappleGunReference.GetSwingSpeed()) * Time.deltaTime);
+                    //    swingHelper.UsedDirectionChange();
+                    //}
                 }
 
             }
