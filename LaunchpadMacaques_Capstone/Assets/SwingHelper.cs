@@ -204,17 +204,18 @@ public class SwingHelper : MonoBehaviour
                     tempIntesnity += intensityIncreaseAmount * Time.deltaTime;
                 }
 
-                else
-                {
-                   tempIntesnity = 1;
+                //else
+                //{
+                //   tempIntesnity = 1;
 
-                }
+                //}
 
 
                 if (currentTime > 5)
                 {
                     currentTime = 0;
                     playerRb.velocity = Vector3.zero;
+                    tempIntesnity = 1;
                 }
 
                 dirToTargert = temp;

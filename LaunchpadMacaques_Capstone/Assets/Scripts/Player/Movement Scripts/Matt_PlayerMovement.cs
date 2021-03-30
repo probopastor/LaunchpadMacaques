@@ -1598,4 +1598,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         randInstance.start();
         randInstance.release();
     }
+
+    public Transform GetOrientaion()
+    {
+        return orientation;
+    }
 }
