@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using FMOD.Studio;
+using FMODUnity;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
@@ -18,6 +20,9 @@ public class Matt_PlayerMovement : MonoBehaviour
     private GrapplingGun grappleGunReference;
     private CollectibleController collectibleController;
     private List<NarrativeTriggerHandler> narrativeTriggerReferences;
+
+    [EventRef] public string dashSound;
+    [EventRef] public string[] dashQuips;
     #endregion
 
     #region Player Camera Variables
@@ -199,7 +204,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Player Input")]
 
     private float x, y;
-    private bool jumping = false, sprinting = false, crouching = false, canDash = false;
+    private bool jumping = false, sprinting = false, crouching = false;
+    public bool canDash = false;
 
     private PauseManager pauseManager;
 
@@ -209,7 +215,9 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private float deafultVelocity;
 
-    private float currentMaxFOV;
+    private float currentMaxFOV = 0;
+    [SerializeField, Tooltip("Sets the initial max field of view for the camera")] float maxFovInitial = 0;
+    private float maxFovOnDash = 0;
 
     private float lastVelocity = 0;
 
@@ -309,6 +317,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        //Initial FOV so when player finishes dashing they go back to initial FOV set.
+        maxFovInitial = maxFOV - 10;
+        //FOV during the dash.
+        maxFovOnDash = maxFOV + 10;
+
         if (PlayerPrefs.HasKey("FovValue"))
         {
             maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
@@ -552,7 +565,6 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// </summary>
     public void Dash()
     {
-
         if (!grounded && dashUnlocked)
         {
             if (grappleGunReference.IsGrappling())
@@ -562,6 +574,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
             if (canDash)
             {
+                PlayRandom(dashQuips);
+                EventInstance dashEvent = RuntimeManager.CreateInstance(dashSound);
+                dashEvent.start();
+                dashEvent.release();
+
                 anim.SetTrigger("Dash");
 
                 DashFeedback(false);
@@ -987,7 +1004,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #region Coyote Time Methods
     /// <summary>
-    /// Determines whether or not the Coyote Time objects should be enabled. 
+    /// Determines whether or not the Coyote Time objects should be enabled.
     /// </summary>
     private void CheckForCoyoteObjects()
     {
@@ -1014,7 +1031,7 @@ public class Matt_PlayerMovement : MonoBehaviour
                         }
                     }
 
-                    // Check to see if the Coyote Time object is stepped on. 
+                    // Check to see if the Coyote Time object is stepped on.
                     foreach (GameObject objs in coyoteTimeObjs)
                     {
                         if (hit.collider.gameObject.name == objs.name)
@@ -1544,6 +1561,20 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
 
 
+            if (canDash)
+            {
+
+                m_fieldOfView += (fovChangeRate * Time.deltaTime);
+                maxFOV = maxFovOnDash;
+            }
+            else
+            {
+
+                m_fieldOfView -= (fovChangeRate * Time.deltaTime);
+                maxFOV = maxFovInitial;
+
+            }
+
             lastVelocity = rb.velocity.magnitude;
 
 
@@ -1556,12 +1587,15 @@ public class Matt_PlayerMovement : MonoBehaviour
         return canMove;
     }
 
-    public Transform GetOrientaion()
+    /// <summary>
+    /// Plays a random FMOD event from an array.
+    /// </summary>
+    /// <param name="vs"></param>
+    public void PlayRandom(string[] vs)
     {
-        return orientation;
+        string randEvent = vs[Random.Range(0, vs.Length)];
+        EventInstance randInstance = RuntimeManager.CreateInstance(randEvent);
+        randInstance.start();
+        randInstance.release();
     }
-
-
 }
-
-

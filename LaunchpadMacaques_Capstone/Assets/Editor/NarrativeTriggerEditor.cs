@@ -34,12 +34,8 @@ public class NarrativeTriggerEditor : Editor
         EditorGUILayout.LabelField("Random Trigger Settings", EditorStyles.miniBoldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("randomIntervalMin"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("randomIntervalMax"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("randomCancelChance"));
-        //Player Hitting Ground Event Settings (Universal)
         EditorGUILayout.LabelField("Player Hitting Ground Settings",EditorStyles.miniBoldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("fallTime"));
-        EditorGUILayout.LabelField("Look At Object Event Settings", EditorStyles.miniBoldLabel);
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("lookAtObjectCheckDistance"));
         if (serializedObject.FindProperty("randomIntervalMin").floatValue > serializedObject.FindProperty("randomIntervalMax").floatValue)
         {
             EditorGUILayout.HelpBox("randomIntervalMax must be bigger than or equal to randomIntervalMin", MessageType.Warning);
@@ -232,29 +228,14 @@ public class NarrativeTriggerEditor : Editor
                         SerializedProperty eventType = element.FindPropertyRelative("eventType");
                         EditorGUILayout.PropertyField(eventType);
                         //Time in Level
-                        if (eventType.enumValueIndex == (int) NarrativeTriggerHandler.EventType.TimeInLevel)
+                        if (eventType.enumValueIndex == 1)
                         {
                             EditorGUILayout.PropertyField(element.FindPropertyRelative("timeInLevelBeforeTrigger"));
                         }
                         //LookAtObject
-                        else if(eventType.enumValueIndex == (int) NarrativeTriggerHandler.EventType.LookAtObject)
+                        else if(eventType.enumValueIndex == 2)
                         {
                             EditorGUILayout.PropertyField(element.FindPropertyRelative("triggeringObjects"));
-                        }
-                        //LevelCompleted
-                        else if(eventType.enumValueIndex == (int) NarrativeTriggerHandler.EventType.LevelCompleted)
-                        {
-                            string[] levelNames = new string[UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings];
-                            for(int j = 0; j < UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings; j++)
-                            {
-                                levelNames[j] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(j));
-                            }
-
-                            EditorGUILayout.BeginHorizontal();
-                            EditorGUILayout.LabelField(new GUIContent("Level", "The level which, upon completion, will activate this trigger"));
-                            element.FindPropertyRelative("levelNum").intValue = EditorGUILayout.Popup(element.FindPropertyRelative("levelNum").intValue, levelNames);
-                            Debug.Log("New value of level num is " + element.FindPropertyRelative("levelNum").intValue);
-                            EditorGUILayout.EndHorizontal();
                         }
                     }
 

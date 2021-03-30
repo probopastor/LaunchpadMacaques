@@ -12755,18 +12755,18 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 654430525}
+  - {fileID: 220031430}
   - {fileID: 991889015}
+  - {fileID: 1102588076}
   - {fileID: 1556630569}
   - {fileID: 20075467}
+  - {fileID: 1830146586}
   - {fileID: 673468748}
-  - {fileID: 1102588076}
+  - {fileID: 361678048}
+  - {fileID: 1495924135}
   - {fileID: 653713105}
   - {fileID: 789473791}
   - {fileID: 1122225084}
-  - {fileID: 220031430}
-  - {fileID: 1830146586}
-  - {fileID: 361678048}
-  - {fileID: 1495924135}
   m_Father: {fileID: 842463150}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -25490,6 +25490,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3205568006631949046, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -21.300049
+      objectReference: {fileID: 0}
     - target: {fileID: 3706929032331221428, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_Enabled
@@ -30094,8 +30099,7 @@ MonoBehaviour:
   doorMovementDirection: {x: 0, y: 0, z: 0}
   doorMoveSpeed: 0.005
   rotateOnActivation: 1
-  doorRotationAngles:
-  - {x: -89.98, y: -90, z: 0}
+  doorRotAngles: []
 --- !u!33 &4636375811245595247
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -30576,8 +30580,7 @@ MonoBehaviour:
   doorMovementDirection: {x: 0, y: 0, z: 0}
   doorMoveSpeed: 0.005
   rotateOnActivation: 1
-  doorRotationAngles:
-  - {x: -89.98, y: 90, z: 0}
+  doorRotAngles: []
 --- !u!114 &7518227434397580816
 MonoBehaviour:
   m_ObjectHideFlags: 0
