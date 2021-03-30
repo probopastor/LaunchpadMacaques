@@ -7,7 +7,7 @@ using UnityEngine.Rendering.HighDefinition;
 
 public class SetPostProcessing : MonoBehaviour
 {
-    [SerializeField] Volume cameraVolume;
+    [SerializeField] Volume cameraVolume = null;
 
     string cameraVolumeName;
 
@@ -34,6 +34,7 @@ public class SetPostProcessing : MonoBehaviour
     public void SetBloom()
     {
         profile = cameraVolume.profile;
+        Debug.Log(profile.components.Count);
 
         if (profile.TryGet<Bloom>(out var bloom))
         {

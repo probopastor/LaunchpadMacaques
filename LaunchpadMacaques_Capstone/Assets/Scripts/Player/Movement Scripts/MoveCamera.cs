@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class MoveCamera : MonoBehaviour
 {
-    public Transform player;
-    bool shaking;
-    private Vector3 shakeAmount;
+    public Transform player = null;
+    bool shaking = false;
+    private Vector3 shakeAmount = new Vector3();
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))

@@ -35,6 +35,9 @@ public class DetectController : MonoBehaviour
 
     private void Start()
     {
+        bool foundControllerCheck = false;
+        foundControllerCheck = foundController;
+        foundController = foundControllerCheck;
 
         if (instance == null)
         {

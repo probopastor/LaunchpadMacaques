@@ -12,8 +12,8 @@ using UnityEngine.SceneManagement;
 
 public class HandleSaving : MonoBehaviour
 {
-    [SerializeField, Tooltip("A array of levels that the player can complete")] Level[] levels;
-    [SerializeField] Ability[] abilities;
+    [SerializeField, Tooltip("A array of levels that the player can complete")] Level[] levels = null;
+    [SerializeField] Ability[] abilities = null;
     public static HandleSaving instance;
     Save_System saveSystem;
 

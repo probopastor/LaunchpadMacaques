@@ -12,7 +12,7 @@ using UnityEngine;
 public class InformationPostToggle : MonoBehaviour
 {
     #region Variables
-    [SerializeField, Tooltip("The GameObject that holds all the information posts. ")] private GameObject postHolder;
+    [SerializeField, Tooltip("The GameObject that holds all the information posts. ")] private GameObject postHolder = null;
     private bool toggle;
     #endregion
 

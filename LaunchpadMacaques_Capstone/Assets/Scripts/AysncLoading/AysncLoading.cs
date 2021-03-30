@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 
 public class AysncLoading : MonoBehaviour
 {
-    [SerializeField, Tooltip("The Name of the Next Scene ")] string nextSceneName;
+    [SerializeField, Tooltip("The Name of the Next Scene ")] string nextSceneName = null;
 
     private bool allowLoading;
     private void Start()

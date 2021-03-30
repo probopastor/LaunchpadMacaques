@@ -27,7 +27,7 @@ public class GrapplingGun : MonoBehaviour
 
     [Header("Layer Settings")]
     [SerializeField] LayerMask whatIsGrappleable;
-    [SerializeField] private LayerMask whatIsNotGrappleable;
+    [SerializeField] private LayerMask whatIsNotGrappleable = new LayerMask();
 
     [Header("Grapple Settings")]
     [SerializeField] [Tooltip("The Max distance the player can grapple form")] private float maxGrappleDistance = 100f;
@@ -40,9 +40,7 @@ public class GrapplingGun : MonoBehaviour
     {
         JustConstantVelocit, Just_Non_Constant_Velocity
     }
-
-
-
+    
     [Header("Rope Settings")]
     [SerializeField, Tooltip("The grapple length on regrapple. ")] private float ropeLength = 10;
 
@@ -101,6 +99,7 @@ public class GrapplingGun : MonoBehaviour
     [Header("Audio Clips")]
     [EventRef, SerializeField, Tooltip("Audio clip that plays when grapple is initiated.")]
     private string grappleStart;
+    [EventRef] public string[] grappleGrunts;
     [EventRef, SerializeField, Tooltip("Audio clip that plays when grapple is active.")]
     private string grappleActive;
     [EventRef, SerializeField, Tooltip("Audio clip that plays when grapple is ended.")]
@@ -108,7 +107,6 @@ public class GrapplingGun : MonoBehaviour
 
     public StudioEventEmitter grapplingEmitter;
     private PauseManager pauseManager;
-
 
     [SerializeField] LayerMask groundDecalLayer;
 
@@ -187,11 +185,7 @@ public class GrapplingGun : MonoBehaviour
 
     private bool canBatman;
 
-    private bool batmanInProgress = false;
-
     private bool passedGrapplePoint = false;
-
-    private RespawnSystem respawnSystem;
 
     #endregion
 
@@ -199,11 +193,11 @@ public class GrapplingGun : MonoBehaviour
     [Header("Grappling Shadow Settings")]
 
     [SerializeField] [Tooltip("The Decal that will appear on the ground while the player is grappling. ")] GameObject groundDecal;
-    public GameObject thisDecal;
-    public bool displayShadow = false;
+    private GameObject thisDecal;
+    private bool displayShadow = false;
 
-    [SerializeField, Tooltip("The object with the grappling shadow line renderer. ")] public GameObject grapplingLrObj;
-    public LineRenderer grapplingLr;
+    [SerializeField, Tooltip("The object with the grappling shadow line renderer. ")] private GameObject grapplingLrObj;
+    private LineRenderer grapplingLr;
 
     public GameObject GroundDecal { get => groundDecal; set => groundDecal = value; }
     public Transform EjectPoint { get => ejectPoint; set => ejectPoint = value; }
@@ -239,7 +233,6 @@ public class GrapplingGun : MonoBehaviour
 
         SetObject();
 
-        respawnSystem = player.GetComponent<RespawnSystem>();
 
         currentSwingSpeed = swingSpeed;
 
@@ -305,11 +298,7 @@ public class GrapplingGun : MonoBehaviour
         GrappleUpdateChanges();
         CheckForGrapplingThroughWall();
 
-
-        if (PlayerPrefs.GetInt("HoverLine") == 1)
-        {
-            HoverShadow();
-        }
+        HoverShadow();
 
         if (pauseManager.GetPaused() || !IsGrappling()) grapplingEmitter.Stop();
         else if (!grapplingEmitter.IsPlaying()) grapplingEmitter.Play();
@@ -421,7 +410,7 @@ public class GrapplingGun : MonoBehaviour
     #endregion
 
     #region UserInput
-
+   
 
 
     #region Handle Trigger Input
@@ -457,7 +446,6 @@ public class GrapplingGun : MonoBehaviour
     }
 
     #endregion
-
 
     #region Look For Grapple Location
     /// <summary>
@@ -598,7 +586,7 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     public void StartGrapple()
     {
-        if (CanFindGrappleLocation() && !batmanInProgress && !pulling)
+        if (CanFindGrappleLocation())
         {
             StartGrapplingSettings();
             CreateGrapplePoint();
@@ -608,15 +596,15 @@ public class GrapplingGun : MonoBehaviour
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
             beginGrappleInstance.release();
+            PlayRandom(grappleGrunts);
         }
 
     }
 
     public void StartBatManGrapple()
     {
-        if (CanFindGrappleLocation() && canBatman && !batmanInProgress && !pulling)
+        if (CanFindGrappleLocation() && canBatman)
         {
-            batmanInProgress = true;
             StartGrapplingSettings();
             BatmanGrapple();
 
@@ -626,6 +614,7 @@ public class GrapplingGun : MonoBehaviour
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
             beginGrappleInstance.release();
+
         }
     }
 
@@ -766,13 +755,12 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     private void CreateGrapplePoint()
     {
+
         currentGrappledObj = grappleRayHit.collider.gameObject;
 
         if (currentGrappledObj.GetComponent<GrapplePoint>() != null)
         {
             GrapplePoint point = currentGrappledObj.GetComponent<GrapplePoint>();
-
-            respawnSystem.SetCurrentGrapplePoint(point);
 
             if (!point.isBreaking())
             {
@@ -813,6 +801,8 @@ public class GrapplingGun : MonoBehaviour
         joint.massScale = springMass;
 
         currentGrapplePosition = hitObjectClone.transform.position;
+
+
 
         //Pinwheel
         Pinwheel pinwheel = null;
@@ -896,24 +886,8 @@ public class GrapplingGun : MonoBehaviour
             endGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             endGrappleInstance.start();
             endGrappleInstance.release();
-
-            if(batmanInProgress)
-            {
-                StartCoroutine(BatmanInputDelay(0.25f));
-            }
         }
-    }
 
-    /// <summary>
-    /// Sets batmanInProgress to be false after a period of time, to prevent player from cancelling batman with
-    /// regular swinging input. 
-    /// </summary>
-    /// <param name="delay">The time before batmanInProgress should be set to false.</param>
-    /// <returns></returns>
-    private IEnumerator BatmanInputDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        batmanInProgress = false;
     }
 
     /// <summary>
@@ -1092,6 +1066,14 @@ public class GrapplingGun : MonoBehaviour
     public float SetRopeLength(float value)
     {
         return ropeLength = value;
+    }
+
+    public void PlayRandom(string[] vs)
+    {
+        string randEvent = vs[Random.Range(0, vs.Length)];
+        EventInstance randInstance = RuntimeManager.CreateInstance(randEvent);
+        randInstance.start();
+        randInstance.release();
     }
 
     #endregion

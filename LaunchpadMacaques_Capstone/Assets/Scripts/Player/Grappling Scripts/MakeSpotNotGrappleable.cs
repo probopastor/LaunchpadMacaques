@@ -18,10 +18,10 @@ public class MakeSpotNotGrappleable : MonoBehaviour
     [SerializeField] [Tooltip("The Size of How much of the object will be made not Grappable")] float notGrappableSize = 5;
     [SerializeField] [Tooltip("The Max Size of an object for the entire object to become un Grappable")] float maxObjectSize = 13;
     [Header("Visuals")]
-    [SerializeField] [Tooltip("The Object that is spawned to make part of object not Grappable")] GameObject invisibleCorruptionSpot;
+    [SerializeField] [Tooltip("The Object that is spawned to make part of object not Grappable")] GameObject invisibleCorruptionSpot = null;
     [SerializeField] [Tooltip("The Material an object will switch to if the entire object becomes un Grappable")] Material corruptedMaterial;
 
-    [SerializeField] [Tooltip("The Prefab that creates the Decal that is placed on part of Object when it becomes un Grappable")] private GameObject decal;
+    [SerializeField] [Tooltip("The Prefab that creates the Decal that is placed on part of Object when it becomes un Grappable")] private GameObject decal = null;
     [SerializeField] [Tooltip("The Layer for objects that the player can Grapple to")] private LayerMask whatIsGrappleable;
     #endregion
 

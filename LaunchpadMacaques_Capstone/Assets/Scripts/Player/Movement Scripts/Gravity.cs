@@ -7,8 +7,8 @@ public class Gravity : MonoBehaviour
 {
     public float gravity = 1100f;
     private bool useGravity = true;
-    private float orgGravity;
-    Rigidbody rb;
+    private float orgGravity = 0;
+    Rigidbody rb = null;
 
     // Start is called before the first frame update
     void Start()

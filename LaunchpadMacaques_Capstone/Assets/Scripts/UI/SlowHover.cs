@@ -12,7 +12,7 @@ public class SlowHover : MonoBehaviour
 {
     public float hoverVary;
     [SerializeField]
-    private GameObject _childMesh;
+    private GameObject _childMesh = null;
     private float offset;
 
     // Start is called before the first frame update
