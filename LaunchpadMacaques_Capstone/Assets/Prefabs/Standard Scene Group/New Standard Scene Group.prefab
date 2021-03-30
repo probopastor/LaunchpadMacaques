@@ -780,7 +780,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 316d52a84ddc52147a4c2c4334a5a61a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoplay: 1
+  randomTracks: 0
   emitters:
   - name: Cursed
     emitter: {fileID: 785986413042473082}
@@ -1546,6 +1546,7 @@ MonoBehaviour:
   maxScreenShakeAmmount: 80
   screenShakeLength: 0.1
   anim: {fileID: 7564166262601284636}
+  maxFovInitial: 0
   distanceXZ: 5
   distanceToCheckDown: 5
   vigneteColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
@@ -1573,6 +1574,12 @@ MonoBehaviour:
   landing: event:/Landing
   jumping: event:/Jump Start
   footsteps: event:/Footsteps
+  painGrunts:
+  - event:/Pain/Pain 1
+  - event:/Pain/Pain 2
+  - event:/Pain/Pain 3
+  - event:/Pain/Pain 4
+  - event:/Empty Event
   swingingEmitter: {fileID: 1790872067108165595}
 --- !u!114 &1790872067108165595
 MonoBehaviour:
@@ -1617,6 +1624,7 @@ MonoBehaviour:
   deathParticles:
   - {fileID: 3174322086810235630}
   - {fileID: 4104758063410203579}
+  currentGrapplePoint: {fileID: 0}
 --- !u!114 &2268425337875407786
 MonoBehaviour:
   m_ObjectHideFlags: 0
