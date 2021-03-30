@@ -204,7 +204,7 @@ public class SettingsManager : MonoBehaviour
     {
 
         audioSubmenu.SetActive(false);
-        controlBindingsSubmenu.SetActive(false);
+        //controlBindingsSubmenu.SetActive(false);
         videoSubMenu.SetActive(false);
         gameplaySubMenu.SetActive(false);
         lookSettings.SetActive(false);
@@ -874,11 +874,11 @@ public class SettingsManager : MonoBehaviour
                 transitionManager.enable = optionsMenu;
                 transitionManager.disable = audioSubmenu;
             }
-            else if(controlBindingsSubmenu.activeSelf)
-            {
-                transitionManager.enable = optionsMenu;
-                transitionManager.disable = controlBindingsSubmenu;
-            }
+            //else if(controlBindingsSubmenu.activeSelf)
+            //{
+            //    transitionManager.enable = optionsMenu;
+            //    transitionManager.disable = controlBindingsSubmenu;
+            //}
 
             else if (gameplaySubMenu.activeSelf)
             {
