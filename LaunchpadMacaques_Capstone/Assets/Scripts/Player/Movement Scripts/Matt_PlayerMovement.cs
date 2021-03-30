@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using FMOD.Studio;
+using FMODUnity;
 
 public class Matt_PlayerMovement : MonoBehaviour
 {
@@ -18,6 +20,9 @@ public class Matt_PlayerMovement : MonoBehaviour
     private GrapplingGun grappleGunReference;
     private CollectibleController collectibleController;
     private List<NarrativeTriggerHandler> narrativeTriggerReferences;
+
+    [EventRef] public string dashSound;
+    [EventRef] public string[] dashQuips;
     #endregion
 
     #region Player Camera Variables
@@ -199,7 +204,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Player Input")]
 
     private float x, y;
-    private bool jumping = false, sprinting = false, crouching = false, canDash = false;
+    private bool jumping = false, sprinting = false, crouching = false;
+    public bool canDash = false;
 
     private PauseManager pauseManager;
 
@@ -555,8 +561,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// The method that is called to start the player dash
     /// </summary>
     public void Dash()
-    {
-
+    {   
         if (!grounded && dashUnlocked)
         {
             if (grappleGunReference.IsGrappling())
@@ -566,6 +571,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
             if (canDash)
             {
+                PlayRandom(dashQuips);
+                EventInstance dashEvent = RuntimeManager.CreateInstance(dashSound);
+                dashEvent.start();
+                dashEvent.release();
+
                 anim.SetTrigger("Dash");
 
                 DashFeedback(false);
@@ -1572,7 +1582,17 @@ public class Matt_PlayerMovement : MonoBehaviour
         return canMove;
     }
 
-
+    /// <summary>
+    /// Plays a random FMOD event from an array.
+    /// </summary>
+    /// <param name="vs"></param>
+    public void PlayRandom(string[] vs)
+    {
+        string randEvent = vs[Random.Range(0, vs.Length)];
+        EventInstance randInstance = RuntimeManager.CreateInstance(randEvent);
+        randInstance.start();
+        randInstance.release();
+    }
 }
 
 

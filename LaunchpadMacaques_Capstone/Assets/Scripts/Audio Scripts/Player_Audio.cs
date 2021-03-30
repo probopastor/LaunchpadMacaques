@@ -27,9 +27,11 @@ public class Player_Audio : MonoBehaviour
     private EventInstance footstepInstance;
 
     private PauseManager pauseManager;
+    private Matt_PlayerMovement playerMovement;
 
     void Start()
     {
+        playerMovement = GetComponent<Matt_PlayerMovement>();
         pauseManager = FindObjectOfType<PauseManager>();
         m_rb = GetComponent<Rigidbody>();
 

@@ -105,6 +105,8 @@ public class GrapplingGun : MonoBehaviour
     private string grappleActive;
     [EventRef, SerializeField, Tooltip("Audio clip that plays when grapple is ended.")]
     private string grappleEnd;
+    [EventRef, SerializeField, Tooltip("Audio clips for VA effort")]
+    private string[] effortGrunts;
 
     public StudioEventEmitter grapplingEmitter;
     private PauseManager pauseManager;
@@ -608,6 +610,7 @@ public class GrapplingGun : MonoBehaviour
             beginGrappleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             beginGrappleInstance.start();
             beginGrappleInstance.release();
+            PlayRandom(effortGrunts);
         }
 
     }
@@ -631,7 +634,6 @@ public class GrapplingGun : MonoBehaviour
 
     private void StartGrapplingSettings()
     {
-
         if (IsGrappling())
         {
             StopGrapple();
@@ -1110,6 +1112,17 @@ public class GrapplingGun : MonoBehaviour
         if (sm > (max * max)) return v.normalized * max;
         else if (sm < min * min) return v.normalized * min;
         return v;
+    }
+    /// <summary>
+    /// Plays a random FMOD event from an array.
+    /// </summary>
+    /// <param name="vs"></param>
+    public void PlayRandom(string[] vs)
+    {
+        string randEvent = vs[Random.Range(0, vs.Length)];
+        EventInstance randInstance = RuntimeManager.CreateInstance(randEvent);
+        randInstance.start();
+        randInstance.release();
     }
     #endregion
 
