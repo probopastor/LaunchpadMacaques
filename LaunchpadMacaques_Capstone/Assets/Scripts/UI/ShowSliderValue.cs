@@ -13,7 +13,7 @@ using TMPro;
 public class ShowSliderValue : MonoBehaviour
 {
     Slider thisSlider;
-    [SerializeField] TextMeshProUGUI sliderValueText = null;
+    [SerializeField] TextMeshProUGUI sliderValueText;
     // Start is called before the first frame update
     void Start()
     {

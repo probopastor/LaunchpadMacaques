@@ -16,23 +16,23 @@ public class CollectibleController : MonoBehaviour
 {
     #region Variables
     [Header("Text Elements")]
-    public TextMeshProUGUI totalCollectiblesText = null;
-    public TextMeshProUGUI testDisplayText = null;
-    public TextMeshProUGUI gravityText = null;
+    public TextMeshProUGUI totalCollectiblesText;
+    public TextMeshProUGUI testDisplayText;
+    public TextMeshProUGUI gravityText;
 
     [Header("Script References")]
     [Tooltip("Reference to the Pause Manager script.")]
-    private PauseManager pauseManager = null;
+    private PauseManager pauseManager;
 
     [SerializeField] [Tooltip("Reference to the Matt Player Movement script.")]
-    private Matt_PlayerMovement playerMovement = null;
+    private Matt_PlayerMovement playerMovement;
 
     [Header("Variables")]
     [SerializeField] [Tooltip("Total amount of collectibles in the level.")] 
-    private int totalCollectibles = 0; 
+    private int totalCollectibles; 
 
     [SerializeField] [Tooltip("Total amount of collected collectibles.")]
-    private int totalCollectedCollectibles = 0;
+    private int totalCollectedCollectibles;
 
     [Tooltip("Boolean used to determine if EffectTimer Coroutine is active or not.")] 
     private bool isActive = false;
@@ -47,11 +47,7 @@ public class CollectibleController : MonoBehaviour
     private float newGravity = 200f;
     private float newPlayerGravity = -4.4f;
 
-    private bool effectTimerRunning = false;
-
-    public bool GravityIsCollected { get => gravityIsCollected; set => gravityIsCollected = value; }
-
-
+    private bool effectTimerRunning;
     #endregion
 
     private void Awake()

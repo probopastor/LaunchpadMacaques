@@ -7,8 +7,8 @@ public class StartGamePanel : MonoBehaviour
 {
     Save_System save;
 
-    [SerializeField] string tutorialLevelName = null;
-    [SerializeField] string hubLevelName = null;
+    [SerializeField] string tutorialLevelName;
+    [SerializeField] string hubLevelName;
 
 
     private bool playedTutorial;

@@ -14,21 +14,19 @@ public class InformationPost : A_InputType
 {
     #region Variables
 
-    [SerializeField] private TextMeshProUGUI informationText = null;
+    [SerializeField] private TextMeshProUGUI informationText;
     [SerializeField, TextArea, Tooltip("The information that will be displayed when player is in the information post's radius. ")] private string information;
 
 
-    private bool isActive = false;
+    private bool isActive;
 
-    private bool playerInRange = false;
+    private bool playerInRange;
 
-    private NarrativeTriggerHandler narrative = null;
+    private NarrativeTriggerHandler narrative;
 
     private string interactText = "Press E";
 
-    private PlayerControlls controls = null;
-
-    public string InteractText { get => interactText; set => interactText = value; }
+    private PlayerControlls controls;
 
     #endregion
 

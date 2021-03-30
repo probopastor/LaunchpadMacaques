@@ -12,7 +12,7 @@ using TMPro;
 
 public class ExampleInputType : A_InputType
 {
-    [SerializeField] TextMeshProUGUI exampleText = null;
+    [SerializeField] TextMeshProUGUI exampleText;
     /// <summary>
     /// Method called when controller status changes
     /// </summary>

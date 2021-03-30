@@ -19,7 +19,7 @@ public class MovingPlatform : MonoBehaviour
 
     //Inspector:
     [SerializeField, Tooltip("The array Vector3 points that the platform will go to (in order)")]
-    private Vector3[] points = null;
+    private Vector3[] points;
 
     public enum MovementStyle { ConstantSpeed , ConstantTime };
     [SerializeField, Tooltip("The way the platform will move from point to point " +
@@ -45,7 +45,7 @@ public class MovingPlatform : MonoBehaviour
     private float easeDistance = 2;
 
     [SerializeField, Tooltip("The prefab for the object that will appear at the endpoints of the moving platform path")]
-    private GameObject endpointPrefab = null;
+    private GameObject endpointPrefab;
     [SerializeField, Tooltip("The scale of the endpoint model")]
     private float endpointScale = 0;
 

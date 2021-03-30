@@ -6,18 +6,18 @@ using UnityEngine.Playables;
 
 public class ConfigJoint : MonoBehaviour
 {
-    [SerializeField] private GameObject hitObject = null;
+    [SerializeField] private GameObject hitObject;
     private GameObject hitObjectClone;
 
-    private LineRenderer lr = null;
-    private Vector3 grapplePoint = new Vector3();
-    public LayerMask whatIsGrappleable = new LayerMask();
-    [SerializeField] LayerMask whatIsNotGrappleable = new LayerMask();
-    private Vector3 currentGrapplePosition = new Vector3();
-    public Transform gunTip = null, camera1 = null, player = null;
+    private LineRenderer lr;
+    private Vector3 grapplePoint;
+    public LayerMask whatIsGrappleable;
+    [SerializeField] LayerMask whatIsNotGrappleable;
+    private Vector3 currentGrapplePosition;
+    public Transform gunTip, camera1, player;
     private float maxPullDistance = 100f;
-    private ConfigurableJoint joint = null;
-    private RaycastHit grappleRayHit = new RaycastHit();
+    private ConfigurableJoint joint;
+    private RaycastHit grappleRayHit;
 
     [SerializeField] private Transform orientation;
 
@@ -64,7 +64,7 @@ public class ConfigJoint : MonoBehaviour
     [SerializeField, Tooltip("The delay (in seconds) between pushes ")]
     private float pushDelay = 1.25f;
     private float currentPushDelay = 0;
-    [SerializeField] private GameObject pushParticle = null;
+    [SerializeField] private GameObject pushParticle;
 
     [Space(10)]
 
@@ -95,12 +95,6 @@ public class ConfigJoint : MonoBehaviour
     private bool canApplyForce;
 
     JointDrive ydrive;
-
-    public SoftJointLimit JointLimit { get => jointLimit; set => jointLimit = value; }
-    public float GhostTime { get => ghostTime; set => ghostTime = value; }
-    public float MinDistanceFromObjForLaunch { get => minDistanceFromObjForLaunch; set => minDistanceFromObjForLaunch = value; }
-    public float MinTimeForLaunch { get => minTimeForLaunch; set => minTimeForLaunch = value; }
-
     void Awake()
     {
 
