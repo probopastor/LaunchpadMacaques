@@ -195,6 +195,8 @@ public class GrapplingGun : MonoBehaviour
 
     private RespawnSystem respawnSystem;
 
+    private SwingHelper swingHelper;
+
     #endregion
 
     #region Shadow & Downwards Line Renferer
@@ -233,6 +235,7 @@ public class GrapplingGun : MonoBehaviour
     #region StartFunctions
     void Awake()
     {
+        swingHelper = FindObjectOfType<SwingHelper>();
         SetTypeOfGrapple();
         if (postText)
         {
@@ -602,6 +605,7 @@ public class GrapplingGun : MonoBehaviour
     {
         if (CanFindGrappleLocation() && !batmanInProgress && !pulling)
         {
+            swingHelper.ResetVariables();
             StartGrapplingSettings();
             CreateGrapplePoint();
             playerRB.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;

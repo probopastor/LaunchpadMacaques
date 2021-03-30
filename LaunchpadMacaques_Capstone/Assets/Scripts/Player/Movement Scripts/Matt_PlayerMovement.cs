@@ -253,6 +253,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     bool foundGround = true;
 
+    private SwingHelper swingHelper;
+
     ParticleSystem system
     {
         get
@@ -285,6 +287,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Awake()
     {
+        swingHelper = FindObjectOfType<SwingHelper>();
         defaultGravity = gravity;
         deafultVelocity = maxVelocity;
         rb = GetComponent<Rigidbody>();
@@ -293,7 +296,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         collectibleController = FindObjectOfType<CollectibleController>();
         grappleGunReference = FindObjectOfType<GrapplingGun>();
         narrativeTriggerReferences = new List<NarrativeTriggerHandler>();
-        foreach(NarrativeTriggerHandler handler in FindObjectsOfType<NarrativeTriggerHandler>())
+        foreach (NarrativeTriggerHandler handler in FindObjectsOfType<NarrativeTriggerHandler>())
         {
             narrativeTriggerReferences.Add(handler);
         }
@@ -460,7 +463,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             {
                 return;
             }
-            if (Physics.Raycast(this.transform.position, (-transform.up), out RaycastHit hit,distanceToCheckDown, whatIsGround))
+            if (Physics.Raycast(this.transform.position, (-transform.up), out RaycastHit hit, distanceToCheckDown, whatIsGround))
             {
                 if (!grounded)
                 {
@@ -513,7 +516,7 @@ public class Matt_PlayerMovement : MonoBehaviour
                 if (!foundGround)
                 {
 
-                    postProcessing.SetVignete(true, vigneteColor, Mathf.Clamp(((distanceXZ - x) * vigneteIntensityScaleAmmount) 
+                    postProcessing.SetVignete(true, vigneteColor, Mathf.Clamp(((distanceXZ - x) * vigneteIntensityScaleAmmount)
                         + startingVigneteIntensity, 0, 1));
                 }
 
@@ -561,7 +564,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// The method that is called to start the player dash
     /// </summary>
     public void Dash()
-    {   
+    {
         if (!grounded && dashUnlocked)
         {
             if (grappleGunReference.IsGrappling())
@@ -754,7 +757,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     }
 
-   
+
 
     public LayerMask GetGround()
     {
@@ -974,21 +977,23 @@ public class Matt_PlayerMovement : MonoBehaviour
                 // If the force can be applied, add a force in the direction of the player's orientation.
                 if (grappleGunReference.GetCanApplyForce())
                 {
-                    rb.AddForce(orientation.transform.forward * grappleGunReference.GetSwingSpeed() * 2 * Time.deltaTime);
-                    latestOrientation = orientation.transform.forward;
-                }
-            }
-            // If the swing lock is enabled and the player is grappling, apply force to the player in the most recent orientation they were facing.
-            else if (grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
-            {
-                if (grappleGunReference.GetCanApplyForce())
-                {
-                    if (latestOrientation != null)
+                    if (!swingHelper.StuckHorizontal())
                     {
-                        rb.velocity = Vector3.zero;
-                        rb.AddForce(latestOrientation * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
+                        rb.AddForce(((orientation.transform.forward * 2 * grappleGunReference.GetSwingSpeed()) +
+                             (swingHelper.GetDirectionToTarget() * (swingHelper.GetDirectionChangeIntensity() * grappleGunReference.GetSwingSpeed()))) * Time.deltaTime);
+                        if (swingHelper.GetDirectionToTarget() != Vector3.zero)
+                        {
+                            swingHelper.UsedDirectionChange();
+                        }
                     }
+
+                    //else
+                    //{
+                    //    rb.AddForce(swingHelper.GetDirectionToTarget() * (swingHelper.GetDirectionChangeIntensity() * grappleGunReference.GetSwingSpeed()) * Time.deltaTime);
+                    //    swingHelper.UsedDirectionChange();
+                    //}
                 }
+
             }
         }
         else
@@ -999,7 +1004,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #region Coyote Time Methods
     /// <summary>
-    /// Determines whether or not the Coyote Time objects should be enabled. 
+    /// Determines whether or not the Coyote Time objects should be enabled.
     /// </summary>
     private void CheckForCoyoteObjects()
     {
@@ -1026,7 +1031,7 @@ public class Matt_PlayerMovement : MonoBehaviour
                         }
                     }
 
-                    // Check to see if the Coyote Time object is stepped on. 
+                    // Check to see if the Coyote Time object is stepped on.
                     foreach (GameObject objs in coyoteTimeObjs)
                     {
                         if (hit.collider.gameObject.name == objs.name)
@@ -1468,7 +1473,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
         }
 
-        if(cancelVelocity)
+        if (cancelVelocity)
         {
             notLandedAfterAirTime = false;
             rb.velocity = Vector3.zero;
@@ -1555,7 +1560,7 @@ public class Matt_PlayerMovement : MonoBehaviour
                 //   m_fieldOfView = (int)m_fieldOfView;
             }
 
-            
+
             if (canDash)
             {
 
@@ -1593,6 +1598,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         randInstance.start();
         randInstance.release();
     }
+
+    public Transform GetOrientaion()
+    {
+        return orientation;
+    }
 }
-
-
