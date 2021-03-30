@@ -23,6 +23,8 @@ public class SwingHelper : MonoBehaviour
     [Range(0, 1)]
     [SerializeField, Tooltip("The intensity at which the direction change will happen")] float directionChangeIntensity = .5f;
 
+    [SerializeField] float intensityIncreaseAmount = .01f;
+
     [Min(1)]
     [SerializeField] private int neededAmmountOfBadLoops = 3;
 
@@ -153,7 +155,7 @@ public class SwingHelper : MonoBehaviour
                 checking = false;
 
                 StartCoroutine(FixDirection());
-                StartCoroutine(CheckForStuckHorizontal());
+               // StartCoroutine(CheckForStuckHorizontal());
             }
         }
 
@@ -169,7 +171,7 @@ public class SwingHelper : MonoBehaviour
         checking = true;
         yield return new WaitForSeconds(timeBeforeFixing);
         StartCoroutine(FixDirection());
-        StartCoroutine(CheckForStuckHorizontal());
+        //StartCoroutine(CheckForStuckHorizontal());
         checking = false;
     }
 
@@ -198,6 +200,8 @@ public class SwingHelper : MonoBehaviour
                     //{
                     //    temp.z = 0;
                     //}
+
+                    tempIntesnity += intensityIncreaseAmount * Time.deltaTime;
                 }
 
                 else
@@ -209,6 +213,7 @@ public class SwingHelper : MonoBehaviour
 
                 if (currentTime > 5)
                 {
+                    playerRb.velocity = Vector3.zero;
                     stuckHorizontal = true;
                 }
 
@@ -225,22 +230,22 @@ public class SwingHelper : MonoBehaviour
 
     }
 
-    IEnumerator CheckForStuckHorizontal()
-    {
-        Vector3 playerPos = orientation.transform.position;
-        while (true)
-        {
+    //IEnumerator CheckForStuckHorizontal()
+    //{
+    //    Vector3 playerPos = orientation.transform.position;
+    //    while (true)
+    //    {
 
-            yield return new WaitForFixedUpdate();
+    //        yield return new WaitForFixedUpdate();
 
-            if (Mathf.Abs(playerRb.velocity.y) < 5)
-            {
-                stuckHorizontal = true;
-            }
+    //        if (Mathf.Abs(playerRb.velocity.y) < 5)
+    //        {
+    //            stuckHorizontal = true;
+    //        }
 
-            playerPos = orientation.transform.position;
-        }
-    }
+    //        playerPos = orientation.transform.position;
+    //    }
+    //}
 
 
 
