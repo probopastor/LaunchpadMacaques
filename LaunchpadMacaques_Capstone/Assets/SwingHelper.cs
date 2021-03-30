@@ -213,6 +213,7 @@ public class SwingHelper : MonoBehaviour
 
                 if (currentTime > 5)
                 {
+                    currentTime = 0;
                     playerRb.velocity = Vector3.zero;
                     stuckHorizontal = true;
                 }
