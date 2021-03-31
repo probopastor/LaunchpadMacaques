@@ -16046,8 +16046,53 @@ PrefabInstance:
     - target: {fileID: 955088586774280343, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: field of view
-      value: 78.08033
+      value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerSubFoldout.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerNames.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerNames.Array.data[0]
+      value: Trigger 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerSubFoldout.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].eventType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].timeInLevelBeforeTrigger
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].dialogue
+      value: 
+      objectReference: {fileID: 1791562861}
     - target: {fileID: 1790872067108165593, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: disableWalkingOffPlatform
@@ -16092,6 +16137,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3205568006631949046, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -21.30011
       objectReference: {fileID: 0}
     - target: {fileID: 4587646255516199491, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -16246,12 +16296,12 @@ PrefabInstance:
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -17382,6 +17432,52 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1784151384}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1791562861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c17c8a44d499b4cbc5f12bcfffed59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lines:
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 1, g: 1, b: 1, a: 1}
+    text: <typewriter>This place is amazing! There's so many books here.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: The Corruption
+      imgPath: 
+      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+    text: <typewriter>The door's locked behind us again. Why do you think she's in
+      here? This is the one place we could get into in this whole castle, so why
+      would the wizard just be waiting in here?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 1, g: 1, b: 1, a: 1}
+    text: <typewriter>We didn't have another choice. What do you say we just get
+      through here and keep trying to find the wizard?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: The Corruption
+      imgPath: 
+      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+    text: <typewriter>I don't really have much of a choice do I?</typewriter>
+    audioToPlay: 
+  pauseForDuration: 1
+  textDisplayTime: 5
 --- !u!1001 &1797025870
 PrefabInstance:
   m_ObjectHideFlags: 0
