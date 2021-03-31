@@ -75,6 +75,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private const string LAST_COMPLETED_SCENE_KEY = "NarrativeLastCompletedScene";
 
+    IEnumerator dialougeTrigger;
+    IEnumerator flash;
+
 
     [System.Serializable]
     public class Trigger
@@ -257,13 +260,15 @@ public class NarrativeTriggerHandler : MonoBehaviour
             {
                 if (!FindObjectOfType<InformationPost>().GetTutorialCanvas())
                 {
-                    StartCoroutine(RunDialogue(trigger));
+                    dialougeTrigger = RunDialogue(trigger);
+                    StartCoroutine(dialougeTrigger);
                 }
             }
 
             else
             {
-                StartCoroutine(RunDialogue(trigger));
+                dialougeTrigger = RunDialogue(trigger);
+                StartCoroutine(dialougeTrigger);
             }
   
         }
@@ -403,7 +408,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
                 //Text has finished all its effects, prompt the player to click to continue
                 clickToContinue.SetActive(true);
-                StartCoroutine(Flash(clickToContinue));
+                flash = Flash(clickToContinue);
+                StartCoroutine(flash);
 
                 //Effects are done, player must click to proceed to the next 
                 while(!Input.GetButtonDown("Fire1") || Log.instance.IsActive() || mouseOverButton)
@@ -454,6 +460,34 @@ public class NarrativeTriggerHandler : MonoBehaviour
         canvas.gameObject.SetActive(false);
 
         trigger.isRunning = false;
+    }
+
+    public void CancelDialouge()
+    {
+        if(dialougeTrigger != null)
+        {
+            StopCoroutine(dialougeTrigger);
+        }
+
+        if(flash != null)
+        {
+            StopCoroutine(flash);
+        }
+        Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        //Reset Nameplates
+        foreach (TMP_Text text in nameplateText)
+        {
+            text.text = "";
+        }
+        foreach (GameObject nameplate in nameplate)
+        {
+            nameplate.SetActive(false);
+        }
+
+        canvas.gameObject.SetActive(false);
     }
 
     /// <summary>

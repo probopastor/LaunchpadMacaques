@@ -324,7 +324,7 @@ public class GrapplingGun : MonoBehaviour
         if (PlayerPrefs.GetInt("HoverLine") == 1)
         {
             HoverShadow();
-        }
+    }
 
         if (pauseManager.GetPaused() || !IsGrappling()) grapplingEmitter.Stop();
         else if (!grapplingEmitter.IsPlaying()) grapplingEmitter.Play();
