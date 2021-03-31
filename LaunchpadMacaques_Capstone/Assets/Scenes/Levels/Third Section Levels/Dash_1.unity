@@ -39389,6 +39389,56 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1366621984}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1373338910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c17c8a44d499b4cbc5f12bcfffed59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lines:
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 1, g: 1, b: 1, a: 1}
+    text: <typewriter>This is her lab. We're bound to find something in here.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: The Corruption
+      imgPath: 
+      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+    text: <typewriter>This place looks like a disaster.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 1, g: 1, b: 1, a: 1}
+    text: <typewriter>There could be something useful in here.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: The Corruption
+      imgPath: 
+      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+    text: <typewriter>Or we could just be trapped again.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 1, g: 1, b: 1, a: 1}
+    text: <typewriter>You'll get us out of here. I know you can.</typewriter>
+    audioToPlay: 
+  pauseForDuration: 1
+  textDisplayTime: 5
 --- !u!1001 &1374153897
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54809,6 +54859,51 @@ PrefabInstance:
       propertyPath: field of view
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerSubFoldout.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerNames.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerNames.Array.data[0]
+      value: Trigger 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerSubFoldout.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].eventType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].timeInLevelBeforeTrigger
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].dialogue
+      value: 
+      objectReference: {fileID: 1373338910}
     - target: {fileID: 1790872067108165574, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -54987,12 +55082,12 @@ PrefabInstance:
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -55003,6 +55098,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 90.900566
       objectReference: {fileID: 0}
     - target: {fileID: 7840260332642151202, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
