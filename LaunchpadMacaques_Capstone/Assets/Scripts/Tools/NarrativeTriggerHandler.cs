@@ -263,6 +263,13 @@ public class NarrativeTriggerHandler : MonoBehaviour
                     dialougeTrigger = RunDialogue(trigger);
                     StartCoroutine(dialougeTrigger);
                 }
+
+                else
+                {
+                    FindObjectOfType<InformationPost>().TurnOffTutorialCanvas();
+                    dialougeTrigger = RunDialogue(trigger);
+                    StartCoroutine(dialougeTrigger);
+                }
             }
 
             else
