@@ -237,6 +237,21 @@ public class NarrativeTriggerEditor : Editor
                         {
                             EditorGUILayout.PropertyField(element.FindPropertyRelative("triggeringObjects"));
                         }
+                        //LevelCompleted
+                        else if (eventType.enumValueIndex == (int)NarrativeTriggerHandler.EventType.LevelCompleted)
+                        {
+                            string[] levelNames = new string[UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings];
+                            for (int j = 0; j < UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings; j++)
+                            {
+                                levelNames[j] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(j));
+                            }
+
+                            EditorGUILayout.BeginHorizontal();
+                            EditorGUILayout.LabelField(new GUIContent("Level", "The level which, upon completion, will activate this trigger"));
+                            element.FindPropertyRelative("levelNum").intValue = EditorGUILayout.Popup(element.FindPropertyRelative("levelNum").intValue, levelNames);
+                            Debug.Log("New value of level num is " + element.FindPropertyRelative("levelNum").intValue);
+                            EditorGUILayout.EndHorizontal();
+                        }
                     }
 
                     EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
