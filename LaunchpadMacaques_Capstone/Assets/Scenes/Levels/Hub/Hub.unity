@@ -37683,17 +37683,17 @@ PrefabInstance:
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.size
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggerSubFoldout.Array.size
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggerNames.Array.size
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
@@ -37783,13 +37783,13 @@ PrefabInstance:
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[1].type
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[1].dialogue
       value: 
-      objectReference: {fileID: 1691224547}
+      objectReference: {fileID: 903182358}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[1].triggeringTag
@@ -37838,7 +37838,7 @@ PrefabInstance:
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[1].levelNum
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
@@ -37848,7 +37848,7 @@ PrefabInstance:
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggerNames.Array.data[1]
-      value: Trigger 2
+      value: Trigger 3
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
@@ -37859,7 +37859,7 @@ PrefabInstance:
         type: 3}
       propertyPath: triggers.Array.data[2].dialogue
       value: 
-      objectReference: {fileID: 903182358}
+      objectReference: {fileID: 277045460}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[2].triggeringTag
@@ -37913,7 +37913,7 @@ PrefabInstance:
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[2].levelNum
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
@@ -37923,7 +37923,7 @@ PrefabInstance:
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggerNames.Array.data[2]
-      value: Trigger 3
+      value: Trigger 4
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
@@ -37988,7 +37988,7 @@ PrefabInstance:
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[3].levelNum
-      value: 18
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
@@ -38018,6 +38018,11 @@ PrefabInstance:
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[3].cameraTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
+        type: 3}
+      propertyPath: triggers.Array.data[2].cameraTime
       value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -46988,8 +46993,87 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65c17c8a44d499b4cbc5f12bcfffed59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lines: []
-  pauseForDuration: 0
+  lines:
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>I told you the wizard wouldn't be in there.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>I had to try.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>Really? You again?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Yeah. Me again. Now, can you get this thing off me or not?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>I mean... I could... But I'm not going to.</typewriter>
+    audioToPlay: 
+  - lineType: 1
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>The wizard disappears again.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Seriously? Again?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>I don't know what else you expected.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Her to listen to me for even one second?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>There's no point. Let's just go.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>No. We're going to continue this little game of cat and mouse
+      until we catch up to her. There's only so many places she can hide in this
+      castle.</typewriter>
+    audioToPlay: 
+  pauseForDuration: 1
   textDisplayTime: 5
 --- !u!1001 &905932979
 PrefabInstance:
@@ -92207,21 +92291,6 @@ Transform:
   m_Father: {fileID: 774563360}
   m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 9, z: 0}
---- !u!114 &1691224547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65c17c8a44d499b4cbc5f12bcfffed59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lines: []
-  pauseForDuration: 0
-  textDisplayTime: 5
 --- !u!43 &1692134554
 Mesh:
   m_ObjectHideFlags: 0
@@ -105612,84 +105681,84 @@ MonoBehaviour:
   lines:
   - lineType: 0
     character:
-      characterName: You
+      characterName: MC
       imgPath: 
-      textColor: {r: 1, g: 1, b: 1, a: 1}
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
     text: <typewriter>Wow, this place is amazing. Hmm...</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
-      characterName: The Corruption
+      characterName: MC
       imgPath: 
-      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
     text: <typewriter>You could always turn around and leave.</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
-      characterName: You
+      characterName: MC
       imgPath: 
-      textColor: {r: 1, g: 1, b: 1, a: 1}
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
     text: <typewriter>No, I don't need to be stuck with a... Thing... Such as you
       forever</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
-      characterName: The Corruption
+      characterName: MC
       imgPath: 
-      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
     text: <typewriter>But I make you better. More powerful. Stronger. You could be
       the greatest wizard in all of history.</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
-      characterName: You
+      characterName: MC
       imgPath: 
-      textColor: {r: 1, g: 1, b: 1, a: 1}
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
     text: <typewriter>I just want to be a normal person. I don't care for magic or
       wizards or spellbooks or whatever kind of entity you are.</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
-      characterName: The Corruption
+      characterName: MC
       imgPath: 
-      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
     text: (sigh) <typewriter>You humans are always so annoying.</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
-      characterName: The Corruption
+      characterName: MC
       imgPath: 
-      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
     text: <typewriter>"<shaky>I don't want to control the world and make everyone
       else bow to my every whim.</shaky>"</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
-      characterName: You
+      characterName: MC
       imgPath: 
-      textColor: {r: 1, g: 1, b: 1, a: 1}
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
     text: <typewriter>I don't sound like that.</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
-      characterName: The Corruption
+      characterName: MC
       imgPath: 
-      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
     text: <typewriter>Please, you humans all sound exactly the same.</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
-      characterName: You
+      characterName: MC
       imgPath: 
-      textColor: {r: 1, g: 1, b: 1, a: 1}
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
     text: <typewriter>No, we don't. Now, I am going to go and find that wizard and
       make her remove you from my arm if it's the last thing I do.</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
-      characterName: The Corruption
+      characterName: MC
       imgPath: 
-      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
     text: <typewriter>And it just might be.</typewriter>
     audioToPlay: 
   pauseForDuration: 1
