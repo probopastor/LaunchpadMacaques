@@ -34789,36 +34789,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 677061577}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &677922574
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 677922575}
-  m_Layer: 0
-  m_Name: Camera Target 4
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &677922575
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 677922574}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -70.19385, y: 176.54337, z: -56.65291}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 36
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &680604668
 Mesh:
   m_ObjectHideFlags: 0
@@ -38018,18 +37988,23 @@ PrefabInstance:
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[3].hasCameraMovement
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[3].cameraPoint
       value: 
-      objectReference: {fileID: 1199959958}
+      objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[3].cameraTarget
       value: 
-      objectReference: {fileID: 677922574}
+      objectReference: {fileID: 0}
+    - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
+        type: 3}
+      propertyPath: triggers.Array.data[3].cameraTime
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a15b51a58856684d8d3cdfbb7b1a263, type: 3}
 --- !u!43 &733654037
@@ -63735,80 +63710,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 28
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1199959958
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1199959960}
-  - component: {fileID: 1199959959}
-  m_Layer: 0
-  m_Name: Camera Point 4
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1199959959
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1199959958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ExcludedPropertiesInInspector:
-  - m_Script
-  m_LockStageInInspector: 
-  m_StreamingVersion: 20170927
-  m_Priority: 10
-  m_StandbyUpdate: 2
-  m_LookAt: {fileID: 677922575}
-  m_Follow: {fileID: 0}
-  m_Lens:
-    FieldOfView: 60
-    OrthographicSize: 10
-    NearClipPlane: 0.1
-    FarClipPlane: 5000
-    Dutch: 0
-    LensShift: {x: 0, y: 0}
-    Iso: 200
-    ShutterSpeed: 0.005
-    Aperture: 16
-    BladeCount: 5
-    Curvature: {x: 2, y: 11}
-    BarrelClipping: 0.25
-    Anamorphism: 0
-  m_Transitions:
-    m_BlendHint: 0
-    m_InheritPosition: 0
-    m_OnCameraLive:
-      m_PersistentCalls:
-        m_Calls: []
-  m_LegacyBlendHint: 0
-  m_ComponentOwner: {fileID: 1656440919}
---- !u!4 &1199959960
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1199959958}
-  m_LocalRotation: {x: -0.0009448839, y: 0.9761523, z: 0.21704341, w: 0.004249614}
-  m_LocalPosition: {x: -70.78934, y: 144.54713, z: 11.738886}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1656440919}
-  m_Father: {fileID: 0}
-  m_RootOrder: 35
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1200990736
 Mesh:
   m_ObjectHideFlags: 0
@@ -88706,62 +88607,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1655424847}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1656440918
-GameObject:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1656440919}
-  - component: {fileID: 1656440921}
-  - component: {fileID: 1656440920}
-  m_Layer: 0
-  m_Name: cm
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1656440919
-Transform:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1656440918}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -51, y: 3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1199959960}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1656440920
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1656440918}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e8b78ac948f05a46a6d8339a503172b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1656440921
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1656440918}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1659801022
 GameObject:
   m_ObjectHideFlags: 0
@@ -100865,37 +100710,37 @@ PrefabInstance:
     - target: {fileID: 4587646255516199491, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9761523
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4587646255516199491, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.004249614
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4587646255516199491, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.030663
+      value: -26.446487
       objectReference: {fileID: 0}
     - target: {fileID: 4587646255516199491, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 131.54713
+      value: 132.8848
       objectReference: {fileID: 0}
     - target: {fileID: 4587646255516199491, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 86.06651
+      value: 211.33337
       objectReference: {fileID: 0}
     - target: {fileID: 4587646255516199491, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0009448839
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4587646255516199491, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.21704341
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4633794000843320419, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -105722,82 +105567,86 @@ MonoBehaviour:
   lines:
   - lineType: 0
     character:
-      characterName: The Corruption
-      imgPath: 
-      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
-    text: <typewriter>I told you the wizard wouldn't be in there.</typewriter>
-    audioToPlay: 
-  - lineType: 0
-    character:
       characterName: You
       imgPath: 
       textColor: {r: 1, g: 1, b: 1, a: 1}
-    text: <typewriter>I had to try.</typewriter>
-    audioToPlay: 
-  - lineType: 0
-    character:
-      characterName: The Wizard
-      imgPath: 
-      textColor: {r: 0.24905658, g: 1, b: 0.91209424, a: 1}
-    text: <typewriter><shaky>Really?</shaky> You again?</typewriter>
-    audioToPlay: 
-  - lineType: 0
-    character:
-      characterName: You
-      imgPath: 
-      textColor: {r: 1, g: 1, b: 1, a: 1}
-    text: <typewriter>Yeah. Me again. Now, can you get this thing off me or not?</typewriter>
-    audioToPlay: 
-  - lineType: 0
-    character:
-      characterName: The Wizard
-      imgPath: 
-      textColor: {r: 0.24905658, g: 1, b: 0.91209424, a: 1}
-    text: <typewriter>I mean.. I could... But I'm not going to.</typewriter>
-    audioToPlay: 
-  - lineType: 2
-    character:
-      characterName: The Wizard
-      imgPath: 
-      textColor: {r: 0.24905658, g: 1, b: 0.91209424, a: 1}
-    text: 
-    audioToPlay: 
-  - lineType: 0
-    character:
-      characterName: You
-      imgPath: 
-      textColor: {r: 1, g: 1, b: 1, a: 1}
-    text: <typewriter>Seriously? Again?</typewriter>
+    text: <typewriter>Wow, this place is amazing. There's so many different ways
+      to go. Hmm...</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
       characterName: The Corruption
       imgPath: 
       textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
-    text: <typewriter>I don't know what else you expected.</typewriter>
+    text: <typewriter>You could always turn around and leave.</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
       characterName: You
       imgPath: 
       textColor: {r: 1, g: 1, b: 1, a: 1}
-    text: <typewriter>Her to listen to me for even one second?</typewriter>
+    text: <typewriter>No, I don't need to be stuck with a... Thing... Such as you
+      forever</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
       characterName: The Corruption
       imgPath: 
       textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
-    text: <typewriter>There's no point. Let's just go.</typewriter>
+    text: <typewriter>But I make you better. More powerful. Stronger. You could be
+      the greatest wizard in all of history.</typewriter>
     audioToPlay: 
   - lineType: 0
     character:
       characterName: You
       imgPath: 
       textColor: {r: 1, g: 1, b: 1, a: 1}
-    text: <typewriter>No. We're going to continue this little game of cat and mouse
-      until we catch up to her. There's only so many places she can hide in this
-      castle.</typewriter>
+    text: <typewriter>I just want to be a normal person. I don't care for magic or
+      wizards or spellbooks or whatever kind of entity you are.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: The Corruption
+      imgPath: 
+      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+    text: (sigh) <typewriter>You humans are always so annoying.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: The Corruption
+      imgPath: 
+      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+    text: <typewriter>"<shaky>I don't want to control the world and make everyone
+      else bow to my every whim.</shaky>"</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 1, g: 1, b: 1, a: 1}
+    text: <typewriter>I don't sound like that.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: The Corruption
+      imgPath: 
+      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+    text: <typewriter>Please, you humans all sound exactly the same.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 1, g: 1, b: 1, a: 1}
+    text: <typewriter>No, we don't. Now, I am going to go and find that wizard and
+      make her remove you from my arm if it's the last thing I do.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: The Corruption
+      imgPath: 
+      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+    text: <typewriter>And it just might be.</typewriter>
     audioToPlay: 
   pauseForDuration: 1
   textDisplayTime: 5
