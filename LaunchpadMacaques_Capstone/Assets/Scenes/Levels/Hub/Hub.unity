@@ -14248,6 +14248,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a31f478b0dcc8b2418669dcd6771a7da, type: 3}
+--- !u!114 &277045460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c17c8a44d499b4cbc5f12bcfffed59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lines: []
+  pauseForDuration: 0
+  textDisplayTime: 5
 --- !u!1 &284460939
 GameObject:
   m_ObjectHideFlags: 0
@@ -37774,7 +37789,7 @@ PrefabInstance:
         type: 3}
       propertyPath: triggers.Array.data[1].dialogue
       value: 
-      objectReference: {fileID: 1987924426}
+      objectReference: {fileID: 1691224547}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[1].triggeringTag
@@ -37844,7 +37859,7 @@ PrefabInstance:
         type: 3}
       propertyPath: triggers.Array.data[2].dialogue
       value: 
-      objectReference: {fileID: 1987924426}
+      objectReference: {fileID: 903182358}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[2].triggeringTag
@@ -37924,7 +37939,7 @@ PrefabInstance:
         type: 3}
       propertyPath: triggers.Array.data[3].dialogue
       value: 
-      objectReference: {fileID: 1987924426}
+      objectReference: {fileID: 277045460}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[3].triggeringTag
@@ -46961,6 +46976,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 902355254}
   m_Mesh: {fileID: 1070292595}
+--- !u!114 &903182358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c17c8a44d499b4cbc5f12bcfffed59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lines: []
+  pauseForDuration: 0
+  textDisplayTime: 5
 --- !u!1001 &905932979
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -92177,6 +92207,21 @@ Transform:
   m_Father: {fileID: 774563360}
   m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 9, z: 0}
+--- !u!114 &1691224547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c17c8a44d499b4cbc5f12bcfffed59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lines: []
+  pauseForDuration: 0
+  textDisplayTime: 5
 --- !u!43 &1692134554
 Mesh:
   m_ObjectHideFlags: 0
@@ -105570,8 +105615,7 @@ MonoBehaviour:
       characterName: You
       imgPath: 
       textColor: {r: 1, g: 1, b: 1, a: 1}
-    text: <typewriter>Wow, this place is amazing. There's so many different ways
-      to go. Hmm...</typewriter>
+    text: <typewriter>Wow, this place is amazing. Hmm...</typewriter>
     audioToPlay: 
   - lineType: 0
     character:

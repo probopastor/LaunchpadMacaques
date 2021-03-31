@@ -34,8 +34,12 @@ public class NarrativeTriggerEditor : Editor
         EditorGUILayout.LabelField("Random Trigger Settings", EditorStyles.miniBoldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("randomIntervalMin"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("randomIntervalMax"));
-        EditorGUILayout.LabelField("Player Hitting Ground Settings",EditorStyles.miniBoldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("randomCancelChance"));
+        //Player Hitting Ground Event Settings (Universal)
+        EditorGUILayout.LabelField("Player Hitting Ground Settings", EditorStyles.miniBoldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("fallTime"));
+        EditorGUILayout.LabelField("Look At Object Event Settings", EditorStyles.miniBoldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("lookAtObjectCheckDistance"));
         if (serializedObject.FindProperty("randomIntervalMin").floatValue > serializedObject.FindProperty("randomIntervalMax").floatValue)
         {
             EditorGUILayout.HelpBox("randomIntervalMax must be bigger than or equal to randomIntervalMin", MessageType.Warning);
@@ -48,7 +52,7 @@ public class NarrativeTriggerEditor : Editor
         SerializedProperty arraySub = serializedObject.FindProperty("triggerSubFoldout");
         SerializedProperty arrayNames = serializedObject.FindProperty("triggerNames");
 
-        if(array.arraySize > 0)
+        if (array.arraySize > 0)
             triggerMainFoldout = EditorGUILayout.Foldout(triggerMainFoldout, "Triggers", true);
         //If the main foldout is out and all triggers are being shown
         if (triggerMainFoldout)
@@ -60,9 +64,9 @@ public class NarrativeTriggerEditor : Editor
                 EditorGUILayout.BeginHorizontal();
 
                 arraySub.GetArrayElementAtIndex(i).boolValue = EditorGUILayout.Foldout(arraySub.GetArrayElementAtIndex(i).boolValue, arrayNames.GetArrayElementAtIndex(i).stringValue);
-                if(GUILayout.Button("Delete Trigger"))
+                if (GUILayout.Button("Delete Trigger"))
                 {
-                    if(narrativeTriggerHandler.triggers[i].areaTrigger != null)
+                    if (narrativeTriggerHandler.triggers[i].areaTrigger != null)
                     {
                         DestroyImmediate(narrativeTriggerHandler.triggers[i].areaTrigger);
                     }
@@ -85,12 +89,13 @@ public class NarrativeTriggerEditor : Editor
                     EditorGUILayout.LabelField("General", EditorStyles.boldLabel);
                     EditorGUILayout.PropertyField(element.FindPropertyRelative("type"));
                     //Time in level triggers should NEVER be repeatable as it only occurs once
-                    if(!((element.FindPropertyRelative("type").enumValueIndex == (int)NarrativeTriggerHandler.TriggerType.OnEvent) &&
+                    if (!((element.FindPropertyRelative("type").enumValueIndex == (int)NarrativeTriggerHandler.TriggerType.OnEvent) &&
                        (element.FindPropertyRelative("eventType").enumValueIndex == (int)NarrativeTriggerHandler.EventType.TimeInLevel)))
-                    EditorGUILayout.PropertyField(element.FindPropertyRelative("repeatable"));
+                        EditorGUILayout.PropertyField(element.FindPropertyRelative("repeatable"));
 
                     EditorGUILayout.Space();
                     EditorGUILayout.LabelField("Text Options", EditorStyles.boldLabel);
+                    EditorGUILayout.BeginHorizontal();
                     if (GUILayout.Button("Edit Dialogue"))
                     {
                         serializedObject.Update();
@@ -102,6 +107,14 @@ public class NarrativeTriggerEditor : Editor
                         }
                         DialogueBuilder.ShowWindow(ref narrativeTriggerHandler, i);
                     }
+                    if (GUILayout.Button("Reset Dialogue"))
+                    {
+                        serializedObject.Update();
+                        element.FindPropertyRelative("dialogue").objectReferenceValue = ScriptableObject.CreateInstance<Dialogue>();
+                        serializedObject.ApplyModifiedProperties();
+                        DialogueBuilder.CloseWindow();
+                    }
+                    EditorGUILayout.EndHorizontal();
 
                     EditorGUILayout.Space();
 
@@ -114,14 +127,14 @@ public class NarrativeTriggerEditor : Editor
                         EditorGUILayout.Space();
                         EditorGUILayout.BeginHorizontal();
                         //Camera Point
-                        if(GUILayout.Button("Spawn Camera Point"))
+                        if (GUILayout.Button("Spawn Camera Point"))
                         {
                             CinemachineVirtualCamera virtualCam = SpawnExclusiveObject(/*property=*/ref element, /*variableToAccess=*/"cameraPoint", /*nameOfObjectToCreate=*/"Camera Point " + (i + 1))
                                 .AddComponent<CinemachineVirtualCamera>();
 
                             //If target already exists, assign it to be looked at
                             GameObject potentialTarget;
-                            if((potentialTarget = (GameObject) element.FindPropertyRelative("cameraTarget").objectReferenceValue) != null)
+                            if ((potentialTarget = (GameObject)element.FindPropertyRelative("cameraTarget").objectReferenceValue) != null)
                             {
                                 virtualCam.LookAt = potentialTarget.transform;
                             }
@@ -133,12 +146,12 @@ public class NarrativeTriggerEditor : Editor
 
                             virtualCam.AddCinemachineComponent<CinemachineHardLookAt>();
                             virtualCam.m_Lens.FieldOfView = Camera.main.fieldOfView;
-                            
+
                         }
                         //Only create a "Go to" button if an object is already assigned
-                        if(element.FindPropertyRelative("cameraPoint").objectReferenceValue != null)
+                        if (element.FindPropertyRelative("cameraPoint").objectReferenceValue != null)
                         {
-                            if(GUILayout.Button("Go to Camera Point"))
+                            if (GUILayout.Button("Go to Camera Point"))
                             {
                                 JumpToObject(narrativeTriggerHandler.triggers[i].cameraPoint);
                             }
@@ -155,14 +168,14 @@ public class NarrativeTriggerEditor : Editor
 
                             //If a virtual cam already exists, properly assign this new target to that camera
                             GameObject potentialVirtualCam;
-                            if ((potentialVirtualCam = (GameObject) element.FindPropertyRelative("cameraPoint").objectReferenceValue) != null)
+                            if ((potentialVirtualCam = (GameObject)element.FindPropertyRelative("cameraPoint").objectReferenceValue) != null)
                             {
                                 potentialVirtualCam.GetComponent<CinemachineVirtualCamera>().LookAt = camTarget.transform;
                             }
                         }
                         if (element.FindPropertyRelative("cameraTarget").objectReferenceValue != null)
                         {
-                            if(GUILayout.Button("Go to Camera Target"))
+                            if (GUILayout.Button("Go to Camera Target"))
                             {
                                 JumpToObject(narrativeTriggerHandler.triggers[i].cameraTarget);
                             }
@@ -219,7 +232,7 @@ public class NarrativeTriggerEditor : Editor
                         if ((current = element.FindPropertyRelative("areaTrigger").objectReferenceValue) != null)
                             DestroyImmediate(current);
                     }
-                    
+
                     //Display onEvent Trigger specific options if applicable
                     if (type == (int)NarrativeTriggerHandler.TriggerType.OnEvent)
                     {
@@ -228,12 +241,12 @@ public class NarrativeTriggerEditor : Editor
                         SerializedProperty eventType = element.FindPropertyRelative("eventType");
                         EditorGUILayout.PropertyField(eventType);
                         //Time in Level
-                        if (eventType.enumValueIndex == 1)
+                        if (eventType.enumValueIndex == (int)NarrativeTriggerHandler.EventType.TimeInLevel)
                         {
                             EditorGUILayout.PropertyField(element.FindPropertyRelative("timeInLevelBeforeTrigger"));
                         }
                         //LookAtObject
-                        else if(eventType.enumValueIndex == 2)
+                        else if (eventType.enumValueIndex == (int)NarrativeTriggerHandler.EventType.LookAtObject)
                         {
                             EditorGUILayout.PropertyField(element.FindPropertyRelative("triggeringObjects"));
                         }
@@ -249,7 +262,6 @@ public class NarrativeTriggerEditor : Editor
                             EditorGUILayout.BeginHorizontal();
                             EditorGUILayout.LabelField(new GUIContent("Level", "The level which, upon completion, will activate this trigger"));
                             element.FindPropertyRelative("levelNum").intValue = EditorGUILayout.Popup(element.FindPropertyRelative("levelNum").intValue, levelNames);
-                            Debug.Log("New value of level num is " + element.FindPropertyRelative("levelNum").intValue);
                             EditorGUILayout.EndHorizontal();
                         }
                     }
@@ -269,6 +281,11 @@ public class NarrativeTriggerEditor : Editor
             //triggerSubFoldout.Add(new bool());
             arraySub.InsertArrayElementAtIndex(index);
 
+            //Create new Dialogue
+            array.GetArrayElementAtIndex(array.arraySize - 1).FindPropertyRelative("dialogue").objectReferenceValue = ScriptableObject.CreateInstance<Dialogue>();
+            serializedObject.ApplyModifiedProperties();
+
+
             arrayNames.InsertArrayElementAtIndex(index);
             arrayNames.GetArrayElementAtIndex(index).stringValue = "Trigger " + (index + 1);
         }
@@ -281,30 +298,30 @@ public class NarrativeTriggerEditor : Editor
         Handles.color = Color.cyan;
 
         //For area triggers, draw wireframe cubes and give them handles to move around
-        for(int i = 0; i < narrativeTriggerHandler.triggers.Length; i++)
+        for (int i = 0; i < narrativeTriggerHandler.triggers.Length; i++)
         {
             GameObject currentTriggerObject;
-            if((currentTriggerObject = narrativeTriggerHandler.triggers[i].areaTrigger) != null)
+            if ((currentTriggerObject = narrativeTriggerHandler.triggers[i].areaTrigger) != null)
             {
                 CreateHandlesForObject(/*Object=*/currentTriggerObject, /*labelName=*/string.Format("Trigger {0} Area", i + 1),
                     /*includePosition=*/true, /*includeRotation=*/true, /*includeScale=*/true);
                 narrativeTriggerHandler.triggers[i].areaCenter = currentTriggerObject.transform.position;
                 narrativeTriggerHandler.triggers[i].boxSize = currentTriggerObject.transform.localScale;
             }
-            
-            if((currentTriggerObject = narrativeTriggerHandler.triggers[i].cameraPoint) != null)
+
+            if ((currentTriggerObject = narrativeTriggerHandler.triggers[i].cameraPoint) != null)
             {
                 CreateHandlesForObject(/*Object=*/currentTriggerObject, /*labelName=*/string.Format("Trigger {0} Cam Point", i + 1),
                     /*includePosition=*/true, /*includeRotation=*/false, /*includeScale=*/false);
             }
 
-            if((currentTriggerObject = narrativeTriggerHandler.triggers[i].cameraTarget) != null)
+            if ((currentTriggerObject = narrativeTriggerHandler.triggers[i].cameraTarget) != null)
             {
                 CreateHandlesForObject(/*Object=*/currentTriggerObject, /*labelName=*/string.Format("Trigger {0} Cam Target", i + 1),
                     /*includePosition=*/true, /*includeRotation=*/false, /*includeScale=*/false);
             }
         }
-        
+
     }
 
     /// <summary>
@@ -373,21 +390,21 @@ public class NarrativeTriggerEditor : Editor
         labelName = string.Format("<color=yellow>{0}</color>", labelName);
 
         Handles.Label(positionforLabel, labelName, style);
-        if(includePosition)
+        if (includePosition)
             position = Handles.PositionHandle(obj.transform.position, Quaternion.identity);
-        if(includeScale)
+        if (includeScale)
             scale = Handles.ScaleHandle(obj.transform.localScale, obj.transform.position, Quaternion.identity, 10);
-        if(includeRotation)
+        if (includeRotation)
             rotation = Handles.RotationHandle(obj.transform.localRotation, obj.transform.position);
 
         if (EditorGUI.EndChangeCheck())
         {
             Undo.RecordObject(target, "Changed Trigger Properties");
-            if(includePosition)
+            if (includePosition)
                 obj.transform.position = position;
-            if(includeScale)
+            if (includeScale)
                 obj.transform.localScale = scale;
-            if(includeRotation)
+            if (includeRotation)
                 obj.transform.localRotation = rotation;
         }
     }
