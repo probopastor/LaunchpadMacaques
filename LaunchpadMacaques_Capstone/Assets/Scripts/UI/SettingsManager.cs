@@ -835,6 +835,8 @@ public class SettingsManager : MonoBehaviour
     public void SetMasterVolume(float volume)
     {
         PlayerPrefs.SetFloat("MasterVolume", volume);
+
+        ChangeFMODSound(masterSoundSlider.gameObject, volume);
     }
 
     /// <summary>
