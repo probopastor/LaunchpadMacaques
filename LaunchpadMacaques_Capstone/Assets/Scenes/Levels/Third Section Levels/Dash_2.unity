@@ -1458,7 +1458,7 @@ PrefabInstance:
     - target: {fileID: 3662869239387556586, guid: ab784b8ddf03ef84cae4e0049cb1bcba,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3662869239387556586, guid: ab784b8ddf03ef84cae4e0049cb1bcba,
         type: 3}
@@ -5748,7 +5748,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh34482
+  m_Name: pb_Mesh159380
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -12530,11 +12530,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815702984}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -85.39083, y: 91.917595, z: -23.342073}
-  m_LocalScale: {x: 49.77139, y: 5, z: 11.268988}
+  m_LocalPosition: {x: -86.5, y: 195.73259, z: -16}
+  m_LocalScale: {x: 33.636475, y: 1.9427557, z: 27.4902}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &816700141
 PrefabInstance:
@@ -13660,7 +13660,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh33628
+  m_Name: pb_Mesh158152
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -15628,8 +15628,208 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65c17c8a44d499b4cbc5f12bcfffed59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lines: []
-  pauseForDuration: 0
+  lines:
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Stop! There's nowhere left for you to run. </typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>Fine. You caught me. Now what? You want me to fix you? To get
+      rid of whatever entity is attached to you?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Yes.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>I can't.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>You keep saying you can't, but you have to.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>You don't get it, do you? I can't fix you. Look around. I can't
+      even fix my own castle. I can't fix myself. There's no cure for this. I didn't
+      mean to hit you with the spell. Nobody else was supposed to be out there. No
+      one ever goes into that forest.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>Do you really believe her?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>You didn't mean to? You expect me to believe that?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>I don't care if you believe me or not; it's the truth. I was
+      practicing a spell to try and cure myself. Look at me. I'm cursed just like
+      you are. The spell I was trying got out of control. It hit you by mistake.
+      Now we're both cursed.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>Are you really going to stand here and listen to her lie to
+      you? She just doesn't want to undo her spell. Let's leave and we can figure
+      out a way to live together. Peacefully.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Stop trying to get inside my head! Let me listen to what she
+      has to say.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>How are you able to tell me this? Why are you telling me this?
+      Doesn't this parasite, or curse, or whatever it is take control of you?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>Yes, but not all of you. And not all of the time. My mind is
+      still trapped in here even when I'm not in control, but it can't control me
+      constantly. At least, not yet. That's how I'm speaking to you right now. I'm
+      me. Think of it like I'm two people trapped inside one body. Or one person
+      and a monster trapped inside one person's body.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>'Monster' seems a bit harsh...</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>How... How long do I have?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>A few more days? Probably less. It was one week after I was
+      cursed that it took over completely for the first time. I got control back
+      after a few hours. Now, it takes control of me most of the day. I don't know
+      how much longer I have until I won't get control again.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>What happens when it takes over completely?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>I don't know. It tries to take over the world?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>Tries? One of us alone could easily take over this puny, mortal
+      world.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>So, what, it's just waiting until you can't do anything anymore?
+      Then why the huge game of cat and mouse throughout the castle?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>The more you use its powers, the quicker it'll take control.
+      And with two of them... Well... They'll be unstoppable.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>You knew. That's why you were so eager to help me. You lied
+      to me.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>I didn't lie. It was true that if you died, I would die too.
+      I just left out the part about me getting more powerful.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: MC
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>There has to be a way to fix this. Some kind of cure. A spell,
+      a potion, an incantation, something. Please, you have to try.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>...Come on. We don't have very long. Let's try and figure something
+      out.</typewriter>
+    audioToPlay: 
+  pauseForDuration: 1
   textDisplayTime: 5
 --- !u!1001 &1029233616
 PrefabInstance:
@@ -15745,7 +15945,7 @@ PrefabInstance:
     - target: {fileID: 2560896460728453257, guid: 0bb879055e3dcd44b92718809053f57b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2560896460728453257, guid: 0bb879055e3dcd44b92718809053f57b,
         type: 3}
@@ -17400,7 +17600,7 @@ PrefabInstance:
     - target: {fileID: 4069079121501273345, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 94
       objectReference: {fileID: 0}
     - target: {fileID: 5216400769558545688, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
@@ -17440,7 +17640,7 @@ PrefabInstance:
     - target: {fileID: 5216400769558545688, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5216400769558545688, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
@@ -17505,27 +17705,27 @@ PrefabInstance:
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[0].areaCenter.y
-      value: 91.917595
+      value: 195.73259
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[0].boxSize.x
-      value: 49.77139
+      value: 33.636475
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[0].boxSize.y
-      value: 5
+      value: 1.9427557
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[0].boxSize.z
-      value: 11.268988
+      value: 27.4902
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[0].areaCenter.z
-      value: -23.342073
+      value: -13.641241
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
@@ -22502,7 +22702,7 @@ Transform:
   - {fileID: 1178402724}
   - {fileID: 1713988416}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1460094426
 PrefabInstance:
@@ -24014,7 +24214,7 @@ Transform:
   - {fileID: 1494482427}
   - {fileID: 1916006553}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1587325176
 GameObject:
@@ -29789,7 +29989,7 @@ PrefabInstance:
     - target: {fileID: 4698832026194030293, guid: 36995a23c518ba34f9bc7bc7d1204c6a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4698832026194030293, guid: 36995a23c518ba34f9bc7bc7d1204c6a,
         type: 3}
@@ -31518,7 +31718,7 @@ Transform:
   - {fileID: 781830763}
   - {fileID: 958014573}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2101611822
 PrefabInstance:
