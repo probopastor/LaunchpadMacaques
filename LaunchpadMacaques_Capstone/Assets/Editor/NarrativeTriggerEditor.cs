@@ -95,6 +95,7 @@ public class NarrativeTriggerEditor : Editor
 
                     EditorGUILayout.Space();
                     EditorGUILayout.LabelField("Text Options", EditorStyles.boldLabel);
+                    EditorGUILayout.BeginHorizontal();
                     if (GUILayout.Button("Edit Dialogue"))
                     {
                         serializedObject.Update();
@@ -106,6 +107,14 @@ public class NarrativeTriggerEditor : Editor
                         }
                         DialogueBuilder.ShowWindow(ref narrativeTriggerHandler, i);
                     }
+                    if (GUILayout.Button("Reset Dialogue"))
+                    {
+                        serializedObject.Update();
+                        element.FindPropertyRelative("dialogue").objectReferenceValue = ScriptableObject.CreateInstance<Dialogue>();
+                        serializedObject.ApplyModifiedProperties();
+                        DialogueBuilder.CloseWindow();
+                    }
+                    EditorGUILayout.EndHorizontal();
 
                     EditorGUILayout.Space();
 
@@ -253,7 +262,6 @@ public class NarrativeTriggerEditor : Editor
                             EditorGUILayout.BeginHorizontal();
                             EditorGUILayout.LabelField(new GUIContent("Level", "The level which, upon completion, will activate this trigger"));
                             element.FindPropertyRelative("levelNum").intValue = EditorGUILayout.Popup(element.FindPropertyRelative("levelNum").intValue, levelNames);
-                            Debug.Log("New value of level num is " + element.FindPropertyRelative("levelNum").intValue);
                             EditorGUILayout.EndHorizontal();
                         }
                     }
@@ -272,6 +280,11 @@ public class NarrativeTriggerEditor : Editor
             array.InsertArrayElementAtIndex(index);
             //triggerSubFoldout.Add(new bool());
             arraySub.InsertArrayElementAtIndex(index);
+
+            //Create new Dialogue
+            array.GetArrayElementAtIndex(array.arraySize - 1).FindPropertyRelative("dialogue").objectReferenceValue = ScriptableObject.CreateInstance<Dialogue>();
+            serializedObject.ApplyModifiedProperties();
+
 
             arrayNames.InsertArrayElementAtIndex(index);
             arrayNames.GetArrayElementAtIndex(index).stringValue = "Trigger " + (index + 1);
