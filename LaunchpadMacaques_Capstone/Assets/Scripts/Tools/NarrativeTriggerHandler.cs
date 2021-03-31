@@ -334,8 +334,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         int lastNameplateUsed = -1;
         while ((currentLine = trigger.dialogue.NextLine()) != null)
         {
-            //Start adding lines to the log
-            Log.instance.PushToLog(currentLine);
+           
 
             //Update nameplates
             //No nameplate yet
@@ -368,6 +367,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
             //Run text effects and apply them to the dialogue window
             TextEffectHandler.instance.RunText(dialogueText, currentLine.text);
+
+            currentLine.text = dialogueText.text;
+            //Start adding lines to the log
+            Log.instance.PushToLog(currentLine);
 
             //Play audio for associated line if applicable
             FMOD.Studio.EventDescription desc;
