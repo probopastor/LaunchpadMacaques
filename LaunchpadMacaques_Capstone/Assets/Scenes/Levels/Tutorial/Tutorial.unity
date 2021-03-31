@@ -4909,6 +4909,90 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a4b8f6fdcd7acc4faad9a9473035a86, type: 3}
+--- !u!114 &275043827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c17c8a44d499b4cbc5f12bcfffed59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lines:
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 1, g: 1, b: 1, a: 1}
+    text: <typewriter>The wizard's trail brought me here? To a giant castle?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: The Corruption
+      imgPath: 
+      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+    text: <typewriter>Why so surprised?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 1, g: 1, b: 1, a: 1}
+    text: "<typewriter>I didn't even know this castle was out here. How could I have
+      never seen it before?\r</typewriter>"
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: The Corruption
+      imgPath: 
+      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+    text: <typewriter>There's a lot you don't know yet. Do you really think you can
+      just walk in here and have the wizard get rid of me?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 1, g: 1, b: 1, a: 1}
+    text: <typewriter>I'll make her get rid of you.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: The Corruption
+      imgPath: 
+      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+    text: "<typewriter>What makes you think she can?</typewriter> \r"
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 1, g: 1, b: 1, a: 1}
+    text: <typewriter>She's the one who cursed me with you in the first place, so
+      she can figure out how to uncurse me.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: The Corruption
+      imgPath: 
+      textColor: {r: 0.9811321, g: 0.21658951, b: 0.88567364, a: 1}
+    text: <typewriter>Oh to be so naive...</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 1, g: 1, b: 1, a: 1}
+    text: '<typewriter>Do you <shaky>ever</shaky> stop talking? Can you just be quiet
+      for  alittle bit while I try and figure out how to get out of this room?
+
+      </typewriter>'
+    audioToPlay: 
+  pauseForDuration: 1
+  textDisplayTime: 5
 --- !u!4 &277463689 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4318654301727670477, guid: 36b2d8b69ddfef641a8a5f25514f866a,
@@ -28036,7 +28120,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh40072
+  m_Name: pb_Mesh46870
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -35374,6 +35458,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 97144998329476730, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 229712723945304053, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -35427,6 +35516,86 @@ PrefabInstance:
     - target: {fileID: 229712723945304053, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerSubFoldout.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerNames.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerNames.Array.data[0]
+      value: Trigger 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerSubFoldout.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].eventType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].timeInLevelBeforeTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].dialogue
+      value: 
+      objectReference: {fileID: 275043827}
+    - target: {fileID: 1205762044612961447, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205762044612961447, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205762044612961447, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205762044612961447, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_lineSpacing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205762044612961447, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205762044612961447, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_overflowMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205762044612961447, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_verticalMapping
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1790872067108165574, guid: e02315d1bca9dd54489263b84334ae29,
@@ -35612,22 +35781,57 @@ PrefabInstance:
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 0.00006338208
       objectReference: {fileID: 0}
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 700
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_Pivot.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588089878508414836, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7840260332642151202, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
