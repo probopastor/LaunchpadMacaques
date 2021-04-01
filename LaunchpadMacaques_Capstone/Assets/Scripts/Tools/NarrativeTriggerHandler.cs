@@ -186,7 +186,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         //If there was a previous level and it hasn't been marked as completed, run level completed event
         if (lastLevel >= 0
-            && HandleSaving.instance.IsLevelComplete(System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(lastLevel))))
+            /*&& HandleSaving.instance.IsLevelComplete(System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(lastLevel)))*/)
         {
             LevelCompletedActivation(lastLevel);
         }
@@ -679,7 +679,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         //No Matching Triggers found :(
         if (filteredList.Count <= 0)
+        {
+            LevelCompletedEventHasBeenCompleted?.Invoke();
             return;
+        }
 
         //Pick a random one out of the list to activate
         currentTrigger = filteredList[Random.Range(0, filteredList.Count)];
@@ -694,7 +697,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
     /// </summary>
     private void UpdateLastLevelPlayerPref()
     {
-        PlayerPrefs.SetInt(LAST_COMPLETED_SCENE_KEY, UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        PlayerPrefs.SetInt(LAST_COMPLETED_SCENE_KEY, UnityEngine.SceneManagement.SceneUtility.GetBuildIndexByScenePath(UnityEngine.SceneManagement.SceneManager.GetActiveScene().path));
     }
 
     #endregion
