@@ -676,6 +676,7 @@ public class GrapplingGun : MonoBehaviour
             beginGrappleInstance.start();
             beginGrappleInstance.release();
             PlayRandom(effortGrunts);
+            playerMovementReference.HitAngle(true);
         }
 
     }

@@ -376,7 +376,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-
+            StopCoroutine(KillForces());
+            StartCoroutine(KillForces());
         }
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && Time.timeScale > 0)
         {
@@ -703,14 +704,14 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         killForce = true;
 
-        if (lowVelocityDuration != 0)
-        {
-            yield return new WaitForSeconds(lowVelocityDuration);
-        }
-        else
-        {
-            yield return new WaitForEndOfFrame();
-        }
+        //if (lowVelocityDuration != 0)
+        //{
+        //    yield return new WaitForSeconds(lowVelocityDuration);
+        //}
+        //else
+        //{
+        //    yield return new WaitForEndOfFrame();
+        //}
 
         if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) &&
            (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) &&
@@ -977,6 +978,7 @@ public class Matt_PlayerMovement : MonoBehaviour
                 // If the force can be applied, add a force in the direction of the player's orientation.
                 if (grappleGunReference.GetCanApplyForce())
                 {
+                    applyForceAbovePoint = false;
                     if (!swingHelper.StuckHorizontal())
                     {
                         rb.AddForce(((orientation.transform.forward * 2 * grappleGunReference.GetSwingSpeed()) +
@@ -994,12 +996,23 @@ public class Matt_PlayerMovement : MonoBehaviour
                     //}
                 }
 
+                else if(applyForceAbovePoint)
+                {
+                    rb.AddForce((-orientation.transform.forward * .1f * grappleGunReference.GetSwingSpeed()));
+                }
+
             }
         }
         else
         {
             rb.velocity = Vector3.zero;
         }
+    }
+
+    private bool applyForceAbovePoint;
+    public void HitAngle(bool use)
+    {
+        applyForceAbovePoint = use;
     }
 
     #region Coyote Time Methods
