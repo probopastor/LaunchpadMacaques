@@ -376,8 +376,11 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            StopCoroutine(KillForces());
-            StartCoroutine(KillForces());
+            //reset = true;
+            applyForceAbovePoint = true;
+            rb.velocity /= 2;
+            rb.angularVelocity /=2;
+
         }
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && Time.timeScale > 0)
         {
@@ -975,9 +978,11 @@ public class Matt_PlayerMovement : MonoBehaviour
             // If Swing Lock is not active, and the player is grappling, add a force in the player's orientation
             else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
             {
+              
                 // If the force can be applied, add a force in the direction of the player's orientation.
-                if (grappleGunReference.GetCanApplyForce())
+              if (grappleGunReference.GetCanApplyForce())
                 {
+                    reset = false;
                     applyForceAbovePoint = false;
                     if (!swingHelper.StuckHorizontal())
                     {
@@ -989,17 +994,20 @@ public class Matt_PlayerMovement : MonoBehaviour
                         }
                     }
 
-                    //else
-                    //{
-                    //    rb.AddForce(swingHelper.GetDirectionToTarget() * (swingHelper.GetDirectionChangeIntensity() * grappleGunReference.GetSwingSpeed()) * Time.deltaTime);
-                    //    swingHelper.UsedDirectionChange();
-                    //}
                 }
+
+           
 
                 else if(applyForceAbovePoint)
                 {
                     rb.AddForce((-orientation.transform.forward * .1f * grappleGunReference.GetSwingSpeed()));
                 }
+
+               //else if (reset)
+               // {
+               //     rb.AddForce(((/*-orientation.transform.forward * 2* grappleGunReference.GetSwingSpeed()) +*/
+               //               (swingHelper.GetActualDistaneToTarget() * (swingHelper.GetDirectionChangeIntensity() * grappleGunReference.GetSwingSpeed()))) * Time.deltaTime));
+               // }
 
             }
         }
@@ -1010,6 +1018,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     }
 
     private bool applyForceAbovePoint;
+    private bool reset;
     public void HitAngle(bool use)
     {
         applyForceAbovePoint = use;
@@ -1598,6 +1607,18 @@ public class Matt_PlayerMovement : MonoBehaviour
     public bool CanPlayerMove()
     {
         return canMove;
+    }
+
+    public void TurnOffReset()
+    {
+
+
+        reset = false;
+    }
+
+    public bool GetReset()
+    {
+        return reset;
     }
 
     /// <summary>
