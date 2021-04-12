@@ -35,6 +35,9 @@ public class GameplayInputController : MonoBehaviour
 
     [SerializeField, Tooltip("The Event that is Called When player Presses pause Input ")] PauseEvent pauseEvent;
 
+    [SerializeField, Tooltip("The Event that is Called when player Presses Reset Grapple Input")] ResetGrappleEvent resetGrappleEvent;
+
+    #region Jamies Stuff
     public GameplayInputController(LookEvent lookEvent)
     {
         this.lookEvent = lookEvent;
@@ -94,6 +97,7 @@ public class GameplayInputController : MonoBehaviour
     {
         this.dashStartEvent = dashStartEvent;
     }
+    #endregion
 
     private void Awake()
     {
@@ -184,6 +188,7 @@ public class GameplayInputController : MonoBehaviour
         SetCrouchEvent();
         SetBatmanGrapple();
         SetDropCube();
+        SetResetGrapple();
     }
 
     #region SetInputs
@@ -212,6 +217,11 @@ public class GameplayInputController : MonoBehaviour
             controls.GamePlay.StartGrapple.canceled += OnStopGrapple;
         }
 
+    }
+
+    private void SetResetGrapple()
+    {
+        controls.GamePlay.ResetGrapple.performed += OnResetGrapple;
     }
 
     private void SetBatmanGrapple()
@@ -289,6 +299,11 @@ public class GameplayInputController : MonoBehaviour
         stopGrappleEvent.Invoke(cxt.ReadValue<float>());
     }
 
+    private void OnResetGrapple(InputAction.CallbackContext cxt)
+    {
+        resetGrappleEvent.Invoke(cxt.ReadValue<float>());
+    }
+
     private void OnDropCube(InputAction.CallbackContext cxt)
     {
         dropCubeEvent.Invoke(cxt.ReadValue<float>());
@@ -349,5 +364,7 @@ public class GameplayInputController : MonoBehaviour
 [Serializable] public class BatmanEvent : UnityEvent<float> { }
 
 [Serializable] public class DropCubeEvent : UnityEvent<float> { }
+
+[Serializable] public class ResetGrappleEvent : UnityEvent<float> { }
 
 
