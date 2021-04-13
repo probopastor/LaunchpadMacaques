@@ -50,14 +50,16 @@ public class SwingHelper : MonoBehaviour
 
 
     private int currentAmmountOfBadLoops = 0;
+
+    Matt_PlayerMovement player;
     // Start is called before the first frame update
 
     private void Awake()
     {
-        Matt_PlayerMovement temp = FindObjectOfType<Matt_PlayerMovement>();
+        player = FindObjectOfType<Matt_PlayerMovement>();
         grapplingGun = FindObjectOfType<GrapplingGun>();
-        orientation = temp.GetOrientaion();
-        playerRb = temp.gameObject.GetComponent<Rigidbody>();
+        orientation = player.GetOrientaion();
+        playerRb = player.gameObject.GetComponent<Rigidbody>();
         hitAngle = false;
 
     }
@@ -102,6 +104,15 @@ public class SwingHelper : MonoBehaviour
 
                 hitAngle = false;
                 inNegative = !inNegative;
+            }
+
+            if (player.GetReset())
+            {
+                if ((angle > 0) && Mathf.Abs(angle) > (minCheckAngle - 10) && Mathf.Abs(angle) < (maxCheckAngle + 10))
+                {
+
+                    player.TurnOffReset();
+                }
             }
 
         }
@@ -155,7 +166,7 @@ public class SwingHelper : MonoBehaviour
                 checking = false;
 
                 StartCoroutine(FixDirection());
-               // StartCoroutine(CheckForStuckHorizontal());
+                // StartCoroutine(CheckForStuckHorizontal());
             }
         }
 
@@ -231,22 +242,20 @@ public class SwingHelper : MonoBehaviour
 
     }
 
-    //IEnumerator CheckForStuckHorizontal()
-    //{
-    //    Vector3 playerPos = orientation.transform.position;
-    //    while (true)
-    //    {
+    public Vector3 GetActualDistaneToTarget()
+    {
+        if (grapplingGun.GetCurrentGrappledObject() != null)
+        {
+            var temp = (grapplingGun.GetCurrentGrappledObject().transform.position - orientation.transform.position);
+            temp.y = 0;
 
-    //        yield return new WaitForFixedUpdate();
+            dirToTargert = temp;
+            return temp;
 
-    //        if (Mathf.Abs(playerRb.velocity.y) < 5)
-    //        {
-    //            stuckHorizontal = true;
-    //        }
-
-    //        playerPos = orientation.transform.position;
-    //    }
-    //}
+        }
+        return Vector3.zero;
+   
+        }
 
 
 
