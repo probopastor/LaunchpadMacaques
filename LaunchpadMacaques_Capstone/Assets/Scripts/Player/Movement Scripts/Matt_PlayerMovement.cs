@@ -317,6 +317,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        //this.GetComponent<Rigidbody>().useGravity = true;
+
         //Initial FOV so when player finishes dashing they go back to initial FOV set.
         maxFovInitial = maxFOV - 10;
         //FOV during the dash.
@@ -872,13 +874,17 @@ public class Matt_PlayerMovement : MonoBehaviour
             gravity = defaultGravity;
         }
 
-        if ((!grappleGunReference.IsGrappling() && !grounded) && !collectibleController.GetIsActive()) // If in the air // (gameObject.transform.position.y > 20)
+        if ((!grappleGunReference.IsGrappling() && !grounded) && !collectibleController.GetIsActive() && !GetComponent<RespawnSystem>().ChangeGravityOnDeath()) // If in the air // (gameObject.transform.position.y > 20)
         {
             gravityVector = new Vector3(0, inAirGravity, 0);
         }
-        else if ((grappleGunReference.IsGrappling()) && !collectibleController.GetIsActive())
+        else if ((grappleGunReference.IsGrappling()) && !collectibleController.GetIsActive() && !GetComponent<RespawnSystem>().ChangeGravityOnDeath())
         {
             gravityVector = new Vector3(0, grapplingGravity, 0);
+        }
+        else if(GetComponent<RespawnSystem>().GetDeathInProgress())
+        {
+            gravityVector = new Vector3(0, 0, 0);
         }
 
         else

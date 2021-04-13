@@ -24,6 +24,7 @@ public class RespawnSystem : MonoBehaviour
     [Header("Death Effects")]
     [SerializeField] float delayBeforePlayerRespawns = 1;
     [SerializeField, Tooltip("The particles that will play when the player is respawned. ")] private ParticleSystem[] deathParticles;
+    [SerializeField, Tooltip("The time the player will sink for on death." )] private float sinkTime = 0f;
 
     [EventRef, SerializeField]
     string[] deathRattles;
@@ -53,6 +54,7 @@ public class RespawnSystem : MonoBehaviour
 
     private bool deathParticlesPlaying = false;
     private bool deathInProgress = false;
+    private bool changeGravityOnDeath = false;
 
     [SerializeField]
     private GrapplePoint currentGrapplePoint;
@@ -205,6 +207,8 @@ public class RespawnSystem : MonoBehaviour
 
         player.SetPlayerCanMove(false);
 
+        StartCoroutine(SinkTime());
+
         // Play death particles
         if (!deathParticlesPlaying)
         {
@@ -244,16 +248,25 @@ public class RespawnSystem : MonoBehaviour
         transitionManger.RespawnPlayerTranstion();
     }
 
+    private IEnumerator SinkTime()
+    {
+        yield return new WaitForSeconds(sinkTime);
+        this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        changeGravityOnDeath = true;
+    }
+
     /// <summary>
     /// Respawns the player at the last availible respawn position and stops nay grapples that might have been occuring.
     /// </summary>
     public void RespawnPlayer()
     {
+        //this.GetComponent<Rigidbody>().useGravity = true;
         PlayRandom(deathQuips);
         this.transform.position = currentRespawnPosition;
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
         gg.StopGrapple();
+        changeGravityOnDeath = false;
         deathInProgress = false;
     }
 
@@ -315,6 +328,15 @@ public class RespawnSystem : MonoBehaviour
     public bool GetDeathInProgress()
     {
         return deathInProgress;
+    }
+
+    /// <summary>
+    /// Returns true if gravity should be changed on death, false otherwise. 
+    /// </summary>
+    /// <returns></returns>
+    public bool ChangeGravityOnDeath()
+    {
+        return changeGravityOnDeath;
     }
 
     /// <summary>
