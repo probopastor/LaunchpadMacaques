@@ -7,13 +7,6 @@ public class MoveCamera : MonoBehaviour
     public Transform player;
     bool shaking;
     private Vector3 shakeAmount;
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            StartCoroutine(StartScreenShake(.5f, 20));
-        }
-    }
     private void FixedUpdate()
     {
         if (shaking)

@@ -106,6 +106,12 @@ public class DialogueBuilder : EditorWindow
         
     }
 
+    bool shouldClose = false;
+    public static void CloseWindow()
+    {
+        DialogueBuilder.instance.shouldClose = true;
+    }
+
     /// <summary>
     /// Defines the GUI for the Dialogue Builder
     /// </summary>
@@ -113,6 +119,12 @@ public class DialogueBuilder : EditorWindow
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)
             Close();
+        else if(shouldClose)
+        {
+            shouldClose = false;
+            Close();
+            return;
+        }
 
         //Make sure object is properly updated
         currentObject.Update();

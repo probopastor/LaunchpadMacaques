@@ -102,6 +102,11 @@ public class QuitConfirmation : MonoBehaviour
         else if(choice == "Deny")
         {
             confirm_panel.SetActive(false);
+
+            foreach (Button button in uiButtons)
+            {
+                button.interactable = true;
+            }
         }
 
 #endif
