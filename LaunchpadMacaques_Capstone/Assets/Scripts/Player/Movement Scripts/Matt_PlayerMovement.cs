@@ -78,11 +78,12 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The min velocity needed on the Y axis for FOV to change. ")] private float yFOVActicationVel = 15f;
     [SerializeField, Tooltip("The rate at which FOV is changed.")] private float fovChangeRate = 0.75f;
 
-    [SerializeField, Tooltip("Max FOV")] private float maxFOV = 120.75f;
+    [SerializeField, Tooltip("The max FOV in relation to the player's FOV set in the options menu. ")] private float maxFOV = 120.75f;
 
     [SerializeField, Tooltip("FOV While Dashing. ")] private float dashFOV = 0;
 
     private float minFOV = 60;
+    private float adjustedMaxFOV = 0;
     float m_fieldOfView = 60.0f;
     #endregion
 
@@ -313,11 +314,22 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        // Sets the FOV values if Dynamic FOV is enabled by the player.
         if (PlayerPrefs.HasKey("FovValue"))
         {
             maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
-            m_fieldOfView = PlayerPrefs.GetInt("FovValue");
             minFOV = PlayerPrefs.GetInt("FovValue");
+            m_fieldOfView = minFOV;
+            adjustedMaxFOV = minFOV + maxFOV;
+
+            Camera.main.fieldOfView = m_fieldOfView;
+
+            // Sets the FOV of all of the Cinemachine Virtual Cameras to be equal to the FOV of the main camera.
+            Cinemachine.CinemachineVirtualCamera[] camArray = FindObjectsOfType<Cinemachine.CinemachineVirtualCamera>();
+            foreach (Cinemachine.CinemachineVirtualCamera cam in camArray)
+            {
+                cam.m_Lens.FieldOfView = Camera.main.fieldOfView;
+            }
         }
 
 
@@ -1541,7 +1553,7 @@ public class Matt_PlayerMovement : MonoBehaviour
                 cam.m_Lens.FieldOfView = Camera.main.fieldOfView;
             }
 
-            m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, maxFOV);
+            m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, adjustedMaxFOV);
 
             // If not dashing, change FOV normally with speed. Otherwise, change FOV to dash FOV.
             if (!dashing)
