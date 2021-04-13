@@ -25,6 +25,7 @@ public class RespawnSystem : MonoBehaviour
     [SerializeField] float delayBeforePlayerRespawns = 1;
     [SerializeField, Tooltip("The particles that will play when the player is respawned. ")] private ParticleSystem[] deathParticles;
     [SerializeField, Tooltip("The time the player will sink for on death." )] private float sinkTime = 0f;
+    [SerializeField, Tooltip("The gravity modifier while the player is sinking in lava." )] private float sinkGravity = 0f;
 
     [EventRef, SerializeField]
     string[] deathRattles;
@@ -354,5 +355,15 @@ public class RespawnSystem : MonoBehaviour
         EventInstance randInstance = RuntimeManager.CreateInstance(randEvent);
         randInstance.start();
         randInstance.release();
+    }
+
+    /// <summary>
+    /// Returns the gravity modifier while the player is sinking in lava.
+    /// </summary>
+    /// <returns>Gravity modifier.</returns>
+    public Vector3 GetSinkGravity()
+    {
+        Vector3 gravityWhileSinking = new Vector3(0, sinkGravity, 0);
+        return gravityWhileSinking;
     }
 }

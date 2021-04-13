@@ -236,6 +236,8 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private bool canMove = true;
 
+    private bool sinkGravityUsed = false;
+
     [Header("Edge Detection")]
     [SerializeField] private float distanceXZ = 5;
     [SerializeField] private float distanceToCheckDown = 5;
@@ -874,21 +876,31 @@ public class Matt_PlayerMovement : MonoBehaviour
             gravity = defaultGravity;
         }
 
-        if ((!grappleGunReference.IsGrappling() && !grounded) && !collectibleController.GetIsActive() && !GetComponent<RespawnSystem>().ChangeGravityOnDeath()) // If in the air // (gameObject.transform.position.y > 20)
+        if ((!grappleGunReference.IsGrappling() && !grounded) && !collectibleController.GetIsActive() && !GetComponent<RespawnSystem>().GetDeathInProgress()) // If in the air // (gameObject.transform.position.y > 20)
         {
             gravityVector = new Vector3(0, inAirGravity, 0);
         }
-        else if ((grappleGunReference.IsGrappling()) && !collectibleController.GetIsActive() && !GetComponent<RespawnSystem>().ChangeGravityOnDeath())
+        else if ((grappleGunReference.IsGrappling()) && !collectibleController.GetIsActive() && !GetComponent<RespawnSystem>().GetDeathInProgress())
         {
             gravityVector = new Vector3(0, grapplingGravity, 0);
         }
-        else if(GetComponent<RespawnSystem>().GetDeathInProgress())
+        else if(!GetComponent<RespawnSystem>().ChangeGravityOnDeath() && GetComponent<RespawnSystem>().GetDeathInProgress())
+        {
+            if(!sinkGravityUsed)
+            {
+                sinkGravityUsed = true;
+                this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            }
+
+            gravityVector = GetComponent<RespawnSystem>().GetSinkGravity();
+        }
+        else if(GetComponent<RespawnSystem>().ChangeGravityOnDeath() && GetComponent<RespawnSystem>().GetDeathInProgress())
         {
             gravityVector = new Vector3(0, 0, 0);
         }
-
         else
         {
+            sinkGravityUsed = false;
             gravityVector = new Vector3(0, gravity, 0);
         }
 
@@ -1017,10 +1029,10 @@ public class Matt_PlayerMovement : MonoBehaviour
 
             }
         }
-        else
-        {
-            rb.velocity = Vector3.zero;
-        }
+        //else
+        //{
+        //    rb.velocity = Vector3.zero;
+        //}
     }
 
     private bool applyForceAbovePoint;
