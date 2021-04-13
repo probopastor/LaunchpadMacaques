@@ -130,6 +130,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -694,6 +699,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 48
+      objectReference: {fileID: 0}
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 48
+      objectReference: {fileID: 0}
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Center.z
+      value: -6
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -1159,6 +1189,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 114861675}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &72095438
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 72095439}
+  - component: {fileID: 72095440}
+  m_Layer: 0
+  m_Name: Corruption (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &72095439
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72095438}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -140, y: 20, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &72095440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72095438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &77891020
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1374,7 +1458,7 @@ PrefabInstance:
     - target: {fileID: 3662869239387556586, guid: ab784b8ddf03ef84cae4e0049cb1bcba,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3662869239387556586, guid: ab784b8ddf03ef84cae4e0049cb1bcba,
         type: 3}
@@ -3490,6 +3574,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -3853,6 +3942,60 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36b2d8b69ddfef641a8a5f25514f866a, type: 3}
+--- !u!1 &235315048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 235315049}
+  - component: {fileID: 235315050}
+  m_Layer: 0
+  m_Name: Corruption (13)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &235315049
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 235315048}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -40, y: 20, z: 300}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &235315050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 235315048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &235686057
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3943,6 +4086,114 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 235686057}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &239946885
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 239946886}
+  - component: {fileID: 239946887}
+  m_Layer: 0
+  m_Name: Corruption (21)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &239946886
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239946885}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -40, y: 20, z: 500}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &239946887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239946885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
+--- !u!1 &239996605
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 239996606}
+  - component: {fileID: 239996607}
+  m_Layer: 0
+  m_Name: Corruption (24)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &239996606
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239996605}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -87.8, y: 108.4, z: 485.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 24
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &239996607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239996605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &250365496
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3950,6 +4201,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2143577720}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -4188,10 +4444,55 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerSubFoldout.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerNames.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerNames.Array.data[0]
+      value: Trigger 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggerSubFoldout.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].eventType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].timeInLevelBeforeTrigger
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: triggers.Array.data[0].dialogue
+      value: 
+      objectReference: {fileID: 853618881}
     - target: {fileID: 1790872067108165574, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -540.53546
+      value: -16.9
       objectReference: {fileID: 0}
     - target: {fileID: 1790872067108165574, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -4201,7 +4502,7 @@ PrefabInstance:
     - target: {fileID: 1790872067108165574, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 655.21106
+      value: 70.6
       objectReference: {fileID: 0}
     - target: {fileID: 1790872067108165574, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -4227,21 +4528,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1790872067293571116, guid: e02315d1bca9dd54489263b84334ae29,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -540.53546
-      objectReference: {fileID: 0}
-    - target: {fileID: 1790872067293571116, guid: e02315d1bca9dd54489263b84334ae29,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 655.21106
-      objectReference: {fileID: 0}
-    - target: {fileID: 1790872067293571116, guid: e02315d1bca9dd54489263b84334ae29,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.6600037
       objectReference: {fileID: 0}
     - target: {fileID: 2205510989687640733, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -4311,22 +4597,22 @@ PrefabInstance:
     - target: {fileID: 4587646255516199491, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.42651367
+      value: -68.43871
       objectReference: {fileID: 0}
     - target: {fileID: 4587646255516199491, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.08648682
+      value: -15.972521
       objectReference: {fileID: 0}
     - target: {fileID: 4587646255516199491, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00000007450581
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4587646255516199491, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4930309191585369772, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -4351,7 +4637,7 @@ PrefabInstance:
     - target: {fileID: 5270046908357017528, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 540.9621
+      value: -67.23356
       objectReference: {fileID: 0}
     - target: {fileID: 5270046908357017528, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -4361,42 +4647,17 @@ PrefabInstance:
     - target: {fileID: 5270046908357017528, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -655.1245
-      objectReference: {fileID: 0}
-    - target: {fileID: 5270046908357017528, guid: e02315d1bca9dd54489263b84334ae29,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5270046908357017528, guid: e02315d1bca9dd54489263b84334ae29,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.00000007450581
-      objectReference: {fileID: 0}
-    - target: {fileID: 5270046908357017528, guid: e02315d1bca9dd54489263b84334ae29,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5270046908357017528, guid: e02315d1bca9dd54489263b84334ae29,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5270046908357017528, guid: e02315d1bca9dd54489263b84334ae29,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -17.978252
       objectReference: {fileID: 0}
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7027160114100868104, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -4411,7 +4672,7 @@ PrefabInstance:
     - target: {fileID: 7792715446289231160, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -20.499939
+      value: -20.5
       objectReference: {fileID: 0}
     - target: {fileID: 7840260332642151202, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -5199,6 +5460,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 308248493}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &311888401
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 311888402}
+  - component: {fileID: 311888403}
+  m_Layer: 0
+  m_Name: Corruption (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &311888402
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 311888401}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -40, y: 20, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &311888403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 311888401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &319355429
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5206,6 +5521,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -5428,7 +5748,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh40580
+  m_Name: pb_Mesh159380
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -5894,6 +6214,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 341493608}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &343773422
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 343773423}
+  - component: {fileID: 343773424}
+  m_Layer: 0
+  m_Name: Corruption (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &343773423
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343773422}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -240, y: 20, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &343773424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343773422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1 &347672916
 GameObject:
   m_ObjectHideFlags: 0
@@ -6096,6 +6470,168 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8244d3718a9ab4e49bd7690582a4d6a5, type: 3}
+--- !u!1 &357133776
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 357133777}
+  - component: {fileID: 357133778}
+  m_Layer: 0
+  m_Name: Corruption (6)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &357133777
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 357133776}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -140, y: 20, z: 100}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &357133778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 357133776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
+--- !u!1 &360067368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 360067369}
+  - component: {fileID: 360067370}
+  m_Layer: 0
+  m_Name: Corruption (10)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &360067369
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360067368}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -140, y: 20, z: 200}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &360067370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360067368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
+--- !u!1 &374786940
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 374786941}
+  - component: {fileID: 374786942}
+  m_Layer: 0
+  m_Name: Corruption (9)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &374786941
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374786940}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -40, y: 20, z: 200}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &374786942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374786940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &375314029
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6253,6 +6789,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -6607,6 +7148,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2143577720}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -6980,57 +7526,37 @@ PrefabInstance:
     - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_Size.x
-      value: 0.99179775
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_Size.z
-      value: 0.9989965
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_Size.y
-      value: 1.1212937
-      objectReference: {fileID: 0}
-    - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
-        type: 3}
-      propertyPath: m_Center.z
-      value: 0.00053176883
-      objectReference: {fileID: 0}
-    - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
-        type: 3}
-      propertyPath: m_Center.x
-      value: 0.002040524
-      objectReference: {fileID: 0}
-    - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
-        type: 3}
-      propertyPath: m_Center.y
-      value: 0.12519608
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1189174416255183089, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_Name
       value: Checkpoint
       objectReference: {fileID: 0}
-    - target: {fileID: 1189174416255183089, guid: a31f478b0dcc8b2418669dcd6771a7da,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.7442474
+      value: 114.25575
       objectReference: {fileID: 0}
     - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 124.3849
+      value: 127.3849
       objectReference: {fileID: 0}
     - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 313.41318
+      value: 280.41318
       objectReference: {fileID: 0}
     - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
@@ -7072,26 +7598,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4877727809911084705, guid: a31f478b0dcc8b2418669dcd6771a7da,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a31f478b0dcc8b2418669dcd6771a7da, type: 3}
 --- !u!4 &426032667 stripped
@@ -7107,6 +7613,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2143577720}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 36
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -7864,6 +8380,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 490445934}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &493584734
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 493584735}
+  - component: {fileID: 493584736}
+  m_Layer: 0
+  m_Name: Corruption (16)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &493584735
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493584734}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 60, y: 20, z: 400}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &493584736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493584734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &501991822
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8762,6 +9332,60 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8244d3718a9ab4e49bd7690582a4d6a5, type: 3}
+--- !u!1 &569152572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 569152573}
+  - component: {fileID: 569152574}
+  m_Layer: 0
+  m_Name: Corruption (15)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &569152573
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 569152572}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -240, y: 20, z: 300}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &569152574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 569152572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!4 &577649413 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7608552301973800388, guid: 70847c192ef118d4f983fb39f748bd87,
@@ -9068,6 +9692,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 590967278}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &591371733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 591371734}
+  - component: {fileID: 591371735}
+  m_Layer: 0
+  m_Name: Corruption (17)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &591371734
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591371733}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -40, y: 20, z: 400}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &591371735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591371733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &598435688
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9075,6 +9753,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2143577720}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -9165,6 +9848,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2143577720}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -9725,6 +10413,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 644425131}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &645484129
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 645484130}
+  - component: {fileID: 645484131}
+  m_Layer: 0
+  m_Name: Corruption (14)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &645484130
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645484129}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -140, y: 20, z: 300}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &645484131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645484129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &658141974
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11134,6 +11876,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 110828724}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &766860352
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 766860353}
+  - component: {fileID: 766860354}
+  m_Layer: 0
+  m_Name: Corruption (18)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &766860353
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766860352}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -140, y: 20, z: 400}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 18
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &766860354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766860352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &770828325
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11566,6 +12362,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 807499901}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &810876589
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 810876590}
+  - component: {fileID: 810876591}
+  m_Layer: 0
+  m_Name: Corruption
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &810876590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810876589}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 60, y: 20, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &810876591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810876589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &811237014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11680,11 +12530,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815702984}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -85.39083, y: 91.917595, z: -23.342073}
-  m_LocalScale: {x: 49.77139, y: 5, z: 11.268988}
+  m_LocalPosition: {x: -86.5, y: 195.73259, z: -16}
+  m_LocalScale: {x: 33.636475, y: 1.9427557, z: 27.4902}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &816700141
 PrefabInstance:
@@ -11936,6 +12786,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2143577720}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -12013,6 +12868,143 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 83f55404cd28d4942b90af97b270aa15, type: 3}
+--- !u!114 &853618881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c17c8a44d499b4cbc5f12bcfffed59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lines:
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>Really? How are you still alive? I keep making it harder and,
+      somehow, you keep living.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>You're welcome.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Can she even hear you?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>No, not yet. Not until I'm in control that is.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Sorry, but I'm not going to let that happen.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>We'll see about that.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>Are you going to answer me or are you just going to keep staring?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>I'll leave you along as soon as you help me. You're the one
+      who did this to me. You're the reason I'm stuck with this parasite talking
+      over me.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>I can't help you.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Can't? Or won't?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>Yes.</typewriter>
+    audioToPlay: 
+  - lineType: 2
+    character:
+      characterName: The Wizard
+      imgPath: 
+      textColor: {r: 0.24905658, g: 1, b: 0.91209424, a: 1}
+    text: 
+    audioToPlay: 
+  - lineType: 1
+    character:
+      characterName: The Wizard
+      imgPath: 
+      textColor: {r: 0.24905658, g: 1, b: 0.91209424, a: 1}
+    text: The wizard disappears again.
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Seriously? Again?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>You're so naive.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Let's get going. She's out of places to hide.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>I hate humans.</typewriter>
+    audioToPlay: 
+  pauseForDuration: 1
+  textDisplayTime: 5
 --- !u!4 &870940588 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8442910905155546278, guid: 8244d3718a9ab4e49bd7690582a4d6a5,
@@ -12668,7 +13660,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh39504
+  m_Name: pb_Mesh158152
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -14624,6 +15616,221 @@ Transform:
   m_Father: {fileID: 1726182538}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1028156077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c17c8a44d499b4cbc5f12bcfffed59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lines:
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Stop! There's nowhere left for you to run. </typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>Fine. You caught me. Now what? You want me to fix you? To get
+      rid of whatever entity is attached to you?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Yes.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>I can't.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>You keep saying you can't, but you have to.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>You don't get it, do you? I can't fix you. Look around. I can't
+      even fix my own castle. I can't fix myself. There's no cure for this. I didn't
+      mean to hit you with the spell. Nobody else was supposed to be out there. No
+      one ever goes into that forest.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>Do you really believe her?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>You didn't mean to? You expect me to believe that?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>I don't care if you believe me or not; it's the truth. I was
+      practicing a spell to try and cure myself. Look at me. I'm cursed just like
+      you are. The spell I was trying got out of control. It hit you by mistake.
+      Now we're both cursed.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>Are you really going to stand here and listen to her lie to
+      you? She just doesn't want to undo her spell. Let's leave and we can figure
+      out a way to live together. Peacefully.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>Stop trying to get inside my head! Let me listen to what she
+      has to say.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>How are you able to tell me this? Why are you telling me this?
+      Doesn't this parasite, or curse, or whatever it is take control of you?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>Yes, but not all of you. And not all of the time. My mind is
+      still trapped in here even when I'm not in control, but it can't control me
+      constantly. At least, not yet. That's how I'm speaking to you right now. I'm
+      me. Think of it like I'm two people trapped inside one body. Or one person
+      and a monster trapped inside one person's body.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>'Monster' seems a bit harsh...</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>How... How long do I have?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>A few more days? Probably less. It was one week after I was
+      cursed that it took over completely for the first time. I got control back
+      after a few hours. Now, it takes control of me most of the day. I don't know
+      how much longer I have until I won't get control again.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>What happens when it takes over completely?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>I don't know. It tries to take over the world?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>Tries? One of us alone could easily take over this puny, mortal
+      world.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>So, what, it's just waiting until you can't do anything anymore?
+      Then why the huge game of cat and mouse throughout the castle?</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>The more you use its powers, the quicker it'll take control.
+      And with two of them... Well... They'll be unstoppable.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>You knew. That's why you were so eager to help me. You lied
+      to me.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Corruption
+      imgPath: 
+      textColor: {r: 0.6617812, g: 0.2492973, b: 0.6698113, a: 1}
+    text: <typewriter>I didn't lie. It was true that if you died, I would die too.
+      I just left out the part about me getting more powerful.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: You
+      imgPath: 
+      textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
+    text: <typewriter>There has to be a way to fix this. Some kind of cure. A spell,
+      a potion, an incantation, something. Please, you have to try.</typewriter>
+    audioToPlay: 
+  - lineType: 0
+    character:
+      characterName: Wizard
+      imgPath: 
+      textColor: {r: 1, g: 0.48151934, b: 0.29671866, a: 1}
+    text: <typewriter>...Come on. We don't have very long. Let's try and figure something
+      out.</typewriter>
+    audioToPlay: 
+  pauseForDuration: 1
+  textDisplayTime: 5
 --- !u!1001 &1029233616
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14738,7 +15945,7 @@ PrefabInstance:
     - target: {fileID: 2560896460728453257, guid: 0bb879055e3dcd44b92718809053f57b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2560896460728453257, guid: 0bb879055e3dcd44b92718809053f57b,
         type: 3}
@@ -16289,6 +17496,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1103800326}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1111845083
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1111845084}
+  - component: {fileID: 1111845085}
+  m_Layer: 0
+  m_Name: Corruption (19)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1111845084
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1111845083}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -240, y: 20, z: 400}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1111845085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1111845083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &1122825517
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16339,7 +17600,7 @@ PrefabInstance:
     - target: {fileID: 4069079121501273345, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 94
       objectReference: {fileID: 0}
     - target: {fileID: 5216400769558545688, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
@@ -16379,7 +17640,7 @@ PrefabInstance:
     - target: {fileID: 5216400769558545688, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5216400769558545688, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
@@ -16444,33 +17705,38 @@ PrefabInstance:
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[0].areaCenter.y
-      value: 91.917595
+      value: 195.73259
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[0].boxSize.x
-      value: 49.77139
+      value: 33.636475
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[0].boxSize.y
-      value: 5
+      value: 1.9427557
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[0].boxSize.z
-      value: 11.268988
+      value: 27.4902
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[0].areaCenter.z
-      value: -23.342073
+      value: -13.641241
       objectReference: {fileID: 0}
     - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
         type: 3}
       propertyPath: triggers.Array.data[0].areaCenter.x
       value: -85.39083
       objectReference: {fileID: 0}
+    - target: {fileID: 6306741161328001735, guid: 3a15b51a58856684d8d3cdfbb7b1a263,
+        type: 3}
+      propertyPath: triggers.Array.data[0].dialogue
+      value: 
+      objectReference: {fileID: 1028156077}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a15b51a58856684d8d3cdfbb7b1a263, type: 3}
 --- !u!1001 &1123817532
@@ -16801,6 +18067,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2143577720}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -18404,6 +19675,115 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7868f41013436074f90de28d60c90166, type: 3}
+--- !u!1 &1256765876
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1256765877}
+  m_Layer: 0
+  m_Name: AUDIO AMBIENCE---------
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1256765877
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256765876}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 810876590}
+  - {fileID: 311888402}
+  - {fileID: 72095439}
+  - {fileID: 343773423}
+  - {fileID: 1467277788}
+  - {fileID: 1557317237}
+  - {fileID: 357133777}
+  - {fileID: 1841968440}
+  - {fileID: 1990625706}
+  - {fileID: 374786941}
+  - {fileID: 360067369}
+  - {fileID: 1267467829}
+  - {fileID: 1333882941}
+  - {fileID: 235315049}
+  - {fileID: 645484130}
+  - {fileID: 569152573}
+  - {fileID: 493584735}
+  - {fileID: 591371734}
+  - {fileID: 766860353}
+  - {fileID: 1111845084}
+  - {fileID: 1587325177}
+  - {fileID: 239946886}
+  - {fileID: 1345690467}
+  - {fileID: 1721735843}
+  - {fileID: 239996606}
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1267467828
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1267467829}
+  - component: {fileID: 1267467830}
+  m_Layer: 0
+  m_Name: Corruption (11)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1267467829
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267467828}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -240, y: 20, z: 200}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1267467830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267467828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &1272840815
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19052,6 +20432,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1438277384}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1333882940
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1333882941}
+  - component: {fileID: 1333882942}
+  m_Layer: 0
+  m_Name: Corruption (12)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1333882941
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1333882940}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 60, y: 20, z: 300}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1333882942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1333882940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &1341915699
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19202,6 +20636,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1342050673}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1345690466
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1345690467}
+  - component: {fileID: 1345690468}
+  m_Layer: 0
+  m_Name: Corruption (22)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1345690467
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1345690466}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -140, y: 20, z: 500}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 22
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1345690468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1345690466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &1350849944
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20561,6 +22049,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -20811,6 +22304,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -21204,7 +22702,7 @@ Transform:
   - {fileID: 1178402724}
   - {fileID: 1713988416}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1460094426
 PrefabInstance:
@@ -21290,6 +22788,60 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8244d3718a9ab4e49bd7690582a4d6a5, type: 3}
+--- !u!1 &1467277787
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1467277788}
+  - component: {fileID: 1467277789}
+  m_Layer: 0
+  m_Name: Corruption (4)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1467277788
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467277787}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 60, y: 20, z: 100}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1467277789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467277787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &1468252048
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21447,6 +22999,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -21639,11 +23196,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Checkpoint (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 1189174416255183089, guid: a31f478b0dcc8b2418669dcd6771a7da,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21697,11 +23249,6 @@ PrefabInstance:
     - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4877727809911084705, guid: a31f478b0dcc8b2418669dcd6771a7da,
-        type: 3}
-      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -22114,6 +23661,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2143577720}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -22197,6 +23749,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1545934459}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1557317236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1557317237}
+  - component: {fileID: 1557317238}
+  m_Layer: 0
+  m_Name: Corruption (5)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1557317237
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557317236}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -40, y: 20, z: 100}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1557317238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557317236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &1561986870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22204,6 +23810,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -22603,8 +24214,62 @@ Transform:
   - {fileID: 1494482427}
   - {fileID: 1916006553}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1587325176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1587325177}
+  - component: {fileID: 1587325178}
+  m_Layer: 0
+  m_Name: Corruption (20)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1587325177
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1587325176}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 60, y: 20, z: 500}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 20
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1587325178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1587325176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &1592072116
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23969,6 +25634,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1719711314}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1721735842
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1721735843}
+  - component: {fileID: 1721735844}
+  m_Layer: 0
+  m_Name: Corruption (23)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1721735843
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721735842}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -240, y: 20, z: 500}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 23
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1721735844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721735842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1 &1726182537
 GameObject:
   m_ObjectHideFlags: 0
@@ -24609,6 +26328,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -24694,6 +26418,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -25972,6 +27701,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 843677029}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1841968439
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1841968440}
+  - component: {fileID: 1841968441}
+  m_Layer: 0
+  m_Name: Corruption (7)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1841968440
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841968439}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -240, y: 20, z: 100}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1841968441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841968439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1 &1863844095
 GameObject:
   m_ObjectHideFlags: 0
@@ -26361,6 +28144,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -26446,6 +28234,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -27294,25 +29087,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: Checkpoint
       objectReference: {fileID: 0}
-    - target: {fileID: 1189174416255183089, guid: a31f478b0dcc8b2418669dcd6771a7da,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 200.25575
+      value: 217.25575
       objectReference: {fileID: 0}
     - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 228.3849
+      value: 229.3849
       objectReference: {fileID: 0}
     - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 307.41318
+      value: 301.41318
       objectReference: {fileID: 0}
     - target: {fileID: 4059597753330016286, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
@@ -27918,6 +29706,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2143577720}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -28196,7 +29989,7 @@ PrefabInstance:
     - target: {fileID: 4698832026194030293, guid: 36995a23c518ba34f9bc7bc7d1204c6a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4698832026194030293, guid: 36995a23c518ba34f9bc7bc7d1204c6a,
         type: 3}
@@ -28518,6 +30311,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -28686,6 +30484,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1988256251}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1990625705
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1990625706}
+  - component: {fileID: 1990625707}
+  m_Layer: 0
+  m_Name: Corruption (8)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1990625706
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1990625705}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 60, y: 20, z: 200}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1256765877}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1990625707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1990625705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &1991068839
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29751,6 +31603,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name
@@ -29861,7 +31718,7 @@ Transform:
   - {fileID: 781830763}
   - {fileID: 958014573}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2101611822
 PrefabInstance:
@@ -30216,6 +32073,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 440681164}
     m_Modifications:
+    - target: {fileID: 6962597661288414461, guid: 83f55404cd28d4942b90af97b270aa15,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8114621900284278105, guid: 83f55404cd28d4942b90af97b270aa15,
         type: 3}
       propertyPath: m_Name

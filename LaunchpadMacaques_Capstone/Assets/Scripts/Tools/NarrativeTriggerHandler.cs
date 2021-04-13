@@ -75,6 +75,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private const string LAST_COMPLETED_SCENE_KEY = "NarrativeLastCompletedScene";
 
+    IEnumerator dialougeTrigger;
+    IEnumerator flash;
+
 
     [System.Serializable]
     public class Trigger
@@ -183,7 +186,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         //If there was a previous level and it hasn't been marked as completed, run level completed event
         if (lastLevel >= 0
-            && HandleSaving.instance.IsLevelComplete(System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(lastLevel))))
+            /*&& HandleSaving.instance.IsLevelComplete(System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(lastLevel)))*/)
         {
             LevelCompletedActivation(lastLevel);
         }
@@ -257,13 +260,22 @@ public class NarrativeTriggerHandler : MonoBehaviour
             {
                 if (!FindObjectOfType<InformationPost>().GetTutorialCanvas())
                 {
-                    StartCoroutine(RunDialogue(trigger));
+                    dialougeTrigger = RunDialogue(trigger);
+                    StartCoroutine(dialougeTrigger);
+                }
+
+                else
+                {
+                    FindObjectOfType<InformationPost>().TurnOffTutorialCanvas();
+                    dialougeTrigger = RunDialogue(trigger);
+                    StartCoroutine(dialougeTrigger);
                 }
             }
 
             else
             {
-                StartCoroutine(RunDialogue(trigger));
+                dialougeTrigger = RunDialogue(trigger);
+                StartCoroutine(dialougeTrigger);
             }
   
         }
@@ -334,8 +346,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         int lastNameplateUsed = -1;
         while ((currentLine = trigger.dialogue.NextLine()) != null)
         {
-            //Start adding lines to the log
-            Log.instance.PushToLog(currentLine);
+           
 
             //Update nameplates
             //No nameplate yet
@@ -369,6 +380,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
             //Run text effects and apply them to the dialogue window
             TextEffectHandler.instance.RunText(dialogueText, currentLine.text);
 
+            currentLine.text = dialogueText.text;
+            //Start adding lines to the log
+            Log.instance.PushToLog(currentLine);
+
             //Play audio for associated line if applicable
             FMOD.Studio.EventDescription desc;
             //If the trigger has an audio source assigned, play the associated sound (if it has one)
@@ -400,7 +415,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
                 //Text has finished all its effects, prompt the player to click to continue
                 clickToContinue.SetActive(true);
-                StartCoroutine(Flash(clickToContinue));
+                flash = Flash(clickToContinue);
+                StartCoroutine(flash);
 
                 //Effects are done, player must click to proceed to the next 
                 while(!Input.GetButtonDown("Fire1") || Log.instance.IsActive() || mouseOverButton)
@@ -451,6 +467,34 @@ public class NarrativeTriggerHandler : MonoBehaviour
         canvas.gameObject.SetActive(false);
 
         trigger.isRunning = false;
+    }
+
+    public void CancelDialouge()
+    {
+        if(dialougeTrigger != null)
+        {
+            StopCoroutine(dialougeTrigger);
+        }
+
+        if(flash != null)
+        {
+            StopCoroutine(flash);
+        }
+        Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        //Reset Nameplates
+        foreach (TMP_Text text in nameplateText)
+        {
+            text.text = "";
+        }
+        foreach (GameObject nameplate in nameplate)
+        {
+            nameplate.SetActive(false);
+        }
+
+        canvas.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -635,7 +679,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         //No Matching Triggers found :(
         if (filteredList.Count <= 0)
+        {
+            LevelCompletedEventHasBeenCompleted?.Invoke();
             return;
+        }
 
         //Pick a random one out of the list to activate
         currentTrigger = filteredList[Random.Range(0, filteredList.Count)];
@@ -650,7 +697,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
     /// </summary>
     private void UpdateLastLevelPlayerPref()
     {
-        PlayerPrefs.SetInt(LAST_COMPLETED_SCENE_KEY, UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        PlayerPrefs.SetInt(LAST_COMPLETED_SCENE_KEY, UnityEngine.SceneManagement.SceneUtility.GetBuildIndexByScenePath(UnityEngine.SceneManagement.SceneManager.GetActiveScene().path));
     }
 
     #endregion

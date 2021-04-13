@@ -81,6 +81,7 @@ public class PauseManager : MonoBehaviour
         {
             if (!gameLost && !gameWon && !HTPMenu.activeSelf && !optionsMenu.transform.parent.gameObject.activeSelf)
             {
+                narrative.CancelDialouge();
                 PauseGame();
             }
 

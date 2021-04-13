@@ -184,8 +184,6 @@ public class GameplayInputController : MonoBehaviour
         SetCrouchEvent();
         SetBatmanGrapple();
         SetDropCube();
-
-        controls.GamePlay.ChangSwingType.performed += OnChangeSwingEvent;
     }
 
     #region SetInputs
@@ -262,22 +260,6 @@ public class GameplayInputController : MonoBehaviour
 
     #region Detect Inputs
 
-    private void OnChangeSwingEvent(InputAction.CallbackContext cxt)
-    {
-        holdDownToSwing = !holdDownToSwing;
-
-        if (holdDownToSwing)
-        {
-            controls.GamePlay.StartGrapple.canceled += OnStopGrapple;
-            controls.GamePlay.StopGrapple.performed -= OnStopGrapple;
-        }
-
-        else if (!holdDownToSwing)
-        {
-            controls.GamePlay.StopGrapple.performed += OnStopGrapple;
-            controls.GamePlay.StartGrapple.canceled -= OnStopGrapple;
-        }
-    }
 
     private void OnCrouchEvent(InputAction.CallbackContext cxt)
     {

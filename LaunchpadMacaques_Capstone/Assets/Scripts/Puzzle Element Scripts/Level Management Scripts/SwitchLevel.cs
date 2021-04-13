@@ -11,11 +11,16 @@ public class SwitchLevel : MonoBehaviour
 {
     [SerializeField, Tooltip("The name of the scene this object should load when triggered. ")] private string nextLevelName;
 
+
+    [SerializeField, Tooltip("Should this portal load the next level in the level progression")] bool playNextLevel = false;
+
     Matt_PlayerMovement player;
+    HandleSaving handleSaving;
 
     private void Start()
     {
         player = FindObjectOfType<Matt_PlayerMovement>();
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -33,9 +38,19 @@ public class SwitchLevel : MonoBehaviour
     /// </summary>
     private void SwitchScenes()
     {
+        handleSaving = FindObjectOfType<HandleSaving>();
         player.SetPlayerCanMove(false);
-        FindObjectOfType<HandleSaving>().LevelCompleted();
-        FindObjectOfType<ButtonTransitionManager>().SwitchScene(nextLevelName);
+        handleSaving.LevelCompleted();
+        if (!playNextLevel)
+        {
+            FindObjectOfType<ButtonTransitionManager>().SwitchScene(nextLevelName);
+        }
+
+        else
+        {
+            FindObjectOfType<ButtonTransitionManager>().SwitchScene(handleSaving.GetNextLevel());
+        }
+
         
     }
 }
