@@ -317,19 +317,7 @@ public class Matt_PlayerMovement : MonoBehaviour
         // Sets the FOV values if Dynamic FOV is enabled by the player.
         if (PlayerPrefs.HasKey("FovValue"))
         {
-            maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
-            minFOV = PlayerPrefs.GetInt("FovValue");
-            m_fieldOfView = minFOV;
-            adjustedMaxFOV = minFOV + maxFOV;
-
-            Camera.main.fieldOfView = m_fieldOfView;
-
-            // Sets the FOV of all of the Cinemachine Virtual Cameras to be equal to the FOV of the main camera.
-            Cinemachine.CinemachineVirtualCamera[] camArray = FindObjectsOfType<Cinemachine.CinemachineVirtualCamera>();
-            foreach (Cinemachine.CinemachineVirtualCamera cam in camArray)
-            {
-                cam.m_Lens.FieldOfView = Camera.main.fieldOfView;
-            }
+            SetFOV();
         }
 
 
@@ -400,7 +388,7 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
         }
 
-        changeFOV();
+        ChangeFOV();
 
         //Particles with speed
         float speed = rb.velocity.magnitude;
@@ -1537,13 +1525,38 @@ public class Matt_PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
+    /// Sets the FOV based on the value of the FOV slider. 
+    /// </summary>
+    public void SetFOV()
+    {
+        maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
+        minFOV = PlayerPrefs.GetInt("FovValue");
+        m_fieldOfView = minFOV;
+        adjustedMaxFOV = minFOV + maxFOV;
+
+        Camera.main.fieldOfView = m_fieldOfView;
+
+        // Sets the FOV of all of the Cinemachine Virtual Cameras to be equal to the FOV of the main camera.
+        Cinemachine.CinemachineVirtualCamera[] camArray = FindObjectsOfType<Cinemachine.CinemachineVirtualCamera>();
+        foreach (Cinemachine.CinemachineVirtualCamera cam in camArray)
+        {
+            cam.m_Lens.FieldOfView = Camera.main.fieldOfView;
+        }
+    }
+
+    /// <summary>
     /// Changes the FOV with speed and when the player dashes. 
     /// </summary>
-    void changeFOV()
+    void ChangeFOV()
     {
 
         if (PlayerPrefs.GetInt("FOV") == 1)
         {
+            // Sets FOV values if FOV was changed in the options menu. 
+            //maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
+            //minFOV = PlayerPrefs.GetInt("FovValue");
+            //adjustedMaxFOV = minFOV + maxFOV;
+
             Camera.main.fieldOfView = m_fieldOfView;
 
             // Sets the FOV of all of the Cinemachine Virtual Cameras to be equal to the FOV of the main camera.
