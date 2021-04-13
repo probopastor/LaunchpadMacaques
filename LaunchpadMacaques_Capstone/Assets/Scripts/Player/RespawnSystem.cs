@@ -8,6 +8,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
+using FMOD.Studio;
 
 public class RespawnSystem : MonoBehaviour
 {
@@ -22,6 +24,11 @@ public class RespawnSystem : MonoBehaviour
     [Header("Death Effects")]
     [SerializeField] float delayBeforePlayerRespawns = 1;
     [SerializeField, Tooltip("The particles that will play when the player is respawned. ")] private ParticleSystem[] deathParticles;
+
+    [EventRef, SerializeField]
+    string[] deathRattles;
+    [EventRef, SerializeField]
+    string[] deathQuips;
     #endregion
 
     #region Private Variables
@@ -194,6 +201,8 @@ public class RespawnSystem : MonoBehaviour
 
     IEnumerator KillPlayer()
     {
+        PlayRandom(deathRattles);
+
         player.SetPlayerCanMove(false);
 
         // Play death particles
@@ -240,6 +249,7 @@ public class RespawnSystem : MonoBehaviour
     /// </summary>
     public void RespawnPlayer()
     {
+        PlayRandom(deathQuips);
         this.transform.position = currentRespawnPosition;
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
@@ -316,4 +326,11 @@ public class RespawnSystem : MonoBehaviour
         currentGrapplePoint = grapplePoint;
     }
 
+    public void PlayRandom(string[] vs)
+    {
+        string randEvent = vs[Random.Range(0, vs.Length)];
+        EventInstance randInstance = RuntimeManager.CreateInstance(randEvent);
+        randInstance.start();
+        randInstance.release();
+    }
 }
