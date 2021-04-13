@@ -374,10 +374,6 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-
-        }
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && Time.timeScale > 0)
         {
             if (canMove)
@@ -430,6 +426,17 @@ public class Matt_PlayerMovement : MonoBehaviour
         EdgeDetection();
 
         SprintFeedBack();
+    }
+
+    /// <summary>
+    /// Will Reset the players Grapple (Slow down their velocity, and changes how forces are applied to the player)
+    /// </summary>
+    public void ResetGrapple()
+    {
+        reset = true;
+        applyForceAbovePoint = true;
+        rb.velocity /= 10;
+        rb.angularVelocity /= 10;
     }
 
     private void SprintFeedBack()
@@ -703,14 +710,14 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         killForce = true;
 
-        if (lowVelocityDuration != 0)
-        {
-            yield return new WaitForSeconds(lowVelocityDuration);
-        }
-        else
-        {
-            yield return new WaitForEndOfFrame();
-        }
+        //if (lowVelocityDuration != 0)
+        //{
+        //    yield return new WaitForSeconds(lowVelocityDuration);
+        //}
+        //else
+        //{
+        //    yield return new WaitForEndOfFrame();
+        //}
 
         if ((rb.velocity.x < xVelocityResetRange && rb.velocity.x > -xVelocityResetRange) &&
            (rb.velocity.y < yVelocityResetRange && rb.velocity.y > -yVelocityResetRange) &&
@@ -974,11 +981,19 @@ public class Matt_PlayerMovement : MonoBehaviour
             // If Swing Lock is not active, and the player is grappling, add a force in the player's orientation
             else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
             {
+             
                 // If the force can be applied, add a force in the direction of the player's orientation.
-                if (grappleGunReference.GetCanApplyForce())
+              if (grappleGunReference.GetCanApplyForce())
                 {
-                    if (!swingHelper.StuckHorizontal())
+
+                    if (reset)
                     {
+                        rb.AddForce(swingHelper.GetActualDistaneToTarget() * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
+                    }
+                    
+                    else if (!swingHelper.StuckHorizontal())
+                    {
+                        applyForceAbovePoint = false;
                         rb.AddForce(((orientation.transform.forward * 2 * grappleGunReference.GetSwingSpeed()) +
                              (swingHelper.GetDirectionToTarget() * (swingHelper.GetDirectionChangeIntensity() * grappleGunReference.GetSwingSpeed()))) * Time.deltaTime);
                         if (swingHelper.GetDirectionToTarget() != Vector3.zero)
@@ -987,11 +1002,11 @@ public class Matt_PlayerMovement : MonoBehaviour
                         }
                     }
 
-                    //else
-                    //{
-                    //    rb.AddForce(swingHelper.GetDirectionToTarget() * (swingHelper.GetDirectionChangeIntensity() * grappleGunReference.GetSwingSpeed()) * Time.deltaTime);
-                    //    swingHelper.UsedDirectionChange();
-                    //}
+                }
+
+                else if(applyForceAbovePoint)
+                {
+                    rb.AddForce((-orientation.transform.forward * .1f * grappleGunReference.GetSwingSpeed()));
                 }
 
             }
@@ -1000,6 +1015,13 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             rb.velocity = Vector3.zero;
         }
+    }
+
+    private bool applyForceAbovePoint;
+    private bool reset;
+    public void HitAngle(bool use)
+    {
+        applyForceAbovePoint = use;
     }
 
     #region Coyote Time Methods
@@ -1585,6 +1607,18 @@ public class Matt_PlayerMovement : MonoBehaviour
     public bool CanPlayerMove()
     {
         return canMove;
+    }
+
+    public void TurnOffReset()
+    {
+
+
+        reset = false;
+    }
+
+    public bool GetReset()
+    {
+        return reset;
     }
 
     /// <summary>
