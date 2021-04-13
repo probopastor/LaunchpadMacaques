@@ -1036,6 +1036,7 @@ GameObject:
   - component: {fileID: 7608552302251296134}
   - component: {fileID: 3130467721882929038}
   - component: {fileID: 3130467721882929039}
+  - component: {fileID: 7294867629235294423}
   m_Layer: 0
   m_Name: Fire Holder
   m_TagString: KillZone
@@ -1277,6 +1278,29 @@ MonoBehaviour:
     type: 3}
   endpointScale: 7
   lineRenderer: {fileID: 0}
+--- !u!114 &7294867629235294423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7608552302251296132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Corruption
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 6.4
+  OverrideMaxDistance: 99
 --- !u!1001 &441759927
 PrefabInstance:
   m_ObjectHideFlags: 0

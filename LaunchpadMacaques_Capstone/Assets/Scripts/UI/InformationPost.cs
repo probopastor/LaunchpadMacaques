@@ -146,6 +146,11 @@ public class InformationPost : A_InputType
         return informationText.gameObject.transform.parent.gameObject.activeSelf;
     }
 
+    public void TurnOffTutorialCanvas()
+    {
+        informationText.gameObject.transform.parent.gameObject.SetActive(false);
+    }
+
     public void SetInformationPost(string newString)
     {
         information = newString;
