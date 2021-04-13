@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1896414930489051276
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1896414930489051278}
+  - component: {fileID: 1896414930489051277}
+  m_Layer: 0
+  m_Name: Falling Object Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1896414930489051278
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1896414930489051276}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 486.91348, y: 129.75688, z: -321.19794}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1896414930489051277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1896414930489051276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ebe537c00ddbc84db987b41e22338d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceObjects:
+  - obj: {fileID: 0}
+    fallSpeed: 50
+    delayBeforeFalling: 5
+    deathTags: []
+    shakeSpeed: 40
+    shakeAmmount: 5
+    playerCanStandOn: 0
+    respawnOnDeath: 0
+    distanceToStartFalling: 20
+  checkPointObjects:
+  - obj: {fileID: 0}
+    fallSpeed: 50
+    delayBeforeFalling: 5
+    deathTags: []
+    shakeSpeed: 40
+    shakeAmmount: 5
+    playerCanStandOn: 0
+    respawnOnDeath: 0
+    checkPointObjet: {fileID: 0}
+  startOfLevelObjects:
+  - obj: {fileID: 0}
+    fallSpeed: 50
+    delayBeforeFalling: 5
+    deathTags: []
+    shakeSpeed: 40
+    shakeAmmount: 5
+    playerCanStandOn: 0
+    respawnOnDeath: 0
+  deafultDeathTags:
+  - KillZone
