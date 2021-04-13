@@ -29,7 +29,6 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Header("Player Transform Assignables")]
     [SerializeField, Tooltip("The transform of the player's camera. ")] private Transform playerCam;
     [SerializeField, Tooltip("The transform of the player's orientation ")] private Transform orientation;
-    float m_fieldOfView = 60.0f;
     #endregion
 
     //Other
@@ -74,12 +73,17 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     #region Movement FOV Variables
     [Header("Movement FOV Variables")]
-    [SerializeField] private float xFOVActivationVel = 40f;
-    [SerializeField] private float zFOVActivationVel = 40f;
-    [SerializeField] private float yFOVActicationVel = 15f;
-    [SerializeField] private float fovChangeRate = 0.75f;
-    [SerializeField] private float maxFOV = 120.75f;
-    [SerializeField] private float maxFOVSpeedScale = .05f;
+    [SerializeField, Tooltip("The min velocity needed on the X axis for FOV to change.")] private float xFOVActivationVel = 40f;
+    [SerializeField, Tooltip("The min velocity needed on the Z axis for FOV to change. ")] private float zFOVActivationVel = 40f;
+    [SerializeField, Tooltip("The min velocity needed on the Y axis for FOV to change. ")] private float yFOVActicationVel = 15f;
+    [SerializeField, Tooltip("The rate at which FOV is changed.")] private float fovChangeRate = 0.75f;
+
+    [SerializeField, Tooltip("Max FOV")] private float maxFOV = 120.75f;
+
+    [SerializeField, Tooltip("FOV While Dashing. ")] private float dashFOV = 0;
+
+    private float minFOV = 60;
+    float m_fieldOfView = 60.0f;
     #endregion
 
     #region Grappling Velocity Reset Variables
@@ -145,8 +149,6 @@ public class Matt_PlayerMovement : MonoBehaviour
     [Tooltip("The dash ammount that will be applied to the player, when using the addForceDah" +
     "This ammount is only applied to the player for one frame")]
     private float impulseDashAmmount = 4000;
-    private bool useAddForceDash = false;
-    private bool useCourtineDash = true;
 
     [SerializeField] GameObject dashUI;
     #endregion
@@ -185,8 +187,6 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField]
     Animator anim;
 
-    private float minFOV = 60;
-
     #region Getters/Setters
     public float GetMaxVelocity()
     {
@@ -206,6 +206,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     private float x, y;
     private bool jumping = false, sprinting = false, crouching = false;
     public bool canDash = false;
+    private bool dashing = false;
 
     private PauseManager pauseManager;
 
@@ -214,14 +215,6 @@ public class Matt_PlayerMovement : MonoBehaviour
     private Vector3 latestOrientation;
 
     private float deafultVelocity;
-
-    private float currentMaxFOV = 0;
-    [SerializeField, Tooltip("Sets the initial max field of view for the camera")] float maxFovInitial = 0;
-    private float maxFovOnDash = 0;
-
-    private float lastVelocity = 0;
-
-    private int lastMaxFOV;
 
     private float mouseX;
     private float mouseY;
@@ -307,6 +300,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
         //Cannot dash while on the ground.
         canDash = false;
+        dashing = false;
         DashFeedback(false);
 
         applyPhysicsMaterial = false;
@@ -319,13 +313,6 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        //this.GetComponent<Rigidbody>().useGravity = true;
-
-        //Initial FOV so when player finishes dashing they go back to initial FOV set.
-        maxFovInitial = maxFOV - 10;
-        //FOV during the dash.
-        maxFovOnDash = maxFOV + 10;
-
         if (PlayerPrefs.HasKey("FovValue"))
         {
             maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
@@ -353,8 +340,6 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             zVelocityResetRange *= -1;
         }
-
-        currentMaxFOV = maxFOV;
 
         dashUnlocked = HandleSaving.instance.UnlockedAbility(Ability.AbilityType.Dash);
 
@@ -596,20 +581,8 @@ public class Matt_PlayerMovement : MonoBehaviour
                 canDash = false;
                 StartCoroutine(DashCooldown());
 
-                if (useAddForceDash)
-                {
-                    _CachedSystem.Emit(emitParticles);
-                    AddForceDash();
-                }
-                else if (useCourtineDash)
-                {
-                    StartCoroutine(DashCourtine());
-                }
 
-                else
-                {
-                    ChangeDirectionDash();
-                }
+                StartCoroutine(DashCourtine());
             }
         }
 
@@ -659,8 +632,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <returns></returns>
     IEnumerator DashCourtine()
     {
+        dashing = true;
         float currentTime = 0;
-        //dashing = true;
         _CachedSystem.Emit(emitParticles);
 
         yield return new WaitForEndOfFrame();
@@ -680,8 +653,9 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
             GetComponent<Rigidbody>().AddForce((playerCam.forward) * courtineDashAmmount * Time.deltaTime, ForceMode.Impulse);
             currentTime += Time.deltaTime;
-            //dashing = false;
             yield return new WaitForSeconds(0);
+
+            dashing = false;
         }
     }
 
@@ -884,9 +858,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             gravityVector = new Vector3(0, grapplingGravity, 0);
         }
-        else if(!GetComponent<RespawnSystem>().ChangeGravityOnDeath() && GetComponent<RespawnSystem>().GetDeathInProgress())
+        else if (!GetComponent<RespawnSystem>().ChangeGravityOnDeath() && GetComponent<RespawnSystem>().GetDeathInProgress())
         {
-            if(!sinkGravityUsed)
+            if (!sinkGravityUsed)
             {
                 sinkGravityUsed = true;
                 this.GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -894,7 +868,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
             gravityVector = GetComponent<RespawnSystem>().GetSinkGravity();
         }
-        else if(GetComponent<RespawnSystem>().ChangeGravityOnDeath() && GetComponent<RespawnSystem>().GetDeathInProgress())
+        else if (GetComponent<RespawnSystem>().ChangeGravityOnDeath() && GetComponent<RespawnSystem>().GetDeathInProgress())
         {
             gravityVector = new Vector3(0, 0, 0);
         }
@@ -999,16 +973,16 @@ public class Matt_PlayerMovement : MonoBehaviour
             // If Swing Lock is not active, and the player is grappling, add a force in the player's orientation
             else if (!grappleGunReference.GetSwingLockToggle() && grappleGunReference.IsGrappling())
             {
-             
+
                 // If the force can be applied, add a force in the direction of the player's orientation.
-              if (grappleGunReference.GetCanApplyForce())
+                if (grappleGunReference.GetCanApplyForce())
                 {
 
                     if (reset)
                     {
                         rb.AddForce(swingHelper.GetActualDistaneToTarget() * grappleGunReference.GetSwingSpeed() * Time.deltaTime);
                     }
-                    
+
                     else if (!swingHelper.StuckHorizontal())
                     {
                         applyForceAbovePoint = false;
@@ -1022,7 +996,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
                 }
 
-                else if(applyForceAbovePoint)
+                else if (applyForceAbovePoint)
                 {
                     rb.AddForce((-orientation.transform.forward * .1f * grappleGunReference.GetSwingSpeed()));
                 }
@@ -1550,6 +1524,9 @@ public class Matt_PlayerMovement : MonoBehaviour
         canMove = move;
     }
 
+    /// <summary>
+    /// Changes the FOV with speed and when the player dashes. 
+    /// </summary>
     void changeFOV()
     {
 
@@ -1557,68 +1534,46 @@ public class Matt_PlayerMovement : MonoBehaviour
         {
             Camera.main.fieldOfView = m_fieldOfView;
 
+            // Sets the FOV of all of the Cinemachine Virtual Cameras to be equal to the FOV of the main camera.
             Cinemachine.CinemachineVirtualCamera[] camArray = FindObjectsOfType<Cinemachine.CinemachineVirtualCamera>();
             foreach (Cinemachine.CinemachineVirtualCamera cam in camArray)
             {
                 cam.m_Lens.FieldOfView = Camera.main.fieldOfView;
             }
 
+            m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, maxFOV);
 
-            var targetMaxFOV = (int)(maxFOV * (1 + (rb.velocity.magnitude * maxFOVSpeedScale)));
-
-            if (lastMaxFOV != 0 && Mathf.Abs(targetMaxFOV - lastMaxFOV) <= 2)
+            // If not dashing, change FOV normally with speed. Otherwise, change FOV to dash FOV.
+            if (!dashing)
             {
-                targetMaxFOV = lastMaxFOV;
-            }
+                if (rb.velocity.x >= xFOVActivationVel ||
+                    rb.velocity.z >= zFOVActivationVel ||
+                    rb.velocity.y >= yFOVActicationVel ||
+                    rb.velocity.y <= -yFOVActicationVel ||
+                    rb.velocity.x <= -xFOVActivationVel ||
+                    rb.velocity.z <= -zFOVActivationVel)
+                {
 
-            if (currentMaxFOV < (targetMaxFOV - 2))
+                    m_fieldOfView += (fovChangeRate * Time.deltaTime);
+
+                }
+                else
+                {
+                    m_fieldOfView -= (fovChangeRate * Time.deltaTime);
+                }
+            }
+            else if(dashing)
             {
-                currentMaxFOV += fovChangeRate * Time.deltaTime;
+                // If the m_fieldOfView is below the dashing FOV, raise it to the dashing FOV. Otherwise lower it to the dashing FOV.
+                if(m_fieldOfView < dashFOV)
+                {
+                    m_fieldOfView += (fovChangeRate * Time.deltaTime);
+                }
+                else if(m_fieldOfView > dashFOV)
+                {
+                    m_fieldOfView -= (fovChangeRate * Time.deltaTime);
+                }
             }
-
-            else if (currentMaxFOV > (targetMaxFOV + 2))
-            {
-                currentMaxFOV -= fovChangeRate * Time.deltaTime;
-            }
-
-            m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, currentMaxFOV);
-
-            if (rb.velocity.x >= xFOVActivationVel ||
-                rb.velocity.z >= zFOVActivationVel ||
-                rb.velocity.y >= yFOVActicationVel ||
-                rb.velocity.y <= -yFOVActicationVel ||
-                rb.velocity.x <= -xFOVActivationVel ||
-                rb.velocity.z <= -zFOVActivationVel)
-            {
-
-                m_fieldOfView += (fovChangeRate * Time.deltaTime);
-                //  m_fieldOfView = (int)m_fieldOfView;
-            }
-            else
-            {
-                m_fieldOfView -= (fovChangeRate * Time.deltaTime);
-                //   m_fieldOfView = (int)m_fieldOfView;
-            }
-
-
-            if (canDash)
-            {
-
-                m_fieldOfView += (fovChangeRate * Time.deltaTime);
-                maxFOV = maxFovOnDash;
-            }
-            else
-            {
-
-                m_fieldOfView -= (fovChangeRate * Time.deltaTime);
-                maxFOV = maxFovInitial;
-
-            }
-
-            lastVelocity = rb.velocity.magnitude;
-
-
-            lastMaxFOV = targetMaxFOV;
         }
     }
 
