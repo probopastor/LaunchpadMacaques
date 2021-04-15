@@ -1420,8 +1420,8 @@ MonoBehaviour:
   zFOVActivationVel: 15
   yFOVActicationVel: 15
   fovChangeRate: 15
-  maxFOV: 70
-  maxFOVSpeedScale: 0.00003
+  maxFOV: 10
+  dashFOV: 0
   xVelocityResetRange: 1
   yVelocityResetRange: 1
   zVelocityResetRange: 1
@@ -1457,7 +1457,6 @@ MonoBehaviour:
   screenShakeLength: 0.1
   anim: {fileID: 7564166262601284636}
   canDash: 0
-  maxFovInitial: 0
   distanceXZ: 5
   distanceToCheckDown: 5
   vigneteColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
@@ -1535,6 +1534,8 @@ MonoBehaviour:
   deathParticles:
   - {fileID: 3174322086810235630}
   - {fileID: 4104758063410203579}
+  sinkTime: 0.7
+  sinkGravity: -10
   deathRattles:
   - event:/Death Rattles/Death Rattle 1
   - event:/Death Rattles/Death Rattle 2
