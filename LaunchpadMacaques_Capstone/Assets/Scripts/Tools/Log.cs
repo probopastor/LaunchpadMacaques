@@ -66,7 +66,7 @@ public class Log : MonoBehaviour
     {
         GameObject messageObj;
         TMP_Text tmpText;
-        loggedMessages.Push(messageObj = Instantiate<GameObject>(messagePrefab, transform, false));
+        loggedMessages.Push(messageObj = Instantiate<GameObject>(messagePrefab, transform.Find("Elements"), false));
         messageObj.transform.SetAsLastSibling();
         (tmpText = loggedMessages.Peek().GetComponent<TMP_Text>()).text = message;
         tmpText.color = notificationTextColor;
@@ -77,7 +77,7 @@ public class Log : MonoBehaviour
         GameObject messageObj;
         TMP_Text tmpText;
 
-        loggedMessages.Push(messageObj = Instantiate<GameObject>(messagePrefab, transform, false));
+        loggedMessages.Push(messageObj = Instantiate<GameObject>(messagePrefab, transform.Find("Elements"), false));
         loggedMessages.Peek().transform.SetAsLastSibling();
         (tmpText = loggedMessages.Peek().GetComponent<TMP_Text>()).text = string.Format("{0}: {1}", line.character.characterName, line.text);
 
