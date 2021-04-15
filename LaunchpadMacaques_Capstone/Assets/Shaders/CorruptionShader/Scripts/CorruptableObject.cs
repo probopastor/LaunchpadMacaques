@@ -85,6 +85,14 @@ public class CorruptableObject : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        if (corruptionPoints == null) corruptionPoints = new Matrix4x4();
+        for (int i = 0; i < 4; i++)
+        {
+            if (staticCorruptionPoints != null && i < staticCorruptionPoints.Length)
+                corruptionPoints.SetRow(i, staticCorruptionPoints[i]);
+            else
+                corruptionPoints.SetRow(i, new Vector4(0, 0, 0, 0));
+        }
         UpdateVariablesFromState();
         UpdateShaderFull();
     }
