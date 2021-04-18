@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Linq;
 
 public class ButtonTransitionManager : MonoBehaviour
 {
@@ -117,6 +118,15 @@ public class ButtonTransitionManager : MonoBehaviour
     {
         if (!inTransisiton)
         {
+
+            Button[] buttonsToDisable = FindObjectOfType<StartGamePanel>().transform.GetComponentsInChildren<Button>();
+
+            foreach(Button button in buttonsToDisable)
+            {
+                Debug.Log("Buttons to disable: " + button.name);
+                button.interactable = false;
+            }
+
             StartCoroutine(ExitTransition(FindObjectOfType<StartGamePanel>().GetCorrectLevelName()));
         }
 
@@ -127,6 +137,7 @@ public class ButtonTransitionManager : MonoBehaviour
     /// </summary>
     public void StartTransisiton(bool useTransition = true)
     {
+
         if (inTransisiton)
         {
             StopAllCoroutines();
@@ -135,6 +146,16 @@ public class ButtonTransitionManager : MonoBehaviour
 
         if (useTransition)
         {
+
+            Button[] buttonsToDisable = FindObjectsOfType<Button>();
+
+            foreach (Button button in buttonsToDisable)
+            {
+                Debug.Log("We will disable these buttons: " + button.name);
+                button.interactable = false;
+            }
+
+
             if (mainMenu)
             {
                 mainMenu.SetUseEscapeTransition(enable.name);
@@ -159,6 +180,14 @@ public class ButtonTransitionManager : MonoBehaviour
             {
                 useTransition = true;
             }
+        }
+
+        Button[] buttonsToDisable = FindObjectsOfType<Button>();
+
+        foreach (Button button in buttonsToDisable)
+        {
+            Debug.Log("We will disable these buttons: " + button.name);
+            button.interactable = false;
         }
 
         StartCoroutine(PanelTransition(useTransition));
@@ -266,13 +295,42 @@ public class ButtonTransitionManager : MonoBehaviour
     /// </summary>
     private void ChangePanels()
     {
+
+        //Button[] buttonsToDisable = { };
+        Button[] buttonsToEnable = { };
+
         if (previousDisable)
         {
+            Debug.Log(previousDisable.name);
+            buttonsToEnable = previousDisable.transform.GetComponentsInChildren<Button>();
+
+            foreach(Button buttons in buttonsToEnable)
+            {
+                if(buttons.interactable == false)
+                {
+                    Debug.Log(buttons.name);
+                    buttons.interactable = true;
+                }
+                else
+                {
+                    Debug.Log("These buttons " + buttons.name + " were never deactivated...");
+                    buttonsToEnable = null;
+                }
+            }
+
             previousDisable.SetActive(false);
         }
 
         if (previousEnable)
         {
+            //Debug.Log(previousEnable.name);
+            //buttonsToEnable = previousEnable.transform.GetComponentsInChildren<Button>();
+
+            //foreach (Button buttons in buttonsToEnable)
+            //{
+            //    Debug.Log(buttons.name);
+            //}
+
             previousEnable.SetActive(true);
         }
 
