@@ -14,6 +14,7 @@ public class HandleSaving : MonoBehaviour
 {
     [SerializeField, Tooltip("A array of levels that the player can complete")] Level[] levels;
     [SerializeField] Ability[] abilities;
+    [SerializeField] Ability[] requiredAbilities;
     public static HandleSaving instance;
     Save_System saveSystem;
 
@@ -282,6 +283,10 @@ public class HandleSaving : MonoBehaviour
 
     public bool UnlockedAbility(Ability.AbilityType ability)
     {
+        if (RequiredAbility(ability))
+        {
+            return true;
+        }
         foreach (Ability a in abilities)
         {
             if (a.thisAbility == ability)
@@ -292,7 +297,28 @@ public class HandleSaving : MonoBehaviour
 
         return false;
     }
+
+
+    private bool RequiredAbility(Ability.AbilityType ability)
+    {
+        foreach(Ability a in requiredAbilities)
+        {
+            if(a.thisAbility == ability)
+            {
+                foreach(string s in a.levels)
+                {
+                    if(s == SceneManager.GetActiveScene().name)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }
+
 
 
 /// <summary>

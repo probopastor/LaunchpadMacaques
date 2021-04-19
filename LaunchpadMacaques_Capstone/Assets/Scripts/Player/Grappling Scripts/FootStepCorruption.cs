@@ -49,6 +49,8 @@ public class FootStepCorruption : MonoBehaviour
     {
         this.ground = ground;
     }
+
+    Transform playerOrientation;
     #endregion]
 
 
@@ -69,7 +71,7 @@ public class FootStepCorruption : MonoBehaviour
         player = FindObjectOfType<Matt_PlayerMovement>();
         playerRB = player.GetComponent<Rigidbody>();
         coruptedTracker = FindObjectOfType<MakeSpotNotGrappleable>();
-
+        playerOrientation = player.GetOrientaion();
         decals = new List<GameObject>();
     }
     #endregion
@@ -185,16 +187,19 @@ public class FootStepCorruption : MonoBehaviour
                 point.z -= (point.z % 0.625f);
             }
 
+
+
             // Creates the decal at the correct point
-            CreateDecalHelper(point);
+            CreateDecalHelper(point, tempTrans.gameObject);
         }
     }
 
     /// <summary>
-    /// Will create a foot step decal at a given vector 3 position
+    /// 
     /// </summary>
     /// <param name="point"></param>
-    private void CreateDecalHelper(Vector3 point)
+    /// <param name="temp"></param>
+    private void CreateDecalHelper(Vector3 point, GameObject obj)
     {
         // Creates the decal at the correct position and sets its size
         decal = Instantiate(footDecal);
@@ -206,7 +211,24 @@ public class FootStepCorruption : MonoBehaviour
         coruptedTracker.AddCorruptedDecals(decal);
 
 
+
+
+ 
+
+
         decal.transform.parent = spotPos.transform;
+        var temp = player.PlayerCam.gameObject.transform.rotation;
+
+
+        temp.y = spotPos.normal.y;
+        temp.x = spotPos.normal.x;
+
+        Debug.Log(temp.z);
+
+
+       Quaternion quaternion = Quaternion.Euler(decal.transform.rotation.x, decal.transform.rotation.y, temp.z);
+
+        decal.transform.localRotation = quaternion;
 
         decals.Add(decal);
     }

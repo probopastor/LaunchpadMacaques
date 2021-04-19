@@ -8,29 +8,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FallingObject : MonoBehaviour
+public abstract class FallingObject : MonoBehaviour
 {
     [Header("Falling Settings")]
-    [SerializeField, Tooltip("The Distance the player has to be within for this object to begin falling")] float distanceToStartFalling;
-    [SerializeField, Tooltip("The speed at which this object falls")] float fallSpeed;
-    [SerializeField, Tooltip("The Delay time before this object actually begins to fall")] float delayBeforeFalling;
+    float fallSpeed;
+    float delayBeforeFalling;
 
     [Header("Death Settings")]
-    [SerializeField, Tooltip("The Tags that will kill this object")] List<string> deathTags;
+    protected List<string> deathTags;
 
     [Header("Shake Settings")]
-    [SerializeField] float shakeSpeed = 40;
-    [SerializeField] float shakeAmmount = 5;
+    float shakeSpeed = 40;
+    float shakeAmmount = 5;
 
     [Header("Other Settings")]
-    [SerializeField] bool playerCanStandOn = true;
+   protected bool playerCanStandOn = true;
 
     private Vector3 orgPos;
-    private bool falling = false;
+    protected bool falling = false;
 
-    private Matt_PlayerMovement player;
+    protected Matt_PlayerMovement player;
 
-    List<GameObject> objectsOnPlatform = new List<GameObject>();
+   protected List<GameObject> objectsOnPlatform = new List<GameObject>();
+
+    private bool respawnOnDeath;
 
 
     private void Start()
@@ -39,31 +40,33 @@ public class FallingObject : MonoBehaviour
         player = FindObjectOfType<Matt_PlayerMovement>();
     }
 
-    private void Update()
-    {
-        CheckPlayerDistance();
-    }
+    public virtual void Update() { }
 
     /// <summary>
     /// Will handle the starting of the falling routine
     /// </summary>
-    private void CheckPlayerDistance()
-    {
-        if (!falling && Vector3.Distance(this.transform.position, player.transform.position) < distanceToStartFalling)
-        {
-            StartCoroutine(Falling());
-        }
-    }
 
+
+    public virtual void SetVariables(float fallSpeed, float delayBeforeFalling, List<string> deathTags, float shakeSpeed, float shakeAmmount, bool playerCanStandOn, bool respawOnDeath)
+    {
+        this.fallSpeed = fallSpeed;
+        this.delayBeforeFalling = delayBeforeFalling;
+        this.deathTags = deathTags;
+        this.shakeSpeed = shakeSpeed;
+        this.shakeAmmount = shakeAmmount;
+        this.playerCanStandOn = playerCanStandOn;
+        this.respawnOnDeath = respawOnDeath;
+    }
 
     /// <summary>
     /// Turns off this object
     /// </summary>
-    private void KillThisObject()
+  protected void KillThisObject()
     {
         objectsOnPlatform.Clear();
         this.gameObject.GetComponent<MeshRenderer>().enabled = false;
         this.GetComponent<BoxCollider>().enabled = false;
+        Destroy(this.gameObject.GetComponent<Rigidbody>());
     }
 
     /// <summary>
@@ -81,15 +84,18 @@ public class FallingObject : MonoBehaviour
     /// Will handle the falling of this object
     /// </summary>
     /// <returns></returns>
-    IEnumerator Falling()
+   public IEnumerator Falling()
     {
         falling = true;
         float currentTime = 0;
+        var temp = this.gameObject.AddComponent<Rigidbody>();
+        temp.useGravity = false;
+        temp.constraints = RigidbodyConstraints.FreezeRotation;
 
 
         // Will loop through and shake the platform
         // Will end once the delay before falling time has been reached
-        while(currentTime < delayBeforeFalling)
+        while (currentTime < delayBeforeFalling)
         {
             Vector3 newPos = this.transform.position;
             newPos.x += Mathf.Sin(Time.time * shakeSpeed) * shakeAmmount * Time.deltaTime;
@@ -106,7 +112,7 @@ public class FallingObject : MonoBehaviour
         while (true)
         {
             Vector3 newPos = this.transform.position;
-         
+
             newPos.y -= fallSpeed * Time.deltaTime;
             UpdateObjectsOnPlatform(new Vector3(0, -(fallSpeed * Time.deltaTime), 0));
 
@@ -130,10 +136,8 @@ public class FallingObject : MonoBehaviour
     }
 
     #region Collision Settings
-
-    private void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.tag);
         if (deathTags.Contains(other.gameObject.tag))
         {
             StopAllCoroutines();
@@ -141,21 +145,29 @@ public class FallingObject : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
 
+
+    protected void OnCollisionEnter(Collision collision)
+    {
         if (collision.gameObject.CompareTag("Player") && playerCanStandOn)
         {
             objectsOnPlatform.Add(collision.gameObject);
         }
+
+        if (deathTags.Contains(collision.gameObject.tag))
+        {
+            StopAllCoroutines();
+            KillThisObject();
+        }
     }
 
-    private void OnCollisionExit(Collision collision)
+    protected void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
             objectsOnPlatform.Remove(collision.gameObject);
         }
     }
+
     #endregion
 }
