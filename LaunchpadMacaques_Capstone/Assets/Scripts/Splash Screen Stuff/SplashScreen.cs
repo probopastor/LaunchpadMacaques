@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class SplashScreen : MonoBehaviour
+public class SplashScreen : MonoBehaviour, IFadable
 {
 
     [SerializeField]
@@ -36,7 +36,30 @@ public class SplashScreen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (faddingObjects[1].GetComponent<Image>())
+        {
+            Debug.Log("This has an Image Component on it...");
+        }
+        else
+        {
+            Debug.Log("The fadable object does not have an image component on it...");
+        }
+    }
+
+    public IEnumerator FadeIn(GameObject fadableObject, float targetOpacity, float duration)
+    {
+
+        if(fadableObject.GetType() == typeof(Image))
+        {
+            Debug.Log("The fadable object is a " + fadableObject.GetType());
+        }
+
+        yield return null;
+    }
+
+    public IEnumerator FadeOut(GameObject fadableObject, float targetOpacity, float duration)
+    {
+        throw new System.NotImplementedException();
     }
 
     public IEnumerator FadeTo(Color imageColor, float targetOpacity, float duration)
@@ -87,5 +110,4 @@ public class SplashScreen : MonoBehaviour
     {
         return text;
     }
-
 }
