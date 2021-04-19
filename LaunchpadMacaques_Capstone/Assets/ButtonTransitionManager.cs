@@ -53,6 +53,12 @@ public class ButtonTransitionManager : MonoBehaviour
 
     List<GameObject> useTransitionOnBack;
 
+    // Array that holds refernces to the buttons that will be disabled when a transition is started.
+    private Button[] buttonsToDisable;
+
+    // Array that holds references to the buttons that will be re-enabled if the previous screen is returned to.
+    private Button[] buttonsToEnable;
+
     public ButtonTransitionManager(IntroTransitionTypes introTransition)
     {
         this.introTransition = introTransition;
@@ -119,11 +125,10 @@ public class ButtonTransitionManager : MonoBehaviour
         if (!inTransisiton)
         {
 
-            Button[] buttonsToDisable = FindObjectOfType<StartGamePanel>().transform.GetComponentsInChildren<Button>();
+            buttonsToDisable = FindObjectOfType<StartGamePanel>().transform.GetComponentsInChildren<Button>();
 
-            foreach(Button button in buttonsToDisable)
+            foreach (Button button in buttonsToDisable)
             {
-                Debug.Log("Buttons to disable: " + button.name);
                 button.interactable = false;
             }
 
@@ -147,11 +152,10 @@ public class ButtonTransitionManager : MonoBehaviour
         if (useTransition)
         {
 
-            Button[] buttonsToDisable = FindObjectsOfType<Button>();
+            buttonsToDisable = FindObjectsOfType<Button>();
 
             foreach (Button button in buttonsToDisable)
             {
-                Debug.Log("We will disable these buttons: " + button.name);
                 button.interactable = false;
             }
 
@@ -182,11 +186,10 @@ public class ButtonTransitionManager : MonoBehaviour
             }
         }
 
-        Button[] buttonsToDisable = FindObjectsOfType<Button>();
+        buttonsToDisable = FindObjectsOfType<Button>();
 
         foreach (Button button in buttonsToDisable)
         {
-            Debug.Log("We will disable these buttons: " + button.name);
             button.interactable = false;
         }
 
@@ -296,24 +299,18 @@ public class ButtonTransitionManager : MonoBehaviour
     private void ChangePanels()
     {
 
-        //Button[] buttonsToDisable = { };
-        Button[] buttonsToEnable = { };
-
         if (previousDisable)
         {
-            Debug.Log(previousDisable.name);
             buttonsToEnable = previousDisable.transform.GetComponentsInChildren<Button>();
 
-            foreach(Button buttons in buttonsToEnable)
+            foreach (Button buttons in buttonsToEnable)
             {
-                if(buttons.interactable == false)
+                if (buttons.interactable == false)
                 {
-                    Debug.Log(buttons.name);
                     buttons.interactable = true;
                 }
                 else
                 {
-                    Debug.Log("These buttons " + buttons.name + " were never deactivated...");
                     buttonsToEnable = null;
                 }
             }
