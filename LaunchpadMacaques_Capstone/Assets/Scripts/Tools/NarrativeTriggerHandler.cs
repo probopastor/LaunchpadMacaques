@@ -75,6 +75,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private const string LAST_COMPLETED_SCENE_KEY = "NarrativeLastCompletedScene";
 
+
+    //Character Animators
+    private Animator wizardAnimator;
+
     IEnumerator dialougeTrigger;
     IEnumerator flash;
 
@@ -376,6 +380,29 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 lastNameplateUsed = newNameplate;
 
             }
+
+            //Checks to see if the Wizard is talking and starts the talking animation, otherwise it stops the animation.
+            if (currentLine.character.characterName == "Corruption")
+            {
+                wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
+                wizardAnimator.SetBool("isTalking", true);
+                Debug.Log("The wizard is speaking..." + wizardAnimator.GetBool("isTalking"));
+
+            }
+            else if(currentLine.character.characterName == "You")
+            {
+                if(GameObject.FindGameObjectWithTag("Wizard") != null)
+                {
+                    wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
+
+                    if (wizardAnimator.GetBool("isTalking"))
+                    {
+                        wizardAnimator.SetBool("isTalking", false);
+                        Debug.Log("The wizard should stop talking... " + " isTalking is set to: " + wizardAnimator.GetBool("isTalking"));
+                    }
+                }
+            }
+
 
             //Run text effects and apply them to the dialogue window
             TextEffectHandler.instance.RunText(dialogueText, currentLine.text);
