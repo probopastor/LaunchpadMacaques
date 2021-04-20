@@ -398,7 +398,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
             if (trigger.dialogue.pauseForDuration)
             {
                 //Freeze time and let the user move their mouse around to hit the log button if desired
-                Time.timeScale = 0;
+                FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(false);
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
                 viewLog.SetActive(true);
@@ -450,7 +450,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
 
         //Resume game
-        Time.timeScale = 1;
+        FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -480,7 +480,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         {
             StopCoroutine(flash);
         }
-        Time.timeScale = 1;
+        FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -547,7 +547,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
     {
         isPanning = true;
 
-        Time.timeScale = 0;
+        FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(false);
 
         CinemachineVirtualCamera camera = triggerWithCamInfo.cameraPoint.GetComponent<CinemachineVirtualCamera>();
         int originalPriorityValue = camera.m_Priority;
@@ -555,7 +555,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         yield return new WaitForSecondsRealtime(triggerWithCamInfo.cameraTime);
         camera.m_Priority = originalPriorityValue;
 
-        Time.timeScale = 1;
+        FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(true);
 
         isPanning = false;
     }
