@@ -600,6 +600,49 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &7210384115566697609
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4154353696541088785}
+  - component: {fileID: 5057444922805434244}
+  m_Layer: 0
+  m_Name: cm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4154353696541088785
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7210384115566697609}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.6050684, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7880684068563497863}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5057444922805434244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7210384115566697609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7880684068373499768
 GameObject:
   m_ObjectHideFlags: 0
@@ -5553,6 +5596,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7880684069554880033}
+  - {fileID: 4154353696541088785}
   m_Father: {fileID: 7880684068529821271}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5614,7 +5658,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   m_LegacyBlendHint: 0
-  m_ComponentOwner: {fileID: 0}
+  m_ComponentOwner: {fileID: 4154353696541088785}
 --- !u!1 &7880684068596782851
 GameObject:
   m_ObjectHideFlags: 0
@@ -5780,6 +5824,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentGravityText: {fileID: 0}
+  dashSound: 
+  dashQuips: []
   playerCam: {fileID: 7880684068529821271}
   orientation: {fileID: 7880684069204234823}
   mouseAccerlationAmmount: 0.09
@@ -5812,15 +5858,30 @@ MonoBehaviour:
   grapplingGravity: -9.81
   grapplingResetGravity: -78.48
   sprintMultiplier: 1.75
+  sprintParticles: {fileID: 0}
   courtineDashAmmount: 1000
   dashLength: 0.05
   dashCooldown: 1.5
+  dashUI: {fileID: 0}
+  tagsToCancelVelocity: []
+  enableCoyoteTime: 0
+  coyoteTimeDuration: 1
+  coyoteTimeObjs: []
+  coyoteTimeTags: []
   minVelocityForScreenShake: 5
   startingScreenShakeAmmount: 5
   shakeAmmountVelocityScaling: 0.2
   maxScreenShakeAmmount: 80
   screenShakeLength: 0.1
   anim: {fileID: 2125406432066585191}
+  canDash: 0
+  maxFovInitial: 0
+  distanceXZ: 5
+  distanceToCheckDown: 5
+  vigneteColor: {r: 0, g: 0, b: 0, a: 0}
+  startingVigneteIntensity: 0.4
+  maxVigneteIntensity: 0.6
+  vigneteIntensityScaleAmmount: 0.1
   _CachedSystem: {fileID: 4904157833975051812}
   emitParticles: 30
 --- !u!114 &7880684068815890855
@@ -5842,6 +5903,7 @@ MonoBehaviour:
   landing: event:/Landing
   jumping: event:/Jump Start
   footsteps: event:/Footsteps
+  painGrunts: []
   swingingEmitter: {fileID: 7880684068815890848}
 --- !u!114 &7880684068815890848
 MonoBehaviour:
@@ -5880,6 +5942,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnTags:
   - KillZone
+  disableRespawnZonesWhenActive: 0
+  respawnZones: []
+  delayBeforePlayerRespawns: 1
+  deathParticles: []
+  deathRattles: []
+  deathQuips: []
+  currentGrapplePoint: {fileID: 0}
 --- !u!114 &7709234657013800401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6223,11 +6292,6 @@ MonoBehaviour:
   maxPullVelocity: 80
   pullLength: 0.5
   minDistanceFromObject: 5
-  increaseAmmount: 5
-  minStartingVelocity: 25
-  mouseWheelSensitivity: 1
-  maxGrapples: 10
-  useMaxGrapples: 1
   sphereRadius: 4
   neededVelocityForAutoAim: 4
   groundCheckDistance: 5
@@ -6240,6 +6304,7 @@ MonoBehaviour:
   grappleStart: event:/Grapple
   grappleActive: event:/Grappling
   grappleEnd: event:/Grapple Break
+  effortGrunts: []
   grapplingEmitter: {fileID: 2613442028990230150}
   groundDecalLayer:
     serializedVersion: 2
@@ -6255,7 +6320,12 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 1}
   groundDecal: {fileID: 8593126659679085998, guid: 8504b6a8de395544fb5dba7cd9b52963,
     type: 3}
+  thisDecal: {fileID: 0}
+  displayShadow: 0
   grapplingLrObj: {fileID: 567325306261129929}
+  grapplingLr: {fileID: 0}
+  grappleLockDistanceReference: {fileID: 0}
+  grappleLockDistance: 10
 --- !u!114 &7880684069554880042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7191,12 +7261,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ccd2a116ed569894184ea23e5ca9bb3f, type: 3}
---- !u!1 &8251647020083766586 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296393078715663276, guid: ccd2a116ed569894184ea23e5ca9bb3f,
-    type: 3}
-  m_PrefabInstance: {fileID: 7880684070169192086}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7033700924842220487 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ccd2a116ed569894184ea23e5ca9bb3f,
@@ -7206,6 +7270,12 @@ GameObject:
 --- !u!4 &7698737626982826365 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ccd2a116ed569894184ea23e5ca9bb3f,
+    type: 3}
+  m_PrefabInstance: {fileID: 7880684070169192086}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8251647020083766586 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2296393078715663276, guid: ccd2a116ed569894184ea23e5ca9bb3f,
     type: 3}
   m_PrefabInstance: {fileID: 7880684070169192086}
   m_PrefabAsset: {fileID: 0}
