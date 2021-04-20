@@ -794,9 +794,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
     private Color GenerateBackgroundColor(Color baseColor)
     {
         Color result = baseColor;
-        baseColor.r *= 0.1f;
-        baseColor.g *= 0.1f;
-        baseColor.b *= 0.1f;
+        baseColor.r *= 0.2f;
+        baseColor.g *= 0.2f;
+        baseColor.b *= 0.2f;
         return result;
     }
 
