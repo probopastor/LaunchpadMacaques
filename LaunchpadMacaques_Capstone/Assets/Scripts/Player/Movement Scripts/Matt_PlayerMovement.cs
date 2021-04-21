@@ -1534,6 +1534,11 @@ public class Matt_PlayerMovement : MonoBehaviour
         m_fieldOfView = minFOV;
         adjustedMaxFOV = minFOV + maxFOV;
 
+        if(m_fieldOfView > adjustedMaxFOV)
+        {
+            m_fieldOfView = adjustedMaxFOV;
+        }
+
         Camera.main.fieldOfView = m_fieldOfView;
 
         // Sets the FOV of all of the Cinemachine Virtual Cameras to be equal to the FOV of the main camera.
@@ -1578,9 +1583,14 @@ public class Matt_PlayerMovement : MonoBehaviour
                     rb.velocity.x <= -xFOVActivationVel ||
                     rb.velocity.z <= -zFOVActivationVel)
                 {
-
-                    m_fieldOfView += (fovChangeRate * Time.deltaTime);
-
+                    if(m_fieldOfView < adjustedMaxFOV)
+                    {
+                        m_fieldOfView += (fovChangeRate * Time.deltaTime);
+                    }
+                    else if(m_fieldOfView > adjustedMaxFOV)
+                    {
+                        m_fieldOfView = adjustedMaxFOV;
+                    }
                 }
                 else
                 {
