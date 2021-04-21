@@ -1282,6 +1282,11 @@ public class Matt_PlayerMovement : MonoBehaviour
 
     }
 
+    public float GetDesiredX()
+    {
+        return desiredX;
+    }
+
     /// <summary>
     /// Helper function for use in the Narrative/Dialogue Trigger LookAtObject Event
     /// </summary>

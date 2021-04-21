@@ -40,6 +40,8 @@ public class FootStepCorruption : MonoBehaviour
 
     [SerializeField] GameObject cam;
 
+    private float xAngle = 0;
+
     public FootStepCorruption(GameObject rightFootPos, GameObject leftFootPos, GameObject footDecal)
     {
         this.rightFootPos = rightFootPos;
@@ -108,6 +110,7 @@ public class FootStepCorruption : MonoBehaviour
 
         if (rightFoot)
         {
+            xAngle = -180;
             rightFoot = false;
             return rightFootPos.transform;
 
@@ -115,6 +118,7 @@ public class FootStepCorruption : MonoBehaviour
 
         else
         {
+            xAngle = 0;
             rightFoot = true;
             return leftFootPos.transform;
 
@@ -219,39 +223,8 @@ public class FootStepCorruption : MonoBehaviour
 
 
         decal.transform.parent = spotPos.transform;
-        var temp = cam.gameObject.transform.rotation;
 
-
-       // temp.y = spotPos.normal.y;
-        temp.x = spotPos.normal.x;
-
-        //Debug.Log(temp.z);
-
-
-        Quaternion quaternion = Quaternion.Euler(decal.transform.rotation.x, decal.transform.rotation.y, temp.y);
-        //  Quaternion quaternion = Quaternion.Euler(temp.x, temp.y, temp.z);
-
-
-        var rot = decal.transform.localRotation;
-
-
-        rot.z = temp.y;
-
-        if (temp.y < 0)
-        {
-          rot.z = temp.y + 90;
-        }
-
-        else if(temp.y > 0)
-        {
-          rot.z = temp.y - 90;
-        }
-
-
-        rot.x = decal.transform.localRotation.x;
-        rot.y = decal.transform.localRotation.y;
-
-        decal.transform.localRotation = rot;
+        decal.transform.localRotation = Quaternion.Euler(xAngle, 0, player.GetDesiredX() - 90);
 
 
         decals.Add(decal);
