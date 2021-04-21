@@ -998,7 +998,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
                 else if (applyForceAbovePoint)
                 {
-                    rb.AddForce((-orientation.transform.forward * .1f * grappleGunReference.GetSwingSpeed()));
+                    rb.AddForce((-orientation.transform.forward * .3f * grappleGunReference.GetSwingSpeed()));
                 }
 
             }

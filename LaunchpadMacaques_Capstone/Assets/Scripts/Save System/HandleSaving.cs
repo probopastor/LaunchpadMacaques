@@ -202,10 +202,11 @@ public class HandleSaving : MonoBehaviour
 
     public string GetNextLevel()
     {
-        string name = "ERORR";
+        string name = "Tutorial";
         if(levels[levels.Length - 1].completed == 1)
         {
-            return levels[levels.Length - 1].levelName;
+            PlayerPrefs.SetInt("LevelSelect", 1);
+            return "MainMenu";
         }
 
         for(int i = levels.Length - 1; i >= 0; i--)
