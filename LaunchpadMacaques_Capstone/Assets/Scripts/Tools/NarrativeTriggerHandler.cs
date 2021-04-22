@@ -57,8 +57,16 @@ public class NarrativeTriggerHandler : MonoBehaviour
     [SerializeField, Tooltip("The distance that the raycast will go in front of the player to check what object they're looking at")]
     private float lookAtObjectCheckDistance = 25f;
 
-    //UI variables
+    //Dialogue variables
     public bool DialogueRunning { get; set; }
+    [SerializeField]
+    private float nameplateTransitionTime = 0.25f;
+    [SerializeField]
+    private float nameplateFadedOpacity = 0.5f;
+    [SerializeField]
+    private float nameplateActiveOpacity = 1f;
+
+    //UI variables
     [SerializeField]
     private GameObject canvas;
     [SerializeField]
@@ -360,51 +368,95 @@ public class NarrativeTriggerHandler : MonoBehaviour
         int lastNameplateUsed = -1;
         while ((currentLine = trigger.dialogue.NextLine()) != null)
         {
-           
-
             //Update nameplates
-            //No nameplate yet
-            if(lastNameplateUsed == -1)
+            //No nameplate yet, activate the first one
+            if (currentLine.GetLineType() == Dialogue.Line.Type.CharacterLine &&
+            lastNameplateUsed == -1)
             {
                 nameplate[0].SetActive(true);
                 nameplateText[0].text = currentLine.character.characterName;
                 nameplateText[0].color = currentLine.character.textColor;
-
+                //Initialize nameplate to transparent
+                nameplate[0].GetComponent<CanvasRenderer>().SetAlpha(0);
+                nameplateText[0].GetComponent<CanvasRenderer>().SetAlpha(0);
+                yield return null;
+                //Transition to opaque
+                nameplate[0].GetComponent<Image>().CrossFadeAlpha(1, nameplateTransitionTime, true);
+                nameplateText[0].CrossFadeAlpha(1, nameplateTransitionTime, true);
+                //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
-
+                nameplate[0].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
+                //Nameplate background
                 nameplate[0].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
 
                 lastNameplateUsed = 0;
             }
-            //New character introduced
-            else if(currentLine.character.characterName != nameplateText[lastNameplateUsed].text )
+            //New character talking, switch which nameplate is highlighted
+            else if (currentLine.GetLineType() == Dialogue.Line.Type.CharacterLine &&
+                currentLine.character.characterName != nameplateText[lastNameplateUsed].text)
             {
+                //New nameplate is either 0 or 1, opposite of whatever the last nameplate was
                 int newNameplate = (lastNameplateUsed == 0 ? 1 : 0);
 
-                //Fade new nameplate in
+                //Activate and set new nameplate to 0 opacity
                 if (!nameplate[newNameplate].activeSelf)
+                {
                     nameplate[newNameplate].SetActive(true);
+                    //Initialize to 0 opacity
+                    nameplate[newNameplate].GetComponent<CanvasRenderer>().SetAlpha(0);
+                    nameplateText[newNameplate].GetComponent<CanvasRenderer>().SetAlpha(0);
+                    nameplateText[newNameplate].color = currentLine.character.textColor;
+                    yield return null;
+                }
                 nameplateText[newNameplate].text = currentLine.character.characterName;
-                nameplateText[newNameplate].color = currentLine.character.textColor;
+
+                //Fade new in
+                nameplate[newNameplate].GetComponent<Image>().CrossFadeAlpha(1, nameplateTransitionTime, true);
+                nameplateText[newNameplate].CrossFadeAlpha(1, nameplateTransitionTime, true);
+
+                //Fade old out
+                nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
+                nameplateText[lastNameplateUsed].CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
 
                 //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
-
                 //Nameplate background
                 nameplate[newNameplate].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
 
-                //Fade new nameplate in
-                nameplate[newNameplate].GetComponent<Image>().CrossFadeAlpha(1, 0.25f, true);
-                nameplateText[newNameplate].CrossFadeAlpha(1, 0.25f, true);
-
-                //Fade old out
-                nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeAlpha(0.5f, 0.25f, true);
-                nameplateText[lastNameplateUsed].CrossFadeAlpha(0.5f, 0.25f, true);
-
                 lastNameplateUsed = newNameplate;
 
+            }
+            //Narration Line
+            else if (currentLine.GetLineType() == Dialogue.Line.Type.NarrationLine)
+            {
+                if (nameplate[0].activeSelf)
+                {
+                    nameplate[0].GetComponent<Image>().CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
+                    nameplateText[0].CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
+                }
+                if (nameplate[1].activeSelf)
+                {
+                    nameplate[1].GetComponent<Image>().CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
+                    nameplateText[1].CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
+                }
+            }
+            //Line being said by a character who was already talking, make sure nameplate is there where it should be
+            else
+            {
+                if (nameplate[lastNameplateUsed].activeSelf == false)
+                {
+                    nameplate[lastNameplateUsed].SetActive(true);
+                }
+                nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeAlpha(1f, nameplateTransitionTime, true);
+                nameplateText[lastNameplateUsed].CrossFadeAlpha(1f, nameplateTransitionTime, true);
+
+                //Change Background Color
+                Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
+                background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
+                //Nameplate background
+                nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
             }
 
             //Run text effects and apply them to the dialogue window
