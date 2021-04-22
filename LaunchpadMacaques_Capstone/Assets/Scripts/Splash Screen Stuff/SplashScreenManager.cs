@@ -19,14 +19,16 @@ public class SplashScreenManager : MonoBehaviour
     private void Awake()
     {
         splashScreens = FindObjectsOfType<SplashScreen>();
-        mainMenuBackground = FindObjectOfType<Canvas>().transform.GetChild(0).GetComponent<Image>();
+        //mainMenuBackground = FindObjectOfType<Canvas>().transform.GetChild(0).GetComponent<Image>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
         // Fade things in at start.
-        StartCoroutine(FadeTo(mainMenuBackground, 1f, 5f));
+       //StartCoroutine(FadeTo(mainMenuBackground, 1f, 5f));
+
+        StartCoroutine(WaitTime(splashScreens[0].GetWaitTime()));
     }
 
     private void Update()
@@ -39,10 +41,10 @@ public class SplashScreenManager : MonoBehaviour
             SkipWarning();
         }
 
-        if (splashScreens.Length <= 1 && isFaddingDone)
-        {
-            StartCoroutine(WaitTime(splashScreens[0].GetWaitTime()));
-        }
+        //if (splashScreens.Length <= 1 && isFaddingDone)
+        //{
+        //    StartCoroutine(WaitTime(splashScreens[0].GetWaitTime()));
+        //}
 
     }
 
