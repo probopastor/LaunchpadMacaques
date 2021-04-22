@@ -44,18 +44,21 @@ public class MusicManager : MonoBehaviour
         switch (buildIndex) //These will likely change when scenes get removed.
         {
             case 0:
+            case 1:
                 SwitchTrack("Main");
                 break;
-            case 1:
+            case 2:
                 SwitchTrack("Tutorial");
                 break;
-            case 2:
+            case 3:
                 SwitchTrack("Dungeon"); //TEMP
                 break;
-            case 3:
-                SwitchTrack("Castles"); //TEMP
-                break;
             case 4:
+            case 7:
+                SwitchTrack("Dining"); //TEMP
+                break;
+            case 5:
+            case 6:
                 SwitchTrack("Lab");
                 break;
         }
