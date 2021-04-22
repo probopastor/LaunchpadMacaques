@@ -58,6 +58,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
     private float lookAtObjectCheckDistance = 25f;
 
     //UI variables
+    public bool DialogueRunning { get; set; }
     [SerializeField]
     private GameObject canvas;
     [SerializeField]
@@ -321,10 +322,18 @@ public class NarrativeTriggerHandler : MonoBehaviour
     /// <summary>
     /// Stop any running dialogue from appearing
     /// </summary>
-    public void TurnOffDialouge()
+    public void CancelDialogue()
     {
         dialogueText.text = "";
         canvas.SetActive(false);
+    }
+
+    public void SetDialoguePaused(bool shouldPause)
+    {
+        if (DialogueRunning)
+        {
+            canvas.SetActive(!shouldPause);
+        }
     }
 
     /// <summary>
@@ -338,6 +347,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
             yield break;
 
         trigger.isRunning = true;
+        DialogueRunning = true;
 
         //Turn on canvas
         canvas.SetActive(true);
@@ -368,7 +378,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 lastNameplateUsed = 0;
             }
             //New character introduced
-            else if(currentLine.character.characterName != nameplateText[lastNameplateUsed].text)
+            else if(currentLine.character.characterName != nameplateText[lastNameplateUsed].text )
             {
                 int newNameplate = (lastNameplateUsed == 0 ? 1 : 0);
 
@@ -417,7 +427,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
             //Dialogue type is click to proceed
             if (trigger.dialogue.pauseForDuration)
             {
-                //Freeze time and let the user move their mouse around to hit the log button if desired
+                //Freeze movement and let the user move their mouse around to hit the log button if desired
                 FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(false);
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
@@ -426,7 +436,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 //Wait until effects are done or player has clicked to skip
                 while(TextEffectHandler.instance.RunningEffectCount > 0)
                 {
-                    if(Input.GetButtonDown("Fire1") && !Log.instance.IsActive() && !mouseOverButton)
+                    //If submit button clicked, the log isn't up, the dialogue canvas is up, and the player isn't clicking the view log button
+                    if(Input.GetButtonDown("Fire1") && !Log.instance.IsActive() && canvas.activeSelf && !mouseOverButton)
                     {
                         TextEffectHandler.instance.SkipToEndOfEffects();
                     }
@@ -439,7 +450,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 StartCoroutine(flash);
 
                 //Effects are done, player must click to proceed to the next 
-                while(!Input.GetButtonDown("Fire1") || Log.instance.IsActive() || mouseOverButton)
+                while(!Input.GetButtonDown("Fire1") || Log.instance.IsActive() || !canvas.activeSelf || mouseOverButton)
                 {
                     yield return null;
                 }
@@ -487,6 +498,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         canvas.gameObject.SetActive(false);
 
         trigger.isRunning = false;
+        DialogueRunning = false;
     }
 
     public void CancelDialouge()

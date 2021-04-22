@@ -1527,6 +1527,11 @@ public class Matt_PlayerMovement : MonoBehaviour
     public void SetPlayerCanMove(bool move)
     {
         canMove = move;
+
+        if(!canMove)
+        {
+            rb.velocity = Vector3.zero;
+        }
     }
 
     /// <summary>

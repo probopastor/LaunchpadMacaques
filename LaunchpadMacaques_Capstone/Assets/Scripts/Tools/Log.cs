@@ -33,6 +33,17 @@ public class Log : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        if(waitingForClose)
+        {
+            StartCoroutine(WaitForClose());
+        }
+
+        StartCoroutine(DelayedApplyColorsToLines());
+
+    }
+
     private void Awake()
     {
         instance = this;
@@ -87,6 +98,7 @@ public class Log : MonoBehaviour
 
     private void ApplyColorsToLines()
     {
+        Debug.Log(string.Format("linesToColorLength: {0}", linesToColor.Count));
         foreach(LineColoringDetails details in linesToColor)
         {
             CharTweener tween = details.textToColor.GetCharTweener();
@@ -103,9 +115,17 @@ public class Log : MonoBehaviour
         }
     }
 
+    private IEnumerator DelayedApplyColorsToLines()
+    {
+        yield return null;
+        ApplyColorsToLines();
+    }
+
+    bool waitingForClose = false;
     private IEnumerator WaitForClose()
     {
-        while(!Input.GetButtonDown("Fire1"))
+        waitingForClose = true;
+        while(!Input.GetButtonDown("Fire1") || FindObjectOfType<PauseManager>().GetPaused())
         {
             yield return null;
         }
@@ -113,5 +133,6 @@ public class Log : MonoBehaviour
         yield return null;
 
         ActivateLog(false);
+        waitingForClose = false;
     }
 }
