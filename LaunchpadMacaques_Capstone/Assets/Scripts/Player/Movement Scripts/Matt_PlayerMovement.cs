@@ -365,7 +365,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     {
         if ((!pauseManager.GetPaused() && !pauseManager.GetGameWon()) && Time.timeScale > 0)
         {
-            if (canMove)
+            if (canMove && !GetComponent<RespawnSystem>().GetDeathInProgress())
             {
                 Look();
                 grappleGunReference.UpdateHandRotation(rb.velocity);
@@ -1649,5 +1649,23 @@ public class Matt_PlayerMovement : MonoBehaviour
     public Transform GetOrientaion()
     {
         return orientation;
+    }
+
+    /// <summary>
+    /// Rotates the player to look at the position of the passed in Game Object.
+    /// </summary>
+    /// <param name="target">The object the player should rotate towards. </param>
+    public void RotateOnSpawn(GameObject target)
+    {
+        Quaternion targetRotation = Quaternion.LookRotation(target.transform.position - transform.position);
+
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        //Perform the rotations
+        playerCam.transform.localRotation = Quaternion.Euler(-targetRotation.eulerAngles);
+        orientation.transform.localRotation = Quaternion.Euler(-targetRotation.eulerAngles);
+
+        Vector3 rot = playerCam.transform.localRotation.eulerAngles;
+        //SetLook(rot.x, rot.y);
     }
 }
