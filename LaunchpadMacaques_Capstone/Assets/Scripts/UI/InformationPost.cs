@@ -90,8 +90,15 @@ public class InformationPost : A_InputType
 
     private void OnDisable()
     {
-        controls.Disable();
-        informationText.text = " ";
+        if (controls != null)
+        {
+            controls.Disable();
+        }
+
+        if (informationText != null)
+        {
+            informationText.text = " ";
+        }
     }
 
     /// <summary>
