@@ -20,11 +20,15 @@ public class IntroductionManager : MonoBehaviour
         StartCoroutine(IntroductionSequence());
     }
 
+    private void Update()
+    {
+        
+    }
+
     private void SetInformation()
     {
         if (informationText != null)
         {
-            //informationText.text = information;
             textEffects.RunText(informationText, information);
         }
     }

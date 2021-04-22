@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3429321263a45354680a0abcb71ddf10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  typewriterSpeed: 0.1
+  typewriterSpeed: 0.05
   typewriterDelay: 0.1
   strength: 1.5
   vibrato: 10
@@ -174,7 +174,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   informationText: {fileID: 1808390174}
-  information: <typewriter>eeeeeee</typewriter>
+  information: "<typewriter>After being struck by a wizard\u2019s rogue spell, you\u2019ve
+    been corrupted by a dark entity that is quickly taking over your body and your
+    mind. Determined to stop it, you\u2019ve tracked the wizard that hit you down
+    to a castle in the middle of a forest. With the entity constantly making snide
+    comments in your head and an arm that can suddenly grapple, you\u2019ll stop
+    at nothing to make the wizard cure you.\r\n</typewriter>"
   textEffects: {fileID: 10895438}
   introductionDurationAfterEffects: 1
   tutorialLevelName: Tutorial
@@ -699,7 +704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -784,8 +789,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 15, y: -39}
-  m_SizeDelta: {x: 509.79938, y: 236.5169}
+  m_AnchoredPosition: {x: 0.0000052452, y: 28.127}
+  m_SizeDelta: {x: 743.98175, y: 394.23138}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1808390174
 MonoBehaviour:
@@ -871,7 +876,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 160.104, z: 0, w: 19.11687}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
