@@ -67,6 +67,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
     [SerializeField]
     private TMP_Text[] nameplateText;
     [SerializeField]
+    private Image background;
+    [SerializeField]
     private GameObject clickToContinue;
     [SerializeField]
     private GameObject viewLog;
@@ -174,6 +176,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
         nameplate[1] = transform.Find("DialogueCanvas/Background/Character2Nameplate").gameObject;
         nameplateText[1] = nameplate[1].GetComponentInChildren<TMP_Text>();
         nameplate[1].SetActive(false);
+        //background
+        background = nameplate[0].transform.parent.GetComponentInParent<Image>();
 
         clickToContinue = transform.Find("DialogueCanvas/Background/ClickToContinue").gameObject;
         clickToContinue.SetActive(false);
@@ -358,6 +362,13 @@ public class NarrativeTriggerHandler : MonoBehaviour
             {
                 nameplate[0].SetActive(true);
                 nameplateText[0].text = currentLine.character.characterName;
+                nameplateText[0].color = currentLine.character.textColor;
+
+                Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
+                background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
+
+                nameplate[0].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
+
                 lastNameplateUsed = 0;
             }
             //New character introduced
@@ -369,7 +380,16 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 if (!nameplate[newNameplate].activeSelf)
                     nameplate[newNameplate].SetActive(true);
                 nameplateText[newNameplate].text = currentLine.character.characterName;
+                nameplateText[newNameplate].color = currentLine.character.textColor;
 
+                //Change Background Color
+                Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
+                background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
+
+                //Nameplate background
+                nameplate[newNameplate].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
+
+                //Fade new nameplate in
                 nameplate[newNameplate].GetComponent<Image>().CrossFadeAlpha(1, 0.25f, true);
                 nameplateText[newNameplate].CrossFadeAlpha(1, 0.25f, true);
 
@@ -594,25 +614,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
         isPanning = false;
     }
 
-    float flashInterval = 0.5f;
-    bool shouldFlash = false;
-    //Controls the flashing of a GameObject
-    private IEnumerator Flash(GameObject objectToFlash)
-    {
-        shouldFlash = true;
-        float currentTime = 0;
-        while (shouldFlash)
-        {
-            if (currentTime >= flashInterval)
-            {
-                objectToFlash.SetActive(!objectToFlash.activeSelf);
-                currentTime = 0;
-            }
-
-            currentTime += Time.unscaledDeltaTime;
-            yield return null;
-        }
-    }
 
     /// <summary>
     /// Activates a random Trigger out of all the triggers of TriggerType type
@@ -801,6 +802,38 @@ public class NarrativeTriggerHandler : MonoBehaviour
              && timeInLevel >= triggerToCheck.timeInLevelBeforeTrigger
              && !triggerToCheck.hasRan;
     }
+    #endregion
+
+    #region UI Helper Functions
+    float flashInterval = 0.5f;
+    bool shouldFlash = false;
+    //Controls the flashing of a GameObject
+    private IEnumerator Flash(GameObject objectToFlash)
+    {
+        shouldFlash = true;
+        float currentTime = 0;
+        while (shouldFlash)
+        {
+            if (currentTime >= flashInterval)
+            {
+                objectToFlash.SetActive(!objectToFlash.activeSelf);
+                currentTime = 0;
+            }
+
+            currentTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
+    }
+
+    private Color GenerateBackgroundColor(Color baseColor)
+    {
+        Color result = baseColor;
+        baseColor.r *= 0.2f;
+        baseColor.g *= 0.2f;
+        baseColor.b *= 0.2f;
+        return result;
+    }
+
     #endregion
 
     #region Getters/Setters
