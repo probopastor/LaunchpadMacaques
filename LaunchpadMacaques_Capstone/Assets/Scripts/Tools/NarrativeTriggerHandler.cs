@@ -365,6 +365,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         //Start getting every line in the dialogue
         Dialogue.Line currentLine;
+        FMOD.Studio.EventInstance currentAudio;
         int lastNameplateUsed = -1;
         while ((currentLine = trigger.dialogue.NextLine()) != null)
         {
@@ -490,9 +491,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
             //If the trigger has an audio source assigned, play the associated sound (if it has one)
             if (FMODUnity.RuntimeManager.StudioSystem.getEvent(currentLine.audioToPlay, out desc) == FMOD.RESULT.OK)
             {
-                FMOD.Studio.EventInstance playAudio = FMODUnity.RuntimeManager.CreateInstance(currentLine.audioToPlay);
+                currentAudio = FMODUnity.RuntimeManager.CreateInstance(currentLine.audioToPlay);
                 desc.getLength(out trigger.dialogue.textDisplayTime);
-                playAudio.start();
+                currentAudio.start();
             }
 
             //Dialogue type is click to proceed
@@ -541,6 +542,20 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 yield return new WaitForSecondsRealtime(trigger.dialogue.textDisplayTime);
             }
             TextEffectHandler.instance.StopText();
+
+
+            if (FMODUnity.RuntimeManager.StudioSystem.getEvent(currentLine.audioToPlay, out desc) == FMOD.RESULT.OK)
+            {
+                FMOD.Studio.PLAYBACK_STATE currentState;
+                FMOD.Studio.EventInstance[] instances;
+                desc.getInstanceList(out instances);
+                currentAudio = instances[0];
+                currentAudio.getPlaybackState(out currentState);
+                if (currentAudio.isValid() && currentState == FMOD.Studio.PLAYBACK_STATE.PLAYING)
+                    currentAudio.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            }
+            
+            
 
             yield return null;
         }
