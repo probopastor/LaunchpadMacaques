@@ -35,6 +35,8 @@ public class InformationPost : A_InputType
         controls = new PlayerControlls();
 
         controls.GamePlay.Interact.performed += InteractInput;
+
+        informationText = GameObject.Find("New Standard Scene Group/Canvas Group/StandardCanvas/Info Text/Information Post Text").GetComponent<TextMeshProUGUI>();
     }
     // Start is called before the first frame update
     new void Start()
