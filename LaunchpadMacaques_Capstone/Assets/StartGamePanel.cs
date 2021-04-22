@@ -8,6 +8,7 @@ public class StartGamePanel : MonoBehaviour
     Save_System save;
 
     [SerializeField] string tutorialLevelName;
+    [SerializeField] string introductionLevelName;
     [SerializeField] string hubLevelName;
 
 
@@ -52,7 +53,7 @@ public class StartGamePanel : MonoBehaviour
     {
         if (!playedTutorial)
         {
-            SceneManager.LoadScene(tutorialLevelName);
+            SceneManager.LoadScene(introductionLevelName);
         }
 
         else
@@ -66,7 +67,7 @@ public class StartGamePanel : MonoBehaviour
     {
         if (!playedTutorial)
         {
-            return tutorialLevelName;
+            return introductionLevelName;
         }
 
         else
