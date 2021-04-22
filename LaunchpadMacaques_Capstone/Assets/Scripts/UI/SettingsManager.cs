@@ -607,13 +607,13 @@ public class SettingsManager : MonoBehaviour
         if (PlayerPrefs.HasKey("FovValue"))
         {
             fovSlider.SetValueWithoutNotify(PlayerPrefs.GetInt("FovValue"));
-            SetFOVValue(PlayerPrefs.GetInt("FovValue"));
+            PlayerPrefs.SetInt("FovValue", PlayerPrefs.GetInt("FovValue"));
         }
 
         else
         {
             fovSlider.SetValueWithoutNotify(deafultFOV);
-            SetFOVValue(deafultFOV);
+            PlayerPrefs.SetInt("FovValue", deafultFOV);
         }
     }
 
@@ -736,6 +736,12 @@ public class SettingsManager : MonoBehaviour
     public void SetFOVValue(float value)
     {
         PlayerPrefs.SetInt("FovValue", (int)value);
+        InitialFOV();
+
+        if(FindObjectOfType<Matt_PlayerMovement>() != null)
+        {
+            FindObjectOfType<Matt_PlayerMovement>().SetFOV();
+        }
     }
 
     /// <summary>

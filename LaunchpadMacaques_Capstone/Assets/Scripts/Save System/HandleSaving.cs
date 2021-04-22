@@ -14,6 +14,7 @@ public class HandleSaving : MonoBehaviour
 {
     [SerializeField, Tooltip("A array of levels that the player can complete")] Level[] levels;
     [SerializeField] Ability[] abilities;
+    [SerializeField] Ability[] requiredAbilities;
     public static HandleSaving instance;
     Save_System saveSystem;
 
@@ -201,10 +202,11 @@ public class HandleSaving : MonoBehaviour
 
     public string GetNextLevel()
     {
-        string name = "ERORR";
+        string name = "Tutorial";
         if(levels[levels.Length - 1].completed == 1)
         {
-            return levels[levels.Length - 1].levelName;
+            PlayerPrefs.SetInt("LevelSelect", 1);
+            return "MainMenu";
         }
 
         for(int i = levels.Length - 1; i >= 0; i--)
@@ -282,6 +284,10 @@ public class HandleSaving : MonoBehaviour
 
     public bool UnlockedAbility(Ability.AbilityType ability)
     {
+        if (RequiredAbility(ability))
+        {
+            return true;
+        }
         foreach (Ability a in abilities)
         {
             if (a.thisAbility == ability)
@@ -292,7 +298,28 @@ public class HandleSaving : MonoBehaviour
 
         return false;
     }
+
+
+    private bool RequiredAbility(Ability.AbilityType ability)
+    {
+        foreach(Ability a in requiredAbilities)
+        {
+            if(a.thisAbility == ability)
+            {
+                foreach(string s in a.levels)
+                {
+                    if(s == SceneManager.GetActiveScene().name)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }
+
 
 
 /// <summary>
