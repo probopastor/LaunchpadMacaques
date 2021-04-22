@@ -382,11 +382,18 @@ public class NarrativeTriggerHandler : MonoBehaviour
             }
 
             //Checks to see if the Wizard is talking and starts the talking animation, otherwise it stops the animation.
-            if (currentLine.character.characterName == "Corruption")
+            if (currentLine.character.characterName == "The Wizard" || currentLine.character.characterName == "Wizard")
             {
-                wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
-                wizardAnimator.SetBool("isTalking", true);
-                Debug.Log("The wizard is speaking..." + wizardAnimator.GetBool("isTalking"));
+                if(GameObject.FindGameObjectWithTag("Wizard") != null)
+                {
+                    wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
+                    wizardAnimator.SetBool("isTalking", true);
+                    Debug.Log("The wizard is speaking..." + wizardAnimator.GetBool("isTalking"));
+                }
+                else
+                {
+                    Debug.LogError("The Wizard isn't in the scene but is talking!");
+                }
 
             }
             else if(currentLine.character.characterName == "You")
