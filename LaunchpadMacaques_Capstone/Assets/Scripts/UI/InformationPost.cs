@@ -90,8 +90,15 @@ public class InformationPost : A_InputType
 
     private void OnDisable()
     {
-        controls.Disable();
-        informationText.text = " ";
+        if (controls != null)
+        {
+            controls.Disable();
+        }
+
+        if (informationText != null)
+        {
+            informationText.text = " ";
+        }
     }
 
     /// <summary>
@@ -103,7 +110,7 @@ public class InformationPost : A_InputType
         {
             if (isActive)
             {
-                narrative.TurnOffDialouge();
+                narrative.CancelDialouge();
                 informationText.text = information;
             }
             else if (!isActive)
@@ -125,7 +132,7 @@ public class InformationPost : A_InputType
                 informationText.text = information;
 
                 playerInRange = true;
-                narrative.TurnOffDialouge();
+                narrative.CancelDialouge();
             }
 
         }
