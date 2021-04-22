@@ -77,11 +77,11 @@ public class PauseManager : MonoBehaviour
 
     public void PauseInput()
     {
-        if (player.CanPlayerMove())
+        if (player.CanPlayerMove() || narrative.DialogueRunning)
         {
             if (!gameLost && !gameWon && !HTPMenu.activeSelf && !optionsMenu.transform.parent.gameObject.activeSelf)
             {
-                narrative.CancelDialouge();
+                //narrative.CancelDialouge();
                 PauseGame();
             }
 
@@ -209,10 +209,6 @@ public class PauseManager : MonoBehaviour
           //  eventSystem.SetSelectedGameObject(resumeButton);
             CursorCanvas.SetActive(false);
 
-
-
-            narrative.TurnOffDialouge();
-
             if (InformationPostText != null)
             {
                 InformationPostText.SetActive(false);
@@ -243,6 +239,9 @@ public class PauseManager : MonoBehaviour
 
 
         }
+
+        narrative.SetDialoguePaused(paused);
+        
     }
 
     /// <summary>
