@@ -363,11 +363,27 @@ public class NarrativeTriggerHandler : MonoBehaviour
         //Get ready to start pushing conversation to the log
         Log.instance.StartNewConversation();
 
-        //Get Every line in the dialogue
+        //Start getting every line in the dialogue
         Dialogue.Line currentLine;
         int lastNameplateUsed = -1;
         while ((currentLine = trigger.dialogue.NextLine()) != null)
         {
+            //If break, turn nameplates off
+            if (currentLine.GetLineType() == Dialogue.Line.Type.Break)
+            {
+                nameplate[0].SetActive(false);
+                nameplate[1].SetActive(false);
+                lastNameplateUsed = -1;
+                continue;
+            }
+            //If narration line, push text to log as action text
+            else if (currentLine.GetLineType() == Dialogue.Line.Type.NarrationLine)
+            {
+                Log.instance.PushToLog(currentLine.text);
+            }
+
+            /////////////////UPDATE NAMEPLATES BASED ON LINE
+
             //Update nameplates
             //No nameplate yet, activate the first one
             if (currentLine.GetLineType() == Dialogue.Line.Type.CharacterLine &&
@@ -441,6 +457,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
                     nameplate[1].GetComponent<Image>().CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
                     nameplateText[1].CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
                 }
+
+                //Change Background Color to default Black Narrative Color
+                background.CrossFadeColor(Color.black, 0.25f, true, true);
             }
             //Line being said by a character who was already talking, make sure nameplate is there where it should be
             else
