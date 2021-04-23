@@ -35,6 +35,8 @@ public class InformationPost : A_InputType
         controls = new PlayerControlls();
 
         controls.GamePlay.Interact.performed += InteractInput;
+
+        informationText = GameObject.Find("New Standard Scene Group/Canvas Group/StandardCanvas/Info Text/Information Post Text").GetComponent<TextMeshProUGUI>();
     }
     // Start is called before the first frame update
     new void Start()
@@ -90,8 +92,15 @@ public class InformationPost : A_InputType
 
     private void OnDisable()
     {
-        controls.Disable();
-        informationText.text = " ";
+        if (controls != null)
+        {
+            controls.Disable();
+        }
+
+        if (informationText != null)
+        {
+            informationText.text = " ";
+        }
     }
 
     /// <summary>
@@ -103,7 +112,7 @@ public class InformationPost : A_InputType
         {
             if (isActive)
             {
-                narrative.TurnOffDialouge();
+                narrative.CancelDialouge();
                 informationText.text = information;
             }
             else if (!isActive)
@@ -125,7 +134,7 @@ public class InformationPost : A_InputType
                 informationText.text = information;
 
                 playerInRange = true;
-                narrative.TurnOffDialouge();
+                narrative.CancelDialouge();
             }
 
         }
