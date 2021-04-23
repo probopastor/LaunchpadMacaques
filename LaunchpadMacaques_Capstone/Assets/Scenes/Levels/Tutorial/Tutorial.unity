@@ -28511,7 +28511,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh47974
+  m_Name: pb_Mesh47512
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -36349,6 +36349,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -17.978252
       objectReference: {fileID: 0}
+    - target: {fileID: 5924832922711444034, guid: e02315d1bca9dd54489263b84334ae29,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6971212600973182950, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_Enabled
@@ -43864,8 +43869,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   informationText: {fileID: 1929015645}
-  information: 'Use <sprite=7> to grapple to certain objects. <sprite=5> to release
-    grapple. '
+  information: 'Hold <sprite=7> to grapple to certain objects. Release <sprite=7>
+    to release grapple. '
 --- !u!33 &8627338607538932042
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -44285,8 +44290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   informationText: {fileID: 1929015645}
-  information: To sprint on the ground, or to reach certain distances, press <sprite=2>
-    after grappling in mid-air to dash forward.
+  information: Press <sprite=2> to sprint.
 --- !u!1 &8627338608395786728
 GameObject:
   m_ObjectHideFlags: 0
@@ -44544,7 +44548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   informationText: {fileID: 1929015645}
-  information: Press<sprite=0>to jump.
+  information: Press <sprite=0> to jump.
 --- !u!23 &8627338609303223922
 MeshRenderer:
   m_ObjectHideFlags: 0
