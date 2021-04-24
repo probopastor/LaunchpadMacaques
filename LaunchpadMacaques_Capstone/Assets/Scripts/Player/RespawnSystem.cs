@@ -264,10 +264,6 @@ public class RespawnSystem : MonoBehaviour
     {
         yield return new WaitForSeconds(sinkTime);
 
-        if (currentRespawnLookAtObject != null)
-        {
-            player.RotateOnSpawn(currentRespawnLookAtObject);
-        }
 
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
         changeGravityOnDeath = true;
@@ -283,18 +279,31 @@ public class RespawnSystem : MonoBehaviour
         this.transform.position = currentRespawnPosition;
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
+        StartCoroutine(ChangePlayerRotation());
         gg.StopGrapple();
         changeGravityOnDeath = false;
 
         deathInProgress = false;
     }
 
+
+    IEnumerator ChangePlayerRotation()
+    {
+        while (true)
+        {
+            player.RotateOnSpawn(currentRespawnLookAtObject);
+            yield return null;
+        }
+    }
     /// <summary>
     /// Sets the player's ability to move to true.
     /// </summary>
     public void PlayerCanMove()
     {
+
         player.SetPlayerCanMove(true);
+        StopAllCoroutines();
+
     }
 
     /// <summary>

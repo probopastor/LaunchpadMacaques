@@ -1657,15 +1657,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <param name="target">The object the player should rotate towards. </param>
     public void RotateOnSpawn(GameObject target)
     {
-        Quaternion targetRotation = Quaternion.LookRotation(target.transform.position - transform.position);
-
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-
-        //Perform the rotations
-        playerCam.transform.localRotation = Quaternion.Euler(-targetRotation.eulerAngles);
-        orientation.transform.localRotation = Quaternion.Euler(-targetRotation.eulerAngles);
-
-        Vector3 rot = playerCam.transform.localRotation.eulerAngles;
-        //SetLook(rot.x, rot.y);
+        playerCam.transform.LookAt(target.transform);
+        xRotation = playerCam.transform.localRotation.x;
+        orientation.transform.LookAt(target.transform);
     }
 }
