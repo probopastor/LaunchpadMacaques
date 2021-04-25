@@ -77,13 +77,15 @@ public class Matt_PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("The min velocity needed on the Z axis for FOV to change. ")] private float zFOVActivationVel = 40f;
     [SerializeField, Tooltip("The min velocity needed on the Y axis for FOV to change. ")] private float yFOVActicationVel = 15f;
     [SerializeField, Tooltip("The rate at which FOV is changed.")] private float fovChangeRate = 0.75f;
+    [SerializeField, Tooltip("The rate at which Dashing FOV is changed.")] private float fovDashChangeRate = 1f;
 
-    [SerializeField, Tooltip("The max FOV in relation to the player's FOV set in the options menu. ")] private float maxFOV = 120.75f;
+    [SerializeField, Tooltip("The max FOV in relation to the player's FOV settings in the options menu. ")] private float maxFOV = 120.75f;
 
-    [SerializeField, Tooltip("FOV While Dashing. ")] private float dashFOV = 0;
+    [SerializeField, Tooltip("FOV While Dashing in relation to thee player's FOV setting in the options menu. ")] private float dashFOV = 0;
 
     private float minFOV = 60;
     private float adjustedMaxFOV = 0;
+    private float adjustedDashFOV = 0;
     float m_fieldOfView = 60.0f;
     #endregion
 
@@ -250,6 +252,8 @@ public class Matt_PlayerMovement : MonoBehaviour
     bool foundGround = true;
 
     private SwingHelper swingHelper;
+
+    bool wasMoving = false;
 
     ParticleSystem system
     {
@@ -570,6 +574,7 @@ public class Matt_PlayerMovement : MonoBehaviour
 
             if (canDash)
             {
+                dashing = true;
                 PlayRandom(dashQuips);
                 EventInstance dashEvent = RuntimeManager.CreateInstance(dashSound);
                 dashEvent.start();
@@ -632,7 +637,7 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// <returns></returns>
     IEnumerator DashCourtine()
     {
-        dashing = true;
+        //dashing = true;
         float currentTime = 0;
         _CachedSystem.Emit(emitParticles);
 
@@ -653,10 +658,11 @@ public class Matt_PlayerMovement : MonoBehaviour
             }
             GetComponent<Rigidbody>().AddForce((playerCam.forward) * courtineDashAmmount * Time.deltaTime, ForceMode.Impulse);
             currentTime += Time.deltaTime;
-            yield return new WaitForSeconds(0);
+            yield return new WaitForEndOfFrame();
 
-            dashing = false;
         }
+
+        dashing = false;
     }
 
     IEnumerator DashCooldown()
@@ -1527,6 +1533,11 @@ public class Matt_PlayerMovement : MonoBehaviour
     public void SetPlayerCanMove(bool move)
     {
         canMove = move;
+
+        if (!canMove)
+        {
+            rb.velocity = Vector3.zero;
+        }
     }
 
     /// <summary>
@@ -1534,14 +1545,19 @@ public class Matt_PlayerMovement : MonoBehaviour
     /// </summary>
     public void SetFOV()
     {
-        maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
+        //maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
         minFOV = PlayerPrefs.GetInt("FovValue");
         m_fieldOfView = minFOV;
         adjustedMaxFOV = minFOV + maxFOV;
+        adjustedDashFOV = minFOV + dashFOV;
 
-        if(m_fieldOfView > adjustedMaxFOV)
+        if (m_fieldOfView > adjustedMaxFOV)
         {
             m_fieldOfView = adjustedMaxFOV;
+        }
+        else if (m_fieldOfView < minFOV)
+        {
+            m_fieldOfView = minFOV;
         }
 
         Camera.main.fieldOfView = m_fieldOfView;
@@ -1554,6 +1570,8 @@ public class Matt_PlayerMovement : MonoBehaviour
         }
     }
 
+    private bool dashFOVInProgress = false;
+
     /// <summary>
     /// Changes the FOV with speed and when the player dashes. 
     /// </summary>
@@ -1563,10 +1581,6 @@ public class Matt_PlayerMovement : MonoBehaviour
         if (PlayerPrefs.GetInt("FOV") == 1)
         {
             // Sets FOV values if FOV was changed in the options menu. 
-            //maxFOV += PlayerPrefs.GetInt("FovValue") - m_fieldOfView;
-            //minFOV = PlayerPrefs.GetInt("FovValue");
-            //adjustedMaxFOV = minFOV + maxFOV;
-
             Camera.main.fieldOfView = m_fieldOfView;
 
             // Sets the FOV of all of the Cinemachine Virtual Cameras to be equal to the FOV of the main camera.
@@ -1576,10 +1590,10 @@ public class Matt_PlayerMovement : MonoBehaviour
                 cam.m_Lens.FieldOfView = Camera.main.fieldOfView;
             }
 
-            m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, adjustedMaxFOV);
+            //m_fieldOfView = Mathf.Clamp(m_fieldOfView, minFOV, adjustedMaxFOV);
 
             // If not dashing, change FOV normally with speed. Otherwise, change FOV to dash FOV.
-            if (!dashing)
+            if (!dashing && !dashFOVInProgress)
             {
                 if (rb.velocity.x >= xFOVActivationVel ||
                     rb.velocity.z >= zFOVActivationVel ||
@@ -1588,33 +1602,93 @@ public class Matt_PlayerMovement : MonoBehaviour
                     rb.velocity.x <= -xFOVActivationVel ||
                     rb.velocity.z <= -zFOVActivationVel)
                 {
-                    if(m_fieldOfView < adjustedMaxFOV)
+                    if (m_fieldOfView < adjustedMaxFOV)
                     {
                         m_fieldOfView += (fovChangeRate * Time.deltaTime);
                     }
-                    else if(m_fieldOfView > adjustedMaxFOV)
+                    else if (m_fieldOfView > adjustedMaxFOV)
                     {
                         m_fieldOfView = adjustedMaxFOV;
                     }
                 }
                 else
                 {
-                    m_fieldOfView -= (fovChangeRate * Time.deltaTime);
+
+                    if (m_fieldOfView < minFOV)
+                    {
+                        m_fieldOfView = minFOV;
+                    }
+                    else if(m_fieldOfView > minFOV)
+                    {
+                        m_fieldOfView -= (fovChangeRate * Time.deltaTime);
+                    }
+                }
+
+                if(m_fieldOfView > adjustedMaxFOV)
+                {
+                    m_fieldOfView = adjustedMaxFOV;
                 }
             }
-            else if(dashing)
+            else if (dashing && !dashFOVInProgress)
             {
-                // If the m_fieldOfView is below the dashing FOV, raise it to the dashing FOV. Otherwise lower it to the dashing FOV.
-                if(m_fieldOfView < dashFOV)
+                StartCoroutine(DashFOVChanges(50));
+            }
+
+            //else if (dashing)
+            //{
+            //    //// If the m_fieldOfView is below the dashing FOV, raise it to the dashing FOV. Otherwise lower it to the dashing FOV.
+            //    //if (m_fieldOfView < adjustedDashFOV)
+            //    //{
+            //    //    m_fieldOfView += (fovDashChangeRate * Time.deltaTime);
+            //    //}
+            //    //else if (m_fieldOfView > adjustedDashFOV)
+            //    //{
+            //    //    m_fieldOfView -= (fovDashChangeRate * Time.deltaTime);
+            //    //}
+
+            //    ////m_fieldOfView = adjustedDashFOV;
+            //    ///
+
+            //}
+        }
+    }
+
+    private IEnumerator DashFOVChanges(int cycles)
+    {
+        dashFOVInProgress = true;
+
+        if (dashing)
+        {
+            if (cycles > 0)
+            {
+                cycles--;
+
+                // Sets FOV values if FOV was changed in the options menu. 
+                Camera.main.fieldOfView = m_fieldOfView;
+
+                // Sets the FOV of all of the Cinemachine Virtual Cameras to be equal to the FOV of the main camera.
+                Cinemachine.CinemachineVirtualCamera[] camArray = FindObjectsOfType<Cinemachine.CinemachineVirtualCamera>();
+                foreach (Cinemachine.CinemachineVirtualCamera cam in camArray)
                 {
-                    m_fieldOfView += (fovChangeRate * Time.deltaTime);
+                    cam.m_Lens.FieldOfView = Camera.main.fieldOfView;
                 }
-                else if(m_fieldOfView > dashFOV)
+
+                if (m_fieldOfView < adjustedDashFOV)
                 {
-                    m_fieldOfView -= (fovChangeRate * Time.deltaTime);
+                    m_fieldOfView += (fovDashChangeRate * Time.deltaTime);
                 }
+                else if (m_fieldOfView > adjustedDashFOV)
+                {
+                    m_fieldOfView -= (fovDashChangeRate * Time.deltaTime);
+                }
+
+                yield return new WaitForEndOfFrame();
+                StartCoroutine(DashFOVChanges(cycles));
             }
         }
+
+        yield return new WaitForEndOfFrame();
+        dashFOVInProgress = false;
     }
 
     public bool CanPlayerMove()

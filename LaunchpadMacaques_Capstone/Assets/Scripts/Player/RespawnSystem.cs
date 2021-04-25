@@ -1,8 +1,8 @@
 ﻿/* 
-* (Launchpad Macaques - [Trial and Error]) 
-* (Unknown) 
-* (RespawnSystem.cs) 
-* (Will handle re spawning the player, as well as reseting objects when the player dies) 
+* Launchpad Macaques - [Trial and Error] 
+* William Nomikos, Levi Schoof, Jamey Colleen 
+* RespawnSystem.cs
+* Will handle re spawning the player, as well as reseting objects when the player dies 
 */
 
 using System.Collections;
