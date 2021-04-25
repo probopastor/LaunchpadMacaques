@@ -110,7 +110,7 @@ public class FootStepCorruption : MonoBehaviour
 
         if (rightFoot)
         {
-            xAngle = -180;
+           // xAngle = -180;
             rightFoot = false;
             return rightFootPos.transform;
 
@@ -118,7 +118,7 @@ public class FootStepCorruption : MonoBehaviour
 
         else
         {
-            xAngle = 0;
+           // xAngle = 0;
             rightFoot = true;
             return leftFootPos.transform;
 
@@ -217,14 +217,17 @@ public class FootStepCorruption : MonoBehaviour
         coruptedTracker.AddCorruptedDecals(decal);
 
 
-
+        if(spotPos.collider.transform.rotation.x == 0)
+        {
+            xAngle -= 90;
+        }
 
  
 
 
         decal.transform.parent = spotPos.transform;
 
-        decal.transform.localRotation = Quaternion.Euler(xAngle, 0, player.GetDesiredX() - 90);
+        decal.transform.localRotation = Quaternion.Euler(decal.transform.localRotation.eulerAngles.x, 0, player.GetDesiredX() - 90);
 
 
         decals.Add(decal);
