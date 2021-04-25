@@ -11,6 +11,7 @@ public class FootStepCorruption : MonoBehaviour
 
     [Header("Decal Settings")]
     [SerializeField, Tooltip("The Decal Projector that is used for the Foot prints")] GameObject footDecal;
+    [SerializeField] GameObject rightFootDecal;
     [SerializeField, Tooltip("The size of the Foot Prints")] float decalSize = 0;
     [SerializeField, Tooltip("The max amount of Foot steps that can be spawned, will remove the oldest ones")] int maxFootSteps = 0;
 
@@ -41,6 +42,8 @@ public class FootStepCorruption : MonoBehaviour
     [SerializeField] GameObject cam;
 
     private float xAngle = 0;
+
+    private GameObject currentDecal;
 
     public FootStepCorruption(GameObject rightFootPos, GameObject leftFootPos, GameObject footDecal)
     {
@@ -110,16 +113,16 @@ public class FootStepCorruption : MonoBehaviour
 
         if (rightFoot)
         {
-           // xAngle = -180;
             rightFoot = false;
+            currentDecal = rightFootDecal;
             return rightFootPos.transform;
 
         }
 
         else
         {
-           // xAngle = 0;
             rightFoot = true;
+            currentDecal = footDecal;
             return leftFootPos.transform;
 
         }
@@ -208,7 +211,7 @@ public class FootStepCorruption : MonoBehaviour
     private void CreateDecalHelper(Vector3 point, GameObject obj)
     {
         // Creates the decal at the correct position and sets its size
-        decal = Instantiate(footDecal);
+        decal = Instantiate(currentDecal);
         decal.transform.position = point;
         decal.transform.rotation = Quaternion.FromToRotation(new Vector3(Vector3.up.x, Vector3.up.y, Vector3.up.z + 90), spotPos.normal);
         decal.GetComponent<DecalProjector>().size = new Vector3(decalSize, decalSize, .1f);
@@ -216,13 +219,6 @@ public class FootStepCorruption : MonoBehaviour
         // Adds the decal to the corrupted decal list
         coruptedTracker.AddCorruptedDecals(decal);
 
-
-        if(spotPos.collider.transform.rotation.x == 0)
-        {
-            xAngle -= 90;
-        }
-
- 
 
 
         decal.transform.parent = spotPos.transform;
