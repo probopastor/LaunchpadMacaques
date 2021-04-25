@@ -125,24 +125,14 @@ public class Log : MonoBehaviour
     private IEnumerator WaitForClose()
     {
         waitingForClose = true;
-        //while(!Input.GetButtonDown("Fire1") || FindObjectOfType<PauseManager>().GetPaused())
-        //{
-        //    yield return null;
-        //}
+        while(!Input.GetButtonDown("Fire1") || FindObjectOfType<PauseManager>().GetPaused())
+        {
+            yield return null;
+        }
 
         yield return null;
 
-        //ActivateLog(false);
-        //waitingForClose = false;
-    }
-
-    public void CloseInput()
-    {
-
-        if (waitingForClose || FindObjectOfType<PauseManager>().GetPaused())
-        {
-            ActivateLog(false);
-            waitingForClose = false;
-        }
+        ActivateLog(false);
+        waitingForClose = false;
     }
 }

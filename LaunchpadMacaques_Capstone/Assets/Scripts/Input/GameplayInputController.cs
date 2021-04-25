@@ -37,9 +37,6 @@ public class GameplayInputController : MonoBehaviour
 
     [SerializeField, Tooltip("The Event that is Called when player Presses Reset Grapple Input")] ResetGrappleEvent resetGrappleEvent;
 
-    [SerializeField, Tooltip("The event that is called to continue dialouge")] DialougeEvent dialouge;
-    [SerializeField, Tooltip("The Event that is called to open/close Log")] LogEvent logEvent;
-
     #region Jamies Stuff
     public GameplayInputController(LookEvent lookEvent)
     {
@@ -192,21 +189,9 @@ public class GameplayInputController : MonoBehaviour
         SetBatmanGrapple();
         SetDropCube();
         SetResetGrapple();
-        SetDialouge();
-        SetLog();
     }
 
     #region SetInputs
-    
-    private void SetLog()
-    {
-        controls.GamePlay.OpenLog.performed += OnLogEvent;
-    }
-
-    private void SetDialouge()
-    {
-        controls.GamePlay.Dialouge.performed += OnDialougeEvent;
-    }
 
     private void SetCrouchEvent()
     {
@@ -289,17 +274,6 @@ public class GameplayInputController : MonoBehaviour
     private void OnCrouchEvent(InputAction.CallbackContext cxt)
     {
         crouchEvent.Invoke(cxt.ReadValue<float>());
-    }
-    
-
-    private void OnLogEvent(InputAction.CallbackContext cxt)
-    {
-        logEvent.Invoke(cxt.ReadValue<float>());
-    }
-
-    private void OnDialougeEvent(InputAction.CallbackContext cxt)
-    {
-        dialouge.Invoke(cxt.ReadValue<float>());
     }
     private void OnJump(InputAction.CallbackContext cxt)
     {
@@ -392,9 +366,5 @@ public class GameplayInputController : MonoBehaviour
 [Serializable] public class DropCubeEvent : UnityEvent<float> { }
 
 [Serializable] public class ResetGrappleEvent : UnityEvent<float> { }
-
-[Serializable] public class DialougeEvent: UnityEvent<float> { }
-
-[Serializable] public class LogEvent: UnityEvent<float> { }
 
 
