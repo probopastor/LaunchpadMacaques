@@ -80,6 +80,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     //Character Animators
     private Animator wizardAnimator;
+    private WizardInteractionsManager wizardInteractionManager;
 
     IEnumerator dialougeTrigger;
     IEnumerator flash;
@@ -354,11 +355,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
         int lastNameplateUsed = -1;
         while ((currentLine = trigger.dialogue.NextLine()) != null)
         {
-           
+
 
             //Update nameplates
             //No nameplate yet
-            if(lastNameplateUsed == -1)
+            if (lastNameplateUsed == -1)
             {
                 nameplate[0].SetActive(true);
                 nameplateText[0].text = currentLine.character.characterName;
@@ -372,7 +373,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 lastNameplateUsed = 0;
             }
             //New character introduced
-            else if(currentLine.character.characterName != nameplateText[lastNameplateUsed].text)
+            else if (currentLine.character.characterName != nameplateText[lastNameplateUsed].text)
             {
                 int newNameplate = (lastNameplateUsed == 0 ? 1 : 0);
 
@@ -401,34 +402,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
             }
 
-            //Checks to see if the Wizard is talking and starts the talking animation, otherwise it stops the animation.
-            if (currentLine.character.characterName == "The Wizard" || currentLine.character.characterName == "Wizard")
-            {
-                if(GameObject.FindGameObjectWithTag("Wizard") != null)
-                {
-                    wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
-                    wizardAnimator.SetBool("isTalking", true);
-                    Debug.Log("The wizard is speaking..." + wizardAnimator.GetBool("isTalking"));
-                }
-                else
-                {
-                    Debug.LogError("The Wizard isn't in the scene but is talking!");
-                }
-
-            }
-            else if(currentLine.character.characterName == "You")
-            {
-                if(GameObject.FindGameObjectWithTag("Wizard") != null)
-                {
-                    wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
-
-                    if (wizardAnimator.GetBool("isTalking"))
-                    {
-                        wizardAnimator.SetBool("isTalking", false);
-                        Debug.Log("The wizard should stop talking... " + " isTalking is set to: " + wizardAnimator.GetBool("isTalking"));
-                    }
-                }
-            }
+            IsWizardTalking(currentLine);
 
 
             //Run text effects and apply them to the dialogue window
@@ -458,9 +432,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 viewLog.SetActive(true);
 
                 //Wait until effects are done or player has clicked to skip
-                while(TextEffectHandler.instance.RunningEffectCount > 0)
+                while (TextEffectHandler.instance.RunningEffectCount > 0)
                 {
-                    if(Input.GetButtonDown("Fire1") && !Log.instance.IsActive() && !mouseOverButton)
+                    if (Input.GetButtonDown("Fire1") && !Log.instance.IsActive() && !mouseOverButton)
                     {
                         TextEffectHandler.instance.SkipToEndOfEffects();
                     }
@@ -473,7 +447,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 StartCoroutine(flash);
 
                 //Effects are done, player must click to proceed to the next 
-                while(!Input.GetButtonDown("Fire1") || Log.instance.IsActive() || mouseOverButton)
+                while (!Input.GetButtonDown("Fire1") || Log.instance.IsActive() || mouseOverButton)
                 {
                     yield return null;
                 }
@@ -486,7 +460,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
             {
                 viewLog.SetActive(false);
                 //Wait until effects are done before starting the timer
-                while(TextEffectHandler.instance.RunningEffectCount > 0)
+                while (TextEffectHandler.instance.RunningEffectCount > 0)
                 {
                     yield return null;
                 }
@@ -521,6 +495,47 @@ public class NarrativeTriggerHandler : MonoBehaviour
         canvas.gameObject.SetActive(false);
 
         trigger.isRunning = false;
+    }
+
+    private void IsWizardTalking(Dialogue.Line currentLine)
+    {
+        //Checks to see if the Wizard is talking and starts the talking animation, otherwise it stops the animation.
+        if (currentLine.character.characterName == "The Wizard" || currentLine.character.characterName == "Wizard")
+        {
+            if (GameObject.FindGameObjectWithTag("Wizard") != null)
+            {
+                wizardInteractionManager.IsWizardTalking = true;
+
+                if (wizardInteractionManager.IsWizardTalking)
+                {
+                    wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
+                    wizardAnimator.SetBool("isTalking", true);
+                    Debug.Log("The wizard is speaking..." + wizardAnimator.GetBool("isTalking"));
+                }
+            }
+            else
+            {
+                Debug.LogError("The Wizard isn't in the scene but is talking!");
+            }
+
+        }
+        else if (currentLine.character.characterName == "You")
+        {
+            if (GameObject.FindGameObjectWithTag("Wizard") != null)
+            {
+                wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
+
+                wizardInteractionManager = GameObject.FindGameObjectWithTag("Wizard").GetComponent<WizardInteractionsManager>();
+
+                wizardInteractionManager.IsWizardTalking = false;
+
+                if (wizardAnimator.GetBool("isTalking"))
+                {
+                    wizardAnimator.SetBool("isTalking", false);
+                    Debug.Log("The wizard should stop talking... " + " isTalking is set to: " + wizardAnimator.GetBool("isTalking"));
+                }
+            }
+        }
     }
 
     public void CancelDialouge()
