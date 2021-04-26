@@ -153,6 +153,14 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""SkipIntro"",
+                    ""type"": ""Button"",
+                    ""id"": ""9a6b98e0-624b-48d2-9828-eac61dfb0a7b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -604,6 +612,17 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""OpenLog"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2a482585-5732-45b8-850d-744895c332cd"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SkipIntro"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1148,6 +1167,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
         m_GamePlay_ResetGrapple = m_GamePlay.FindAction("Reset Grapple", throwIfNotFound: true);
         m_GamePlay_Dialouge = m_GamePlay.FindAction("Dialouge", throwIfNotFound: true);
         m_GamePlay_OpenLog = m_GamePlay.FindAction("OpenLog", throwIfNotFound: true);
+        m_GamePlay_SkipIntro = m_GamePlay.FindAction("SkipIntro", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1226,6 +1246,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
     private readonly InputAction m_GamePlay_ResetGrapple;
     private readonly InputAction m_GamePlay_Dialouge;
     private readonly InputAction m_GamePlay_OpenLog;
+    private readonly InputAction m_GamePlay_SkipIntro;
     public struct GamePlayActions
     {
         private @PlayerControlls m_Wrapper;
@@ -1247,6 +1268,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
         public InputAction @ResetGrapple => m_Wrapper.m_GamePlay_ResetGrapple;
         public InputAction @Dialouge => m_Wrapper.m_GamePlay_Dialouge;
         public InputAction @OpenLog => m_Wrapper.m_GamePlay_OpenLog;
+        public InputAction @SkipIntro => m_Wrapper.m_GamePlay_SkipIntro;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1307,6 +1329,9 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                 @OpenLog.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnOpenLog;
                 @OpenLog.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnOpenLog;
                 @OpenLog.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnOpenLog;
+                @SkipIntro.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnSkipIntro;
+                @SkipIntro.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnSkipIntro;
+                @SkipIntro.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnSkipIntro;
             }
             m_Wrapper.m_GamePlayActionsCallbackInterface = instance;
             if (instance != null)
@@ -1362,6 +1387,9 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                 @OpenLog.started += instance.OnOpenLog;
                 @OpenLog.performed += instance.OnOpenLog;
                 @OpenLog.canceled += instance.OnOpenLog;
+                @SkipIntro.started += instance.OnSkipIntro;
+                @SkipIntro.performed += instance.OnSkipIntro;
+                @SkipIntro.canceled += instance.OnSkipIntro;
             }
         }
     }
@@ -1490,6 +1518,7 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
         void OnResetGrapple(InputAction.CallbackContext context);
         void OnDialouge(InputAction.CallbackContext context);
         void OnOpenLog(InputAction.CallbackContext context);
+        void OnSkipIntro(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

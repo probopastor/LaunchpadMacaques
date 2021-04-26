@@ -43,18 +43,17 @@ public class IntroductionManager : MonoBehaviour
 
     private void Update()
     {
-        // If proper key is pressed down, skip the text effect.
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            SkipToNextText();
-        }
-
         if(scaleImage)
         {
             ImageScaling();
         }
     }
 
+
+    public void SkipIntroInput()
+    {
+        SkipToNextText();
+    }
     private void SetInformation()
     {
         textIterator = 1;
