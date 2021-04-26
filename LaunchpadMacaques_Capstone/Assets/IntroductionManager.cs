@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 
 public class IntroductionManager : MonoBehaviour
 {
@@ -27,6 +28,13 @@ public class IntroductionManager : MonoBehaviour
     [Tooltip("Maintains whether or not text is currently being played. ")] private bool textInProgress = false;
     [Tooltip("Determines whether the next text should occur immediately or after its set delay. ")] private bool startTextImmediately = false;
 
+    [SerializeField] private bool scaleImage = false;
+    [SerializeField] private Image backgroundImage;
+    [SerializeField] private float startImageScale = 100f;
+    [SerializeField] private float endImageScale = 1f;
+    [SerializeField] private float imageScaleChangeRate = 0.5f;
+    private float currentImageScale = 0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +48,11 @@ public class IntroductionManager : MonoBehaviour
         {
             SkipToNextText();
         }
+
+        if(scaleImage)
+        {
+            ImageScaling();
+        }
     }
 
     private void SetInformation()
@@ -49,9 +62,15 @@ public class IntroductionManager : MonoBehaviour
         textInProgress = false;
         startTextImmediately = false;
 
-        for(int i = 0; i < informationTextToPlay.Length; i++)
+        for (int i = 0; i < informationTextToPlay.Length; i++)
         {
             informationTextToPlay[i].enabled = false;
+        }
+
+        if (scaleImage)
+        {
+            currentImageScale = startImageScale;
+            backgroundImage.transform.localScale = new Vector2(currentImageScale, currentImageScale);
         }
 
         StartCoroutine(Intro());
@@ -62,9 +81,9 @@ public class IntroductionManager : MonoBehaviour
     /// </summary>
     private void SkipToNextText()
     {
-        if (!informationTextToPlay[textIterator-1].IsActive())
+        if (!informationTextToPlay[textIterator - 1].IsActive())
         {
-            informationTextToPlay[textIterator-1].enabled = true;
+            informationTextToPlay[textIterator - 1].enabled = true;
         }
 
         // If a text effect is running, finish it. 
@@ -94,11 +113,11 @@ public class IntroductionManager : MonoBehaviour
         if (textEffects.EffectsRunning() == 0 && !queueSceneSwitch && !textInProgress)
         {
             textInProgress = true;
-            informationTextToPlay[textIterator-1].enabled = true;
-            textEffects.RunText(informationTextToPlay[textIterator -1], textToPlay[textIterator -1]);
+            informationTextToPlay[textIterator - 1].enabled = true;
+            textEffects.RunText(informationTextToPlay[textIterator - 1], textToPlay[textIterator - 1]);
         }
         // If text just finished being in progress, iterate the text to be played.
-        else if(textEffects.EffectsRunning() == 0 && !queueSceneSwitch && textInProgress)
+        else if (textEffects.EffectsRunning() == 0 && !queueSceneSwitch && textInProgress)
         {
             // Sets the text to stop being in progress
             textInProgress = false;
@@ -114,7 +133,7 @@ public class IntroductionManager : MonoBehaviour
             }
 
             // If the previous text section was skipped, the next one will be loaded immediately. 
-            if(!startTextImmediately)
+            if (!startTextImmediately)
             {
                 yield return new WaitForSeconds(introductionDurationDuringEffects);
             }
@@ -127,7 +146,7 @@ public class IntroductionManager : MonoBehaviour
             StartCoroutine(Intro());
         }
         // If all text has been played, begin the Scene Switch
-        else if(textEffects.EffectsRunning() == 0 && queueSceneSwitch)
+        else if (textEffects.EffectsRunning() == 0 && queueSceneSwitch)
         {
             yield return new WaitForEndOfFrame();
             StartCoroutine(IntroductionSequence());
@@ -157,5 +176,14 @@ public class IntroductionManager : MonoBehaviour
         }
 
         yield return new WaitForEndOfFrame();
+    }
+
+    private void ImageScaling()
+    {
+        if (currentImageScale > endImageScale)
+        {
+            currentImageScale -= imageScaleChangeRate * Time.deltaTime;
+            backgroundImage.transform.localScale = new Vector2(currentImageScale, currentImageScale);
+        }
     }
 }
