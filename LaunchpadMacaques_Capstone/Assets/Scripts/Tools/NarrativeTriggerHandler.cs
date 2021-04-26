@@ -89,6 +89,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
     IEnumerator dialougeTrigger;
     IEnumerator flash;
 
+    private bool waitingForInput = false;
+
+
 
     [System.Serializable]
     public class Trigger
@@ -250,6 +253,44 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
 
             yield return null;
+        }
+    }
+
+    public void PlayerInput()
+    {
+        if (waitingForInput)
+        {
+            if(TextEffectHandler.instance.RunningEffectCount > 0)
+            {
+                if (!Log.instance.IsActive() && canvas.activeSelf && !mouseOverButton)
+                {
+                    TextEffectHandler.instance.SkipToEndOfEffects();
+                }
+            }
+
+
+            else
+            {
+
+                if (!Log.instance.IsActive() && canvas.activeSelf && !mouseOverButton)
+                {
+                    waitingForInput = false;
+                }
+     
+            }
+        }
+    }
+
+    public void LogInput()
+    {
+        if (canvas.activeSelf && !Log.instance.IsActive())
+        {
+            Log.instance.ActivateLog(true);
+        }
+
+        else
+        {
+            Log.instance.CloseInput();
         }
     }
 
@@ -505,13 +546,14 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 Cursor.visible = true;
                 viewLog.SetActive(true);
 
+                waitingForInput = true;
                 //Wait until effects are done or player has clicked to skip
                 while(TextEffectHandler.instance.RunningEffectCount > 0)
                 {
                     //If submit button clicked, the log isn't up, the dialogue canvas is up, and the player isn't clicking the view log button
                     if(Input.GetButtonDown("Fire1") && !Log.instance.IsActive() && canvas.activeSelf && !mouseOverButton)
                     {
-                        TextEffectHandler.instance.SkipToEndOfEffects();
+                        //TextEffectHandler.instance.SkipToEndOfEffects();
                     }
                     yield return null;
                 }
@@ -521,11 +563,19 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 flash = Flash(clickToContinue);
                 StartCoroutine(flash);
 
+
                 //Effects are done, player must click to proceed to the next 
-                while(!Input.GetButtonDown("Fire1") || Log.instance.IsActive() || !canvas.activeSelf || mouseOverButton)
+
+                while (waitingForInput || Log.instance.IsActive() || !canvas.activeSelf || mouseOverButton)
                 {
                     yield return null;
                 }
+                //while(!Input.GetButtonDown("Fire1") || Log.instance.IsActive() || !canvas.activeSelf || mouseOverButton)
+                //{
+                //    yield return null;
+                //}
+
+                //waitingForInput = false;
 
                 //Stop flashing
                 shouldFlash = false;
