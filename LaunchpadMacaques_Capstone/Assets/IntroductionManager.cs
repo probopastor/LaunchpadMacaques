@@ -80,26 +80,29 @@ public class IntroductionManager : MonoBehaviour
     /// </summary>
     private void SkipToNextText()
     {
-        if (!informationTextToPlay[textIterator - 1].IsActive())
+        if(!queueSceneSwitch)
         {
-            informationTextToPlay[textIterator - 1].enabled = true;
+            if (!informationTextToPlay[textIterator - 1].IsActive())
+            {
+                informationTextToPlay[textIterator - 1].enabled = true;
+            }
+
+            // If a text effect is running, finish it. 
+            if (textEffects.EffectsRunning() != 0)
+            {
+                textEffects.SkipToEndOfEffects();
+            }
+
+            // Set the next set of text to occur immediatly without a delay
+            startTextImmediately = true;
+
+            // Sets the text in progress so that text can be properly iterated in Intro()
+            textInProgress = true;
+
+            // Restarts Intro() with new conditionals
+            StopCoroutine(Intro());
+            StartCoroutine(Intro());
         }
-
-        // If a text effect is running, finish it. 
-        if (textEffects.EffectsRunning() != 0)
-        {
-            textEffects.SkipToEndOfEffects();
-        }
-
-        // Set the next set of text to occur immediatly without a delay
-        startTextImmediately = true;
-
-        // Sets the text in progress so that text can be properly iterated in Intro()
-        textInProgress = true;
-
-        // Restarts Intro() with new conditionals
-        StopCoroutine(Intro());
-        StartCoroutine(Intro());
     }
 
     /// <summary>
