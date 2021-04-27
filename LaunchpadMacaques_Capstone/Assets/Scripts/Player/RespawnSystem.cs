@@ -1,8 +1,8 @@
 ﻿/* 
-* (Launchpad Macaques - [Trial and Error]) 
-* (Unknown) 
-* (RespawnSystem.cs) 
-* (Will handle re spawning the player, as well as reseting objects when the player dies) 
+* Launchpad Macaques - [Trial and Error] 
+* William Nomikos, Levi Schoof, Jamey Colleen 
+* RespawnSystem.cs
+* Will handle re spawning the player, as well as reseting objects when the player dies 
 */
 
 using System.Collections;
@@ -24,13 +24,15 @@ public class RespawnSystem : MonoBehaviour
     [Header("Death Effects")]
     [SerializeField] float delayBeforePlayerRespawns = 1;
     [SerializeField, Tooltip("The particles that will play when the player is respawned. ")] private ParticleSystem[] deathParticles;
-    [SerializeField, Tooltip("The time the player will sink for on death." )] private float sinkTime = 0f;
-    [SerializeField, Tooltip("The gravity modifier while the player is sinking in lava." )] private float sinkGravity = 0f;
+    [SerializeField, Tooltip("The time the player will sink for on death.")] private float sinkTime = 0f;
+    [SerializeField, Tooltip("The gravity modifier while the player is sinking in lava.")] private float sinkGravity = 0f;
 
     [EventRef, SerializeField]
     string[] deathRattles;
     [EventRef, SerializeField]
     string[] deathQuips;
+
+    private GameObject currentRespawnLookAtObject;
     #endregion
 
     #region Private Variables
@@ -48,7 +50,7 @@ public class RespawnSystem : MonoBehaviour
     private GrapplePoint[] disappearingGrapplePoints;
     private DisappearingPlatform[] disappearingPlatforms;
     private FallingObject[] fallingPlatforms;
-    
+
     ButtonTransitionManager transitionManger;
 
     Matt_PlayerMovement player;
@@ -136,6 +138,15 @@ public class RespawnSystem : MonoBehaviour
         {
             currentRespawnObject = other.gameObject;
             currentRespawnPosition = transform.position;
+
+            // Sets the respawn look at position object to the object at this checkpoint. 
+            foreach (Transform childTransform in currentRespawnObject.transform)
+            {
+                if (childTransform.tag == "RespawnDirection")
+                {
+                    currentRespawnLookAtObject = childTransform.gameObject;
+                }
+            }
 
             // Disables past respawn zones when a new one is activated.
             if (disableRespawnZonesWhenActive)
@@ -227,7 +238,7 @@ public class RespawnSystem : MonoBehaviour
             platform.EnablePlatform();
         }
 
-        foreach(FallingObject p in fallingPlatforms)
+        foreach (FallingObject p in fallingPlatforms)
         {
             p.RespawnObject();
         }
@@ -252,12 +263,14 @@ public class RespawnSystem : MonoBehaviour
     private IEnumerator SinkTime()
     {
         yield return new WaitForSeconds(sinkTime);
+
+
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
         changeGravityOnDeath = true;
     }
 
     /// <summary>
-    /// Respawns the player at the last availible respawn position and stops nay grapples that might have been occuring.
+    /// Respawns the player at the last availible respawn position and stops any grapples that might have been occuring.
     /// </summary>
     public void RespawnPlayer()
     {
@@ -266,17 +279,31 @@ public class RespawnSystem : MonoBehaviour
         this.transform.position = currentRespawnPosition;
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
+        StartCoroutine(ChangePlayerRotation());
         gg.StopGrapple();
         changeGravityOnDeath = false;
+
         deathInProgress = false;
     }
 
+
+    IEnumerator ChangePlayerRotation()
+    {
+        while (true)
+        {
+            player.RotateOnSpawn(currentRespawnLookAtObject);
+            yield return null;
+        }
+    }
     /// <summary>
     /// Sets the player's ability to move to true.
     /// </summary>
     public void PlayerCanMove()
     {
+
         player.SetPlayerCanMove(true);
+        StopAllCoroutines();
+
     }
 
     /// <summary>
@@ -313,10 +340,10 @@ public class RespawnSystem : MonoBehaviour
     {
         return deathParticlesPlaying;
     }
-/// <summary>
-/// Setter for the deathInProgress bool in case it ever needs to be changed outside of this script.
-/// </summary>
-/// <param name="value"></param>
+    /// <summary>
+    /// Setter for the deathInProgress bool in case it ever needs to be changed outside of this script.
+    /// </summary>
+    /// <param name="value"></param>
     public void SetDeathInProgress(bool value)
     {
         deathInProgress = value;
