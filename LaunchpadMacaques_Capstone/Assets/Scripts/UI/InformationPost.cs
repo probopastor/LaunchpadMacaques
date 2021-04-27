@@ -103,7 +103,7 @@ public class InformationPost : A_InputType
     {
         base.OnEnable();
         controls.Enable();
-        SetInformation();
+        //SetInformation();
     }
 
     private void OnDisable()
