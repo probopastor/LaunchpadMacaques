@@ -54,6 +54,14 @@ public class Player_Audio : MonoBehaviour
         if (Physics.Raycast(transform.position, Vector3.down, 4f, collisions)) grounded = true;
         else grounded = false;
 
+        if (!grounded && landed)
+        {
+            landed = false;
+            jumpInstance = RuntimeManager.CreateInstance(jumping);
+            jumpInstance.set3DAttributes(RuntimeUtils.To3DAttributes(transform.position));
+            jumpInstance.start();
+        }
+
         if (grounded && !landed)
         {   
             landed = true;
@@ -92,7 +100,7 @@ public class Player_Audio : MonoBehaviour
     {
         return magnitude;
     }
-
+    
     public void PlayRandom(string[] vs)
     {
         string randEvent = vs[Random.Range(0, vs.Length)];
