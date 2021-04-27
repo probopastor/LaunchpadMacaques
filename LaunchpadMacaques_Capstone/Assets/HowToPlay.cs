@@ -22,6 +22,14 @@ public class HowToPlay : A_InputType
         }
     }
 
+
+    private void Update()
+    {
+        if(!keyBoard.activeSelf && !controller.activeSelf)
+        {
+            ChangeUI();
+        }
+    }
     private new void OnEnable()
     {
         base.OnEnable();
