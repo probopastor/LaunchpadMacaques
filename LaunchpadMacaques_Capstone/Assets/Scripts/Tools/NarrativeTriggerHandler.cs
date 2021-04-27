@@ -91,6 +91,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private bool waitingForInput = false;
 
+    private Animator wizardAnimator;
+    private WizardInteractionsManager wizardInteractionManager;
+
 
 
     [System.Serializable]
@@ -527,6 +530,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
             //Start adding lines to the log
             Log.instance.PushToLog(currentLine);
 
+            IsWizardTalking(currentLine);
+
             //Play audio for associated line if applicable
             FMOD.Studio.EventDescription desc;
             //If the trigger has an audio source assigned, play the associated sound (if it has one)
@@ -635,6 +640,47 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         trigger.isRunning = false;
         DialogueRunning = false;
+    }
+
+    private void IsWizardTalking(Dialogue.Line currentLine)
+    {
+        //Checks to see if the Wizard is talking and starts the talking animation, otherwise it stops the animation.
+        if (currentLine.character.characterName == "The Wizard" || currentLine.character.characterName == "Wizard")
+        {
+            if (GameObject.FindGameObjectWithTag("Wizard") != null)
+            {
+                wizardInteractionManager.IsWizardTalking = true;
+
+                if (wizardInteractionManager.IsWizardTalking)
+                {
+                    wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
+                    wizardAnimator.SetBool("isTalking", true);
+                    Debug.Log("The wizard is speaking..." + wizardAnimator.GetBool("isTalking"));
+                }
+            }
+            else
+            {
+                Debug.LogError("The Wizard isn't in the scene but is talking!");
+            }
+
+        }
+        else if (currentLine.character.characterName == "You")
+        {
+            if (GameObject.FindGameObjectWithTag("Wizard") != null)
+            {
+                wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
+
+                wizardInteractionManager = GameObject.FindGameObjectWithTag("Wizard").GetComponent<WizardInteractionsManager>();
+
+                wizardInteractionManager.IsWizardTalking = false;
+
+                if (wizardAnimator.GetBool("isTalking"))
+                {
+                    wizardAnimator.SetBool("isTalking", false);
+                    Debug.Log("The wizard should stop talking... " + " isTalking is set to: " + wizardAnimator.GetBool("isTalking"));
+                }
+            }
+        }
     }
 
     public void CancelDialouge()
