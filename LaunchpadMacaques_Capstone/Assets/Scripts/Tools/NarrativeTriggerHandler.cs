@@ -57,6 +57,15 @@ public class NarrativeTriggerHandler : MonoBehaviour
     [SerializeField, Tooltip("The distance that the raycast will go in front of the player to check what object they're looking at")]
     private float lookAtObjectCheckDistance = 25f;
 
+    //Dialogue variables
+    public bool DialogueRunning { get; set; }
+    [SerializeField]
+    private float nameplateTransitionTime = 0.25f;
+    [SerializeField]
+    private float nameplateFadedOpacity = 0.5f;
+    [SerializeField]
+    private float nameplateActiveOpacity = 1f;
+
     //UI variables
     [SerializeField]
     private GameObject canvas;
@@ -77,13 +86,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private const string LAST_COMPLETED_SCENE_KEY = "NarrativeLastCompletedScene";
 
-
-    //Character Animators
-    private Animator wizardAnimator;
-    private WizardInteractionsManager wizardInteractionManager;
-
     IEnumerator dialougeTrigger;
     IEnumerator flash;
+
+    private bool waitingForInput = false;
+
 
 
     [System.Serializable]
@@ -249,6 +256,44 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
+    public void PlayerInput()
+    {
+        if (waitingForInput)
+        {
+            if(TextEffectHandler.instance.RunningEffectCount > 0)
+            {
+                if (!Log.instance.IsActive() && canvas.activeSelf && !mouseOverButton)
+                {
+                    TextEffectHandler.instance.SkipToEndOfEffects();
+                }
+            }
+
+
+            else
+            {
+
+                if (!Log.instance.IsActive() && canvas.activeSelf && !mouseOverButton)
+                {
+                    waitingForInput = false;
+                }
+     
+            }
+        }
+    }
+
+    public void LogInput()
+    {
+        if (canvas.activeSelf && !Log.instance.IsActive())
+        {
+            Log.instance.ActivateLog(true);
+        }
+
+        else
+        {
+            Log.instance.CloseInput();
+        }
+    }
+
     /// <summary>artL
     /// Activates trigger at given index
     /// </summary>
@@ -326,10 +371,18 @@ public class NarrativeTriggerHandler : MonoBehaviour
     /// <summary>
     /// Stop any running dialogue from appearing
     /// </summary>
-    public void TurnOffDialouge()
+    public void CancelDialogue()
     {
         dialogueText.text = "";
         canvas.SetActive(false);
+    }
+
+    public void SetDialoguePaused(bool shouldPause)
+    {
+        if (DialogueRunning)
+        {
+            canvas.SetActive(!shouldPause);
+        }
     }
 
     /// <summary>
@@ -343,6 +396,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
             yield break;
 
         trigger.isRunning = true;
+        DialogueRunning = true;
 
         //Turn on canvas
         canvas.SetActive(true);
@@ -350,60 +404,121 @@ public class NarrativeTriggerHandler : MonoBehaviour
         //Get ready to start pushing conversation to the log
         Log.instance.StartNewConversation();
 
-        //Get Every line in the dialogue
+        //Start getting every line in the dialogue
         Dialogue.Line currentLine;
+        FMOD.Studio.EventInstance currentAudio;
         int lastNameplateUsed = -1;
         while ((currentLine = trigger.dialogue.NextLine()) != null)
         {
+            //If break, turn nameplates off
+            if (currentLine.GetLineType() == Dialogue.Line.Type.Break)
+            {
+                nameplate[0].SetActive(false);
+                nameplate[1].SetActive(false);
+                lastNameplateUsed = -1;
+                continue;
+            }
+            //If narration line, push text to log as action text
+            else if (currentLine.GetLineType() == Dialogue.Line.Type.NarrationLine)
+            {
+                Log.instance.PushToLog(currentLine.text);
+            }
 
+            /////////////////UPDATE NAMEPLATES BASED ON LINE
 
             //Update nameplates
-            //No nameplate yet
-            if (lastNameplateUsed == -1)
+            //No nameplate yet, activate the first one
+            if (currentLine.GetLineType() == Dialogue.Line.Type.CharacterLine &&
+            lastNameplateUsed == -1)
             {
                 nameplate[0].SetActive(true);
                 nameplateText[0].text = currentLine.character.characterName;
                 nameplateText[0].color = currentLine.character.textColor;
-
+                //Initialize nameplate to transparent
+                nameplate[0].GetComponent<CanvasRenderer>().SetAlpha(0);
+                nameplateText[0].GetComponent<CanvasRenderer>().SetAlpha(0);
+                yield return null;
+                //Transition to opaque
+                nameplate[0].GetComponent<Image>().CrossFadeAlpha(1, nameplateTransitionTime, true);
+                nameplateText[0].CrossFadeAlpha(1, nameplateTransitionTime, true);
+                //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
-
+                nameplate[0].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
+                //Nameplate background
                 nameplate[0].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
 
                 lastNameplateUsed = 0;
             }
-            //New character introduced
-            else if (currentLine.character.characterName != nameplateText[lastNameplateUsed].text)
+            //New character talking, switch which nameplate is highlighted
+            else if (currentLine.GetLineType() == Dialogue.Line.Type.CharacterLine &&
+                currentLine.character.characterName != nameplateText[lastNameplateUsed].text)
             {
+                //New nameplate is either 0 or 1, opposite of whatever the last nameplate was
                 int newNameplate = (lastNameplateUsed == 0 ? 1 : 0);
 
-                //Fade new nameplate in
+                //Activate and set new nameplate to 0 opacity
                 if (!nameplate[newNameplate].activeSelf)
+                {
                     nameplate[newNameplate].SetActive(true);
+                    //Initialize to 0 opacity
+                    nameplate[newNameplate].GetComponent<CanvasRenderer>().SetAlpha(0);
+                    nameplateText[newNameplate].GetComponent<CanvasRenderer>().SetAlpha(0);
+                    nameplateText[newNameplate].color = currentLine.character.textColor;
+                    yield return null;
+                }
                 nameplateText[newNameplate].text = currentLine.character.characterName;
-                nameplateText[newNameplate].color = currentLine.character.textColor;
+
+                //Fade new in
+                nameplate[newNameplate].GetComponent<Image>().CrossFadeAlpha(1, nameplateTransitionTime, true);
+                nameplateText[newNameplate].CrossFadeAlpha(1, nameplateTransitionTime, true);
+
+                //Fade old out
+                nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
+                nameplateText[lastNameplateUsed].CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
 
                 //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
-
                 //Nameplate background
                 nameplate[newNameplate].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
-
-                //Fade new nameplate in
-                nameplate[newNameplate].GetComponent<Image>().CrossFadeAlpha(1, 0.25f, true);
-                nameplateText[newNameplate].CrossFadeAlpha(1, 0.25f, true);
-
-                //Fade old out
-                nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeAlpha(0.5f, 0.25f, true);
-                nameplateText[lastNameplateUsed].CrossFadeAlpha(0.5f, 0.25f, true);
 
                 lastNameplateUsed = newNameplate;
 
             }
+            //Narration Line
+            else if (currentLine.GetLineType() == Dialogue.Line.Type.NarrationLine)
+            {
+                if (nameplate[0].activeSelf)
+                {
+                    nameplate[0].GetComponent<Image>().CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
+                    nameplateText[0].CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
+                }
+                if (nameplate[1].activeSelf)
+                {
+                    nameplate[1].GetComponent<Image>().CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
+                    nameplateText[1].CrossFadeAlpha(nameplateFadedOpacity, nameplateTransitionTime, true);
+                }
 
-            IsWizardTalking(currentLine);
+                //Change Background Color to default Black Narrative Color
+                background.CrossFadeColor(Color.black, 0.25f, true, true);
+            }
+            //Line being said by a character who was already talking, make sure nameplate is there where it should be
+            else
+            {
+                if (nameplate[lastNameplateUsed].activeSelf == false)
+                {
+                    nameplate[lastNameplateUsed].SetActive(true);
+                }
+                nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeAlpha(1f, nameplateTransitionTime, true);
+                nameplateText[lastNameplateUsed].CrossFadeAlpha(1f, nameplateTransitionTime, true);
 
+                //Change Background Color
+                Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
+                background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
+                //Nameplate background
+                nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
+            }
 
             //Run text effects and apply them to the dialogue window
             TextEffectHandler.instance.RunText(dialogueText, currentLine.text);
@@ -417,26 +532,28 @@ public class NarrativeTriggerHandler : MonoBehaviour
             //If the trigger has an audio source assigned, play the associated sound (if it has one)
             if (FMODUnity.RuntimeManager.StudioSystem.getEvent(currentLine.audioToPlay, out desc) == FMOD.RESULT.OK)
             {
-                FMOD.Studio.EventInstance playAudio = FMODUnity.RuntimeManager.CreateInstance(currentLine.audioToPlay);
+                currentAudio = FMODUnity.RuntimeManager.CreateInstance(currentLine.audioToPlay);
                 desc.getLength(out trigger.dialogue.textDisplayTime);
-                playAudio.start();
+                currentAudio.start();
             }
 
             //Dialogue type is click to proceed
             if (trigger.dialogue.pauseForDuration)
             {
-                //Freeze time and let the user move their mouse around to hit the log button if desired
+                //Freeze movement and let the user move their mouse around to hit the log button if desired
                 FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(false);
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
                 viewLog.SetActive(true);
 
+                waitingForInput = true;
                 //Wait until effects are done or player has clicked to skip
-                while (TextEffectHandler.instance.RunningEffectCount > 0)
+                while(TextEffectHandler.instance.RunningEffectCount > 0)
                 {
-                    if (Input.GetButtonDown("Fire1") && !Log.instance.IsActive() && !mouseOverButton)
+                    //If submit button clicked, the log isn't up, the dialogue canvas is up, and the player isn't clicking the view log button
+                    if(Input.GetButtonDown("Fire1") && !Log.instance.IsActive() && canvas.activeSelf && !mouseOverButton)
                     {
-                        TextEffectHandler.instance.SkipToEndOfEffects();
+                        //TextEffectHandler.instance.SkipToEndOfEffects();
                     }
                     yield return null;
                 }
@@ -446,11 +563,19 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 flash = Flash(clickToContinue);
                 StartCoroutine(flash);
 
+
                 //Effects are done, player must click to proceed to the next 
-                while (!Input.GetButtonDown("Fire1") || Log.instance.IsActive() || mouseOverButton)
+
+                while (waitingForInput || Log.instance.IsActive() || !canvas.activeSelf || mouseOverButton)
                 {
                     yield return null;
                 }
+                //while(!Input.GetButtonDown("Fire1") || Log.instance.IsActive() || !canvas.activeSelf || mouseOverButton)
+                //{
+                //    yield return null;
+                //}
+
+                //waitingForInput = false;
 
                 //Stop flashing
                 shouldFlash = false;
@@ -460,13 +585,27 @@ public class NarrativeTriggerHandler : MonoBehaviour
             {
                 viewLog.SetActive(false);
                 //Wait until effects are done before starting the timer
-                while (TextEffectHandler.instance.RunningEffectCount > 0)
+                while(TextEffectHandler.instance.RunningEffectCount > 0)
                 {
                     yield return null;
                 }
                 yield return new WaitForSecondsRealtime(trigger.dialogue.textDisplayTime);
             }
             TextEffectHandler.instance.StopText();
+
+
+            if (FMODUnity.RuntimeManager.StudioSystem.getEvent(currentLine.audioToPlay, out desc) == FMOD.RESULT.OK)
+            {
+                FMOD.Studio.PLAYBACK_STATE currentState;
+                FMOD.Studio.EventInstance[] instances;
+                desc.getInstanceList(out instances);
+                currentAudio = instances[0];
+                currentAudio.getPlaybackState(out currentState);
+                if (currentAudio.isValid() && currentState == FMOD.Studio.PLAYBACK_STATE.PLAYING)
+                    currentAudio.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            }
+            
+            
 
             yield return null;
         }
@@ -495,47 +634,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         canvas.gameObject.SetActive(false);
 
         trigger.isRunning = false;
-    }
-
-    private void IsWizardTalking(Dialogue.Line currentLine)
-    {
-        //Checks to see if the Wizard is talking and starts the talking animation, otherwise it stops the animation.
-        if (currentLine.character.characterName == "The Wizard" || currentLine.character.characterName == "Wizard")
-        {
-            if (GameObject.FindGameObjectWithTag("Wizard") != null)
-            {
-                wizardInteractionManager.IsWizardTalking = true;
-
-                if (wizardInteractionManager.IsWizardTalking)
-                {
-                    wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
-                    wizardAnimator.SetBool("isTalking", true);
-                    Debug.Log("The wizard is speaking..." + wizardAnimator.GetBool("isTalking"));
-                }
-            }
-            else
-            {
-                Debug.LogError("The Wizard isn't in the scene but is talking!");
-            }
-
-        }
-        else if (currentLine.character.characterName == "You")
-        {
-            if (GameObject.FindGameObjectWithTag("Wizard") != null)
-            {
-                wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
-
-                wizardInteractionManager = GameObject.FindGameObjectWithTag("Wizard").GetComponent<WizardInteractionsManager>();
-
-                wizardInteractionManager.IsWizardTalking = false;
-
-                if (wizardAnimator.GetBool("isTalking"))
-                {
-                    wizardAnimator.SetBool("isTalking", false);
-                    Debug.Log("The wizard should stop talking... " + " isTalking is set to: " + wizardAnimator.GetBool("isTalking"));
-                }
-            }
-        }
+        DialogueRunning = false;
     }
 
     public void CancelDialouge()
