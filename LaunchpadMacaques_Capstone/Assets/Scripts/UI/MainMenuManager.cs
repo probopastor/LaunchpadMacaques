@@ -20,6 +20,9 @@ public class MainMenuManager : MonoBehaviour
     private GameObject mainMenu_Panel;
 
     [SerializeField]
+    GameObject tutorialButton;
+
+    [SerializeField]
     private List<GameObject> menuPanels = new List<GameObject>();
 
     public Animator anim;
@@ -31,7 +34,9 @@ public class MainMenuManager : MonoBehaviour
     {
 
         useTransitions = new List<string>();
-        mainMenu_Panel.SetActive(true);
+
+
+
 
         Time.timeScale = 1;
         Cursor.visible = true;
@@ -45,7 +50,23 @@ public class MainMenuManager : MonoBehaviour
         }
 
         transitionManager = FindObjectOfType<ButtonTransitionManager>();
+
+        if (PlayerPrefs.GetInt("LevelSelect") == 1)
+        {
+            mainMenu_Panel.SetActive(false);
+            menuPanels[1].SetActive(true);
+            Invoke("EscapeKey", .5f);
+
+        }
+
+        else
+        {
+            mainMenu_Panel.SetActive(true);
+        }
+
+        PlayerPrefs.SetInt("LevelSelect", 0);
     }
+
 
 
     /// <summary>
@@ -74,7 +95,7 @@ public class MainMenuManager : MonoBehaviour
                         case "Level Select Page2":
                             transitionManager.disable = menuPanels[index];
                             transitionManager.enable = menuPanels[0];
-                           // transitionManager.StartTransisiton(false);
+                            // transitionManager.StartTransisiton(false);
 
                             break;
 
@@ -88,14 +109,14 @@ public class MainMenuManager : MonoBehaviour
                         case "Credits Panel":
                             transitionManager.disable = menuPanels[index];
                             transitionManager.enable = mainMenu_Panel;
-                           // transitionManager.StartTransisiton();
+                            // transitionManager.StartTransisiton();
 
                             break;
 
                         case "OptionsMenu":
                             transitionManager.disable = menuPanels[index];
                             transitionManager.enable = mainMenu_Panel;
-                           // transitionManager.StartTransisiton();
+                            // transitionManager.StartTransisiton();
 
                             break;
 
@@ -115,9 +136,9 @@ public class MainMenuManager : MonoBehaviour
                     }
 
                     bool useTransition = false;
-                    for(int i = 0; i < useTransitions.Count; i++)
+                    for (int i = 0; i < useTransitions.Count; i++)
                     {
-                        if(menuPanels[index].name == useTransitions[i])
+                        if (menuPanels[index].name == useTransitions[i])
                         {
                             useTransition = true;
                         }

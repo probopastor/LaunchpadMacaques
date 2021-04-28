@@ -27,7 +27,7 @@ public class SwitchLevel : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-       
+           
             SwitchScenes();
         }
     }
@@ -40,6 +40,7 @@ public class SwitchLevel : MonoBehaviour
     {
         handleSaving = FindObjectOfType<HandleSaving>();
         player.SetPlayerCanMove(false);
+        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
         handleSaving.LevelCompleted();
         if (!playNextLevel)
         {

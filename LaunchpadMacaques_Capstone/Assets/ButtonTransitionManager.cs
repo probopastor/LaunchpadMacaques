@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Linq;
 
 public class ButtonTransitionManager : MonoBehaviour
 {
@@ -51,6 +52,12 @@ public class ButtonTransitionManager : MonoBehaviour
     SettingsManager settings;
 
     List<GameObject> useTransitionOnBack;
+
+    // Array that holds refernces to the buttons that will be disabled when a transition is started.
+    private Button[] buttonsToDisable;
+
+    // Array that holds references to the buttons that will be re-enabled if the previous screen is returned to.
+    private Button[] buttonsToEnable;
 
     public ButtonTransitionManager(IntroTransitionTypes introTransition)
     {
@@ -117,6 +124,14 @@ public class ButtonTransitionManager : MonoBehaviour
     {
         if (!inTransisiton)
         {
+
+            buttonsToDisable = FindObjectOfType<StartGamePanel>().transform.GetComponentsInChildren<Button>();
+
+            foreach (Button button in buttonsToDisable)
+            {
+                button.interactable = false;
+            }
+
             StartCoroutine(ExitTransition(FindObjectOfType<StartGamePanel>().GetCorrectLevelName()));
         }
 
@@ -127,6 +142,7 @@ public class ButtonTransitionManager : MonoBehaviour
     /// </summary>
     public void StartTransisiton(bool useTransition = true)
     {
+
         if (inTransisiton)
         {
             StopAllCoroutines();
@@ -135,6 +151,15 @@ public class ButtonTransitionManager : MonoBehaviour
 
         if (useTransition)
         {
+
+            buttonsToDisable = FindObjectsOfType<Button>();
+
+            foreach (Button button in buttonsToDisable)
+            {
+                button.interactable = false;
+            }
+
+
             if (mainMenu)
             {
                 mainMenu.SetUseEscapeTransition(enable.name);
@@ -159,6 +184,13 @@ public class ButtonTransitionManager : MonoBehaviour
             {
                 useTransition = true;
             }
+        }
+
+        buttonsToDisable = FindObjectsOfType<Button>();
+
+        foreach (Button button in buttonsToDisable)
+        {
+            button.interactable = false;
         }
 
         StartCoroutine(PanelTransition(useTransition));
@@ -266,13 +298,36 @@ public class ButtonTransitionManager : MonoBehaviour
     /// </summary>
     private void ChangePanels()
     {
+
         if (previousDisable)
         {
+            buttonsToEnable = previousDisable.transform.GetComponentsInChildren<Button>();
+
+            foreach (Button buttons in buttonsToEnable)
+            {
+                if (buttons.interactable == false)
+                {
+                    buttons.interactable = true;
+                }
+                else
+                {
+                    buttonsToEnable = null;
+                }
+            }
+
             previousDisable.SetActive(false);
         }
 
         if (previousEnable)
         {
+            //Debug.Log(previousEnable.name);
+            //buttonsToEnable = previousEnable.transform.GetComponentsInChildren<Button>();
+
+            //foreach (Button buttons in buttonsToEnable)
+            //{
+            //    Debug.Log(buttons.name);
+            //}
+
             previousEnable.SetActive(true);
         }
 
