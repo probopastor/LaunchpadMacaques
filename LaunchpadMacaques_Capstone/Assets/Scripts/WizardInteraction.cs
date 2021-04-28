@@ -8,13 +8,12 @@ public class WizardInteraction : MonoBehaviour
     [SerializeField]
     private string interactionName = "Default";
 
+    [SerializeField]
     private Animator wizardAnimator;
     private Transform wizardTransform;
 
     [SerializeField]
-    private float walkSpeed = 5.0f;
-
-    float walkingTime = 0f;
+    private float walkingTime = 5f;
 
     private bool wizardDoneWalking = false;
 
@@ -28,30 +27,39 @@ public class WizardInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(walkingTime);
+
     }
 
-    public void MoveWizard()
+    public IEnumerator MoveWizard()
     {
-        walkingTime = 0f;
         WizardDoneWalking = false;
+        float timeElapsed = 0f;
 
-        while(!WizardDoneWalking)
+        while (!WizardDoneWalking)
         {
 
-            walkingTime += Time.deltaTime;
+            wizardTransform.localRotation = Quaternion.identity;
 
-            if (walkingTime < 2f)
+            timeElapsed += Time.deltaTime;
+
+            if (timeElapsed < walkingTime)
             {
-                wizardTransform.Translate(Vector3.forward * walkSpeed * Time.deltaTime);
+                //wizardTransform.Translate(Vector3.forward * walkSpeed * Time.deltaTime);
+                WizardAnimator.SetBool("isWalking", true);
             }
-            else if(walkingTime >= 2f)
+            else if(timeElapsed >= walkingTime)
             {
                 WizardDoneWalking = true;
+                WizardAnimator.SetBool("isWalking", false);
             }
+
+            Debug.Log(WizardAnimator.GetBool("isWalking"));
+            yield return null;
+
         }
 
-        Debug.Log(walkingTime);
+        Debug.Log("Corotuine is done...");
+        StopCoroutine(MoveWizard());
 
     }
 

@@ -94,6 +94,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
     private Animator wizardAnimator;
     private WizardInteractionsManager wizardInteractionManager;
 
+    //Global reference to the current dialogue line.
+    private Dialogue.Line currentLine;
+
 
 
     [System.Serializable]
@@ -196,6 +199,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
         viewLog = transform.Find("DialogueCanvas/Background/ViewLog").gameObject;
 
         canvas.SetActive(false);
+
+        wizardInteractionManager = FindObjectOfType<WizardInteractionsManager>();
     }
 
     private void Start()
@@ -408,7 +413,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         Log.instance.StartNewConversation();
 
         //Start getting every line in the dialogue
-        Dialogue.Line currentLine;
+        //Dialogue.Line currentLine;
         FMOD.Studio.EventInstance currentAudio;
         int lastNameplateUsed = -1;
         while ((currentLine = trigger.dialogue.NextLine()) != null)
@@ -669,8 +674,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
             if (GameObject.FindGameObjectWithTag("Wizard") != null)
             {
                 wizardAnimator = GameObject.FindGameObjectWithTag("Wizard").GetComponent<Animator>();
-
-                wizardInteractionManager = GameObject.FindGameObjectWithTag("Wizard").GetComponent<WizardInteractionsManager>();
 
                 wizardInteractionManager.IsWizardTalking = false;
 
@@ -1023,6 +1026,14 @@ public class NarrativeTriggerHandler : MonoBehaviour
     public bool GetMouseOverButton()
     {
         return mouseOverButton;
+    }
+
+    public Dialogue.Line CurrentDialogueLine
+    {
+        get
+        {
+            return currentLine;
+        }
     }
 
     /// <summary>
