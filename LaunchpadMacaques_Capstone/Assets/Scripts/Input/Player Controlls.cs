@@ -644,6 +644,17 @@ public class @PlayerControlls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""53f050af-17c8-444e-b661-c085b89c25fd"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SkipIntro"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""0065bcdb-417f-4037-b7fa-05fda1f0b928"",
                     ""path"": ""<Keyboard>/anyKey"",
                     ""interactions"": """",
