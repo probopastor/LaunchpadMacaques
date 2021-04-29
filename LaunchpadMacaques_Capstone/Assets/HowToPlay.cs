@@ -11,7 +11,11 @@ public class HowToPlay : A_InputType
     {
         if (controllerDetected)
         {
-            keyBoard.SetActive(false);
+            if (keyBoard)
+            {
+                keyBoard.SetActive(false);
+            }
+
             controller.SetActive(true);
         }
 
