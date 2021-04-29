@@ -44,7 +44,6 @@ public class ColorblindFilter: MonoBehaviour
         LoadProfiles();
         SetProfile(PlayerPrefs.GetInt("ColorblindMode"));
 
-        Debug.Log("The current length of the volumeProfiles Dictionary is: " + volumeProfiles.Count);
     }
 
     private void Update()
@@ -170,7 +169,6 @@ public class ColorblindFilter: MonoBehaviour
                 case "Normal":
                     if (profileObjects[index].name.Contains("Normal"))
                     {
-                        Debug.Log("The index of " + dictionaryValue + " is: " + index);
                         return index;
                     }
                     break;

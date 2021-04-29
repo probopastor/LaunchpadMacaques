@@ -5,25 +5,27 @@ using UnityEngine;
 
 public class Portal : MonoBehaviour
 {
-    private bool openPortal = false;
-    private bool closePortal = false;
 
-
-    public enum PortalStates {INACTIVE, OPENING, OPEN, CLOSING, CLOSED };
+    public enum PortalStates {INACTIVE, OPEN, CLOSE };
 
     public PortalStates portalState = PortalStates.INACTIVE;
 
-    private Animator portalAnimator;
+    private int wizardCollisions = 0;
 
-    private void Awake()
-    {
-        portalAnimator = GetComponent<Animator>();
-    }
 
     private void Update()
     {
         // Check Portal State...
         CheckPortalState(portalState);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Wizard")
+        {
+            wizardCollisions++;
+            Debug.Log("The wizard has collided with the portal! with a collision count of: " + wizardCollisions);
+        }
     }
 
     private void CheckPortalState(PortalStates currentPortalState)
@@ -32,11 +34,14 @@ public class Portal : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-    }
-
-    private void OpenPortal()
-    {
-
+        else if(currentPortalState == PortalStates.OPEN)
+        {
+            gameObject.SetActive(true);
+        }
+        else if(currentPortalState == PortalStates.CLOSE)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     #region Getters/Setters
@@ -52,16 +57,18 @@ public class Portal : MonoBehaviour
         }
     }
 
+    public int WizardCollisions
+    {
+        get
+        {
+            return wizardCollisions;
+        }
+        set
+        {
+            wizardCollisions = value;
+        }
+    }
+
     #endregion
-
-    //private IEnumerator OpenPortal()
-    //{
-    //    while(!closePortal)
-    //    {
-    //        // Play portal opening animation and keep it open.
-
-    //    yield return null;
-    //    }
-    //}
 
 }
