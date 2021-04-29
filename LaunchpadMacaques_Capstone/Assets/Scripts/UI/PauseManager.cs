@@ -165,7 +165,6 @@ public class PauseManager : MonoBehaviour
 
         else if (optionsMenu.transform.parent.gameObject.activeSelf)
         {
-            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
             if (optionsMenu.activeSelf)
             {
                 optionsMenu.transform.parent.gameObject.SetActive(false);
@@ -176,6 +175,18 @@ public class PauseManager : MonoBehaviour
             {
                 optionsMenu.SetActive(true);
                 videoSettings.SetActive(false);
+            }
+
+            else if (graphicsSettings.activeSelf)
+            {
+                videoSettings.SetActive(true);
+                graphicsSettings.SetActive(false);
+            }
+
+            else if (postProcessingSettings.activeSelf)
+            {
+                videoSettings.SetActive(true);
+                postProcessingSettings.SetActive(false);
             }
 
             else if (audioSettings.activeSelf)
@@ -190,7 +201,17 @@ public class PauseManager : MonoBehaviour
                 gameplaySettings.SetActive(false);
             }
 
-            FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+            else if (lookSettings.activeSelf)
+            {
+                gameplaySettings.SetActive(true);
+                lookSettings.SetActive(false);
+            }
+
+            else if (miscGamePlaySettings.activeSelf)
+            {
+                gameplaySettings.SetActive(true);
+                miscGamePlaySettings.SetActive(false);
+            }
         }
     }
 
@@ -216,9 +237,6 @@ public class PauseManager : MonoBehaviour
 
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-
-      
-
 
         }
         else if (paused == true)

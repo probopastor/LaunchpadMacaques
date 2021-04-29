@@ -114,6 +114,10 @@ public class GrapplingGun : MonoBehaviour
 
     [SerializeField] LayerMask groundDecalLayer;
 
+    [SerializeField] Camera handCam;
+
+    private Vector3 handStartingPos;
+
     #endregion
 
     #region Particle Effects
@@ -148,6 +152,8 @@ public class GrapplingGun : MonoBehaviour
 
     private bool swingLockToggle;
     private bool canApplyForce;
+
+    private bool canGrapple = true;
 
     // Two private instances of the objec that the player is grappling to (Both used for different things)
     private GameObject grappledObj;
@@ -245,6 +251,7 @@ public class GrapplingGun : MonoBehaviour
     #region StartFunctions
     void Awake()
     {
+
         swingHelper = FindObjectOfType<SwingHelper>();
         SetTypeOfGrapple();
         if (postText)
@@ -271,6 +278,8 @@ public class GrapplingGun : MonoBehaviour
         grapplingLr = grapplingLrObj.GetComponent<LineRenderer>();
         grapplingLr.enabled = false;
     }
+
+   
 
     private void SetTypeOfGrapple()
     {
@@ -305,6 +314,8 @@ public class GrapplingGun : MonoBehaviour
     {
         CheckBatman();
 
+        handStartingPos = ejectPoint.transform.position;
+
         pauseManager = FindObjectOfType<PauseManager>();
     }
 
@@ -324,7 +335,11 @@ public class GrapplingGun : MonoBehaviour
         if (PlayerPrefs.GetInt("HoverLine") == 1)
         {
             HoverShadow();
-    }
+        }
+
+        //Debug.Log(Camera.main.ViewportToWorldPoint(this.transform.position));
+
+        handStartingPos = ejectPoint.transform.position;
 
         if (pauseManager.GetPaused() || !IsGrappling()) grapplingEmitter.Stop();
         else if (!grapplingEmitter.IsPlaying()) grapplingEmitter.Play();
@@ -464,11 +479,18 @@ public class GrapplingGun : MonoBehaviour
 
             if (lr.positionCount == 0 || drawlingLine) return;
 
-            currentGrapplePosition = grapplePoint;
+
+
+            var temp = handCam.ViewportToWorldPoint(Camera.main.WorldToViewportPoint(hitObjectClone.transform.position));
+            //var temp = Vector3.zero;
+            currentGrapplePosition = temp;
 
             lr.SetPosition(0, ejectPoint.position);
             lr.SetPosition(1, currentGrapplePosition);
         }
+
+
+
     }
 
     #endregion
@@ -512,7 +534,7 @@ public class GrapplingGun : MonoBehaviour
                 if (grappledObj != hit.collider.gameObject)
                 {
                     // If the current grapple locked object is different from the grappling point aimed at, update the current grapple locked object
-                    if(currentGrappleLockedObject != hit.collider.gameObject)
+                    if (currentGrappleLockedObject != hit.collider.gameObject)
                     {
                         currentGrappleLockedObject = hit.collider.gameObject;
                         grappleLocked = false;
@@ -530,7 +552,7 @@ public class GrapplingGun : MonoBehaviour
         }
 
         // If grapple locked, set the grappleRayHit (which determines which object will be grappled to) to the proper object
-        if(grappleLocked)
+        if (grappleLocked)
         {
             grappleRayHit = grappleLockRaycastHitRef;
             return true;
@@ -664,7 +686,7 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     public void StartGrapple()
     {
-        if (CanFindGrappleLocation() && !batmanInProgress && !pulling)
+        if (CanFindGrappleLocation() && !batmanInProgress && !pulling && canGrapple)
         {
             swingHelper.ResetVariables();
             StartGrapplingSettings();
@@ -684,7 +706,7 @@ public class GrapplingGun : MonoBehaviour
 
     public void StartBatManGrapple()
     {
-        if (CanFindGrappleLocation() && canBatman && !batmanInProgress && !pulling)
+        if (CanFindGrappleLocation() && canBatman && !batmanInProgress && !pulling && canGrapple)
         {
             batmanInProgress = true;
             StartGrapplingSettings();
@@ -758,6 +780,7 @@ public class GrapplingGun : MonoBehaviour
 
 
 
+
     /// <summary>
     /// Will Pull player to point until they are within a certin distant from the point
     /// </summary>
@@ -800,8 +823,10 @@ public class GrapplingGun : MonoBehaviour
     {
         drawlingLine = true;
         lr.positionCount = 2;
-        //Vector3 grappled = grappleRayHit.point;
-        Vector3 grappled = grappleRayHit.transform.position;
+      //  Vector3 grappled = grappleRayHit.point;
+
+      var temp = handCam.ViewportToWorldPoint(Camera.main.WorldToViewportPoint(grappleRayHit.point));
+        Vector3 grappled = temp;
         dist = Vector3.Distance(ejectPoint.position, grappled);
 
         float counter = 0;
@@ -812,15 +837,21 @@ public class GrapplingGun : MonoBehaviour
         while (counter < dist)
         {
 
+            temp = handCam.ViewportToWorldPoint(Camera.main.WorldToViewportPoint(grappleRayHit.point));
             Vector3 point1 = ejectPoint.position;
-            Vector3 point2 = grappled;
+            Vector3 point2 = temp;
+
 
             lr.SetPosition(0, ejectPoint.position);
             counter += tempAttachSpeed * Time.deltaTime;
 
             Vector3 pointAlongLine = (counter) * Vector3.Normalize(point2 - point1) + point1;
 
+            var temp2 = handCam.ViewportToWorldPoint(Camera.main.WorldToViewportPoint(pointAlongLine));
+
             lr.SetPosition(1, pointAlongLine);
+
+      
 
             tempAttachSpeed += attachSpeedIncrease * Time.deltaTime;
             yield return new WaitForSeconds(0);
@@ -881,7 +912,11 @@ public class GrapplingGun : MonoBehaviour
         joint.damper = springDamp;
         joint.massScale = springMass;
 
-        currentGrapplePosition = hitObjectClone.transform.position;
+
+        var temp =  Camera.main.ViewportToWorldPoint(handCam.WorldToViewportPoint(hitObjectClone.transform.position));
+        //var temp = Vector3.zero;
+        currentGrapplePosition = temp;
+        //currentGrapplePosition = hitObjectClone.transform.position;
 
         //Pinwheel
         Pinwheel pinwheel = null;
@@ -1161,6 +1196,16 @@ public class GrapplingGun : MonoBehaviour
     public float SetRopeLength(float value)
     {
         return ropeLength = value;
+    }
+
+    public bool GetCanGrapple()
+    {
+        return canGrapple;
+    }
+
+    public void SetCanGrapple(bool newCanGrapple)
+    {
+        canGrapple = newCanGrapple;
     }
 
     #endregion

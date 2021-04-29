@@ -17,10 +17,12 @@ using UnityEngine.UI;
 using TMPro;
 using Cinemachine;
 using FMODUnity;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(GameEventManager))]
 public class NarrativeTriggerHandler : MonoBehaviour
 {
+    private PlayerControlls controls;
     public enum TriggerType { Area, Random, OnEvent };
 
     #region Events
@@ -159,6 +161,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += TimeInLevelCountStart;
 
         LevelCompletedEventHasBeenCompleted += UpdateLastLevelPlayerPref;
+
     }
 
     private void OnDisable()
@@ -172,6 +175,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= TimeInLevelCountStart;
 
         LevelCompletedEventHasBeenCompleted -= UpdateLastLevelPlayerPref;
+
+
+        controls.Disable();
         
     }
 
@@ -198,6 +204,11 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         viewLog = transform.Find("DialogueCanvas/Background/ViewLog").gameObject;
 
+        controls = new PlayerControlls();
+        controls.Enable();
+        controls.GamePlay.Dialouge.performed += PlayerInput;
+        controls.GamePlay.OpenLog.performed += LogInput;
+
         canvas.SetActive(false);
 
         wizardInteractionManager = FindObjectOfType<WizardInteractionsManager>();
@@ -205,6 +216,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
     private void Start()
     {
+
+
         //On Start of current scene, see if there was a last level that has been completed
         int lastLevel = PlayerPrefs.GetInt(LAST_COMPLETED_SCENE_KEY, -1);
 
@@ -264,19 +277,19 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
-    public void PlayerInput()
+    public void PlayerInput(InputAction.CallbackContext cxt)
     {
         if (waitingForInput)
         {
+
             if(TextEffectHandler.instance.RunningEffectCount > 0)
             {
                 if (!Log.instance.IsActive() && canvas.activeSelf && !mouseOverButton)
                 {
                     TextEffectHandler.instance.SkipToEndOfEffects();
                 }
+
             }
-
-
             else
             {
 
@@ -286,19 +299,30 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 }
      
             }
+
+            if (Log.instance.IsActive())
+            {
+                Log.instance.CloseInput();
+            }
         }
     }
 
-    public void LogInput()
+    public void LogInput(InputAction.CallbackContext cxt)
     {
-        if (canvas.activeSelf && !Log.instance.IsActive())
-        {
-            Log.instance.ActivateLog(true);
-        }
 
-        else
+   
+        if (canvas.activeSelf)
         {
-            Log.instance.CloseInput();
+            if (!Log.instance.IsActive())
+            {
+                Log.instance.ActivateLog(true);
+            }
+
+            else
+            {
+                Log.instance.ActivateLog(false);
+            }
+
         }
     }
 
@@ -451,8 +475,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 nameplateText[0].CrossFadeAlpha(1, nameplateTransitionTime, true);
                 //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
+
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
-                nameplate[0].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
+
                 //Nameplate background
                 nameplate[0].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
 
@@ -488,6 +513,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
+
+
                 //Nameplate background
                 nameplate[newNameplate].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
 
@@ -524,6 +551,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
+
                 //Nameplate background
                 nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
             }
@@ -552,6 +580,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
             {
                 //Freeze movement and let the user move their mouse around to hit the log button if desired
                 FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(false);
+                FindObjectOfType<GrapplingGun>().SetCanGrapple(false);
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
                 viewLog.SetActive(true);
@@ -628,6 +657,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         //Resume game
         FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(true);
+        FindObjectOfType<GrapplingGun>().SetCanGrapple(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -852,9 +882,16 @@ public class NarrativeTriggerHandler : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PauseBeforeLevelCompletedRun(int levelIndex)
     {
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(0.25f);
 
         ActivateRandomLevelCompleteTrigger(levelIndex);
+
+        //Ending (It's the last day of the project, apologies for hard coding this in this way)
+        if (levelIndex == 6 //Dash 2
+            && UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Hub")
+        {
+            EndingSplashScreen.instance.ActivateEndScreen(true);
+        }
     }
 
     /// <summary>
