@@ -1735,4 +1735,26 @@ public class Matt_PlayerMovement : MonoBehaviour
         xRotation = playerCam.transform.localRotation.x;
         orientation.transform.LookAt(target.transform);
     }
+
+    /// <summary>
+    /// Rotates the player to a set angle by a set speed on death.
+    /// </summary>
+    /// <param name="rotationAngle">The angle the player should be rotated towards. </param>
+    /// <param name="rotationSpeed">The speed at which the player should be rotated towards the rotationAngle. </param>
+    /// <returns></returns>
+    public IEnumerator RotateOnDeath(Vector3 rotationAngle, float rotationSpeed)
+    {
+        if (GetComponent<RespawnSystem>().GetSinkTimeInProgress())
+        {
+            Quaternion target = Quaternion.Euler(rotationAngle);
+            playerCam.transform.rotation = Quaternion.Slerp(playerCam.transform.rotation, target, Time.deltaTime * rotationSpeed);
+            orientation.transform.rotation = Quaternion.Slerp(orientation.transform.rotation, target, Time.deltaTime * rotationSpeed);
+
+            yield return new WaitForEndOfFrame();
+
+            StartCoroutine(RotateOnDeath(rotationAngle, rotationSpeed));
+        }
+
+        yield return new WaitForEndOfFrame();
+    }
 }

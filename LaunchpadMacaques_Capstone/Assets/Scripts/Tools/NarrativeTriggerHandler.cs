@@ -17,10 +17,12 @@ using UnityEngine.UI;
 using TMPro;
 using Cinemachine;
 using FMODUnity;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(GameEventManager))]
 public class NarrativeTriggerHandler : MonoBehaviour
 {
+    private PlayerControlls controls;
     public enum TriggerType { Area, Random, OnEvent };
 
     #region Events
@@ -153,6 +155,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += TimeInLevelCountStart;
 
         LevelCompletedEventHasBeenCompleted += UpdateLastLevelPlayerPref;
+
     }
 
     private void OnDisable()
@@ -166,6 +169,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= TimeInLevelCountStart;
 
         LevelCompletedEventHasBeenCompleted -= UpdateLastLevelPlayerPref;
+
+
+        controls.Disable();
         
     }
 
@@ -192,11 +198,18 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         viewLog = transform.Find("DialogueCanvas/Background/ViewLog").gameObject;
 
+        controls = new PlayerControlls();
+        controls.Enable();
+        controls.GamePlay.Dialouge.performed += PlayerInput;
+        controls.GamePlay.OpenLog.performed += LogInput;
+
         canvas.SetActive(false);
     }
 
     private void Start()
     {
+
+
         //On Start of current scene, see if there was a last level that has been completed
         int lastLevel = PlayerPrefs.GetInt(LAST_COMPLETED_SCENE_KEY, -1);
 
@@ -256,16 +269,19 @@ public class NarrativeTriggerHandler : MonoBehaviour
         }
     }
 
-    public void PlayerInput()
+    public void PlayerInput(InputAction.CallbackContext cxt)
     {
         if (waitingForInput)
         {
+
+
             if(TextEffectHandler.instance.RunningEffectCount > 0)
             {
                 if (!Log.instance.IsActive() && canvas.activeSelf && !mouseOverButton)
                 {
                     TextEffectHandler.instance.SkipToEndOfEffects();
                 }
+
             }
 
 
@@ -278,19 +294,32 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 }
      
             }
+
+            if (Log.instance.IsActive())
+            {
+                Log.instance.CloseInput();
+            }
         }
+
+
     }
 
-    public void LogInput()
+    public void LogInput(InputAction.CallbackContext cxt)
     {
-        if (canvas.activeSelf && !Log.instance.IsActive())
-        {
-            Log.instance.ActivateLog(true);
-        }
 
-        else
+   
+        if (canvas.activeSelf)
         {
-            Log.instance.CloseInput();
+            if (!Log.instance.IsActive())
+            {
+                Log.instance.ActivateLog(true);
+            }
+
+            else
+            {
+                Log.instance.ActivateLog(false);
+            }
+
         }
     }
 
