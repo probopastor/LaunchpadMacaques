@@ -803,54 +803,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 45466381}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &47653643
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 47653645}
-  - component: {fileID: 47653644}
-  m_Layer: 0
-  m_Name: Wizard Interactions Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &47653644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 47653643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fd37ce891299d244a2a8027e61a60ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionNames:
-  - Hub World 2
-  - Hub World 2
-  - Hub World 5
-  - Throne Room 2
---- !u!4 &47653645
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 47653643}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -162.43826, y: 84.13344, z: -50.13296}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &61729288
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20575,6 +20527,11 @@ PrefabInstance:
       propertyPath: walkingTime
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5210152671288120200, guid: dca64b045d16f2b46b210616fddf3df2,
+        type: 3}
+      propertyPath: interactionName
+      value: Hub World 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5712317394307142730, guid: dca64b045d16f2b46b210616fddf3df2,
         type: 3}
       propertyPath: m_Name
@@ -21375,7 +21332,7 @@ PrefabInstance:
     - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: triggers.Array.data[0].timeInLevelBeforeTrigger
-      value: 20
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1043483441968344014, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -21460,7 +21417,7 @@ PrefabInstance:
     - target: {fileID: 3205568006631949046, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -21.300049
+      value: -21.299988
       objectReference: {fileID: 0}
     - target: {fileID: 4325419945596235928, guid: e02315d1bca9dd54489263b84334ae29,
         type: 3}
@@ -27670,6 +27627,75 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1001468153}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2091364623
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 621410511506967680, guid: 3a3d07bbb221b2f4693fcffd2d6321dd,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -162.43826
+      objectReference: {fileID: 0}
+    - target: {fileID: 621410511506967680, guid: 3a3d07bbb221b2f4693fcffd2d6321dd,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 84.13344
+      objectReference: {fileID: 0}
+    - target: {fileID: 621410511506967680, guid: 3a3d07bbb221b2f4693fcffd2d6321dd,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -50.13296
+      objectReference: {fileID: 0}
+    - target: {fileID: 621410511506967680, guid: 3a3d07bbb221b2f4693fcffd2d6321dd,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 621410511506967680, guid: 3a3d07bbb221b2f4693fcffd2d6321dd,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 621410511506967680, guid: 3a3d07bbb221b2f4693fcffd2d6321dd,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 621410511506967680, guid: 3a3d07bbb221b2f4693fcffd2d6321dd,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 621410511506967680, guid: 3a3d07bbb221b2f4693fcffd2d6321dd,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 621410511506967680, guid: 3a3d07bbb221b2f4693fcffd2d6321dd,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 621410511506967680, guid: 3a3d07bbb221b2f4693fcffd2d6321dd,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 621410511506967680, guid: 3a3d07bbb221b2f4693fcffd2d6321dd,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 621410511506967686, guid: 3a3d07bbb221b2f4693fcffd2d6321dd,
+        type: 3}
+      propertyPath: m_Name
+      value: Wizard Interactions Manager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3a3d07bbb221b2f4693fcffd2d6321dd, type: 3}
 --- !u!1 &2094617529
 GameObject:
   m_ObjectHideFlags: 0

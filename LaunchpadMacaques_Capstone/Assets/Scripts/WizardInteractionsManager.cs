@@ -39,16 +39,28 @@ public class WizardInteractionsManager : MonoBehaviour
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Hub")
         {
             Debug.Log("We are not in the hub");
+
+            if (wizardInteraction.InteractionName == interactionNames[0]) // UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Hub" && 
+            {
+
+                IsWizardIntroPlaying = true;
+                StartCoroutine(WizardIntro());
+
+            }
+            else if (wizardInteraction.InteractionName == interactionNames[2])
+            {
+                IsWizardIntroPlaying = true;
+                StartCoroutine(WizardIntro());
+            }
+
             //IsWizardIntroPlaying = true;
             //StartCoroutine(WizardIntro());
-            StartCoroutine(wizardInteraction.MoveWizardBackwards());
+            //StartCoroutine(wizardInteraction.MoveWizardBackwards());
         }
         else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Hub")
         {
             Debug.Log("We are in the Hub");
         }
-        //StartCoroutine(wizardInteraction.MoveWizard());
-        //wizardInteraction.MoveWizard();
     }
 
     // Update is called once per frame
@@ -57,22 +69,29 @@ public class WizardInteractionsManager : MonoBehaviour
 
         LimitMovement();
 
-        if (narrativeHandler.CurrentDialogueLine != null)
+        if (wizardInteraction.InteractionName == interactionNames[0] || wizardInteraction.InteractionName == interactionNames[2])
         {
-            Debug.Log("The current line of dialogue is: " + narrativeHandler.CurrentDialogueLine.text);
-            Debug.Log("The current line of dialogue is: " + narrativeHandler.CurrentDialogueLine.GetLineType());
-        }
-        else
-        {
-            Debug.Log("There is no dialogue running at the moment...");
-        }
+            if (narrativeHandler.CurrentDialogueLine != null)
+            {
 
-        //if(!IsWizardIntroPlaying)
-        //{
-        //    Debug.Log("Wizard Intro is done, Wizard outro is starting...");
-        //    IsWizardOutroPlaying = true;
-        //    StartCoroutine(WizardOutro());
-        //}
+                if (narrativeHandler.CurrentDialogueLine.GetLineType() == Dialogue.Line.Type.NarrationLine)
+                {
+
+                    Debug.Log("The current line of dialogue is: " + narrativeHandler.CurrentDialogueLine.text);
+                    Debug.Log("The current line of dialogue is: " + narrativeHandler.CurrentDialogueLine.GetLineType());
+
+                    if(IsWizardTalking)
+                    {
+                        wizardInteraction.WizardAnimator.SetBool("isTalking", false);
+                    }
+
+
+                    IsWizardOutroPlaying = true;
+                    StartCoroutine(WizardOutro());
+                }
+
+            }
+        }
 
     }
 
@@ -86,7 +105,6 @@ public class WizardInteractionsManager : MonoBehaviour
 
             yield return new WaitForSeconds(5f);
 
-            //wizardInteraction.MoveWizard();
 
             // Start Moving the Wizard
             StartCoroutine(wizardInteraction.MoveWizardForward());
@@ -103,7 +121,7 @@ public class WizardInteractionsManager : MonoBehaviour
     private IEnumerator WizardOutro()
     {
 
-        if(IsWizardOutroPlaying)
+        if (IsWizardOutroPlaying)
         {
 
             StartCoroutine(wizardInteraction.MoveWizardBackwards());
@@ -112,8 +130,12 @@ public class WizardInteractionsManager : MonoBehaviour
             if (WizardPortalReference.WizardCollisions == 2)
             {
                 wizardGameObject.SetActive(false);
+
+                yield return new WaitForSeconds(1f);
+
                 wizardPortal.PortalStatesReference = Portal.PortalStates.CLOSE;
                 wizardInteraction.StopAllCoroutines();
+
                 yield return null;
             }
 
@@ -121,18 +143,12 @@ public class WizardInteractionsManager : MonoBehaviour
         }
 
         StopCoroutine(WizardOutro());
-
-        //Turn Wizard Around and walk back through the portal.
-
-        // Make the wizard disappear.
-
-        //Turn off the protal and then start Narrative Doalogue.
     }
 
     private void LimitMovement()
     {
-        
-        if(IsWizardIntroPlaying)
+
+        if (IsWizardIntroPlaying)
         {
             movementScript.SetPlayerCanMove(false);
         }
