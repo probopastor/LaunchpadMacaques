@@ -274,7 +274,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
         if (waitingForInput)
         {
 
-
             if(TextEffectHandler.instance.RunningEffectCount > 0)
             {
                 if (!Log.instance.IsActive() && canvas.activeSelf && !mouseOverButton)
@@ -283,8 +282,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 }
 
             }
-
-
             else
             {
 
@@ -300,8 +297,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 Log.instance.CloseInput();
             }
         }
-
-
     }
 
     public void LogInput(InputAction.CallbackContext cxt)
@@ -472,8 +467,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 nameplateText[0].CrossFadeAlpha(1, nameplateTransitionTime, true);
                 //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
+
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
-                nameplate[0].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
+
                 //Nameplate background
                 nameplate[0].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
 
@@ -509,6 +505,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
+
+
                 //Nameplate background
                 nameplate[newNameplate].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
 
@@ -545,6 +543,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
+
                 //Nameplate background
                 nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
             }
@@ -571,6 +570,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
             {
                 //Freeze movement and let the user move their mouse around to hit the log button if desired
                 FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(false);
+                FindObjectOfType<GrapplingGun>().SetCanGrapple(false);
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
                 viewLog.SetActive(true);
@@ -647,6 +647,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         //Resume game
         FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(true);
+        FindObjectOfType<GrapplingGun>().SetCanGrapple(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -832,9 +833,16 @@ public class NarrativeTriggerHandler : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PauseBeforeLevelCompletedRun(int levelIndex)
     {
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(0.25f);
 
         ActivateRandomLevelCompleteTrigger(levelIndex);
+
+        //Ending (It's the last day of the project, apologies for hard coding this in this way)
+        if (levelIndex == 6 //Dash 2
+            && UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Hub")
+        {
+            EndingSplashScreen.instance.ActivateEndScreen(true);
+        }
     }
 
     /// <summary>
