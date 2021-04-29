@@ -272,7 +272,7 @@ public class RespawnSystem : MonoBehaviour
 
         if (useDeathRotation)
         {
-            StartCoroutine(player.RotateOnDeath(deathRotation, deathRotationSpeed));
+            StartCoroutine(player.RotateOnDeath(deathRotation, deathRotationSpeed, sinkTime));
         }
 
         yield return new WaitForSeconds(sinkTime);
