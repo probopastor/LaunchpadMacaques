@@ -153,6 +153,8 @@ public class GrapplingGun : MonoBehaviour
     private bool swingLockToggle;
     private bool canApplyForce;
 
+    private bool canGrapple = true;
+
     // Two private instances of the objec that the player is grappling to (Both used for different things)
     private GameObject grappledObj;
     private GameObject currentGrappledObj;
@@ -684,7 +686,7 @@ public class GrapplingGun : MonoBehaviour
     /// </summary>
     public void StartGrapple()
     {
-        if (CanFindGrappleLocation() && !batmanInProgress && !pulling)
+        if (CanFindGrappleLocation() && !batmanInProgress && !pulling && canGrapple)
         {
             swingHelper.ResetVariables();
             StartGrapplingSettings();
@@ -704,7 +706,7 @@ public class GrapplingGun : MonoBehaviour
 
     public void StartBatManGrapple()
     {
-        if (CanFindGrappleLocation() && canBatman && !batmanInProgress && !pulling)
+        if (CanFindGrappleLocation() && canBatman && !batmanInProgress && !pulling && canGrapple)
         {
             batmanInProgress = true;
             StartGrapplingSettings();
@@ -1191,6 +1193,16 @@ public class GrapplingGun : MonoBehaviour
     public float SetRopeLength(float value)
     {
         return ropeLength = value;
+    }
+
+    public bool GetCanGrapple()
+    {
+        return canGrapple;
+    }
+
+    public void SetCanGrapple(bool newCanGrapple)
+    {
+        canGrapple = newCanGrapple;
     }
 
     #endregion

@@ -274,7 +274,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
         if (waitingForInput)
         {
 
-
             if(TextEffectHandler.instance.RunningEffectCount > 0)
             {
                 if (!Log.instance.IsActive() && canvas.activeSelf && !mouseOverButton)
@@ -283,8 +282,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 }
 
             }
-
-
             else
             {
 
@@ -300,8 +297,6 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 Log.instance.CloseInput();
             }
         }
-
-
     }
 
     public void LogInput(InputAction.CallbackContext cxt)
@@ -571,6 +566,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
             {
                 //Freeze movement and let the user move their mouse around to hit the log button if desired
                 FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(false);
+                FindObjectOfType<GrapplingGun>().SetCanGrapple(false);
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
                 viewLog.SetActive(true);
@@ -647,6 +643,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         //Resume game
         FindObjectOfType<Matt_PlayerMovement>().SetPlayerCanMove(true);
+        FindObjectOfType<GrapplingGun>().SetCanGrapple(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -832,9 +829,18 @@ public class NarrativeTriggerHandler : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PauseBeforeLevelCompletedRun(int levelIndex)
     {
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(0.25f);
 
         ActivateRandomLevelCompleteTrigger(levelIndex);
+
+        Debug.Log(string.Format("Last level name: {0}", UnityEngine.SceneManagement.SceneManager.GetSceneByBuildIndex(levelIndex).name));
+        //Ending (It's the last day of the project, apologies for hard coding this in this way)
+        if (levelIndex == 7
+            && UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Hub")
+        {
+            Debug.Log("End Screen Should be Appearing");
+            EndingSplashScreen.instance.ActivateEndScreen(true);
+        }
     }
 
     /// <summary>
