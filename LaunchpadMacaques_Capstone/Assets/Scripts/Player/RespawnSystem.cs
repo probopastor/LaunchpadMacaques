@@ -134,6 +134,9 @@ public class RespawnSystem : MonoBehaviour
         // Will set the re-spawn position for the player
         if (other.gameObject.CompareTag("Checkpoint") && other.gameObject != currentRespawnObject)
         {
+            other.gameObject.GetComponentInChildren<RespawnParticles>().inactive.Stop();
+            other.gameObject.GetComponentInChildren<RespawnParticles>().active.Play();
+
             currentRespawnObject = other.gameObject;
             currentRespawnPosition = transform.position;
 
@@ -144,6 +147,9 @@ public class RespawnSystem : MonoBehaviour
 
                 for (int i = 0; i < zonesActive - 1; i++)
                 {
+                    respawnZones[i].GetComponentInChildren<RespawnParticles>().inactive.Play();
+                    respawnZones[i].GetComponentInChildren<RespawnParticles>().active.Stop();
+
                     respawnZones[i].SetActive(false);
                 }
             }
