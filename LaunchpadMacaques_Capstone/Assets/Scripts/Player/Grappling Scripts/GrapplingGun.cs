@@ -846,7 +846,7 @@ public class GrapplingGun : MonoBehaviour
 
             var temp2 = handCam.ViewportToWorldPoint(Camera.main.WorldToViewportPoint(pointAlongLine));
 
-            lr.SetPosition(1, temp2);
+            lr.SetPosition(1, pointAlongLine);
 
       
 
