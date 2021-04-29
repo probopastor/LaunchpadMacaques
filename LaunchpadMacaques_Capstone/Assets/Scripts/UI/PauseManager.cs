@@ -238,9 +238,6 @@ public class PauseManager : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
 
-      
-
-
         }
         else if (paused == true)
         {

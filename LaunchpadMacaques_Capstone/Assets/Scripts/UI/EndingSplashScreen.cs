@@ -53,7 +53,7 @@ public class EndingSplashScreen : MonoBehaviour
     {
 
         NarrativeTriggerHandler[] handlers = FindObjectsOfType<NarrativeTriggerHandler>();
-        bool shouldLoop = false;
+        bool shouldLoop = true;
 
         //Wait for dialogue to appear
         do

@@ -467,8 +467,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 nameplateText[0].CrossFadeAlpha(1, nameplateTransitionTime, true);
                 //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
+
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
-                nameplate[0].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
+
                 //Nameplate background
                 nameplate[0].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
 
@@ -504,6 +505,8 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
+
+
                 //Nameplate background
                 nameplate[newNameplate].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
 
@@ -540,6 +543,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
                 //Change Background Color
                 Color newBackgroundColor = GenerateBackgroundColor(currentLine.character.textColor);
                 background.CrossFadeColor(newBackgroundColor, 0.25f, true, true);
+
                 //Nameplate background
                 nameplate[lastNameplateUsed].GetComponent<Image>().CrossFadeColor(newBackgroundColor, 0f, true, true);
             }
@@ -833,12 +837,10 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
         ActivateRandomLevelCompleteTrigger(levelIndex);
 
-        Debug.Log(string.Format("Last level name: {0}", UnityEngine.SceneManagement.SceneManager.GetSceneByBuildIndex(levelIndex).name));
         //Ending (It's the last day of the project, apologies for hard coding this in this way)
-        if (levelIndex == 7
+        if (levelIndex == 6 //Dash 2
             && UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Hub")
         {
-            Debug.Log("End Screen Should be Appearing");
             EndingSplashScreen.instance.ActivateEndScreen(true);
         }
     }
