@@ -27,6 +27,11 @@ public class RespawnSystem : MonoBehaviour
     [SerializeField, Tooltip("The time the player will sink for on death.")] private float sinkTime = 0f;
     [SerializeField, Tooltip("The gravity modifier while the player is sinking in lava.")] private float sinkGravity = 0f;
 
+    [Header("Death Rotation")]
+    [SerializeField, Tooltip("If true, player will rotate to deathRotation angle by deathRotationSpeed on death.")] private bool useDeathRotation = false;
+    [SerializeField, Tooltip("The angle the player will be rotated to on death")] private Vector3 deathRotation = new Vector3(0, 0, 0);
+    [SerializeField, Tooltip("The speed at which the player will rotate towards the deathRotation angle")] private float deathRotationSpeed = 1f;
+
     [EventRef, SerializeField]
     string[] deathRattles;
     [EventRef, SerializeField]
@@ -62,6 +67,7 @@ public class RespawnSystem : MonoBehaviour
     [SerializeField]
     private GrapplePoint currentGrapplePoint;
 
+    private bool sinkTimeInProgress = false;
     #endregion
 
     #region Start Methods
@@ -262,11 +268,28 @@ public class RespawnSystem : MonoBehaviour
 
     private IEnumerator SinkTime()
     {
+        sinkTimeInProgress = true;
+
+        if (useDeathRotation)
+        {
+            StartCoroutine(player.RotateOnDeath(deathRotation, deathRotationSpeed));
+        }
+
         yield return new WaitForSeconds(sinkTime);
 
 
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
         changeGravityOnDeath = true;
+        sinkTimeInProgress = false;
+    }
+
+    /// <summary>
+    /// Returns true if the player is currently sinking during death, false otherwise.
+    /// </summary>
+    /// <returns></returns>
+    public bool GetSinkTimeInProgress()
+    {
+        return sinkTimeInProgress;
     }
 
     /// <summary>
