@@ -836,7 +836,7 @@ public class GrapplingGun : MonoBehaviour
         {
 
             Vector3 point1 = ejectPoint.position;
-            Vector3 point2 = grappled;
+            Vector3 point2 = temp;
 
 
             lr.SetPosition(0, ejectPoint.position);
@@ -844,7 +844,9 @@ public class GrapplingGun : MonoBehaviour
 
             Vector3 pointAlongLine = (counter) * Vector3.Normalize(point2 - point1) + point1;
 
-            lr.SetPosition(1, pointAlongLine);
+            var temp2 = handCam.ViewportToWorldPoint(Camera.main.WorldToViewportPoint(pointAlongLine));
+
+            lr.SetPosition(1, temp2);
 
       
 
