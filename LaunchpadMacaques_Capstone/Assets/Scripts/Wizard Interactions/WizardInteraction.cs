@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Xml.Schema;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class WizardInteraction : MonoBehaviour
