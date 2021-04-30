@@ -21,6 +21,7 @@ public class LevelSelectPictures : MonoBehaviour
     public GameObject level3Button;
     public GameObject level4Button;
     public GameObject level5Button;
+    public GameObject level6Button;
     public GameObject backButton;
 
     public Image pictureHolder;
@@ -31,6 +32,7 @@ public class LevelSelectPictures : MonoBehaviour
     public Sprite sprite4;
     public Sprite sprite5;
     public Sprite sprite6;
+    public Sprite sprite7;
 
     private EventSystem eventSystem;
 
@@ -70,9 +72,13 @@ public class LevelSelectPictures : MonoBehaviour
         {
             pictureHolder.GetComponent<Image>().sprite = sprite5;
         }
-        else if (eventSystem.currentSelectedGameObject == (backButton))
+        else if (eventSystem.currentSelectedGameObject == (level6Button))
         {
             pictureHolder.GetComponent<Image>().sprite = sprite6;
+        }
+        else if (eventSystem.currentSelectedGameObject == (backButton))
+        {
+            pictureHolder.GetComponent<Image>().sprite = sprite7;
         }
 
     }
