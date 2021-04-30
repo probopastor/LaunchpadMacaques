@@ -14,14 +14,6 @@ public class InformationPost : A_InputType
 {
     #region Variables
 
-    [Header("Note Details")]
-    [SerializeField, Tooltip("Mark true if this post is a note object and should function like a note. Otherwise keep false.")] private bool isNote = false;
-    [Tooltip("The note panel. Only applicable for notes. ")] private GameObject notePanel;
-    [Tooltip("The note TMP. Only applicable for notes. ")] private TextMeshProUGUI noteText;
-
-    [Tooltip("The note panel tag. Only applicable for notes. ")] private string notePanelTag;
-    [Tooltip("The note TMP tag. Only applicable for notes. ")] private string noteTMPTag;
-
     [SerializeField] private TextMeshProUGUI informationText;
     [SerializeField, TextArea, Tooltip("The information that will be displayed when player is in the information post's radius. ")] private string information;
 
@@ -45,23 +37,15 @@ public class InformationPost : A_InputType
         controls.GamePlay.Interact.performed += InteractInput;
 
         informationText = GameObject.Find("New Standard Scene Group/Canvas Group/StandardCanvas/Info Text/Information Post Text").GetComponent<TextMeshProUGUI>();
-
-        notePanel = GameObject.FindGameObjectWithTag("NotePanel");
-        noteText = GameObject.FindGameObjectWithTag("NoteTMP").GetComponent<TextMeshProUGUI>();
     }
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
-
         isActive = false;
         SetInformation();
-        narrative = FindObjectOfType<NarrativeTriggerHandler>();
-    }
 
-    private void Update()
-    {
-        Debug.Log("Note Panel: " + notePanel.gameObject.name);
+        narrative = FindObjectOfType<NarrativeTriggerHandler>();
     }
 
     /// <summary>
@@ -103,7 +87,7 @@ public class InformationPost : A_InputType
     {
         base.OnEnable();
         controls.Enable();
-        //SetInformation();
+        SetInformation();
     }
 
     private void OnDisable()
@@ -116,7 +100,6 @@ public class InformationPost : A_InputType
         if (informationText != null)
         {
             informationText.text = " ";
-            noteText.text = " ";
         }
     }
 
@@ -129,28 +112,12 @@ public class InformationPost : A_InputType
         {
             if (isActive)
             {
-                if (!isNote)
-                {
-                    narrative.CancelDialouge();
-                    informationText.text = information;
-                }
-                else if (isNote)
-                {
-                    notePanel.SetActive(true);
-                    noteText.text = information;
-                }
+                narrative.CancelDialouge();
+                informationText.text = information;
             }
             else if (!isActive)
             {
-                if (!isNote)
-                {
-                    informationText.text = " ";
-                }
-                else if (isNote)
-                {
-                    notePanel.SetActive(false);
-                    noteText.text = " ";
-                }
+                informationText.text = " ";
             }
         }
     }
@@ -159,25 +126,17 @@ public class InformationPost : A_InputType
     {
         if (other.tag == "Player" && !playerInRange)
         {
+
             if (informationText)
             {
                 ChangeUI();
-
-                if (!isNote)
-                {
-                    informationText.gameObject.transform.parent.gameObject.SetActive(true);
-                    informationText.text = information;
-                    narrative.CancelDialouge();
-                }
-                else if (isNote)
-                {
-                    notePanel.SetActive(true);
-                    noteText.gameObject.SetActive(true);
-                    noteText.text = information;
-                }
+                informationText.gameObject.transform.parent.gameObject.SetActive(true);
+                informationText.text = information;
 
                 playerInRange = true;
+                narrative.CancelDialouge();
             }
+
         }
     }
 
@@ -185,16 +144,7 @@ public class InformationPost : A_InputType
     {
         if (other.tag == "Player")
         {
-            if (!isNote)
-            {
-                informationText.gameObject.transform.parent.gameObject.SetActive(false);
-            }
-            else if (isNote)
-            {
-                notePanel.SetActive(false);
-                noteText.gameObject.SetActive(false);
-            }
-
+            informationText.gameObject.transform.parent.gameObject.SetActive(false);
             playerInRange = false;
         }
     }

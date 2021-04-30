@@ -28,33 +28,9 @@ public class DetectController : MonoBehaviour
 
     EventSystem even;
 
-    private PlayerControlls controls;
-
     private void Awake()
     {
-        controls = new PlayerControlls();
-        controls.Enable();
-        controls.GamePlay.DetectKeyboard.performed += KeyboardInput;
-        controls.GamePlay.DetectController.performed += ControllerInput;
         InputSystem.onDeviceChange += ControllerStatusChanged;
-    }
-
-    private void KeyboardInput(InputAction.CallbackContext cxt)
-    {
-        if (controller)
-        {
-            ControllerDisconnected();
-        }
-
-    }
-
-    private void ControllerInput(InputAction.CallbackContext cxt)
-    {
-        if (!controller)
-        {
-            ControllerConnected();
-        }
-
     }
 
     private void Start()

@@ -39,7 +39,7 @@ public class NoteHover : MonoBehaviour
     {
         
         //calculate what the new Y position will be
-        float newY = Mathf.Sin(Time.time * speed)/4 + pos.y;
+        float newY = Mathf.Sin(Time.time * speed) + pos.y;
         //set the object's Y to the new calculated Y
         transform.position = new Vector3(pos.x, newY, pos.z);
     }
