@@ -44,7 +44,6 @@ public class ColorblindFilter: MonoBehaviour
         LoadProfiles();
         SetProfile(PlayerPrefs.GetInt("ColorblindMode"));
 
-        Debug.Log("The current length of the volumeProfiles Dictionary is: " + volumeProfiles.Count);
     }
 
     private void Update()
@@ -84,43 +83,6 @@ public class ColorblindFilter: MonoBehaviour
 
                 break;
 
-
-                //case 0:
-                //    camreaVolume.profile = volumeProfiles["Normal"];
-                //    currentColorblindMode = Colorblindness.NORMAL;
-                //    break;
-                //case 1:
-                //    camreaVolume.profile = volumeProfiles["Achromatopsia"];
-                //    currentColorblindMode = Colorblindness.ACHROMATOPSIA;
-                //    break;
-                //case 2:
-                //    camreaVolume.profile = volumeProfiles["Achromatomaly"];
-                //    currentColorblindMode = Colorblindness.ACHROMATOMALY;
-                //    break;
-                //case 3:
-                //    camreaVolume.profile = volumeProfiles["Deuteranopia"];
-                //    currentColorblindMode = Colorblindness.DEUTERANOPIA;
-                //    break;
-                //case 4:
-                //    camreaVolume.profile = volumeProfiles["Deuteranomaly"];
-                //    currentColorblindMode = Colorblindness.DEUTERANOMALY;
-                //    break;
-                //case 5:
-                //    camreaVolume.profile = volumeProfiles["Protanopia"];
-                //    currentColorblindMode = Colorblindness.PROTANOPIA;
-                //    break;
-                //case 6:
-                //    camreaVolume.profile = volumeProfiles["Protanomaly"];
-                //    currentColorblindMode = Colorblindness.PROTANOMALY;
-                //    break;
-                //case 7:
-                //    camreaVolume.profile = volumeProfiles["Tritanopia"];
-                //    currentColorblindMode = Colorblindness.TRITANOPIA;
-                //    break;
-                //case 8:
-                //    camreaVolume.profile = volumeProfiles["Tritanomaly"];
-                //    currentColorblindMode = Colorblindness.TRITANOMALY;
-                //    break;
         }
     }
 
@@ -138,14 +100,6 @@ public class ColorblindFilter: MonoBehaviour
                 {"Normal", (VolumeProfile)profileObjects[FindCorrectVolumeProfile("Normal")] },
                 {"Achromatopsia", (VolumeProfile)profileObjects[FindCorrectVolumeProfile("Achromatopsia")] },
                 {"General", (VolumeProfile)profileObjects[FindCorrectVolumeProfile("General")] }
-                //{"Achromatomaly", (VolumeProfile)profileObjects[FindCorrectVolumeProfile("Achromatomaly")] },
-                //{"Deuteranopia", (VolumeProfile)profileObjects[FindCorrectVolumeProfile("Deuteranopia")] },
-                //{"Deuteranomaly", (VolumeProfile)profileObjects[FindCorrectVolumeProfile("Deuteranomaly")] },
-                //{"Protanopia", (VolumeProfile)profileObjects[FindCorrectVolumeProfile("Protanopia")] },
-                //{"Protanomaly", (VolumeProfile)profileObjects[FindCorrectVolumeProfile("Protanomaly")] },
-                //{"Tritanopia", (VolumeProfile)profileObjects[FindCorrectVolumeProfile("Tritanopia")] },
-                //{"Tritanomaly", (VolumeProfile)profileObjects[FindCorrectVolumeProfile("Tritanomaly")] }
-
 
             };
     }
@@ -170,7 +124,6 @@ public class ColorblindFilter: MonoBehaviour
                 case "Normal":
                     if (profileObjects[index].name.Contains("Normal"))
                     {
-                        Debug.Log("The index of " + dictionaryValue + " is: " + index);
                         return index;
                     }
                     break;
@@ -186,49 +139,6 @@ public class ColorblindFilter: MonoBehaviour
                         return index;
                     }
                     break;
-                //case "Achromatomaly":
-                //    if (profileObjects[index].name.Contains("Achromatomaly"))
-                //    {
-                //        return index;
-                //    }
-                //    break;
-                    //case "Deuteranopia":
-                    //    if (profileObjects[index].name.Contains("Deuteranopia"))
-                    //    {
-                    //        return index;
-                    //    }
-                    //    break;
-                    //case "Deuteranomaly":
-                    //    if (profileObjects[index].name.Contains("Deuteranomaly"))
-                    //    {
-                    //        return index;
-                    //    }
-                    //    break;
-                    //case "Protanopia":
-                    //    if (profileObjects[index].name.Contains("Protanopia"))
-                    //    {
-                    //        Debug.Log("The index of " + dictionaryValue + " is: " + index);
-                    //        return index;
-                    //    }
-                    //    break;
-                    //case "Protanomaly":
-                    //    if (profileObjects[index].name.Contains("Protanomaly"))
-                    //    {
-                    //        return index;
-                    //    }
-                    //    break;
-                    //case "Tritanopia":
-                    //    if (profileObjects[index].name.Contains("Tritanopia"))
-                    //    {
-                    //        return index;
-                    //    }
-                    //    break;
-                    //case "Tritanomaly":
-                    //    if (profileObjects[index].name.Contains("Tritanomaly"))
-                    //    {
-                    //        return index;
-                    //    }
-                    //    break;
 
             }
 
