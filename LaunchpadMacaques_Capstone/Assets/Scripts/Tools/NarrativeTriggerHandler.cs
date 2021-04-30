@@ -209,6 +209,9 @@ public class NarrativeTriggerHandler : MonoBehaviour
         controls.GamePlay.OpenLog.performed += LogInput;
 
         canvas.SetActive(false);
+
+        wizardInteractionManager = FindObjectOfType<WizardInteractionsManager>();
+
     }
 
     private void Start()

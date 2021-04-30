@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Xml.Schema;
 using UnityEditorInternal;
 using UnityEngine;
@@ -65,16 +66,21 @@ public class WizardInteraction : MonoBehaviour
 
         wizardAnimator.SetBool("turnAround", true);
 
+        //Debug.Log("turn around is: " + WizardAnimator.GetBool("isTurning"));
+
         while (wizardAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1.0f)
         {
+            Debug.Log("turn around is: " + WizardAnimator.GetBool("isTurning"));
             yield return null;
         }
 
         wizardAnimator.SetBool("turnAround", false);
 
+        Debug.Log("turn around is: " + WizardAnimator.GetBool("isTurning"));
+
         StartCoroutine(MoveWizardForward());
 
-        Debug.Log("Make Walk backward Coroutine do more stuffs......");
+        //Debug.Log("Make Walk backward Coroutine do more stuffs......");
 
     }
 

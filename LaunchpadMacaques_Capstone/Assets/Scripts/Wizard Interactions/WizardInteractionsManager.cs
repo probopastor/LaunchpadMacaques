@@ -67,6 +67,8 @@ public class WizardInteractionsManager : MonoBehaviour
     void Update()
     {
 
+        Debug.Log(wizardPortal.WizardCollisions);
+
         LimitMovement();
 
         if (wizardInteraction.InteractionName == interactionNames[0] || wizardInteraction.InteractionName == interactionNames[2])
@@ -85,9 +87,12 @@ public class WizardInteractionsManager : MonoBehaviour
                         wizardInteraction.WizardAnimator.SetBool("isTalking", false);
                     }
 
-
-                    IsWizardOutroPlaying = true;
-                    StartCoroutine(WizardOutro());
+                    if(!IsWizardIntroPlaying)
+                    {
+                        Debug.Log("Start Wizard Outro Coroutine");
+                        IsWizardOutroPlaying = true;
+                        StartCoroutine(WizardOutro());
+                    }
                 }
 
             }
@@ -109,6 +114,8 @@ public class WizardInteractionsManager : MonoBehaviour
             // Start Moving the Wizard
             StartCoroutine(wizardInteraction.MoveWizardForward());
 
+            yield return new WaitForSeconds(1.5f);
+
             IsWizardIntroPlaying = false;
 
         }
@@ -120,6 +127,8 @@ public class WizardInteractionsManager : MonoBehaviour
 
     private IEnumerator WizardOutro()
     {
+
+        Debug.Log("Wizard Outro Coroutine started...");
 
         if (IsWizardOutroPlaying)
         {
