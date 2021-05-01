@@ -40,6 +40,7 @@ public class MusicManager : MonoBehaviour
 
     private void SwitchScene(Scene scene, LoadSceneMode mode)
     {
+        UnityEngine.Debug.Log("Scene switched, changing track");
         int buildIndex = scene.buildIndex;
         switch (buildIndex) //These will likely change when scenes get removed.
         {
@@ -47,27 +48,37 @@ public class MusicManager : MonoBehaviour
             case 1:
                 SwitchTrack("Main");
                 break;
+
             case 2:
                 SwitchTrack("Tutorial");
                 break;
+
             case 3:
                 SwitchTrack("Dungeon"); //TEMP
                 break;
+
             case 4:
-            case 7:
-                SwitchTrack("Dining"); //TEMP
+                SwitchTrack("Dining");
                 break;
+
             case 5:
             case 6:
                 SwitchTrack("Lab");
                 break;
+
+            case 7:
+                SwitchTrack("Dining"); //TEMP
+                break;
+
+            case 8:
+                SwitchTrack("Main");
+                break;
+
         }
     }
 
     public void SwitchTrack(string trackName)
     {
-        this.StopAllCoroutines();
-
         ScriptableEmitter temp = AudioUtilities.FindScriptableEmitter(emitters, trackName);
 
         if (curEmitter != temp && curEmitter != null)
