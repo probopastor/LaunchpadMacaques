@@ -71,36 +71,36 @@ public class WizardInteractionsManager : MonoBehaviour
 
         LimitMovement();
 
-        if (wizardInteraction.InteractionName == interactionNames[0] || wizardInteraction.InteractionName == interactionNames[2])
-        {
-            if (narrativeHandler.CurrentDialogueLine != null)
-            {
+        //if (wizardInteraction.InteractionName == interactionNames[0] || wizardInteraction.InteractionName == interactionNames[2])
+        //{
+        //    if (narrativeHandler.CurrentDialogueLine != null)
+        //    {
 
-                if (narrativeHandler.CurrentDialogueLine.GetLineType() == Dialogue.Line.Type.NarrationLine)
-                {
+        //        if (narrativeHandler.CurrentDialogueLine.GetLineType() == Dialogue.Line.Type.NarrationLine)
+        //        {
 
-                    Debug.Log("The current line of dialogue is: " + narrativeHandler.CurrentDialogueLine.text);
-                    Debug.Log("The current line of dialogue is: " + narrativeHandler.CurrentDialogueLine.GetLineType());
+        //            Debug.Log("The current line of dialogue is: " + narrativeHandler.CurrentDialogueLine.text);
+        //            Debug.Log("The current line of dialogue is: " + narrativeHandler.CurrentDialogueLine.GetLineType());
 
-                    if(IsWizardTalking)
-                    {
-                        wizardInteraction.WizardAnimator.SetBool("isTalking", false);
-                    }
+        //            if (IsWizardTalking)
+        //            {
+        //                wizardInteraction.WizardAnimator.SetBool("isTalking", false);
+        //            }
 
-                    if(!IsWizardIntroPlaying)
-                    {
-                        Debug.Log("Start Wizard Outro Coroutine");
-                        IsWizardOutroPlaying = true;
-                        StartCoroutine(WizardOutro());
-                    }
-                }
+        //            if (!IsWizardIntroPlaying)
+        //            {
+        //                Debug.Log("Start Wizard Outro Coroutine");
+        //                IsWizardOutroPlaying = true;
+        //                StartCoroutine(WizardOutro());
+        //            }
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
     }
 
-    private IEnumerator WizardIntro()
+    public IEnumerator WizardIntro()
     {
 
         if (IsWizardIntroPlaying)
@@ -108,8 +108,7 @@ public class WizardInteractionsManager : MonoBehaviour
             // Opens the portal and then wait two seconds.
             wizardPortal.PortalStatesReference = Portal.PortalStates.OPEN;
 
-            yield return new WaitForSeconds(5f);
-
+            yield return new WaitForSeconds(2f);
 
             // Start Moving the Wizard
             StartCoroutine(wizardInteraction.MoveWizardForward());
@@ -125,31 +124,31 @@ public class WizardInteractionsManager : MonoBehaviour
 
     }
 
-    private IEnumerator WizardOutro()
+    public IEnumerator WizardOutro()
     {
 
         Debug.Log("Wizard Outro Coroutine started...");
 
-        if (IsWizardOutroPlaying)
+        //if (IsWizardOutroPlaying)
+        //{
+
+        StartCoroutine(wizardInteraction.MoveWizardBackwards());
+
+
+        if (WizardPortalReference.WizardCollisions == 2)
         {
+            wizardGameObject.SetActive(false);
 
-            StartCoroutine(wizardInteraction.MoveWizardBackwards());
+            yield return new WaitForSeconds(1f);
 
-
-            if (WizardPortalReference.WizardCollisions == 2)
-            {
-                wizardGameObject.SetActive(false);
-
-                yield return new WaitForSeconds(1f);
-
-                wizardPortal.PortalStatesReference = Portal.PortalStates.CLOSE;
-                wizardInteraction.StopAllCoroutines();
-
-                yield return null;
-            }
-
+            wizardPortal.PortalStatesReference = Portal.PortalStates.CLOSE;
+            IsWizardOutroPlaying = false;
+            wizardInteraction.StopAllCoroutines();
 
         }
+
+
+        //}
 
         StopCoroutine(WizardOutro());
     }
@@ -206,6 +205,14 @@ public class WizardInteractionsManager : MonoBehaviour
         get
         {
             return wizardPortal;
+        }
+    }
+
+    public WizardInteraction WizardInteractionReference
+    {
+        get
+        {
+            return wizardInteraction;
         }
     }
 
