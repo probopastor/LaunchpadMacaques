@@ -6,7 +6,7 @@ public class Player_Audio : MonoBehaviour
 {
     public float playerTopSpeed;
     public LayerMask collisions;
-
+    public float painThreshold;
     
     private Rigidbody m_rb;
     private bool grounded;
@@ -69,7 +69,7 @@ public class Player_Audio : MonoBehaviour
             landInstance.set3DAttributes(RuntimeUtils.To3DAttributes(transform.position));
             landInstance.setParameterByName("parameter:/Player Magnitude", GetMagnitude());
             landInstance.start();
-            PlayRandom(painGrunts);
+            if (GetMagnitude() > painThreshold) PlayRandom(painGrunts);
         }
 
         landed = grounded;
