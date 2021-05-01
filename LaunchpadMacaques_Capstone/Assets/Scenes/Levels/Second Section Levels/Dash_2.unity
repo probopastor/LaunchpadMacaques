@@ -5368,18 +5368,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e02315d1bca9dd54489263b84334ae29, type: 3}
---- !u!114 &270606195 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6344741637359773920, guid: e02315d1bca9dd54489263b84334ae29,
-    type: 3}
-  m_PrefabInstance: {fileID: 270606194}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &276869204 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1761056251350318856, guid: 021f02b482203d44eb46af1494450790,
@@ -12868,6 +12856,84 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 894235119}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &739309630
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1537098075934604730, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: information
+      value: "Day 9? After\r\nI went into the forest today. I tried a few spells
+        to cure myself. None of them worked. I had more to try, but I was interrupted
+        by some girl walking through the woods. I hit her with one of the spells.
+        I\u2019m not sure what happened afterwards. I ran. I\u2019m stuck hiding
+        in my castle. Again. Now what?\r\n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109968, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_Name
+      value: Note holder
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -66
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 94
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -20.245262
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.9997733
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.02129136
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -182.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 59a774c4bd67d4d489d85365aa2835a7, type: 3}
 --- !u!1 &754827798
 GameObject:
   m_ObjectHideFlags: 0
@@ -14303,9 +14369,9 @@ MonoBehaviour:
       characterName: You
       imgPath: 
       textColor: {r: 0.724947, g: 0.8584906, b: 0.25473017, a: 1}
-    text: <typewriter>I'll leave you along as soon as you help me. You're the one
-      who did this to me. You're the reason I'm stuck with this parasite talking
-      over me.</typewriter>
+    text: <typewriter>I'll leave you alone as soon as you help me. You're the one
+      who did this to me. You're the reason I'm stuck with this parasite taking over
+      me.</typewriter>
     audioToPlay: event:/Narrative Lines/Hub 5/Line 8 - MC - I'll leave you
   - lineType: 0
     character:
@@ -24665,12 +24731,22 @@ PrefabInstance:
     - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_Size.z
-      value: 10
+      value: 9.008373
       objectReference: {fileID: 0}
     - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_Size.y
-      value: 20
+      value: 1.7439957
+      objectReference: {fileID: 0}
+    - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_Center.y
+      value: -4.7516365
+      objectReference: {fileID: 0}
+    - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_Center.z
+      value: -0.49581337
       objectReference: {fileID: 0}
     - target: {fileID: 1189174416255183089, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
@@ -24736,6 +24812,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: -6.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648424492214830246, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648424492214830246, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648424492214830246, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 8.98
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a31f478b0dcc8b2418669dcd6771a7da, type: 3}
@@ -25309,6 +25400,85 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2009632659}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1538329900
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1537098075934604730, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: information
+      value: "It\u2019s that girl! The one from the forest. She\u2019s here. In this
+        castle. I do not know how she found us, but I can\u2019t let her catch up
+        to this wizard. The wizard has come so close to banishing me from this realm
+        forever. I can\u2019t let that happen. The girl is possessed too. If I keep
+        us running, she\u2019ll have to use its powers. Then, the two of us together
+        can take over these puny humans once and for all, and the world will be ours."
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109968, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_Name
+      value: Note holder 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -206.2823
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 93
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 439.23575
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.9997733
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.02129136
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -182.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750641117183109974, guid: 59a774c4bd67d4d489d85365aa2835a7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 59a774c4bd67d4d489d85365aa2835a7, type: 3}
 --- !u!1001 &1545934459
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31054,94 +31224,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1893263728}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1900069905
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -66
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 94
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -20.245262
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071067
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6105038740310595162, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: information
-      value: "Day 9? After\r\nI went into the forest today. I tried a few spells
-        to cure myself. None of them worked. I had more to try, but I was interrupted
-        by some girl walking through the woods. I hit her with one of the spells.
-        I\u2019m not sure what happened afterwards. I ran. I\u2019m stuck hiding
-        in my castle. Again. Now what?\r\n"
-      objectReference: {fileID: 0}
-    - target: {fileID: 6105038740310595162, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: informationText
-      value: 
-      objectReference: {fileID: 270606195}
-    - target: {fileID: 6105038740310595166, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6374877925371226889, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_Name
-      value: Note 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5ad4c386c202f224aaa25d9db6ff4948, type: 3}
 --- !u!1001 &1906233206
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31692,10 +31774,40 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1581417614}
     m_Modifications:
+    - target: {fileID: 466936090869165691, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
       propertyPath: m_Size.x
-      value: 1
+      value: 1.0511677
+      objectReference: {fileID: 0}
+    - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 0.29088593
+      objectReference: {fileID: 0}
+    - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_Center.y
+      value: -0.5413033
+      objectReference: {fileID: 0}
+    - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -0.43736324
+      objectReference: {fileID: 0}
+    - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 0.89426345
+      objectReference: {fileID: 0}
+    - target: {fileID: 1181426269149778988, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_Center.z
+      value: 0.052868273
       objectReference: {fileID: 0}
     - target: {fileID: 1189174416255183089, guid: a31f478b0dcc8b2418669dcd6771a7da,
         type: 3}
@@ -31796,6 +31908,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.584
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648424492214830246, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.036
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648424492214830246, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.331
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648424492214830246, guid: a31f478b0dcc8b2418669dcd6771a7da,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.07
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a31f478b0dcc8b2418669dcd6771a7da, type: 3}
@@ -32651,95 +32778,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36995a23c518ba34f9bc7bc7d1204c6a, type: 3}
---- !u!1001 &1970921182
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -206.2823
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 93
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 439.23575
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071067
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5995361057936994739, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6105038740310595162, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: information
-      value: "It\u2019s that girl! The one from the forest. She\u2019s here. In this
-        castle. I do not know how she found us, but I can\u2019t let her catch up
-        to this wizard. The wizard has come so close to banishing me from this realm
-        forever. I can\u2019t let that happen. The girl is possessed too. If I keep
-        us running, she\u2019ll have to use its powers. Then, the two of us together
-        can take over these puny humans once and for all, and the world will be ours."
-      objectReference: {fileID: 0}
-    - target: {fileID: 6105038740310595162, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: informationText
-      value: 
-      objectReference: {fileID: 270606195}
-    - target: {fileID: 6105038740310595166, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6374877925371226889, guid: 5ad4c386c202f224aaa25d9db6ff4948,
-        type: 3}
-      propertyPath: m_Name
-      value: Note 2
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5ad4c386c202f224aaa25d9db6ff4948, type: 3}
 --- !u!4 &1974395033 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1761056251350318856, guid: 021f02b482203d44eb46af1494450790,
