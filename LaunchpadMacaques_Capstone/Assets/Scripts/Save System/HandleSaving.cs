@@ -50,25 +50,25 @@ public class HandleSaving : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            SavePlayer();
-        }
+        //if (Input.GetKeyDown(KeyCode.V))
+        //{
+        //    SavePlayer();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            LoadPlayer();
-        }
+        //if (Input.GetKeyDown(KeyCode.C))
+        //{
+        //    LoadPlayer();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            DeleteFile();
-        }
+        //if (Input.GetKeyDown(KeyCode.Z))
+        //{
+        //    DeleteFile();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            CompleteAllLevels();
-        }
+        //if (Input.GetKeyDown(KeyCode.U))
+        //{
+        //    CompleteAllLevels();
+        //}
 
     }
 
