@@ -153,6 +153,7 @@ GameObject:
   - component: {fileID: 3698440311842728597}
   - component: {fileID: 3698440311842728595}
   - component: {fileID: -6555930605587981837}
+  - component: {fileID: 2187232184885790021}
   m_Layer: 5
   m_Name: Menu_Button
   m_TagString: Untagged
@@ -328,9 +329,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: -6555930605587981837}
-          m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, Assembly-CSharp
-          m_MethodName: Play
+        - m_Target: {fileID: 2187232184885790021}
+          m_TargetAssemblyTypeName: ButtonSound, Assembly-CSharp
+          m_MethodName: Selected
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -376,3 +377,15 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 0
   OverrideMaxDistance: 0
+--- !u!114 &2187232184885790021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3698440311842728554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93701c40cf642704a81c3f7be89ec0ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
