@@ -23,11 +23,9 @@ public class IntroductionManager : MonoBehaviour
 
     [SerializeField, Tooltip("The tutorial scene to be loaded after the introduction is finished.")] string tutorialLevelName;
 
-    [Tooltip("The text iterator that maintains which text should currently be played. ")] private int textIterator = 1;
-    [Tooltip("Determines whether the next scene should be loaded. ")] private bool queueSceneSwitch = false;
-    [Tooltip("Maintains whether or not text is currently being played. ")] private bool textInProgress = false;
+    [Tooltip("The text iterator that maintains which text should currently be played. ")] private int textIterator = 0;
     [Tooltip("Determines whether the next text should occur immediately or after its set delay. ")] private bool startTextImmediately = false;
-    private bool textSkipped = false;
+    [Tooltip("Determines whether the input to skip text has been pressed")] private bool textSkipped = false;
 
     [SerializeField] private bool scaleImage = false;
     [SerializeField] private Image backgroundImage;
@@ -57,9 +55,6 @@ public class IntroductionManager : MonoBehaviour
     }
     private void SetInformation()
     {
-        textIterator = 1;
-        queueSceneSwitch = false;
-        textInProgress = false;
         startTextImmediately = false;
 
         for (int i = 0; i < informationTextToPlay.Length; i++)
@@ -81,7 +76,7 @@ public class IntroductionManager : MonoBehaviour
     /// </summary>
     private void SkipToNextText()
     {
-        if(!queueSceneSwitch && textEffects.EffectsRunning() != 0 && !textSkipped)
+        if(textEffects.EffectsRunning() != 0 && !textSkipped)
         {
             // If a text effect is running, finish it. 
             textEffects.SkipToEndOfEffects();
@@ -99,7 +94,7 @@ public class IntroductionManager : MonoBehaviour
     private IEnumerator Intro()
     {
         // Just keep running until scene needs to be changed
-        for(; textIterator < textToPlay.Length + 1; textSkipped = false, textIterator++)
+        for(; textIterator < textToPlay.Length; textSkipped = false, textIterator++)
         {
             //Don't start until any leftover effects are skipped
             while(textEffects.EffectsRunning() != 0)
@@ -107,10 +102,10 @@ public class IntroductionManager : MonoBehaviour
                 yield return null;
             }
 
-            informationTextToPlay[textIterator - 1].text = "";
-            informationTextToPlay[textIterator - 1].enabled = true;
+            informationTextToPlay[textIterator].text = "";
+            informationTextToPlay[textIterator].enabled = true;
             yield return null;
-            textEffects.RunText(informationTextToPlay[textIterator - 1], textToPlay[textIterator - 1]);
+            textEffects.RunText(informationTextToPlay[textIterator], textToPlay[textIterator]);
 
 
             //Reset text skipped to wait for input
