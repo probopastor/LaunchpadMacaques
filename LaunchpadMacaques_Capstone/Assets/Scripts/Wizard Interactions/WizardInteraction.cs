@@ -20,12 +20,37 @@ public class WizardInteraction : MonoBehaviour
     private bool wizardDoneWalking = false;
 
     private WizardInteractionsManager wizIntroManager;
+    private float backwardsAnimationEndTime = 37f;
+    private float currentBackwardsAnimationTime = 0f;
+
+    private bool backwardsAnimationInProgress = false;
+    private bool endBackwardsAnimation = false;
 
     private void Awake()
     {
         wizIntroManager = FindObjectOfType<WizardInteractionsManager>();
         wizardAnimator = GetComponent<Animator>();
         wizardTransform = GetComponent<Transform>();
+    }
+
+    private void FixedUpdate()
+    {
+        if(backwardsAnimationInProgress)
+        {
+            //if(wizardAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime > backwardsAnimationEndTime)
+            //{
+            //    endBackwardsAnimation = true;
+            //}
+
+            if((currentBackwardsAnimationTime < backwardsAnimationEndTime) && !endBackwardsAnimation)
+            {
+                currentBackwardsAnimationTime += 0.02f;
+            }
+            else
+            {
+                endBackwardsAnimation = true;
+            }
+        }
     }
 
     public IEnumerator MoveWizardForward()
@@ -62,24 +87,33 @@ public class WizardInteraction : MonoBehaviour
 
     public IEnumerator MoveWizardBackwards()
     {
+        backwardsAnimationInProgress = true;
 
-        wizardAnimator.SetBool("turnAround", true);
+        WizardAnimator.SetBool("turnAround", true);
 
         //Debug.Log("turn around is: " + WizardAnimator.GetBool("isTurning"));
 
-        while (wizardAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1.0f)
+        while (!endBackwardsAnimation)
         {
-            Debug.Log("turn around is: " + WizardAnimator.GetBool("isTurning"));
             yield return null;
         }
 
         wizardAnimator.SetBool("turnAround", false);
+        wizardAnimator.speed = 0f;
+        wizardAnimator.Play("turnAround", 0, 1);
+        wizardAnimator.enabled = false;
+        wizardAnimator.enabled = true;
+        wizardAnimator.speed = 1f;
 
-        Debug.Log("turn around is: " + WizardAnimator.GetBool("isTurning"));
+        //yield return new WaitForSeconds(WizardAnimator.GetCurrentAnimatorStateInfo(0).length + WizardAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime);
+
+        //WizardAnimator.SetBool("turnAround", false);
 
         StartCoroutine(MoveWizardForward());
 
         //Debug.Log("Make Walk backward Coroutine do more stuffs......");
+
+        backwardsAnimationInProgress = false;
 
     }
 
