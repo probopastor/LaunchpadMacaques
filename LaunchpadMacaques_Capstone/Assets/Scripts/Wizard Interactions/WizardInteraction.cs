@@ -20,12 +20,27 @@ public class WizardInteraction : MonoBehaviour
     private bool wizardDoneWalking = false;
 
     private WizardInteractionsManager wizIntroManager;
+    private float backwardsAnimationEndTime = 1f;
+
+    private bool backwardsAnimationInProgress = false;
+    private bool endBackwardsAnimation = false;
 
     private void Awake()
     {
         wizIntroManager = FindObjectOfType<WizardInteractionsManager>();
         wizardAnimator = GetComponent<Animator>();
         wizardTransform = GetComponent<Transform>();
+    }
+
+    private void FixedUpdate()
+    {
+        if(backwardsAnimationInProgress)
+        {
+            if(wizardAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime > backwardsAnimationEndTime)
+            {
+                endBackwardsAnimation = true;
+            }
+        }
     }
 
     public IEnumerator MoveWizardForward()
@@ -62,12 +77,13 @@ public class WizardInteraction : MonoBehaviour
 
     public IEnumerator MoveWizardBackwards()
     {
+        backwardsAnimationInProgress = true;
 
         WizardAnimator.SetBool("turnAround", true);
 
         //Debug.Log("turn around is: " + WizardAnimator.GetBool("isTurning"));
 
-        while (wizardAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        while (!endBackwardsAnimation)
         {
             yield return null;
         }
@@ -86,6 +102,8 @@ public class WizardInteraction : MonoBehaviour
         StartCoroutine(MoveWizardForward());
 
         //Debug.Log("Make Walk backward Coroutine do more stuffs......");
+
+        backwardsAnimationInProgress = false;
 
     }
 
