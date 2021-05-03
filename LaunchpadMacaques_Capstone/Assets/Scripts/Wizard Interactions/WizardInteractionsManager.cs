@@ -134,9 +134,13 @@ public class WizardInteractionsManager : MonoBehaviour
 
         StartCoroutine(wizardInteraction.MoveWizardBackwards());
 
-
-        if (WizardPortalReference.WizardCollisions == 2)
+        while(WizardPortalReference.WizardCollisions != 2)
         {
+            yield return null;
+        }
+
+        //if (WizardPortalReference.WizardCollisions == 2)
+        //{
             wizardGameObject.SetActive(false);
 
             yield return new WaitForSeconds(1f);
@@ -145,7 +149,7 @@ public class WizardInteractionsManager : MonoBehaviour
             IsWizardOutroPlaying = false;
             wizardInteraction.StopAllCoroutines();
 
-        }
+        //}
 
 
         //}

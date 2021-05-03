@@ -63,19 +63,25 @@ public class WizardInteraction : MonoBehaviour
     public IEnumerator MoveWizardBackwards()
     {
 
-        wizardAnimator.SetBool("turnAround", true);
+        WizardAnimator.SetBool("turnAround", true);
 
         //Debug.Log("turn around is: " + WizardAnimator.GetBool("isTurning"));
 
-        while (wizardAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1.0f)
+        while (wizardAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
         {
-            Debug.Log("turn around is: " + WizardAnimator.GetBool("isTurning"));
             yield return null;
         }
 
         wizardAnimator.SetBool("turnAround", false);
+        wizardAnimator.speed = 0f;
+        wizardAnimator.Play("turnAround", 0, 1);
+        wizardAnimator.enabled = false;
+        wizardAnimator.enabled = true;
+        wizardAnimator.speed = 1f;
 
-        Debug.Log("turn around is: " + WizardAnimator.GetBool("isTurning"));
+        //yield return new WaitForSeconds(WizardAnimator.GetCurrentAnimatorStateInfo(0).length + WizardAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime);
+
+        //WizardAnimator.SetBool("turnAround", false);
 
         StartCoroutine(MoveWizardForward());
 

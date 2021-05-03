@@ -587,21 +587,23 @@ public class NarrativeTriggerHandler : MonoBehaviour
 
                 waitingForInput = true;
 
-
-                if (currentLine.GetLineType() == Dialogue.Line.Type.NarrationLine)
+                if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Movement_2" || UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Dash_2")
                 {
-
-                    if (wizardInteractionManager.IsWizardTalking)
+                    if (currentLine.GetLineType() == Dialogue.Line.Type.NarrationLine)
                     {
-                        wizardInteractionManager.WizardInteractionReference.WizardAnimator.SetBool("isTalking", false);
-                    }
 
-                    if (!wizardInteractionManager.IsWizardIntroPlaying)
-                    {
-                        wizardInteractionManager.IsWizardOutroPlaying = true;
-                        StartCoroutine(wizardInteractionManager.WizardOutro());
-                    }
+                        if (wizardInteractionManager.IsWizardTalking)
+                        {
+                            wizardInteractionManager.WizardInteractionReference.WizardAnimator.SetBool("isTalking", false);
+                        }
 
+                        if (!wizardInteractionManager.IsWizardIntroPlaying)
+                        {
+                            wizardInteractionManager.IsWizardOutroPlaying = true;
+                            StartCoroutine(wizardInteractionManager.WizardOutro());
+                        }
+
+                    }
                 }
 
                 //Wait until effects are done or player has clicked to skip
@@ -615,10 +617,12 @@ public class NarrativeTriggerHandler : MonoBehaviour
                     yield return null;
                 }
 
-
-                while (wizardInteractionManager.IsWizardOutroPlaying)
+                if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Movement_2" || UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Dash_2")
                 {
-                    yield return null;
+                    while (wizardInteractionManager.IsWizardOutroPlaying)
+                    {
+                        yield return null;
+                    }
                 }
 
                 //Text has finished all its effects, prompt the player to click to continue
