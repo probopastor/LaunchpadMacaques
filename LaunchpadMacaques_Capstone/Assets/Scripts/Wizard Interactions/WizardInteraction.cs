@@ -89,21 +89,17 @@ public class WizardInteraction : MonoBehaviour
     {
         backwardsAnimationInProgress = true;
 
-        WizardAnimator.SetBool("turnAround", true);
+       // WizardAnimator.SetBool("turnAround", true);
 
         //Debug.Log("turn around is: " + WizardAnimator.GetBool("isTurning"));
 
-        while (!endBackwardsAnimation)
-        {
-            yield return null;
-        }
+        //while (!endBackwardsAnimation)
+        //{
+        //    yield return null;
+        //}
 
-        wizardAnimator.SetBool("turnAround", false);
-        wizardAnimator.speed = 0f;
-        wizardAnimator.Play("turnAround", 0, 1);
-        wizardAnimator.enabled = false;
-        wizardAnimator.enabled = true;
-        wizardAnimator.speed = 1f;
+        transform.Rotate(new Vector3(0, 180, 0));
+        //wizardAnimator.SetBool("turnAround", false);
 
         //yield return new WaitForSeconds(WizardAnimator.GetCurrentAnimatorStateInfo(0).length + WizardAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime);
 
@@ -115,6 +111,7 @@ public class WizardInteraction : MonoBehaviour
 
         backwardsAnimationInProgress = false;
 
+        yield return null;
     }
 
     #region Getters and Setters
