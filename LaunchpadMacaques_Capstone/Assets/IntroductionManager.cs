@@ -27,6 +27,7 @@ public class IntroductionManager : MonoBehaviour
     [Tooltip("Determines whether the next scene should be loaded. ")] private bool queueSceneSwitch = false;
     [Tooltip("Maintains whether or not text is currently being played. ")] private bool textInProgress = false;
     [Tooltip("Determines whether the next text should occur immediately or after its set delay. ")] private bool startTextImmediately = false;
+    private bool textSkipped = false;
 
     [SerializeField] private bool scaleImage = false;
     [SerializeField] private Image backgroundImage;
@@ -80,28 +81,14 @@ public class IntroductionManager : MonoBehaviour
     /// </summary>
     private void SkipToNextText()
     {
-        if(!queueSceneSwitch)
+        if(!queueSceneSwitch && textEffects.EffectsRunning() != 0 && !textSkipped)
         {
-            if (!informationTextToPlay[textIterator - 1].IsActive())
-            {
-                informationTextToPlay[textIterator - 1].enabled = true;
-            }
-
             // If a text effect is running, finish it. 
-            if (textEffects.EffectsRunning() != 0)
-            {
-                textEffects.SkipToEndOfEffects();
-            }
-
+            textEffects.SkipToEndOfEffects();
             // Set the next set of text to occur immediatly without a delay
             startTextImmediately = true;
-
-            // Sets the text in progress so that text can be properly iterated in Intro()
-            textInProgress = true;
-
-            // Restarts Intro() with new conditionals
-            StopCoroutine(Intro());
-            StartCoroutine(Intro());
+            //Mark text to skip
+            textSkipped = true;
         }
     }
 
@@ -111,27 +98,27 @@ public class IntroductionManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator Intro()
     {
-        // If text is not in progress, play text
-        if (textEffects.EffectsRunning() == 0 && !queueSceneSwitch && !textInProgress)
+        // Just keep running until scene needs to be changed
+        for(; textIterator < textToPlay.Length + 1; textSkipped = false, textIterator++)
         {
-            textInProgress = true;
-            informationTextToPlay[textIterator - 1].enabled = true;
-            textEffects.RunText(informationTextToPlay[textIterator - 1], textToPlay[textIterator - 1]);
-        }
-        // If text just finished being in progress, iterate the text to be played.
-        else if (textEffects.EffectsRunning() == 0 && !queueSceneSwitch && textInProgress)
-        {
-            // Sets the text to stop being in progress
-            textInProgress = false;
-
-            // Iterate which text should be played
-            textIterator++;
-
-            // Check to see if all text has been played.
-            if (textIterator >= textToPlay.Length + 1)
+            //Don't start until any leftover effects are skipped
+            while(textEffects.EffectsRunning() != 0)
             {
-                // If it has, the Scene Switch should occur when the last text ends
-                queueSceneSwitch = true;
+                yield return null;
+            }
+
+            informationTextToPlay[textIterator - 1].text = "";
+            informationTextToPlay[textIterator - 1].enabled = true;
+            yield return null;
+            textEffects.RunText(informationTextToPlay[textIterator - 1], textToPlay[textIterator - 1]);
+
+
+            //Reset text skipped to wait for input
+            textSkipped = false;
+            //Wait for the text to finish running
+            while (textEffects.EffectsRunning() != 0 && !textSkipped)
+            {
+                yield return null;
             }
 
             // If the previous text section was skipped, the next one will be loaded immediately. 
@@ -145,18 +132,13 @@ public class IntroductionManager : MonoBehaviour
                 startTextImmediately = false;
             }
 
-            StartCoroutine(Intro());
-        }
-        // If all text has been played, begin the Scene Switch
-        else if (textEffects.EffectsRunning() == 0 && queueSceneSwitch)
-        {
-            yield return new WaitForEndOfFrame();
-            StartCoroutine(IntroductionSequence());
-        }
+            yield return null;
+         }
 
-        // Cycle through the Intro() coroutine until all text has been played
-        yield return new WaitForEndOfFrame();
-        StartCoroutine(Intro());
+
+        //All text has been played, scene switch
+        yield return new WaitForSeconds(3f);
+        StartCoroutine(IntroductionSequence());
     }
 
     /// <summary>
