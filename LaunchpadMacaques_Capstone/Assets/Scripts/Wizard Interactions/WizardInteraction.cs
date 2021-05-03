@@ -20,7 +20,8 @@ public class WizardInteraction : MonoBehaviour
     private bool wizardDoneWalking = false;
 
     private WizardInteractionsManager wizIntroManager;
-    private float backwardsAnimationEndTime = 1f;
+    private float backwardsAnimationEndTime = 1.2f;
+    private float currentBackwardsAnimationTime = 0f;
 
     private bool backwardsAnimationInProgress = false;
     private bool endBackwardsAnimation = false;
@@ -36,7 +37,16 @@ public class WizardInteraction : MonoBehaviour
     {
         if(backwardsAnimationInProgress)
         {
-            if(wizardAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime > backwardsAnimationEndTime)
+            //if(wizardAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime > backwardsAnimationEndTime)
+            //{
+            //    endBackwardsAnimation = true;
+            //}
+
+            if((currentBackwardsAnimationTime < backwardsAnimationEndTime) && !endBackwardsAnimation)
+            {
+                currentBackwardsAnimationTime += Time.deltaTime;
+            }
+            else
             {
                 endBackwardsAnimation = true;
             }
