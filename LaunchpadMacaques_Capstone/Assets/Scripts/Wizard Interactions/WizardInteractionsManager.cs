@@ -23,6 +23,9 @@ public class WizardInteractionsManager : MonoBehaviour
     private NarrativeTriggerHandler narrativeHandler;
     private Matt_PlayerMovement movementScript;
 
+    private float timeElapsed = 0f;
+    private float timeLimit = 2f;
+
     private void Awake()
     {
         wizardGameObject = GameObject.FindGameObjectWithTag("Wizard");
@@ -129,30 +132,21 @@ public class WizardInteractionsManager : MonoBehaviour
 
         Debug.Log("Wizard Outro Coroutine started...");
 
-        //if (IsWizardOutroPlaying)
-        //{
-
         StartCoroutine(wizardInteraction.MoveWizardBackwards());
 
-        while(WizardPortalReference.WizardCollisions != 2)
+        while ((WizardPortalReference.WizardCollisions != 2) && narrativeHandler.DialogueRunning && timeElapsed <= timeLimit)
         {
+            timeElapsed += Time.deltaTime;
             yield return null;
         }
 
-        //if (WizardPortalReference.WizardCollisions == 2)
-        //{
-            wizardGameObject.SetActive(false);
+        wizardGameObject.SetActive(false);
 
-            yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f);
 
-            wizardPortal.PortalStatesReference = Portal.PortalStates.CLOSE;
-            IsWizardOutroPlaying = false;
-            wizardInteraction.StopAllCoroutines();
-
-        //}
-
-
-        //}
+        wizardPortal.PortalStatesReference = Portal.PortalStates.CLOSE;
+        IsWizardOutroPlaying = false;
+        wizardInteraction.StopAllCoroutines();
 
         StopCoroutine(WizardOutro());
     }

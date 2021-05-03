@@ -597,7 +597,7 @@ public class NarrativeTriggerHandler : MonoBehaviour
                             wizardInteractionManager.WizardInteractionReference.WizardAnimator.SetBool("isTalking", false);
                         }
 
-                        if (!wizardInteractionManager.IsWizardIntroPlaying)
+                        if (!wizardInteractionManager.IsWizardOutroPlaying)
                         {
                             wizardInteractionManager.IsWizardOutroPlaying = true;
                             StartCoroutine(wizardInteractionManager.WizardOutro());
