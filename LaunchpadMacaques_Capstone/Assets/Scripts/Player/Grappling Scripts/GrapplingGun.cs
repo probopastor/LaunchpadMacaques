@@ -825,7 +825,7 @@ public class GrapplingGun : MonoBehaviour
         lr.positionCount = 2;
       //  Vector3 grappled = grappleRayHit.point;
 
-      var temp = handCam.ViewportToWorldPoint(Camera.main.WorldToViewportPoint(grappleRayHit.point));
+      var temp = handCam.ViewportToWorldPoint(Camera.main.WorldToViewportPoint(currentGrapplePosition));
         Vector3 grappled = temp;
         dist = Vector3.Distance(ejectPoint.position, grappled);
 
@@ -837,7 +837,7 @@ public class GrapplingGun : MonoBehaviour
         while (counter < dist)
         {
 
-            temp = handCam.ViewportToWorldPoint(Camera.main.WorldToViewportPoint(grappleRayHit.point));
+            temp = handCam.ViewportToWorldPoint(Camera.main.WorldToViewportPoint(currentGrapplePosition));
             Vector3 point1 = ejectPoint.position;
             Vector3 point2 = temp;
 
